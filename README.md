@@ -4,5 +4,6 @@
 # Initialization
 
 # Install 
+create toc
 
 # Assume Unchanged
