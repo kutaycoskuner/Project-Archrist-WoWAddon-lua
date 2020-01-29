@@ -1,0 +1,10 @@
+﻿# Metadata
+## Interface: 30300
+## Title: |cff128EC4Arch|r|cffedededrist|r|cff262626 -> /archrist /ar|r
+## Notes: Test Addon for experimental purposes.
+## Version: 0.2 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
+## Author: Orthrin
+
+# Libraries
+main.lua
+

@@ -51,3 +51,9 @@ background, border, artwork, overlay, highlight
 - open shortcut press ~
 exportInterfaceFiles code
 exportInterfaceFiles art
+
+>>Colors
+#0d6991
+#128EC4
+#262626
+#ededed
