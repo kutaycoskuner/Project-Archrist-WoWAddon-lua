@@ -1,3 +1,44 @@
+-- ==== Variables
+-- --[[ 
+--     To load the AddOn engine add this to the top of your file:
+-- 	local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+-- ]]
+-- -- Lua functions
+-- local _G, min, pairs, strsplit, unpack, wipe, type, tcopy = _G, min, pairs, strsplit, unpack, wipe, type, table.copy
+-- -- WoW API / Variables
+-- local hooksecurefunc = hooksecurefunc
+-- local CreateFrame = CreateFrame
+-- local GetAddOnInfo = GetAddOnInfo
+-- local GetAddOnMetadata = GetAddOnMetadata
+-- local GetTime = GetTime
+-- local HideUIPanel = HideUIPanel
+-- local InCombatLockdown = InCombatLockdown
+-- local IsAddOnLoaded = IsAddOnLoaded
+-- local LoadAddOn = LoadAddOn
+-- local ReloadUI = ReloadUI
+
+-- local ERR_NOT_IN_COMBAT = ERR_NOT_IN_COMBAT
+-- local GameMenuButtonLogout = GameMenuButtonLogout
+-- local GameMenuFrame = GameMenuFrame
+
+-- BINDING_HEADER_ARCH = GetAddOnMetadata(..., "Title")
+
+-- local AddOnName, Engine = ...;
+-- local AddOn = LibStub("AceAddon-3.0"):NewAddon(AddOnName, "AceConsole-3.0", "AceEvent-3.0"); -- ** "AceTimer-3.0", "AceHook-3.0"
+-- -- AddOn.callbacks = AddOn.callbacks or CallbackHandler:New(AddOn)
+-- AddOn.DF = {profile = {}, global = {}}; AddOn.privateVars = {profile = {}} -- Defaults
+-- AddOn.Options = {type = "group", name = AddOnName, args = {}}
+
+-- Engine[1] = AddOn
+-- Engine[2] = {}
+-- Engine[3] = AddOn.privateVars.profile
+-- Engine[4] = AddOn.DF.profile
+-- Engine[5] = AddOn.DF.global
+-- _G[AddOnName] = Engine
+
+-- -- test
+-- print(AddOnName)
+
 -- ==== Development
 SLASH_RELOADUI1 = "/rl"; -- for quicker reload
 SlashCmdList.RELOADUI = ReloadUI;
@@ -11,6 +52,7 @@ end
 for i = 1, NUM_CHAT_WINDOWS do
     _G["ChatFrame" .. i .. "EditBox"]:SetAltArrowKeyMode(false);
 end
+
 -- ==== Start
 WelcomeHome = LibStub("AceAddon-3.0"):NewAddon("WelcomeHome", "AceConsole-3.0",
                                                "AceEvent-3.0")

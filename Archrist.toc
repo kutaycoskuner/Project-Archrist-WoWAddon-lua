@@ -2,7 +2,7 @@
 ## Interface: 30300
 ## Title: |cff128EC4Arch|r|cffedededrist|r|cff262626 -> /archrist /ar|r
 ## Notes: Raid control addon
-## Version: 0.2 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
+## Version: 0.3 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
 ## Author: Orthrin
 ## SavedVariables: ArchDB, testDB
 ## SavedVariablesPerCharacter: ArchCharDB
@@ -10,7 +10,11 @@
 ## X-Embeds: Ace3
 
 # Libraries
-embeds.xml
+developer\!bindings.xml
+domain\!bindings.xml
+libraries\!bindings.xml
+modules\!bindings.xml
+settings\!bindings.xml
 
 # Initialization
 Archrist.lua

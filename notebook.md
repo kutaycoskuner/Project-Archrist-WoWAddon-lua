@@ -6,13 +6,13 @@ https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmo
 ## SavedVariablesPerCharacter: ElvCharacterDB
 - hangi druidin cs atacagini gooster
 - comment discipline {
-    title       :   ====
-    problem     :   !!
-    query       :   ??
-    todo        :   >>
-    test        :   test
-    highlight   :   **   
-    description :   none
+    title       :   ==== | "#128EC4" 
+    problem     :   !!   | "#ff6633"
+    query       :   ??   | "#33ffff"
+    todo        :   >>   | "#99ff33"
+    test        :   test | "#ffa100"
+    highlight   :   **   | "#ff33ff"
+    description :   none |
 }
 
 
@@ -82,20 +82,13 @@ exportInterfaceFiles art
 #262626
 #ededed
 
-This next section will go over storing information between sessions.
+# File Structure
 
-local options = { 
-    name = "WelcomeHome",
-    handler = WelcomeHome,
-    type = "group",
-    args = {
-        msg = {
-            type = "input",
-            name = "Message",
-            desc = "The message to be displayed when you get home.",
-            usage = "<Your message>",
-            get = "GetMessage",
-            set = "SetMessage",
-        },
-    },
-}
++-- developer
++-- domain
++-- libraries
+|   +-- 
++-- modules
++-- settings
++-- Archrist.lua
++-- Archrist.toc
