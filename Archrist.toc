@@ -1,10 +1,17 @@
 ﻿# Metadata
 ## Interface: 30300
 ## Title: |cff128EC4Arch|r|cffedededrist|r|cff262626 -> /archrist /ar|r
-## Notes: Test Addon for experimental purposes.
+## Notes: Test Addon for experimental purposes
 ## Version: 0.2 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
 ## Author: Orthrin
+## SavedVariables: ArchDB
+## SavedVariablesPerCharacter: ArchCharDB
+## OptionalDeps: Blizzard_DebugTools, Ace3
+## X-Embeds: Ace3
 
 # Libraries
-main.lua
+embeds.xml
+
+# Initialization
+Archrist.lua
 
