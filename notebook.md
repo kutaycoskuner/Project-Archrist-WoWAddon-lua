@@ -5,6 +5,15 @@ https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmo
 ## SavedVariables: ElvDB, ElvPrivateDB
 ## SavedVariablesPerCharacter: ElvCharacterDB
 - hangi druidin cs atacagini gooster
+- comment discipline {
+    title       :   ====
+    problem     :   !!
+    query       :   ??
+    todo        :   >>
+    test        :   test
+    highlight   :   **   
+    description :   none
+}
 
 
 # Problems
@@ -74,3 +83,19 @@ exportInterfaceFiles art
 #ededed
 
 This next section will go over storing information between sessions.
+
+local options = { 
+    name = "WelcomeHome",
+    handler = WelcomeHome,
+    type = "group",
+    args = {
+        msg = {
+            type = "input",
+            name = "Message",
+            desc = "The message to be displayed when you get home.",
+            usage = "<Your message>",
+            get = "GetMessage",
+            set = "SetMessage",
+        },
+    },
+}
