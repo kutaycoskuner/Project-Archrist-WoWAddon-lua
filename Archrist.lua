@@ -45,25 +45,26 @@ local options = {
     }
 }
 
+local defaults = {
+    profile = {
+        message = "Welcome Home!",
+        showInChat = false,
+        showOnScreen = true
+    }
+}
+
 WelcomeHome.showInChat = false
 WelcomeHome.showOnScreen = true
 
-function WelcomeHome:IsShowInChat(info) return self.showInChat end
-
-function WelcomeHome:ToggleShowInChat(info, value) self.showInChat = value end
-
-function WelcomeHome:IsShowOnScreen(info) return self.showOnScreen end
-
-function WelcomeHome:ToggleShowOnScreen(info, value) self.showOnScreen = value end
-
 function WelcomeHome:OnInitialize()
     -- Called when the addon is loaded
+    self.db = LibStub("AceDB-3.0"):New("testDB", defaults, true)
+
     LibStub("AceConfig-3.0"):RegisterOptionsTable("WelcomeHome", options)
     self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(
                             "WelcomeHome", "WelcomeHome")
     self:RegisterChatCommand("wh", "ChatCommand")
     self:RegisterChatCommand("welcomehome", "ChatCommand")
-    WelcomeHome.message = "Welcome Home!"
 end
 
 function WelcomeHome:OnEnable()
@@ -77,17 +78,15 @@ end
 
 function WelcomeHome:ZONE_CHANGED()
     if GetBindLocation() == GetSubZoneText() then
-        if self.showInChat then self:Print(self.message) end
+        if self.db.profile.showInChat then
+            self:Print(self.db.profile.message);
+        end
 
-        if self.showOnScreen then
-            UIErrorsFrame:AddMessage(self.message, 1.0, 1.0, 1.0, 5.0)
+        if self.db.profile.showOnScreen then
+            UIErrorsFrame:AddMessage(self.db.profile.message, 1.0, 1.0, 1.0, 5.0)
         end
     end
 end
-
-function WelcomeHome:GetMessage(info) return self.message end
-
-function WelcomeHome:SetMessage(info, newValue) self.message = newValue end
 
 function WelcomeHome:ChatCommand(input)
     if not input or input:trim() == "" then
@@ -95,6 +94,24 @@ function WelcomeHome:ChatCommand(input)
     else
         LibStub("AceConfigCmd-3.0"):HandleCommand("wh", "WelcomeHome", input)
     end
+end
+
+function WelcomeHome:GetMessage(info) return self.db.profile.message end
+
+function WelcomeHome:SetMessage(info, newValue)
+    self.db.profile.message = newValue
+end
+
+function WelcomeHome:IsShowInChat(info) return self.db.profile.showInChat end
+
+function WelcomeHome:ToggleShowInChat(info, value)
+    self.db.profile.showInChat = value
+end
+
+function WelcomeHome:IsShowOnScreen(info) return self.db.profile.showOnScreen end
+
+function WelcomeHome:ToggleShowOnScreen(info, value)
+    self.db.profile.showOnScreen = value
 end
 
 -- local EventFrame = CreateFrame("Frame")

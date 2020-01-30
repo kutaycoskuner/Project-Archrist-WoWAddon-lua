@@ -4,7 +4,7 @@
 ## Notes: Raid control addon
 ## Version: 0.2 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
 ## Author: Orthrin
-## SavedVariables: ArchDB
+## SavedVariables: ArchDB, testDB
 ## SavedVariablesPerCharacter: ArchCharDB
 ## OptionalDeps: Blizzard_DebugTools, Ace3
 ## X-Embeds: Ace3
