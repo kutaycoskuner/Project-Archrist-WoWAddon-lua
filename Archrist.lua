@@ -23,18 +23,47 @@ local options = {
         msg = {
             type = "input",
             name = "Message",
-            desc = "The message to be displayed when you get home.",
-            usage = "<Your message>",
+            desc = "The message text to be displayed",
+            usage = "<Your message here>",
             get = "GetMessage",
             set = "SetMessage"
+        },
+        showInChat = {
+            type = "toggle",
+            name = "Show in Chat",
+            desc = "Toggles the display of the message in the chat window.",
+            get = "IsShowInChat",
+            set = "ToggleShowInChat"
+        },
+        showOnScreen = {
+            type = "toggle",
+            name = "Show on Screen",
+            desc = "Toggles the display of the message on the screen.",
+            get = "IsShowOnScreen",
+            set = "ToggleShowOnScreen"
         }
     }
 }
 
+WelcomeHome.showInChat = false
+WelcomeHome.showOnScreen = true
+
+function WelcomeHome:IsShowInChat(info) return self.showInChat end
+
+function WelcomeHome:ToggleShowInChat(info, value) self.showInChat = value end
+
+function WelcomeHome:IsShowOnScreen(info) return self.showOnScreen end
+
+function WelcomeHome:ToggleShowOnScreen(info, value) self.showOnScreen = value end
+
 function WelcomeHome:OnInitialize()
     -- Called when the addon is loaded
-    LibStub("AceConfig-3.0"):RegisterOptionsTable("WelcomeHome", options,
-                                                  {"welcomehome", "wh"})
+    LibStub("AceConfig-3.0"):RegisterOptionsTable("WelcomeHome", options)
+    self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(
+                            "WelcomeHome", "WelcomeHome")
+    self:RegisterChatCommand("wh", "ChatCommand")
+    self:RegisterChatCommand("welcomehome", "ChatCommand")
+    WelcomeHome.message = "Welcome Home!"
 end
 
 function WelcomeHome:OnEnable()
@@ -48,13 +77,25 @@ end
 
 function WelcomeHome:ZONE_CHANGED()
     if GetBindLocation() == GetSubZoneText() then
-        self:Print(self.message)
+        if self.showInChat then self:Print(self.message) end
+
+        if self.showOnScreen then
+            UIErrorsFrame:AddMessage(self.message, 1.0, 1.0, 1.0, 5.0)
+        end
     end
 end
 
 function WelcomeHome:GetMessage(info) return self.message end
 
 function WelcomeHome:SetMessage(info, newValue) self.message = newValue end
+
+function WelcomeHome:ChatCommand(input)
+    if not input or input:trim() == "" then
+        InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
+    else
+        LibStub("AceConfigCmd-3.0"):HandleCommand("wh", "WelcomeHome", input)
+    end
+end
 
 -- local EventFrame = CreateFrame("Frame")
 -- EventFrame:RegisterEvent("PLAYER_LOGIN")
