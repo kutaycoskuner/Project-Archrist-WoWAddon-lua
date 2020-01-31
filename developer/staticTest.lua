@@ -1,11 +1,11 @@
--- -- ------------------------------------------------------------------------------------------
--- -- -- Orthplate
--- local Arch, L, V, P, G = unpack(select(2, ...)); --Import: System, Locales, PrivateDB, ProfileDB, GlobalDB
--- -- ------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------
+-- -- Orthplate
+-- local Arch, L, V, P, G = unpack(select(2, ...)); -- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB
+-- ------------------------------------------------------------------------------------------
 
 -- local options = {
---     name = "ArchTest",
---     handler = ArchTest,
+--     name = "Archrist",
+--     handler = Arch,
 --     type = "group",
 --     args = {
 --         msg = {
@@ -46,6 +46,12 @@
 -- function Arch:OnInitialize()
 --     -- Called when the addon is loaded
 --     self.db = LibStub("AceDB-3.0"):New("testDB", defaults, true)
+
+--     LibStub("AceConfig-3.0"):RegisterOptionsTable("Arch", options)
+--     self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(
+--                             "Arch", "Archrist")
+--     self:RegisterChatCommand("ar", "ChatCommand")
+--     self:RegisterChatCommand("welcomehome", "ChatCommand")
 -- end
 
 -- function Arch:OnEnable()
@@ -58,26 +64,26 @@
 -- end
 
 -- function Arch:CHAT_MSG_SAY()
---     -- if GetBindLocation() == GetSubZoneText() then
 --     if self.db.profile.showInChat then self:Print(self.db.profile.message); end
 
 --     if self.db.profile.showOnScreen then
 --         UIErrorsFrame:AddMessage(self.db.profile.message, 1.0, 1.0, 1.0, 5.0)
 --     end
---     -- end
 -- end
 
--- -- function Addon:ChatCommand(input)
--- --     if not input or input:trim() == "" then
--- --         InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
--- --     else
--- --         LibStub("AceConfigCmd-3.0"):HandleCommand("wh", "ArchTest", input)
--- --     end
--- -- end
+-- function Arch:ChatCommand(input)
+--     if not input or input:trim() == "" then
+--         InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
+--     else
+--         LibStub("AceConfigCmd-3.0"):HandleCommand("ar", "Arch", input)
+--     end
+-- end
 
 -- function Arch:GetMessage(info) return self.db.profile.message end
 
--- function Arch:SetMessage(info, newValue) self.db.profile.message = newValue end
+-- function Arch:SetMessage(info, newValue)
+--     self.db.profile.message = newValue
+-- end
 
 -- function Arch:IsShowInChat(info) return self.db.profile.showInChat end
 

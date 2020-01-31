@@ -1,6 +1,11 @@
+-- ------------------------------------------------------------------------------------------
+-- -- Orthplate
+-- local Arch, L, V, P, G = unpack(select(2, ...)); -- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB
+-- ------------------------------------------------------------------------------------------
+
 -- local options = {
---     name = "WelcomeHome",
---     handler = WelcomeHome,
+--     name = "Archrist",
+--     handler = Arch,
 --     type = "group",
 --     args = {
 --         msg = {
@@ -35,63 +40,59 @@
 --         showOnScreen = true
 --     }
 -- }
--- WelcomeHome.showInChat = false
--- WelcomeHome.showOnScreen = true
+-- Arch.showInChat = false
+-- Arch.showOnScreen = true
 
--- function WelcomeHome:OnInitialize()
+-- function Arch:OnInitialize()
 --     -- Called when the addon is loaded
 --     self.db = LibStub("AceDB-3.0"):New("testDB", defaults, true)
 
---     LibStub("AceConfig-3.0"):RegisterOptionsTable("WelcomeHome", options)
+--     LibStub("AceConfig-3.0"):RegisterOptionsTable("Arch", options)
 --     self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(
---                             "WelcomeHome", "WelcomeHome")
---     self:RegisterChatCommand("wh", "ChatCommand")
+--                             "Arch", "Archrist")
+--     self:RegisterChatCommand("ar", "ChatCommand")
 --     self:RegisterChatCommand("welcomehome", "ChatCommand")
 -- end
 
--- function WelcomeHome:OnEnable()
+-- function Arch:OnEnable()
 --     -- Called when the addon is enabled
---     self:RegisterEvent("ZONE_CHANGED")
+--     self:RegisterEvent("CHAT_MSG_SAY")
 -- end
 
--- function WelcomeHome:OnDisable()
+-- function Arch:OnDisable()
 --     -- Called when the addon is disabled
 -- end
 
--- function WelcomeHome:ZONE_CHANGED()
---     if GetBindLocation() == GetSubZoneText() then
---         if self.db.profile.showInChat then
---             self:Print(self.db.profile.message);
---         end
+-- function Arch:CHAT_MSG_SAY()
+--     if self.db.profile.showInChat then self:Print(self.db.profile.message); end
 
---         if self.db.profile.showOnScreen then
---             UIErrorsFrame:AddMessage(self.db.profile.message, 1.0, 1.0, 1.0, 5.0)
---         end
+--     if self.db.profile.showOnScreen then
+--         UIErrorsFrame:AddMessage(self.db.profile.message, 1.0, 1.0, 1.0, 5.0)
 --     end
 -- end
 
--- function WelcomeHome:ChatCommand(input)
+-- function Arch:ChatCommand(input)
 --     if not input or input:trim() == "" then
 --         InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
 --     else
---         LibStub("AceConfigCmd-3.0"):HandleCommand("wh", "WelcomeHome", input)
+--         LibStub("AceConfigCmd-3.0"):HandleCommand("ar", "Arch", input)
 --     end
 -- end
 
--- function WelcomeHome:GetMessage(info) return self.db.profile.message end
+-- function Arch:GetMessage(info) return self.db.profile.message end
 
--- function WelcomeHome:SetMessage(info, newValue)
+-- function Arch:SetMessage(info, newValue)
 --     self.db.profile.message = newValue
 -- end
 
--- function WelcomeHome:IsShowInChat(info) return self.db.profile.showInChat end
+-- function Arch:IsShowInChat(info) return self.db.profile.showInChat end
 
--- function WelcomeHome:ToggleShowInChat(info, value)
+-- function Arch:ToggleShowInChat(info, value)
 --     self.db.profile.showInChat = value
 -- end
 
--- function WelcomeHome:IsShowOnScreen(info) return self.db.profile.showOnScreen end
+-- function Arch:IsShowOnScreen(info) return self.db.profile.showOnScreen end
 
--- function WelcomeHome:ToggleShowOnScreen(info, value)
+-- function Arch:ToggleShowOnScreen(info, value)
 --     self.db.profile.showOnScreen = value
 -- end
