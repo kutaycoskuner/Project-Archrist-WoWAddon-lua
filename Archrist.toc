@@ -4,8 +4,8 @@
 ## Notes: Raid control addon
 ## Version: 0.3 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
 ## Author: Orthrin
-## SavedVariables: ArchDB, testDB
-## SavedVariablesPerCharacter: ArchCharDB
+## SavedVariables: ArchDB, ArchPrivateDB, testDB
+## SavedVariablesPerCharacter: ArchCharacterDB
 ## OptionalDeps: Blizzard_DebugTools, Ace3
 ## X-Embeds: Ace3
 ## X-Discord: https://discord.gg/XCGTYtp
@@ -13,10 +13,9 @@
 # Pre-Load -> Libraries
 !pre-load\libraries\-load.xml
 !pre-load\developer\-load.xml
-
 # Initialization
 Archrist.lua
-
 # Post-Load
 developer\-load.xml
+macro\-load.xml
 

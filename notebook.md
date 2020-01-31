@@ -5,15 +5,6 @@ https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmo
 ## SavedVariables: ElvDB, ElvPrivateDB
 ## SavedVariablesPerCharacter: ElvCharacterDB
 - hangi druidin cs atacagini gooster
-- comment discipline {
-    title       :   ==== | "#128EC4" 
-    problem     :   !!   | "#ff6633"
-    query       :   ??   | "#33ffff"
-    todo        :   >>   | "#99ff33"
-    test        :   test | "#ffa100"
-    highlight   :   **   | "#ff33ff"
-    description :   none |
-}
 
 # Problems
 
@@ -44,6 +35,8 @@ https://www.reddit.com/r/wowaddons/wiki/index
 https://www.townlong-yak.com/framexml/beta/GlobalStrings.lua
 - performance efficiency 
 https://stackoverflow.com/questions/31888918/how-efficient-am-i-using-these-tables-in-lua
+- create slash commands
+https://wow.gamepedia.com/Creating_a_slash_command
 
 # Reminders
 Identify What You Want To Do
@@ -86,11 +79,23 @@ background, border, artwork, overlay, highlight
 exportInterfaceFiles code
 exportInterfaceFiles art
 
->>Colors
+# Comment Discipline
+comment discipline {
+    title               :   ==== | "#00c8ff" 
+    problem             :   !!   | "#ff6633"
+    query               :   ??   | "#33ffff"
+    todo                :   >>   | "#99ff33"
+    test                :   test | "#ffa100"
+    highlight           :   **   | "#8fab21"
+    description         :   ::   | "#128EC4"  
+    separator line      :   --   | "#001d26"  
+    disabledProperty    :  none
+}
 #0d6991
 #128EC4
 #262626
 #ededed
+#ff33ff
 
 # File Structure
 
