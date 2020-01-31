@@ -15,7 +15,6 @@ https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmo
     description :   none |
 }
 
-
 # Problems
 
 # Completed
@@ -33,7 +32,18 @@ https://www.townlong-yak.com/framexml/live/UI.xsd
 https://old.reddit.com/r/classicwow/comments/bvbqo1//epokyf1/
 https://www.wowace.com/projects/ace3/files/440275
 https://wow.gamepedia.com/WelcomeHome_-_Your_first_Ace3_Addon
-
+https://protokolo7.neocities.org/lua/WoW_Addons.pdf
+http://wowprogramming.com/utils.html
+- backup and syncronize app
+https://github.com/Total-RP/Total-RP-3/wiki/How-to-backup-and-synchronize-your-add-ons-settings-using-a-cloud-service
+- lua variable scoping
+https://wow.gamepedia.com/Lua_variable_scoping
+- reddit index of addon making
+https://www.reddit.com/r/wowaddons/wiki/index
+- global strings
+https://www.townlong-yak.com/framexml/beta/GlobalStrings.lua
+- performance efficiency 
+https://stackoverflow.com/questions/31888918/how-efficient-am-i-using-these-tables-in-lua
 
 # Reminders
 Identify What You Want To Do
@@ -92,3 +102,5 @@ exportInterfaceFiles art
 +-- settings
 +-- Archrist.lua
 +-- Archrist.toc
+
+

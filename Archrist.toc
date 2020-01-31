@@ -8,14 +8,15 @@
 ## SavedVariablesPerCharacter: ArchCharDB
 ## OptionalDeps: Blizzard_DebugTools, Ace3
 ## X-Embeds: Ace3
+## X-Discord: https://discord.gg/XCGTYtp
 
-# Libraries
-developer\!bindings.xml
-domain\!bindings.xml
-libraries\!bindings.xml
-modules\!bindings.xml
-settings\!bindings.xml
+# Pre-Load -> Libraries
+!pre-load\libraries\-load.xml
+!pre-load\developer\-load.xml
 
 # Initialization
 Archrist.lua
+
+# Post-Load
+developer\-load.xml
 

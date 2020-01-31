@@ -1,6 +1,3 @@
--- WelcomeHome = LibStub("AceAddon-3.0"):NewAddon("WelcomeHome", "AceConsole-3.0",
---                                                "AceEvent-3.0")
-
 -- local options = {
 --     name = "WelcomeHome",
 --     handler = WelcomeHome,
