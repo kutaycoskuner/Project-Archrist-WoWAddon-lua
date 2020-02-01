@@ -5,10 +5,13 @@ https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmo
 ## SavedVariables: ElvDB, ElvPrivateDB
 ## SavedVariablesPerCharacter: ElvCharacterDB
 - hangi druidin cs atacagini gooster
+- table copy yi developerdan alip diger tarafa koy
 
 # Problems
+`boyle bir fonksiyon yok` attempt to call method 'UpdateCooldownSettings' (a nil value)
 
 # Completed
+- tcopy, twipe komutlarini ogren
 
 # Sources
 [1] mayron wow addon creation
@@ -53,6 +56,10 @@ http://lua-users.org/wiki/OptimisingUsingLocalVariables
 Identify What You Want To Do
 Research on some events or methods in which to do what you wish
 Do it
+
+>> test procedure
+- print('test')
+- print(object)
 
 # Lua
 -- `comment`

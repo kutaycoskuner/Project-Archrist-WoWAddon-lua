@@ -9,7 +9,7 @@ local main, L, V, P, G = unpack(select(2, ...)); --Import: System, Locales, Priv
 
 -- ==== Variables
 -- :: Lua functions
-local _G, min, pairs, strsplit, unpack, wipe, type, tcopy = _G, min, pairs, strsplit, unpack,wipe, type,table.copy
+local _G, min, pairs, strsplit, unpack, wipe, type, tcopy = _G, min, pairs, strsplit, unpack, wipe, type, table.copy
 -- :: WoW API / Variables
 local hooksecurefunc = hooksecurefunc
 local CreateFrame = CreateFrame
@@ -47,22 +47,22 @@ _G[AddonName] = System
 -- ==== Minor Libraries and Modules
 do
 	-- :: Create a function to add minor libraries
-	-- Addon.Libs = {}
-	-- Addon.LibsMinor = {}
-	-- function Addon:AddLib(name, major, minor)
-	-- 	if not name then return end
+	Addon.Libs = {}
+	Addon.LibsMinor = {}
+	function Addon:AddLib(name, major, minor)
+		if not name then return end
 
-	-- 	-- in this case: `major` is the lib table and `minor` is the minor version
-	-- 	if type(major) == "table" and type(minor) == "number" then
-	-- 		self.Libs[name], self.LibsMinor[name] = major, minor
-	-- 	else -- in this case: `major` is the lib name and `minor` is the silent switch
-	-- 		self.Libs[name], self.LibsMinor[name] = LibStub(major, minor)
-	-- 	end
-	-- end
+		-- in this case: `major` is the lib table and `minor` is the minor version
+		if type(major) == "table" and type(minor) == "number" then
+			self.Libs[name], self.LibsMinor[name] = major, minor
+		else -- in this case: `major` is the lib name and `minor` is the silent switch
+			self.Libs[name], self.LibsMinor[name] = LibStub(major, minor)
+		end
+	end
 
 	-- :: add minor libraries
-	-- Addon:AddLib("AceAddon", AceAddon, AceAddonMinor)
-	-- Addon:AddLib("AceDB", "AceDB-3.0")
+	Addon:AddLib("AceAddon", AceAddon, AceAddonMinor)
+	Addon:AddLib("AceDB", "AceDB-3.0")
 	-- Addon:AddLib("EP", "LibElvUIPlugin-1.0")
 	-- Addon:AddLib("LSM", "LibSharedMedia-3.0")
 	-- Addon:AddLib("ACL", "AceLocale-3.0-ElvUI")
@@ -122,31 +122,33 @@ end
 
 -- ==== Addon Init
 function Addon:OnInitialize()
-    -- -- :: if there is no database create one
-	-- if not ArchCharacterDB then
-	-- 	ArchCharacterDB = {}
-	-- end
+    -- :: if there is no database create one
+	if not ArchCharacterDB then
+		ArchCharacterDB = {}
+	end
 
-	-- self.db = tcopy(self.DF.profile, true)
-	-- self.global = tcopy(self.DF.global, true)
+	print(self.DF.profile)
+
+	self.db = tcopy(self.DF.profile, true)
+	self.global = tcopy(self.DF.global, true)
 	
-	-- -- :: eger db varsa profili programa al (cache)  
-	-- if ArchDB then
-	-- 	if ArchDB.global then
-	-- 		self:CopyTable(self.global, ArchDB.global)
-	-- 	end
+	-- :: eger db varsa profili programa al (cache)  
+	if ArchDB then
+		if ArchDB.global then
+			self:CopyTable(self.global, ArchDB.global)
+		end
 
-	-- 	local profileKey
-	-- 	if ArchDB.profileKeys then
-	-- 		profileKey = ArchDB.profileKeys[self.myname.." ["..self.myrealm.."]"]
-	-- 	end
+		local profileKey
+		if ArchDB.profileKeys then
+			profileKey = ArchDB.profileKeys[self.myname.." ["..self.myrealm.."]"]
+		end
 
-	-- 	if profileKey and ArchDB.profiles and ArchDB.profiles[profileKey] then
-	-- 		self:CopyTable(self.db, ArchDB.profiles[profileKey])
-	-- 	end
-	-- end
+		if profileKey and ArchDB.profiles and ArchDB.profiles[profileKey] then
+			self:CopyTable(self.db, ArchDB.profiles[profileKey])
+		end
+	end
 
-	-- self.private = tcopy(self.privateVars.profile, true)
+	self.private = tcopy(self.privateVars.profile, true)
 	-- -- :: private DB icin ayni islemi uygula
 	-- if ArchPrivateDB then
 	-- 	local profileKey
@@ -203,6 +205,12 @@ function Addon:OnInitialize()
 	-- :: loadtime
 	-- self.loadedtime = GetTime()
 end
+
+local LoadUI = CreateFrame("Frame")
+LoadUI:RegisterEvent("PLAYER_LOGIN")
+LoadUI:SetScript("OnEvent", function()
+	Addon:Initialize()
+end)
 
 
 -- test 
