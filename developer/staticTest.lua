@@ -51,7 +51,7 @@
 --     self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(
 --                             "Arch", "Archrist")
 --     self:RegisterChatCommand("ar", "ChatCommand")
---     self:RegisterChatCommand("welcomehome", "ChatCommand")
+--     self:RegisterChatCommand("archrium", "ChatCommand")
 -- end
 
 -- function Arch:OnEnable()

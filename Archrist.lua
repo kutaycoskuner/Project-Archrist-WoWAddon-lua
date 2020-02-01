@@ -3,10 +3,10 @@
     Disclaimer: This addon created by inspectation and use of ElvUI
     To load the Addon engine add this to the top of your file:
 ------------------------------------------------------------------------------------------
--- Orthplate
-local Arch, L, V, P, G = unpack(select(2, ...)); --Import: System, Locales, PrivateDB, ProfileDB, GlobalDB
+local main, L, V, P, G = unpack(select(2, ...)); --Import: System, Locales, PrivateDB, ProfileDB, GlobalDB
 ------------------------------------------------------------------------------------------
 ]] 
+
 -- ==== Variables
 -- :: Lua functions
 local _G, min, pairs, strsplit, unpack, wipe, type, tcopy = _G, min, pairs, strsplit, unpack,wipe, type,table.copy
@@ -29,8 +29,8 @@ local GameMenuFrame = GameMenuFrame
 local AceAddon, AceAddonMinor = LibStub("AceAddon-3.0")
 local CallbackHandler = LibStub("CallbackHandler-1.0")
 local AddonName, System = ...; -- this declares addon scope variable
-local Addon = AceAddon:NewAddon(AddonName, "AceConsole-3.0", "AceEvent-3.0"); -- "AceTimer-3.0", "AceHook-3.0"
--- Addon Decleration
+local Addon = AceAddon:NewAddon(AddonName, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0", "AceHook-3.0");
+-- :: Addon Decleration
 BINDING_HEADER_ARCH = GetAddOnMetadata(..., "Title")
 Addon.callbacks = Addon.callbacks or CallbackHandler:New(Addon)
 Addon.DF = {profile = {}, global = {}};
@@ -44,29 +44,85 @@ System[4] = Addon.DF.profile
 System[5] = Addon.DF.global
 _G[AddonName] = System
 
+-- ==== Minor Libraries and Modules
+do
+	-- :: Create a function to add minor libraries
+	-- Addon.Libs = {}
+	-- Addon.LibsMinor = {}
+	-- function Addon:AddLib(name, major, minor)
+	-- 	if not name then return end
 
--- ==== Custom Libraries
+	-- 	-- in this case: `major` is the lib table and `minor` is the minor version
+	-- 	if type(major) == "table" and type(minor) == "number" then
+	-- 		self.Libs[name], self.LibsMinor[name] = major, minor
+	-- 	else -- in this case: `major` is the lib name and `minor` is the silent switch
+	-- 		self.Libs[name], self.LibsMinor[name] = LibStub(major, minor)
+	-- 	end
+	-- end
 
--- ==== Modules
+	-- :: add minor libraries
+	-- Addon:AddLib("AceAddon", AceAddon, AceAddonMinor)
+	-- Addon:AddLib("AceDB", "AceDB-3.0")
+	-- Addon:AddLib("EP", "LibElvUIPlugin-1.0")
+	-- Addon:AddLib("LSM", "LibSharedMedia-3.0")
+	-- Addon:AddLib("ACL", "AceLocale-3.0-ElvUI")
+	-- Addon:AddLib("LAB", "LibActionButton-1.0-ElvUI")
+	-- Addon:AddLib("LAI", "LibAuraInfo-1.0-ElvUI", true)
+	-- Addon:AddLib("LBF", "LibButtonFacade", true)
+	-- Addon:AddLib("LDB", "LibDataBroker-1.1")
+	-- Addon:AddLib("DualSpec", "LibDualSpec-1.0")
+	-- Addon:AddLib("SimpleSticky", "LibSimpleSticky-1.0")
+	-- Addon:AddLib("SpellRange", "SpellRange-1.0")
+	-- Addon:AddLib("ItemSearch", "LibItemSearch-1.2-ElvUI")
+	-- Addon:AddLib("Compress", "LibCompress")
+	-- Addon:AddLib("Base64", "LibBase64-1.0-ElvUI")
+	-- Addon:AddLib("Translit", "LibTranslit-1.0")
+	-- added on ElvUI_OptionsUI load: AceGUI, AceConfig, AceConfigDialog, AceConfigRegistry, AceDBOptions
 
+	-- :: whatever is that means backwards compatible for plugins
+	-- Addon.LSM = Addon.Libs.LSM
+	-- Addon.Masque = Addon.Libs.Masque
+end
 
-
-
--- Addon.test = Addon:NewModule("test")
-
+-- :: Modules
+Addon.test = Addon:NewModule("test","AceHook-3.0","AceEvent-3.0")
+-- Addon.oUF = Engine.oUF
+-- Addon.ActionBars = Addon:NewModule("ActionBars","AceHook-3.0","AceEvent-3.0")
+-- Addon.AFK = Addon:NewModule("AFK","AceEvent-3.0","AceTimer-3.0")
+-- Addon.Auras = Addon:NewModule("Auras","AceHook-3.0","AceEvent-3.0")
+-- Addon.Bags = Addon:NewModule("Bags","AceHook-3.0","AceEvent-3.0","AceTimer-3.0")
+-- Addon.Blizzard = Addon:NewModule("Blizzard","AceEvent-3.0","AceHook-3.0")
+-- Addon.Chat = Addon:NewModule("Chat","AceTimer-3.0","AceHook-3.0","AceEvent-3.0")
+-- Addon.DataBars = Addon:NewModule("DataBars","AceEvent-3.0")
+-- Addon.DataTexts = Addon:NewModule("DataTexts","AceTimer-3.0","AceHook-3.0","AceEvent-3.0")
+-- Addon.DebugTools = Addon:NewModule("DebugTools","AceEvent-3.0","AceHook-3.0")
+-- Addon.Distributor = Addon:NewModule("Distributor","AceEvent-3.0","AceTimer-3.0","AceComm-3.0","AceSerializer-3.0")
+-- Addon.Layout = Addon:NewModule("Layout","AceEvent-3.0")
+-- Addon.Minimap = Addon:NewModule("Minimap","AceEvent-3.0")
+-- Addon.Misc = Addon:NewModule("Misc","AceEvent-3.0","AceTimer-3.0")
+-- Addon.ModuleCopy = Addon:NewModule("ModuleCopy","AceEvent-3.0","AceTimer-3.0","AceComm-3.0","AceSerializer-3.0")
+-- Addon.NamePlates = Addon:NewModule("NamePlates","AceHook-3.0","AceEvent-3.0","AceTimer-3.0")
+-- Addon.PluginInstaller = Addon:NewModule("PluginInstaller")
+-- Addon.RaidUtility = Addon:NewModule("RaidUtility","AceEvent-3.0")
+-- Addon.ReminderBuffs = Addon:NewModule("ReminderBuffs", "AceEvent-3.0")
+-- Addon.Skins = Addon:NewModule("Skins","AceTimer-3.0","AceHook-3.0","AceEvent-3.0")
+-- Addon.Threat = Addon:NewModule("Threat","AceEvent-3.0")
+-- Addon.Tooltip = Addon:NewModule("Tooltip","AceTimer-3.0","AceHook-3.0","AceEvent-3.0")
+-- Addon.TotemBar = Addon:NewModule("Totems","AceEvent-3.0")
+-- Addon.UnitFrames = Addon:NewModule("UnitFrames","AceTimer-3.0","AceEvent-3.0","AceHook-3.0")
+-- Addon.WorldMap = Addon:NewModule("WorldMap","AceHook-3.0","AceEvent-3.0","AceTimer-3.0")
 
 -- :: Escape string for characters ().%+-*?[^$
--- do
--- 	local arg2, arg3 = "([%(%)%.%%%+%-%*%?%[%^%$])", "%%%1"
--- 	function Addon:EscapeString(str)
--- 		return gsub(str, arg2, arg3)
--- 	end
--- end
+do
+	local arg2, arg3 = "([%(%)%.%%%+%-%*%?%[%^%$])", "%%%1"
+	function Addon:EscapeString(str)
+		return gsub(str, arg2, arg3)
+	end
+end
 
 -- ==== Addon Init
-
 function Addon:OnInitialize()
-    -- -- :: if there is no database creatae one
+    -- -- :: if there is no database create one
 	-- if not ArchCharacterDB then
 	-- 	ArchCharacterDB = {}
 	-- end
@@ -117,7 +173,7 @@ function Addon:OnInitialize()
 	-- local GameMenuButton = CreateFrame("Button", "ElvUI_MenuButton", GameMenuFrame, "GameMenuButtonTemplate")
 	-- GameMenuButton:SetText(self.title)
 	-- GameMenuButton:SetScript("OnClick", function()
-	-- 	AddOn:ToggleOptionsUI()
+	-- 	Addon:ToggleOptionsUI()
 	-- 	HideUIPanel(GameMenuFrame)
 	-- end)
 	-- GameMenuFrame[AddOnName] = GameMenuButton
@@ -144,7 +200,8 @@ function Addon:OnInitialize()
 	-- 	end
 	-- end)
 
-	self.loadedtime = GetTime()
+	-- :: loadtime
+	-- self.loadedtime = GetTime()
 end
 
 

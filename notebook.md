@@ -18,12 +18,21 @@ https://www.youtube.com/watch?v=nfaE7NQhMlc&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmo
 https://wowwiki.fandom.com/wiki/Portal:Interface_customization
 https://wowwiki.fandom.com/wiki/FrameXML
 https://wowwiki.fandom.com/wiki/Viewing_Blizzard%27s_WoW_user_interface_code
+- framexml 3.3.5
 https://www.townlong-yak.com/framexml/3.3.5
+- ui
 https://www.townlong-yak.com/framexml/live/UI.xsd
+- blizzard api
+https://www.townlong-yak.com/framexml/live/Blizzard_APIDocumentation
+- reddit masterpost
 https://old.reddit.com/r/classicwow/comments/bvbqo1//epokyf1/
+- ace3 gui
 https://www.wowace.com/projects/ace3/files/440275
+- ace addon tutorial
 https://wow.gamepedia.com/WelcomeHome_-_Your_first_Ace3_Addon
+- wow addon making book
 https://protokolo7.neocities.org/lua/WoW_Addons.pdf
+- wow programming website
 http://wowprogramming.com/utils.html
 - backup and syncronize app
 https://github.com/Total-RP/Total-RP-3/wiki/How-to-backup-and-synchronize-your-add-ons-settings-using-a-cloud-service
@@ -37,6 +46,8 @@ https://www.townlong-yak.com/framexml/beta/GlobalStrings.lua
 https://stackoverflow.com/questions/31888918/how-efficient-am-i-using-these-tables-in-lua
 - create slash commands
 https://wow.gamepedia.com/Creating_a_slash_command
+- why redefine locals
+http://lua-users.org/wiki/OptimisingUsingLocalVariables
 
 # Reminders
 Identify What You Want To Do
