@@ -127,8 +127,6 @@ function Addon:OnInitialize()
 		ArchCharacterDB = {}
 	end
 
-	print(self.DF.profile)
-
 	self.db = tcopy(self.DF.profile, true)
 	self.global = tcopy(self.DF.global, true)
 	

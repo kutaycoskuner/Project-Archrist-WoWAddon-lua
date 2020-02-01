@@ -5,19 +5,20 @@ local module = main:GetModule('test');
 -- ==== Start
 function module:Initialize()
     self.initialized = true
-    -- :: Register some events
+
+    print('test.lua working')
+    module:RegisterEvent("CHAT_MSG_SAY");
 end
 
--- ==== Methods
--- function module:CHAT_MSG_SAY()
+function module:CHAT_MSG_SAY()
 
---     -- print("yay")
---     UIErrorsFrame:AddMessage('test', 1.0, 1.0, 1.0, 5.0)
--- end
+    -- print("yay")
+    UIErrorsFrame:AddMessage('test', 1.0, 1.0, 1.0, 5.0)
+end
 
+local function InitializeCallback()
+    module:Initialize()
+end
 
--- ==== End
--- local function InitializeCallback()
---     module:Initialize()
--- end
--- main:RegisterModule(module:GetName(), InitializeCallback)
+-- :: InitializeCallback
+main:RegisterModule(module:GetName(), InitializeCallback)
