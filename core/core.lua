@@ -166,11 +166,11 @@ end
 main.PriestColors = {r = 0.99, g = 0.99, b = 0.99}
 
 -- :: This frame everything in ElvUI should be anchored to for Eyefinity support.
--- -- main.UIParent = CreateFrame("Frame", "ElvUIParent", UIParent)
--- -- main.UIParent:SetFrameLevel(UIParent:GetFrameLevel())
--- -- main.UIParent:SetSize(UIParent:GetSize())
--- -- main.UIParent:SetPoint("CENTER", UIParent, "CENTER")
--- -- main.snapBars[#main.snapBars + 1] = main.UIParent
+main.UIParent = CreateFrame("Frame", "ArchGUIParent", UIParent)
+main.UIParent:SetFrameLevel(UIParent:GetFrameLevel())
+main.UIParent:SetSize(UIParent:GetSize())
+main.UIParent:SetPoint("CENTER", UIParent, "CENTER")
+main.snapBars[#main.snapBars + 1] = main.UIParent
 
 -- -- main.HiddenFrame = CreateFrame("Frame")
 -- -- main.HiddenFrame:Hide()
@@ -1110,126 +1110,126 @@ function main:InitializeModules()
 end
 
 -- ==== DATABASE CONVERSIONS
--- function main:DBConversions()
--- 	--Fix issue where UIScale was incorrectly stored as string
--- 	main.global.general.UIScale = tonumber(main.global.general.UIScale)
+function main:DBConversions()
+	-- :: Fix issue where UIScale was incorrectly stored as string
+	main.global.general.UIScale = tonumber(main.global.general.UIScale)
 
--- 	--Not sure how this one happens, but prevent it in any case
--- 	if main.global.general.UIScale <= 0 then
--- 		main.global.general.UIScale = G.general.UIScale
--- 	end
+	-- :: Not sure how this one happens, but prevent it in any case
+	if main.global.general.UIScale <= 0 then
+		main.global.general.UIScale = G.general.UIScale
+	end
 
--- 	if gameLocale and main.global.general.locale == "auto" then
--- 		main.global.general.locale = gameLocale
--- 	end
+	if gameLocale and main.global.general.locale == "auto" then
+		main.global.general.locale = gameLocale
+	end
 
--- 	--Combat & Resting Icon options update
--- 	if main.db.unitframe.units.player.combatIcon ~= nil then
--- 		main.db.unitframe.units.player.CombatIcon.enable = main.db.unitframe.units.player.combatIcon
--- 		main.db.unitframe.units.player.combatIcon = nil
--- 	end
--- 	if main.db.unitframe.units.player.restIcon ~= nil then
--- 		main.db.unitframe.units.player.RestIcon.enable = main.db.unitframe.units.player.restIcon
--- 		main.db.unitframe.units.player.restIcon = nil
--- 	end
+	-- :: Combat & Resting Icon options update
+	if main.db.unitframe.units.player.combatIcon ~= nil then
+		main.db.unitframe.units.player.CombatIcon.enable = main.db.unitframe.units.player.combatIcon
+		main.db.unitframe.units.player.combatIcon = nil
+	end
+	if main.db.unitframe.units.player.restIcon ~= nil then
+		main.db.unitframe.units.player.RestIcon.enable = main.db.unitframe.units.player.restIcon
+		main.db.unitframe.units.player.restIcon = nil
+	end
 
--- 	-- [Fader] Combat Fade options for Player
--- 	if main.db.unitframe.units.player.combatfade ~= nil then
--- 		local enabled = main.db.unitframe.units.player.combatfade
--- 		main.db.unitframe.units.player.fader.enable = enabled
+	-- :: [Fader] Combat Fade options for Player
+	if main.db.unitframe.units.player.combatfade ~= nil then
+		local enabled = main.db.unitframe.units.player.combatfade
+		main.db.unitframe.units.player.fader.enable = enabled
 
--- 		if enabled then -- use the old min alpha too
--- 			main.db.unitframe.units.player.fader.minAlpha = 0
--- 		end
+		if enabled then -- use the old min alpha too
+			main.db.unitframe.units.player.fader.minAlpha = 0
+		end
 
--- 		main.db.unitframe.units.player.combatfade = nil
--- 	end
+		main.db.unitframe.units.player.combatfade = nil
+	end
 
--- 	-- [Fader] Range check options for Units
--- 	do
--- 		local outsideAlpha
--- 		if main.db.unitframe.OORAlpha ~= nil then
--- 			outsideAlpha = main.db.unitframe.OORAlpha
--- 			main.db.unitframe.OORAlpha = nil
--- 		end
+	-- :: [Fader] Range check options for Units
+	do
+		local outsideAlpha
+		if main.db.unitframe.OORAlpha ~= nil then
+			outsideAlpha = main.db.unitframe.OORAlpha
+			main.db.unitframe.OORAlpha = nil
+		end
 
--- 		local rangeCheckUnits = {"target", "targettarget", "targettargettarget", "focus", "focustarget", "pet", "pettarget", "boss", "arena", "party", "raid", "raid40", "raidpet", "tank", "assist"}
--- 		for _, unit in pairs(rangeCheckUnits) do
--- 			if main.db.unitframe.units[unit].rangeCheck ~= nil then
--- 				local enabled = main.db.unitframe.units[unit].rangeCheck
--- 				main.db.unitframe.units[unit].fader.enable = enabled
--- 				main.db.unitframe.units[unit].fader.range = enabled
+		local rangeCheckUnits = {"target", "targettarget", "targettargettarget", "focus", "focustarget", "pet", "pettarget", "boss", "arena", "party", "raid", "raid40", "raidpet", "tank", "assist"}
+		for _, unit in pairs(rangeCheckUnits) do
+			if main.db.unitframe.units[unit].rangeCheck ~= nil then
+				local enabled = main.db.unitframe.units[unit].rangeCheck
+				main.db.unitframe.units[unit].fader.enable = enabled
+				main.db.unitframe.units[unit].fader.range = enabled
 
--- 				if outsideAlpha then
--- 					main.db.unitframe.units[unit].fader.minAlpha = outsideAlpha
--- 				end
+				if outsideAlpha then
+					main.db.unitframe.units[unit].fader.minAlpha = outsideAlpha
+				end
 
--- 				main.db.unitframe.units[unit].rangeCheck = nil
--- 			end
--- 		end
--- 	end
+				main.db.unitframe.units[unit].rangeCheck = nil
+			end
+		end
+	end
 
--- 	--Convert old "Buffs and Debuffs" font size option to individual options
--- 	if main.db.auras.fontSize then
--- 		local fontSize = main.db.auras.fontSize
--- 		main.db.auras.buffs.countFontSize = fontSize
--- 		main.db.auras.buffs.durationFontSize = fontSize
--- 		main.db.auras.debuffs.countFontSize = fontSize
--- 		main.db.auras.debuffs.durationFontSize = fontSize
--- 		main.db.auras.fontSize = nil
--- 	end
+	-- :: Convert old "Buffs and Debuffs" font size option to individual options
+	if main.db.auras.fontSize then
+		local fontSize = main.db.auras.fontSize
+		main.db.auras.buffs.countFontSize = fontSize
+		main.db.auras.buffs.durationFontSize = fontSize
+		main.db.auras.debuffs.countFontSize = fontSize
+		main.db.auras.debuffs.durationFontSize = fontSize
+		main.db.auras.fontSize = nil
+	end
 
--- 	--Convert old private cooldown setting to profile setting
--- 	if main.private.cooldown and (main.private.cooldown.enable ~= nil) then
--- 		main.db.cooldown.enable = main.private.cooldown.enable
--- 		main.private.cooldown.enable = nil
--- 		main.private.cooldown = nil
--- 	end
+	-- :: Convert old private cooldown setting to profile setting
+	if main.private.cooldown and (main.private.cooldown.enable ~= nil) then
+		main.db.cooldown.enable = main.private.cooldown.enable
+		main.private.cooldown.enable = nil
+		main.private.cooldown = nil
+	end
 
--- 	if not main.db.chat.panelColorConverted then
--- 		local color = main.db.general.backdropfadecolor
--- 		main.db.chat.panelColor = {r = color.r, g = color.g, b = color.b, a = color.a}
--- 		main.db.chat.panelColorConverted = true
--- 	end
+	if not main.db.chat.panelColorConverted then
+		local color = main.db.general.backdropfadecolor
+		main.db.chat.panelColor = {r = color.r, g = color.g, b = color.b, a = color.a}
+		main.db.chat.panelColorConverted = true
+	end
 
--- 	--Convert cropIcon to tristate
--- 	local cropIcon = main.db.general.cropIcon
--- 	if type(cropIcon) == "boolean" then
--- 		main.db.general.cropIcon = (cropIcon and 2) or 0
--- 	end
+	-- :: Convert cropIcon to tristate
+	local cropIcon = main.db.general.cropIcon
+	if type(cropIcon) == "boolean" then
+		main.db.general.cropIcon = (cropIcon and 2) or 0
+	end
 
--- 	--Vendor Greys option is now in bags table
--- 	if main.db.general.vendorGrays then
--- 		main.db.bags.vendorGrays.enable = main.db.general.vendorGrays
--- 		main.db.general.vendorGrays = nil
--- 		main.db.general.vendorGraysDetails = nil
--- 	end
+	-- :: Vendor Greys option is now in bags table
+	if main.db.general.vendorGrays then
+		main.db.bags.vendorGrays.enable = main.db.general.vendorGrays
+		main.db.general.vendorGrays = nil
+		main.db.general.vendorGraysDetails = nil
+	end
 
--- 	--Heal Prediction is now a table instead of a bool
--- 	local healPredictionUnits = {"player", "target", "focus", "pet", "arena", "party", "raid", "raid40", "raidpet"}
--- 	for _, unit in pairs(healPredictionUnits) do
--- 		if type(main.db.unitframe.units[unit].healPrediction) ~= "table" then
--- 			local enabled = main.db.unitframe.units[unit].healPrediction
--- 			main.db.unitframe.units[unit].healPrediction = {}
--- 			main.db.unitframe.units[unit].healPrediction.enable = enabled
--- 		end
--- 	end
+	-- :: Heal Prediction is now a table instead of a bool
+	local healPredictionUnits = {"player", "target", "focus", "pet", "arena", "party", "raid", "raid40", "raidpet"}
+	for _, unit in pairs(healPredictionUnits) do
+		if type(main.db.unitframe.units[unit].healPrediction) ~= "table" then
+			local enabled = main.db.unitframe.units[unit].healPrediction
+			main.db.unitframe.units[unit].healPrediction = {}
+			main.db.unitframe.units[unit].healPrediction.enable = enabled
+		end
+	end
 
--- 	--Health Backdrop Multiplier
--- 	if main.db.unitframe.colors.healthmultiplier ~= nil then
--- 		if main.db.unitframe.colors.healthmultiplier > 0.75 then
--- 			main.db.unitframe.colors.healthMultiplier = 0.75
--- 		else
--- 			main.db.unitframe.colors.healthMultiplier = main.db.unitframe.colors.healthmultiplier
--- 		end
+	-- :: Health Backdrop Multiplier
+	if main.db.unitframe.colors.healthmultiplier ~= nil then
+		if main.db.unitframe.colors.healthmultiplier > 0.75 then
+			main.db.unitframe.colors.healthMultiplier = 0.75
+		else
+			main.db.unitframe.colors.healthMultiplier = main.db.unitframe.colors.healthmultiplier
+		end
 
--- 		main.db.unitframe.colors.healthmultiplier = nil
--- 	end
+		main.db.unitframe.colors.healthmultiplier = nil
+	end
 
--- 	if sub(main.db.chat.timeStampFormat, -1) == " " then
--- 		main.db.chat.timeStampFormat = sub(main.db.chat.timeStampFormat, 1, -2)
--- 	end
--- end
+	if sub(main.db.chat.timeStampFormat, -1) == " " then
+		main.db.chat.timeStampFormat = sub(main.db.chat.timeStampFormat, 1, -2)
+	end
+end
 
 function main:RefreshModulesDB()
 	-- -- :: this function is specifically used to reference the new database

@@ -16,6 +16,7 @@
 # Initialization
 Archrist.lua
 # Post-Load
+settings\-load.xml
 core\-load.xml
 developer\-load.xml
 commands\-load.xml
