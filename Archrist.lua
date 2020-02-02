@@ -86,6 +86,7 @@ end
 
 -- :: Modules
 Addon.test = Addon:NewModule("test","AceHook-3.0","AceEvent-3.0")
+Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
 -- Addon.oUF = Engine.oUF
 -- Addon.ActionBars = Addon:NewModule("ActionBars","AceHook-3.0","AceEvent-3.0")
 -- Addon.AFK = Addon:NewModule("AFK","AceEvent-3.0","AceTimer-3.0")

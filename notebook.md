@@ -27,6 +27,8 @@ https://www.townlong-yak.com/framexml/3.3.5
 https://www.townlong-yak.com/framexml/live/UI.xsd
 - blizzard api
 https://www.townlong-yak.com/framexml/live/Blizzard_APIDocumentation
+- wow event aapi
+https://wowwiki.fandom.com/wiki/Events/Mail
 - reddit masterpost
 https://old.reddit.com/r/classicwow/comments/bvbqo1//epokyf1/
 - ace3 gui

@@ -16,7 +16,7 @@
 # Initialization
 Archrist.lua
 # Post-Load
-domain\-load.xml
 developer\-load.xml
+commands\-load.xml
 macro\-load.xml
 
