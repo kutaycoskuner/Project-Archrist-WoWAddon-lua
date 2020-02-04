@@ -2,9 +2,7 @@
 https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmoA2G&index=7
 
 # Todo
-## SavedVariables: ElvDB, ElvPrivateDB
-## SavedVariablesPerCharacter: ElvCharacterDB
-- hangi druidin cs atacagini gooster
+- hangi druidin cs atacagini goster
 - table copy yi developerdan alip diger tarafa koy
 
 # Problems
@@ -12,6 +10,8 @@ https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmo
 
 # Completed
 - tcopy, twipe komutlarini ogren
+- SavedVariables: ElvDB, ElvPrivateDB
+- SavedVariablesPerCharacter: ElvCharacterDB
 
 # Sources
 [1] mayron wow addon creation

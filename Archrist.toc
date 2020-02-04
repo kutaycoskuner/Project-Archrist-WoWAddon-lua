@@ -1,6 +1,6 @@
 ﻿# Metadata
 ## Interface: 30300
-## Title: |cff128EC4Arch|r|cffedededrist|r|cff262626 -> /archrist /ar|r
+## Title: |cff128EC4Archrist|r -> /archrist /ar|r
 ## Notes: Raid control addon
 ## Version: 0.3 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
 ## Author: Orthrin
@@ -12,7 +12,7 @@
 
 # Pre-Load -> Libraries
 !pre-load\libraries\-load.xml
-!pre-load\developer\-load.xml
+!pre-load\self\-load.xml
 # Initialization
 Archrist.lua
 # Post-Load

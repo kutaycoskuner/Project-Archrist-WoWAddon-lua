@@ -5,7 +5,8 @@
 ------------------------------------------------------------------------------------------
 local main, L, V, P, G = unpack(select(2, ...)); --Import: System, Locales, PrivateDB, ProfileDB, GlobalDB
 ------------------------------------------------------------------------------------------
-]] -- ==== Variables
+]] 
+-- ==== Variables
 -- :: Lua functions
 local _G, min, pairs, strsplit, unpack, wipe, type, tcopy = _G, min, pairs,
                                                             strsplit, unpack,

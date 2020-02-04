@@ -5,8 +5,8 @@ local main, L, V, P, G = unpack(select(2, ...)); -- Import: System, Locales, Pri
 local module = main:GetModule('lootMsgFilter');
 ------------------------------------------------------------------------------------------
 -- ===== Loot Msg Filter
-local minRarity = 2 -- 0 = Poor, 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Epic, 5 = Legendary, 6 = Artifact, 7 = Heirloom
-local minRarityName = "Uncommon"
+local minRarity = 1 -- 0 = Poor, 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Epic, 5 = Legendary, 6 = Artifact, 7 = Heirloom
+local minRarityName = "Common"
 -- :: true false donuyor
 local function lootfilter(self, event, msg)
     local itemID = select(3, string.find(msg, "item:(%d+):"))
