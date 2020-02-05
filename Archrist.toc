@@ -1,6 +1,6 @@
 ﻿# Metadata
 ## Interface: 30300
-## Title: |cff128EC4Archrist|r -> /archrist /ar|r
+## Title: |cffedededArchrist|r |cff262626/archrist /ar|r
 ## Notes: Raid control addon
 ## Version: 0.3 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
 ## Author: Orthrin

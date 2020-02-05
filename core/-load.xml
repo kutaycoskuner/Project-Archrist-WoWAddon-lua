@@ -5,4 +5,5 @@
     <Script file="install.lua"/>
     <Script file="dropdown.lua"/>
     <Script file="pixelPerfect.lua"/>
+    <Script file="commands.lua"/>
 </Ui>
