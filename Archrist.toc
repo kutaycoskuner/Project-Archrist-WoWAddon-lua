@@ -12,13 +12,16 @@
 
 # Pre-Load -> Libraries
 !pre-load\libraries\-load.xml
+!pre-load\locales\-load.xml
 !pre-load\self\-load.xml
 # Initialization
 Archrist.lua
 # Post-Load
-settings\-load.xml
-core\-load.xml
-developer\-load.xml
-commands\-load.xml
-macro\-load.xml
+1-settings\-load.xml
+2-core\-load.xml
+3-developer\-load.xml
+4-commands\-load.xml
+5-macro\-load.xml
+6-layout\-load.xml
+7-modules\-load.xml
 

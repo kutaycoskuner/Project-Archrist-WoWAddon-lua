@@ -128,4 +128,7 @@ comment discipline {
 +-- Archrist.lua
 +-- Archrist.toc
 
+# WoW Console
+/console scriptProfile 0
+
 

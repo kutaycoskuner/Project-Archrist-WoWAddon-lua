@@ -3,10 +3,9 @@
     Disclaimer: This addon created by inspectation and use of ElvUI
     To load the Addon engine add this to the top of your file:
 ------------------------------------------------------------------------------------------
-local main, L, V, P, G = unpack(select(2, ...)); --Import: System, Locales, PrivateDB, ProfileDB, GlobalDB
+local A, L, V, P, G = unpack(select(2, ...)) --Import: Archrist, Locales, PrivateDB, ProfileDB, GlobalDB
 ------------------------------------------------------------------------------------------
-]] 
--- ==== Variables
+]] -- ==== Variables
 -- :: Lua functions
 local _G, min, pairs, strsplit, unpack, wipe, type, tcopy = _G, min, pairs,
                                                             strsplit, unpack,
@@ -28,16 +27,16 @@ local ERR_NOT_IN_COMBAT = ERR_NOT_IN_COMBAT
 local GameMenuButtonLogout = GameMenuButtonLogout
 local GameMenuFrame = GameMenuFrame
 --
+local L = LibStub("AceLocale-3.0") --:GetLocale("Archrist") -- :: translations usage: L['<data>']
 local AceAddon, AceAddonMinor = LibStub("AceAddon-3.0")
 local CallbackHandler = LibStub("CallbackHandler-1.0")
 local AddonName, System = ...; -- this declares addon scope variable
-local Addon = AceAddon:NewAddon(AddonName, "AceConsole-3.0", "AceEvent-3.0",
-                                "AceTimer-3.0", "AceHook-3.0");
+local Addon = AceAddon:NewAddon(AddonName, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0", "AceHook-3.0")
 -- :: Addon Decleration
 BINDING_HEADER_ARCH = GetAddOnMetadata(..., "Title")
 Addon.callbacks = Addon.callbacks or CallbackHandler:New(Addon)
-Addon.DF = {profile = {}, global = {}};
-Addon.privateVars = {profile = {}}; -- Defaults
+Addon.DF = {profile = {}, global = {}}
+Addon.privateVars = {profile = {}} -- Defaults
 Addon.options = {type = "group", name = AddonName, args = {}}
 --
 System[1] = Addon
@@ -67,7 +66,7 @@ do
     Addon:AddLib("AceAddon", AceAddon, AceAddonMinor)
     Addon:AddLib("AceDB", "AceDB-3.0")
     -- Addon:AddLib("EP", "LibElvUIPlugin-1.0")
-    -- Addon:AddLib("LSM", "LibSharedMedia-3.0")
+    Addon:AddLib("LSM", "LibSharedMedia-3.0")
     -- Addon:AddLib("ACL", "AceLocale-3.0-ElvUI")
     -- Addon:AddLib("LAB", "LibActionButton-1.0-ElvUI")
     -- Addon:AddLib("LAI", "LibAuraInfo-1.0-ElvUI", true)
@@ -90,9 +89,9 @@ end
 -- :: Modules
 Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
 Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
-Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0",
-                                    "AceTimer-3.0", "AceComm-3.0",
-                                    "AceSerializer-3.0")
+Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
+Addon.ActionBars = Addon:NewModule("ActionBars", "AceHook-3.0", "AceEvent-3.0")
+Addon.milling = Addon:NewModule("milling", "AceHook-3.0", "AceEvent-3.0")
 -- Addon.oUF = Engine.oUF
 -- Addon.ActionBars = Addon:NewModule("ActionBars","AceHook-3.0","AceEvent-3.0")
 -- Addon.AFK = Addon:NewModule("AFK","AceEvent-3.0","AceTimer-3.0")
@@ -119,7 +118,7 @@ Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0",
 -- Addon.UnitFrames = Addon:NewModule("UnitFrames","AceTimer-3.0","AceEvent-3.0","AceHook-3.0")
 -- Addon.WorldMap = Addon:NewModule("WorldMap","AceHook-3.0","AceEvent-3.0","AceTimer-3.0")
 
--- :: Escape string for characters ().%+-*?[^$
+-- :: Escape string for characters ().%+-*?[^$ modullerin isimlerini duzeltiyor
 do
     local arg2, arg3 = "([%(%)%.%%%+%-%*%?%[%^%$])", "%%%1"
     function Addon:EscapeString(str) return gsub(str, arg2, arg3) end
@@ -139,8 +138,7 @@ function Addon:OnInitialize()
 
         local profileKey
         if ArchDB.profileKeys then
-            profileKey =
-                ArchDB.profileKeys[self.myname .. " [" .. self.myrealm .. "]"]
+                profileKey = ArchDB.profileKeys[self.myname .. " [" .. self.myrealm .. "]"]
         end
 
         if profileKey and ArchDB.profiles and ArchDB.profiles[profileKey] then
@@ -149,20 +147,23 @@ function Addon:OnInitialize()
     end
 
     self.private = tcopy(self.privateVars.profile, true)
-    -- -- :: private DB icin ayni islemi uygula
+
+    -- :: private DB icin ayni islemi uygula
     if ArchPrivateDB then
         local profileKey
         if ArchPrivateDB.profileKeys then
             profileKey = ArchPrivateDB.profileKeys[self.myname .. " [" .. self.myrealm .. "]"]
         end
 
-        if profileKey and ArchPrivateDB.profiles and ArchPrivateDB.profiles[profileKey] then
+        if profileKey and ArchPrivateDB.profiles and
+            ArchPrivateDB.profiles[profileKey] then
             self:CopyTable(self.private, ArchPrivateDB.profiles[profileKey])
         end
     end
 
     self.twoPixelsPlease = false
-    self.ScanTooltip = CreateFrame("GameTooltip", "ElvUI_ScanTooltip", _G.UIParent, "GameTooltipTemplate")
+    self.ScanTooltip = CreateFrame("GameTooltip", "ElvUI_ScanTooltip",
+                                   _G.UIParent, "GameTooltipTemplate")
     self.PixelMode = (self.twoPixelsPlease) -- keep this over `UIScale`  or self.private.general.pixelPerfect
     self:UIScale(true)
     self:UpdateMedia()
@@ -172,13 +173,14 @@ function Addon:OnInitialize()
     -- self:Contruct_StaticPopups()
     self:InitializeInitialModules()
 
+    -- :: Game menu buttons
     -- local GameMenuButton = CreateFrame("Button", "ElvUI_MenuButton", GameMenuFrame, "GameMenuButtonTemplate")
     -- GameMenuButton:SetText(self.title)
     -- GameMenuButton:SetScript("OnClick", function()
     -- 	Addon:ToggleOptionsUI()
     -- 	HideUIPanel(GameMenuFrame)
     -- end)
-    -- GameMenuFrame[AddOnName] = GameMenuButton
+    -- GameMenuFrame[AddonName] = GameMenuButton
 
     -- GameMenuButton:Size(GameMenuButtonLogout:GetWidth(), GameMenuButtonLogout:GetHeight())
     -- GameMenuButtonRatings:HookScript("OnShow", function(self)
@@ -203,7 +205,7 @@ function Addon:OnInitialize()
     -- end)
 
     -- :: loadtime
-    -- self.loadedtime = GetTime()
+    self.loadedtime = GetTime()
 end
 
 -- ==== Profile
@@ -211,9 +213,11 @@ function Addon:ResetProfile()
     local profileKey
 
     if ArchPrivateDB.profileKeys then
-        profileKey = ArchPrivateDB.profileKeys[self.myname .. " - " .. self.myrealm]
+        profileKey = ArchPrivateDB.profileKeys[self.myname .. " - " ..
+                         self.myrealm]
 
-        if profileKey and ArchPrivateDB.profiles and ArchPrivateDB.profiles[profileKey] then
+        if profileKey and ArchPrivateDB.profiles and
+            ArchPrivateDB.profiles[profileKey] then
             ArchPrivateDB.profiles[profileKey] = nil
         end
     end
@@ -225,15 +229,16 @@ end
 
 -- ==== Gui
 function Addon:GetConfigDefaultSize()
-	local width, height = Addon:GetConfigSize()
-	local maxWidth, maxHeight = Addon.UIParent:GetSize()
-	width, height = min(maxWidth - 50, width), min(maxHeight - 50, height)
-	return width, height
+    local width, height = Addon:GetConfigSize()
+    local maxWidth, maxHeight = Addon.UIParent:GetSize()
+    width, height = min(maxWidth - 50, width), min(maxHeight - 50, height)
+    return width, height
 end
 
 function Addon:ResetConfigSettings()
     Addon.configSavedPositionTop, Addon.configSavedPositionLeft = nil, nil
-    Addon.global.general.AceGUI = Addon:CopyTable({}, Addon.DF.global.general.AceGUI)
+    Addon.global.general.AceGUI = Addon:CopyTable({}, Addon.DF.global.general
+                                                      .AceGUI)
 end
 
 function Addon:GetConfigSize()
@@ -241,33 +246,34 @@ function Addon:GetConfigSize()
 end
 
 function Addon:UpdateConfigSize(reset)
-	local frame = self.GUIFrame
-	if not frame then return end
+    local frame = self.GUIFrame
+    if not frame then return end
 
-	local maxWidth, maxHeight = self.UIParent:GetSize()
-	frame:SetMinResize(600, 500)
-	frame:SetMaxResize(maxWidth-50, maxHeight-50)
+    local maxWidth, maxHeight = self.UIParent:GetSize()
+    frame:SetMinResize(600, 500)
+    frame:SetMaxResize(maxWidth - 50, maxHeight - 50)
 
-	self.Libs.AceConfigDialog:SetDefaultSize(AddonName, self:GetConfigDefaultSize())
+    self.Libs.AceConfigDialog:SetDefaultSize(AddonName,
+                                             self:GetConfigDefaultSize())
 
-	local status = frame.obj and frame.obj.status
-	if status then
-		if reset then
-			self:ResetConfigSettings()
+    local status = frame.obj and frame.obj.status
+    if status then
+        if reset then
+            self:ResetConfigSettings()
 
-			status.top, status.left = self:GetConfigPosition()
-			status.width, status.height = self:GetConfigDefaultSize()
+            status.top, status.left = self:GetConfigPosition()
+            status.width, status.height = self:GetConfigDefaultSize()
 
-			frame.obj:ApplyStatus()
-		else
-			local top, left = self:GetConfigPosition()
-			if top and left then
-				status.top, status.left = top, left
+            frame.obj:ApplyStatus()
+        else
+            local top, left = self:GetConfigPosition()
+            if top and left then
+                status.top, status.left = top, left
 
-				frame.obj:ApplyStatus()
-			end
-		end
-	end
+                frame.obj:ApplyStatus()
+            end
+        end
+    end
 end
 
 -- ==== Login [last arg]

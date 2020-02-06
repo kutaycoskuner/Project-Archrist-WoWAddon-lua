@@ -1,0 +1,26 @@
+-- ------------------------------------------------------------------------------------------
+-- local A, L, V, P, G = unpack(select(2, ...)) -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+-- local module = A:GetModule('test');
+-- ------------------------------------------------------------------------------------------
+-- -- ==== Start
+-- function module:Initialize()
+--     self.initialized = true
+--     -- :: Register some events
+--     module:RegisterEvent("LOOT_OPENED");
+-- end
+
+-- -- ==== Methods
+-- function module:LOOT_OPENED()
+--     -- Check if auto loot is enabled xor its activation key is pressed
+--     -- if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
+--     -- Work backwards toward the built-in auto loot iterator
+--     print('test')
+--     for i = GetNumLootItems(), 1, -1 do LootSlot(i) end
+--     -- end
+-- end
+-- -- self.
+-- -- self:
+
+-- -- ==== End
+-- local function InitializeCallback() module:Initialize() end
+-- A:RegisterModule(module:GetName(), InitializeCallback)

@@ -1,4 +1,7 @@
 -- ==== Metadata
+local A, L, V, P, G = unpack(select(2, ...)) -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local module = A:GetModule('milling');
+-- local DT = E:GetModule("DataTexts")
 -- source https://www.curseforge.com/wow/addons/millbutton
 --[[
 #showtooltip milling
@@ -8,6 +11,7 @@
 -- ==== Macro
 local mill = CreateFrame("CheckButton", "MillButton", UIParent, "SecureActionButtonTemplate")
 mill:SetAttribute("type", "macro")
+
 
 local function findHerbInBag()
     local function findItem(bag, slot)
@@ -29,10 +33,18 @@ function setMillButton()
         CastingBarFrame:IsVisible() or UnitCastingInfo("player") then
         -- do nothing if no herb, if looting or casting
         MillButton:SetAttribute("macrotext", "")
-        if not bag then print("No more herbs in stacks of 5 or more.") end
+        print('test') --for i = GetNumLootItems(), 1, -1 do LootSlot(i) end
+        if not bag then print("|cff128EC4Archrist:|r No more herbs in stacks of 5 or more.") end
     else
+        module:RegisterEvent('LOOT_OPENED')
         MillButton:SetAttribute("macrotext",
                                 "/cast Milling\n/use " .. bag .. " " .. slot)
     end
 end
  
+function module:LOOT_OPENED()
+    for i = GetNumLootItems(), 1, -1 do LootSlot(i) end
+    module:UnregisterEvent('LOOT_OPENED')
+
+end
+

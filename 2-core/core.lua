@@ -203,26 +203,26 @@ main.snapBars[#main.snapBars + 1] = main.UIParent
 -- 	end, 0.05)
 -- end
 
--- -- function E:GrabColorPickerValues(r, g, b)
--- -- 	-- we must block the execution path to `ColorCallback` in `AceGUIWidget-ColorPicker-ElvUI`
--- -- 	-- in order to prevent an infinite loop from `OnValueChanged` when passing into `E.UpdateMedia` which eventually leads here again.
--- -- 	ColorPickerFrame.noColorCallback = true
+function main:GrabColorPickerValues(r, g, b)
+	-- we must block the execution path to `ColorCallback` in `AceGUIWidget-ColorPicker-ElvUI`
+	-- in order to prevent an infinite loop from `OnValueChanged` when passing into `E.UpdateMedia` which eventually leads here again.
+	ColorPickerFrame.noColorCallback = true
 
--- -- 	-- grab old values
--- -- 	local oldR, oldG, oldB = ColorPickerFrame:GetColorRGB()
+	-- grab old values
+	local oldR, oldG, oldB = ColorPickerFrame:GetColorRGB()
 
--- -- 	-- set and define the new values
--- -- 	ColorPickerFrame:SetColorRGB(r, g, b)
--- -- 	r, g, b = ColorPickerFrame:GetColorRGB()
+	-- set and define the new values
+	ColorPickerFrame:SetColorRGB(r, g, b)
+	r, g, b = ColorPickerFrame:GetColorRGB()
 
--- -- 	-- swap back to the old values
--- -- 	if oldR then ColorPickerFrame:SetColorRGB(oldR, oldG, oldB) end
+	-- swap back to the old values
+	if oldR then ColorPickerFrame:SetColorRGB(oldR, oldG, oldB) end
 
--- -- 	-- free it up..
--- -- 	ColorPickerFrame.noColorCallback = nil
+	-- free it up..
+	ColorPickerFrame.noColorCallback = nil
 
--- -- 	return r, g, b
--- -- end
+	return r, g, b
+end
 
 -- :: Basically check if another class border is being used on a class that doesn't match. And then return true if a match is found.
 function main:CheckClassColor(r, g, b)
@@ -292,14 +292,14 @@ end
 function main:UpdateMedia()
 	if not self.db.general or not self.private.general then return end --Prevent rare nil value errors
 
-	-- Fonts
-	self.media.normFont = LSM:Fetch("font", self.db.general.font)
-	self.media.combatFont = LSM:Fetch("font", self.private.general.dmgfont)
+	-- -- Fonts
+	-- self.media.normFont = LSM:Fetch("font", self.db.general.font)
+	-- self.media.combatFont = LSM:Fetch("font", self.private.general.dmgfont)
 
-	-- Textures
-	self.media.blankTex = LSM:Fetch("background", "ElvUI Blank")
-	self.media.normTex = LSM:Fetch("statusbar", self.private.general.normTex)
-	self.media.glossTex = LSM:Fetch("statusbar", self.private.general.glossTex)
+	-- -- Textures
+	-- self.media.blankTex = LSM:Fetch("background", "ElvUI Blank")
+	-- self.media.normTex = LSM:Fetch("statusbar", self.private.general.normTex)
+	-- self.media.glossTex = LSM:Fetch("statusbar", self.private.general.glossTex)
 
 	-- Border Color
 	local border = main.db.general.bordercolor
@@ -323,10 +323,10 @@ function main:UpdateMedia()
 	self.media.unitframeBorderColor = {border.r, border.g, border.b}
 
 	-- Backdrop Color
-	self.media.backdropcolor = main:SetColorTable(self.media.backdropcolor, self.db.general.backdropcolor)
+	-- self.media.backdropcolor = main:SetColorTable(self.media.backdropcolor, self.db.general.backdropcolor)
 
 	-- Backdrop Fade Color
-	self.media.backdropfadecolor = main:SetColorTable(self.media.backdropfadecolor, self.db.general.backdropfadecolor)
+	-- self.media.backdropfadecolor = main:SetColorTable(self.media.backdropfadecolor, self.db.general.backdropfadecolor)
 
 	-- Value Color
 	local value = self.db.general.valuecolor
@@ -350,8 +350,8 @@ function main:UpdateMedia()
 		RightChatPanel.tex:SetAlpha(a)
 	end
 
-	self:ValueFuncCall()
-	self:UpdateBlizzardFonts()
+	-- self:ValueFuncCall()
+	-- self:UpdateBlizzardFonts()
 end
 
 -- do	
@@ -1088,7 +1088,6 @@ end
 function main:RegisterModule(name, func)
 	if self.initialized then
 		-- test
-		print(name)
 		main:CallLoadedModule((func and {name, func}) or name)
 	else
 		self.RegisteredModules[#self.RegisteredModules + 1] = (func and {name, func}) or name
