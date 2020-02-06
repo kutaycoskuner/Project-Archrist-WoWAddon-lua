@@ -91,7 +91,9 @@ Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
 Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
 Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
 Addon.ActionBars = Addon:NewModule("ActionBars", "AceHook-3.0", "AceEvent-3.0")
+-- :: Macros
 Addon.milling = Addon:NewModule("milling", "AceHook-3.0", "AceEvent-3.0")
+Addon.raidWarnings = Addon:NewModule("raidWarnings", "AceHook-3.0", "AceEvent-3.0")
 -- Addon.oUF = Engine.oUF
 -- Addon.ActionBars = Addon:NewModule("ActionBars","AceHook-3.0","AceEvent-3.0")
 -- Addon.AFK = Addon:NewModule("AFK","AceEvent-3.0","AceTimer-3.0")

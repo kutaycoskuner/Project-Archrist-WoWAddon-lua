@@ -37,7 +37,7 @@ function setMillButton()
         if not bag then print("|cff128EC4Archrist:|r No more herbs in stacks of 5 or more.") end
     else
         module:RegisterEvent('LOOT_OPENED')
-        MillButton:SetAttribute("macrotext",
+        MillButton:SetAttribute("macrotext", --
                                 "/cast Milling\n/use " .. bag .. " " .. slot)
     end
 end
