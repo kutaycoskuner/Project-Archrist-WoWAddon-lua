@@ -68,16 +68,6 @@ end
 -- ==== Roll Filter 
 local eliminateGreed = false
 
--- :: true false donuyor
-local function rollfilter(self, event, msg)
-	if (eliminateGreed == true and (string.find(msg, "Greed") or string.find(msg, "passed") or string.find(msg, "disenchant"))) then
-        return true
-    else
-        return false
-    end
-    return false
-end
-
 local function rollMsgFilterCmd(msg)
     if msg then
         local firsti, lasti, command, value = string.find(msg, "(%w+) \"(.*)\"");
@@ -100,6 +90,16 @@ local function rollMsgFilterCmd(msg)
         UIErrorsFrame:AddMessage("|cff00ccffRollFilter|r : " ..
                                      tostring(eliminateGreed))
     end
+end
+
+-- :: true false donuyor
+local function rollfilter(self, event, msg)
+	if (eliminateGreed == true and (string.find(msg, "Greed") or string.find(msg, "passed") or string.find(msg, "disenchant"))) then
+        return true
+    else
+        return false
+    end
+    return false
 end
 
 -- ==== Slash Handlers [last arg]

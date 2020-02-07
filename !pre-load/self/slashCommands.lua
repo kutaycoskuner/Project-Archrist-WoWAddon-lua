@@ -20,6 +20,9 @@ end
 -- :: in lootMsgFilter
 -- SLASH_lootFilter1 = "/lootfilter"
 -- SLASH_rollFilter1 = "/rollfilter"
+-- :: in raidWarnings
+-- SLASH_RaidWarning1 = "/war"
+-- SLASH_SelectLeadChannel1 = "/comms"
 
 -- :: Slash Command List Local [LastArg]
 local SlashCmdList = SlashCmdList
