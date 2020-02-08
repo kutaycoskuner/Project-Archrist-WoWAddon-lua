@@ -11,17 +11,16 @@
 ## X-Discord: https://discord.gg/XCGTYtp
 
 # Pre-Load -> Libraries
-!pre-load\libraries\-load.xml
-!pre-load\locales\-load.xml
-!pre-load\self\-load.xml
+!pre-load\libraries\-load-libraries.xml
+!pre-load\locales\-load-locales.xml
+!pre-load\self\-load-self.xml
 # Initialization
 Archrist.lua
 # Post-Load
-1-settings\-load.xml
-2-core\-load.xml
-3-developer\-load.xml
-4-commands\-load.xml
-5-macro\-load.xml
-6-layout\-load.xml
-7-modules\-load.xml
+1-settings\-load-settings.xml
+2-core\-load-core.xml
+3-developer\-load-developer.xml
+4-macro\-load-macro.xml
+5-layout\-load-layout.xml
+6-modules\-load-modules.xml
 
