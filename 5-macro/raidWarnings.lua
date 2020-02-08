@@ -6,7 +6,7 @@ local module = A:GetModule('raidWarnings');
 local boss = 'none';
 local comms = '/w ' .. UnitName('player') .. " ";
 local raidWarning1 = '{skull} Focus on [%t] {skull}';
-local raidWarning2 = '';
+local raidWarning2 = '{square} Stack on Anchor {square}';
 local raidWarning3 = '{circle} Heroism Now! {circle}';
 local raidWarning4 = '{triangle} Combat Res [%t] {triangle}';
 
@@ -54,23 +54,26 @@ local function selectBoss(boss)
         -- :: komut varsa
         if (command ~= nil) then command = string.lower(command); end
         --
-        if (command == "marrowgar") then
-            raidWarning1 = '{triangle} RDPS Focus Spikes! {triangle}'
-            raidWarning2 = '{triangle} Melee yes {triangle}'
-            raidWarning3 = '{triangle} Kill stuff {triangle}'
-            raidWarning4 = '{triangle} res deads {triangle}'
-        -- elseif (command == "something") then
+        if (command == "skadi") then
+            raidWarning1 = '{triangle} Watchout for Breath {triangle}'
+            raidWarning2 = '{triangle} LEFT {triangle}'
+            raidWarning3 = '{triangle} RIGHT {triangle}'
+            raidWarning4 = '{triangle} Use Harpoons {triangle}'
+            -- elseif (command == "something") then
+            -- raidWarning1 = '{triangle} Watchout for Breath {triangle}'
+            -- raidWarning2 = '{triangle} LEFT {triangle}'
+            -- raidWarning3 = '{triangle} RIGHT {triangle}'
+            -- raidWarning4 = '{triangle} Use Harpoons {triangle}'
         else
             boss = 'default'
             raidWarning1 = '{skull} Focus on [%t] {skull}';
             raidWarning2 = '';
             raidWarning3 = '{circle} Heroism Now! {circle}';
-            raidWarning4 = '{triangle} Combat Res [%t] {triangle}';         
+            raidWarning4 = '{triangle} Combat Res [%t] {triangle}';
         end
         DEFAULT_CHAT_FRAME:AddMessage("|cff128ec4[Archrium] Raidwarnings:|r " ..
                                           tostring(boss))
-        UIErrorsFrame:AddMessage("|cff128ec4Raidwarnings|r " ..
-                                     tostring(boss))
+        UIErrorsFrame:AddMessage("|cff128ec4Raidwarnings|r " .. tostring(boss))
     end
     setRaidWarnings();
 end
@@ -91,18 +94,18 @@ local function selectChannel(channel)
         if (command == "w" or command == "test") then
             comms = "/w " .. UnitName('player') .. " "
         elseif (command == "s" or command == "say") then
-            comms = "/s " 
+            comms = "/s "
         elseif (command == "p" or command == "party") then
-            comms = "/p " 
+            comms = "/p "
         elseif (command == "ra" or command == "raid") then
-            comms = "/ra " 
+            comms = "/ra "
         elseif (command == "rw" or command == "raidwarning") then
-            comms = "/rw " 
+            comms = "/rw "
         else
             comms = '/rw '
         end
-        DEFAULT_CHAT_FRAME:AddMessage("|cff128ec4[Archrium] WarningChannel:|r " ..
-                                          tostring(comms))
+        DEFAULT_CHAT_FRAME:AddMessage(
+            "|cff128ec4[Archrium] WarningChannel:|r " .. tostring(comms))
         UIErrorsFrame:AddMessage("|cff128ec4WarningChannel|r " ..
                                      tostring(comms))
     end

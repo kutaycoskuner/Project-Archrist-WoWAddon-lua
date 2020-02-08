@@ -10,7 +10,7 @@ local minRarityName = "Common"
 -- :: true false donuyor
 local function lootfilter(self, event, msg)
     local itemID = select(3, string.find(msg, "item:(%d+):"))
-    local itemRarity = select(3, GetItemInfo(2773))
+    local itemRarity = select(3, GetItemInfo(itemID))
     if (itemRarity < minRarity) and
         (string.find(msg, "receives") or string.find(msg, "gets") or
             string.find(msg, "creates")) then
