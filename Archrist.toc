@@ -1,6 +1,6 @@
-﻿# Metadata
+# Metadata
 ## Interface: 30300
-## Title: |cffedededArchrist|r |cff262626/archrist /ar|r
+## Title: |cffedededArchrist|r
 ## Notes: Raid control addon
 ## Version: 0.3 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
 ## Author: Orthrin
@@ -14,13 +14,17 @@
 !pre-load\libraries\-load-libraries.xml
 !pre-load\locales\-load-locales.xml
 !pre-load\self\-load-self.xml
+
 # Initialization
 Archrist.lua
+
 # Post-Load
 1-settings\-load-settings.xml
 2-core\-load-core.xml
-3-developer\-load-developer.xml
-4-macro\-load-macro.xml
-5-layout\-load-layout.xml
-6-modules\-load-modules.xml
+3-macro\-load-macro.xml
+4-modules\-load-modules.xml
+5-developer\-load-developer.xml
+# developer\-load.xml
+# commands\-load.xml
+# macro\-load.xml
 
