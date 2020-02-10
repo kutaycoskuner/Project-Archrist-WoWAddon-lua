@@ -6,6 +6,7 @@ https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmo
 
 # Todo
 - hangi druidin cs atacagini goster
+- player reputation system
 - table copy yi developerdan alip diger tarafa koy
 
 # Problems
@@ -59,6 +60,8 @@ https://stackoverflow.com/questions/31888918/how-efficient-am-i-using-these-tabl
 https://wow.gamepedia.com/Creating_a_slash_command
 - why redefine locals
 http://lua-users.org/wiki/OptimisingUsingLocalVariables
+- lua characters
+https://www.lua.org/pil/20.2.html
 
 # Reminders
 Identify What You Want To Do

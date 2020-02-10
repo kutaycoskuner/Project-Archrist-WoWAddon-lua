@@ -61,13 +61,14 @@ do
 end
 
 -- :: Create Modules
-
 -- :: Modules
-Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
-Addon.deleteAucMail = Addon:NewModule("deleteAucMail", "AceHook-3.0", "AceEvent-3.0")
--- Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
--- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
--- Addon.ActionBars = Addon:NewModule("ActionBars", "AceHook-3.0", "AceEvent-3.0")
+do
+    Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
+    Addon.deleteAucMail = Addon:NewModule("deleteAucMail", "AceHook-3.0", "AceEvent-3.0")
+    Addon.playerDB = Addon:NewModule("playerDB", "AceHook-3.0", "AceEvent-3.0")
+    -- Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
+    -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
+end
 -- :: Macros
 Addon.milling = Addon:NewModule("milling")
 Addon.raidWarnings = Addon:NewModule("raidWarnings")
