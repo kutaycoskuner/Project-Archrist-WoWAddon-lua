@@ -1,4 +1,6 @@
 # Where I left
+- import default settings for database
+- local i pre-load dan cikar altyapi moduulu degil spesifik
 https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmoA2G&index=7
 
 # Todo
@@ -6,9 +8,12 @@ https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmo
 - table copy yi developerdan alip diger tarafa koy
 
 # Problems
+- core profile da yapilan degisikligi gormuyor
 `boyle bir fonksiyon yok` attempt to call method 'UpdateCooldownSettings' (a nil value)
 
 # Completed
+- test if settings importing same table name as main `eger degisim olmazsa evet`
+- database communication
 - tcopy, twipe komutlarini ogren
 - SavedVariables: ElvDB, ElvPrivateDB
 - SavedVariablesPerCharacter: ElvCharacterDB
@@ -130,5 +135,8 @@ comment discipline {
 
 # WoW Console
 /console scriptProfile 0
+
+# Notes
+- find a tolerance space between unfinished work commit and overstructured one because there is always a risk of messing 
 
 

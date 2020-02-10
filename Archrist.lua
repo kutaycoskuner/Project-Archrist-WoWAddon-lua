@@ -34,8 +34,8 @@ _G[AddonName] = System;
 
 --test
 
-print(System[4])
-print('arch')
+-- print(System[4])
+-- print('arch')
 
 --test end
 
@@ -63,6 +63,7 @@ end
 do
     -- :: Modules
     Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
+    Addon.lootMsgFilter = Addon:NewModule("deleteAucMail")
     -- Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
     -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
     -- Addon.ActionBars = Addon:NewModule("ActionBars", "AceHook-3.0", "AceEvent-3.0")
@@ -186,7 +187,7 @@ end
 -- :: response to registered event
 function Addon:CHAT_MSG_SAY()
     -- if self.db.profile.showInChat then
-        self:Print(self.db.message); -- ** aware that P is capital
+        -- self:Print(self.db.message); -- ** aware that P is capital
     -- end
 
     -- if self.db.profile.showOnScreen then

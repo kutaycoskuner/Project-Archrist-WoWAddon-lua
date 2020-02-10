@@ -118,3 +118,43 @@ function A:Initialize()
 		collectgarbage("collect")
 	end
 end
+
+-- :: registermodule
+function A:RegisterModule(name, func)
+	if self.initialized then
+		A:CallLoadedModule((func and {name, func}) or name)
+	else
+		self.RegisteredModules[#self.RegisteredModules + 1] = (func and {name, func}) or name
+	end
+end
+
+function A:InitializeInitialModules()
+	for index, object in ipairs(A.RegisteredInitialModules) do
+		A:CallLoadedModule(object, true, A.RegisteredInitialModules, index)
+	end
+end
+
+function A:InitializeModules()
+	for index, object in ipairs(A.RegisteredModules) do
+		A:CallLoadedModule(object, true, A.RegisteredModules, index)
+	end
+end
+
+function A:CallLoadedModule(obj, silent, object, index)
+	local name, func
+	if type(obj) == "table" then name, func = unpack(obj) else name = obj end
+	local module = name and self:GetModule(name, silent)
+
+	if not module then return end
+	if func and type(func) == "string" then
+		A:RegisterCallback(name, module[func], module)
+	elseif func and type(func) == "function" then
+		A:RegisterCallback(name, func, module)
+	elseif module.Initialize then
+		A:RegisterCallback(name, module.Initialize, module)
+	end
+
+	A.callbacks:Fire(name)
+
+	if object and index then object[index] = nil end
+end
