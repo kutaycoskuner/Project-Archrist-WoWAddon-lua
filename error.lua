@@ -1,33 +1,52 @@
-Message: Interface\FrameXML\GameTooltip.lua:126: WeakAurasTooltipMoneyFrame1:SetPoint(): Couldn't find region named 'WeakAurasTooltipTextLeft9'
-Time: 02/09/20 16:29:56
+Message: ...s\Archrist\4-modules\deleteAucMail\deleteAucMail.lua:9: attempt to call method 'RegisterEvent' (a nil value)
+Time: 02/10/20 03:41:10
 Count: 1
-Stack: [C]: in function `SetPoint'
-Interface\FrameXML\GameTooltip.lua:126: in function `SetTooltipMoney'
-Interface\FrameXML\GameTooltip.lua:88: in function `GameTooltip_OnTooltipAddMoney'
-[string "*:OnTooltipAddMoney"]:1: in function <[string "*:OnTooltipAddMoney"]:1>
-[C]: in function `SetInventoryItem'
-Interface\AddOns\WeakAuras\WeakAuras.lua:4705: in function <Interface\AddOns\WeakAuras\WeakAuras.lua:4704>
-Interface\AddOns\WeakAuras\WeakAuras.lua:4730: in function `tenchUpdate'
-Interface\AddOns\WeakAuras\WeakAuras.lua:4748: in function `TenchInit'
-Interface\AddOns\WeakAuras\Prototypes.lua:2126: in function `init'
-Interface\AddOns\WeakAuras\WeakAuras.lua:1436: in function `ConstructFunction'
-Interface\AddOns\WeakAuras\WeakAuras.lua:3472: in function `pAdd'
-Interface\AddOns\WeakAuras\WeakAuras.lua:3297: in function `Add'
-Interface\AddOns\WeakAuras\WeakAuras.lua:3279: in function `load'
-Interface\AddOns\WeakAuras\WeakAuras.lua:3284: in function `AddMany'
-Interface\AddOns\WeakAuras\WeakAuras.lua:1629: in function <Interface\AddOns\WeakAuras\WeakAuras.lua:1595>
+Stack: ...s\Archrist\4-modules\deleteAucMail\deleteAucMail.lua:9: in function `Initialize'
+...s\Archrist\4-modules\deleteAucMail\deleteAucMail.lua:23: in function <...s\Archrist\4-modules\deleteAucMail\deleteAucMail.lua:22>
+...ies\Ace3\CallbackHandler-1.0\CallbackHandler-1.0.lua:157: in function <...ies\Ace3\CallbackHandler-1.0\CallbackHandler-1.0.lua:157>
+[string "safecall Dispatcher[1]"]:4: in function <[string "safecall Dispatcher[1]"]:4>
+[C]: ?
+[string "safecall Dispatcher[1]"]:13: in function `?'
+...ies\Ace3\CallbackHandler-1.0\CallbackHandler-1.0.lua:92: in function `Fire'
+Interface\AddOns\Archrist\2-core\core.lua:161: in function `CallLoadedModule'
+Interface\AddOns\Archrist\2-core\core.lua:143: in function `InitializeModules'
+Interface\AddOns\Archrist\2-core\core.lua:106: in function `Initialize'
+Interface\AddOns\Archrist\Archrist.lua:221: in function <Interface\AddOns\Archrist\Archrist.lua:220>
 
-Locals: (*temporary) = WeakAurasTooltipMoneyFrame1 {
- small = 1
- info = <table> {
+Locals: self = <table> {
+ SetDefaultModuleLibraries = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:381
+ Enable = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:313
+ NewModule = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:255
+ EnableModule = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:346
+ modules = <table> {
  }
- staticMoney = 491
- 0 = <userdata>
- vadjust = 0
- moneyType = "STATIC"
+ GetModule = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:230
+ IterateEmbeds = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:456
+ IsModule = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:237
+ defaultModuleLibraries = <table> {
+ }
+ MAIL_SHOW = <function> defined @Interface\AddOns\Archrist\4-modules\deleteAucMail\deleteAucMail.lua:17
+ SetEnabledState = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:438
+ enabledState = true
+ baseName = "Archrist"
+ Disable = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:328
+ SetDefaultModulePrototype = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:423
+ GetName = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:298
+ defaultModuleState = true
+ IterateModules = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:451
+ name = "Archrist_deleteAucMail"
+ Initialize = <function> defined @Interface\AddOns\Archrist\4-modules\deleteAucMail\deleteAucMail.lua:6
+ IsEnabled = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:465
+ moduleName = "deleteAucMail"
+ SetDefaultModuleState = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:401
+ DisableModule = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:364
 }
-(*temporary) = "LEFT"
-(*temporary) = "WeakAurasTooltipTextLeft9"
-(*temporary) = "LEFT"
-(*temporary) = 4
-(*temporary) = 0
+(*temporary) = nil
+(*temporary) = <table> {
+ SetDefaultModuleLibraries = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:381
+ Enable = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:313
+ NewModule = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:255
+ EnableModule = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua:346
+ modules = <table> {
+ }
+ GetModule = <function> defined @Interface\AddOns\Archrist\!pre-load\libraries\Ace3\AceAddon-3.0\AceAddon-3.0.lua

@@ -103,7 +103,7 @@ function A:Initialize()
 	self.global = self.data.global
 
 
-	-- self:InitializeModules()
+	self:InitializeModules()
 	self.initialized = true
 
 	-- Minimap:UpdateSettings()
@@ -120,6 +120,10 @@ function A:Initialize()
 end
 
 -- :: registermodule
+function A:RegisterInitialModule(name, func)
+	self.RegisteredInitialModules[#self.RegisteredInitialModules + 1] = (func and {name, func}) or name
+end
+
 function A:RegisterModule(name, func)
 	if self.initialized then
 		A:CallLoadedModule((func and {name, func}) or name)

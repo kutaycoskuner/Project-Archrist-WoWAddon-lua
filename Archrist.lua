@@ -2,7 +2,8 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("Archrist") -- :: translations usage: L['<data>']
 local AddonName, System = ... -- :: this declares addon scope variable
 local AceAddon, AceAddonMinor = LibStub("AceAddon-3.0")
-local Addon = AceAddon:NewAddon(AddonName, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0", "AceHook-3.0")
+local Addon = AceAddon:NewAddon(AddonName, "AceConsole-3.0", "AceEvent-3.0",
+                                "AceTimer-3.0", "AceHook-3.0")
 local CallbackHandler = LibStub("CallbackHandler-1.0")
 
 -- :: lua Functions
@@ -32,46 +33,50 @@ _G[AddonName] = System;
 -- self.db = self.data.profile
 -- self.global = self.data.global
 
---test
+-- test
 
 -- print(System[4])
 -- print('arch')
 
---test end
+-- test end
 
 -- ==== Instantiation
 -- :: Elaborate Libraries
-do 
+do
     Addon.Libs = {}
     Addon.LibsMinor = {}
     function Addon:AddLib(name, major, minor)
-		if not name then return end
+        if not name then return end
 
-		-- in this case: `major` is the lib table and `minor` is the minor version
-		if type(major) == "table" and type(minor) == "number" then
-			self.Libs[name], self.LibsMinor[name] = major, minor
-		else -- in this case: `major` is the lib name and `minor` is the silent switch
-			self.Libs[name], self.LibsMinor[name] = LibStub(major, minor)
-		end
+        -- in this case: `major` is the lib table and `minor` is the minor version
+        if type(major) == "table" and type(minor) == "number" then
+            self.Libs[name], self.LibsMinor[name] = major, minor
+        else -- in this case: `major` is the lib name and `minor` is the silent switch
+            self.Libs[name], self.LibsMinor[name] = LibStub(major, minor)
+        end
     end
-    
+
     Addon:AddLib("AceAddon", AceAddon, AceAddonMinor)
-	Addon:AddLib("AceDB", "AceDB-3.0")
+    Addon:AddLib("AceDB", "AceDB-3.0")
 end
 
 -- :: Create Modules
-do
-    -- :: Modules
-    Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
-    Addon.lootMsgFilter = Addon:NewModule("deleteAucMail")
-    -- Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
-    -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
-    -- Addon.ActionBars = Addon:NewModule("ActionBars", "AceHook-3.0", "AceEvent-3.0")
-    -- :: Macros
-    Addon.milling = Addon:NewModule("milling")
-    Addon.raidWarnings = Addon:NewModule("raidWarnings")
-end
 
+-- :: Modules
+Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
+Addon.deleteAucMail = Addon:NewModule("deleteAucMail")
+-- Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
+-- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
+-- Addon.ActionBars = Addon:NewModule("ActionBars", "AceHook-3.0", "AceEvent-3.0")
+-- :: Macros
+Addon.milling = Addon:NewModule("milling")
+Addon.raidWarnings = Addon:NewModule("raidWarnings")
+
+-- :: fix moduule names
+do
+    local arg2, arg3 = "([%(%)%.%%%+%-%*%?%[%^%$])", "%%%1"
+    function Addon:EscapeString(str) return gsub(str, arg2, arg3) end
+end
 
 -- Main lifecycle event handlers
 
@@ -120,43 +125,42 @@ local options = {
 -- :: define behavior on event
 function Addon:OnInitialize()
 
-    if not ArchCharacterDB then
-		ArchCharacterDB = {}
-	end
+    if not ArchCharacterDB then ArchCharacterDB = {} end
 
-	self.db = tcopy(self.DF.profile, true)
+    self.db = tcopy(self.DF.profile, true)
     self.global = tcopy(self.DF.global, true)
 
-    --**
-    
+    -- **
+
     if ArchDB then
-		if ArchDB.global then
-			self:CopyTable(self.global, ArchDB.global)
-		end
+        if ArchDB.global then self:CopyTable(self.global, ArchDB.global) end
 
-		local profileKey
-		if ArchDB.profileKeys then
-			profileKey = ArchDB.profileKeys[self.myname.." - "..self.myrealm]
-		end
+        local profileKey
+        if ArchDB.profileKeys then
+            profileKey =
+                ArchDB.profileKeys[self.myname .. " - " .. self.myrealm]
+        end
 
-		if profileKey and ArchDB.profiles and ArchDB.profiles[profileKey] then
-			self:CopyTable(self.db, ArchDB.profiles[profileKey])
-		end
-	end
-
-	self.private = tcopy(self.privateVars.profile, true)
-
-	if ArchPrivateDB then
-		local profileKey
-		if ArchPrivateDB.profileKeys then
-			profileKey = ArchPrivateDB.profileKeys[self.myname.." - "..self.myrealm]
-		end
-
-		if profileKey and ArchPrivateDB.profiles and ArchPrivateDB.profiles[profileKey] then
-			self:CopyTable(self.private, ArchPrivateDB.profiles[profileKey])
-		end
+        if profileKey and ArchDB.profiles and ArchDB.profiles[profileKey] then
+            self:CopyTable(self.db, ArchDB.profiles[profileKey])
+        end
     end
-    
+
+    self.private = tcopy(self.privateVars.profile, true)
+
+    if ArchPrivateDB then
+        local profileKey
+        if ArchPrivateDB.profileKeys then
+            profileKey = ArchPrivateDB.profileKeys[self.myname .. " - " ..
+                             self.myrealm]
+        end
+
+        if profileKey and ArchPrivateDB.profiles and
+            ArchPrivateDB.profiles[profileKey] then
+            self:CopyTable(self.private, ArchPrivateDB.profiles[profileKey])
+        end
+    end
+
     -- **
     -- Called when the addon is loaded
     -- self.db = LibStub("AceDB-3.0"):New("ArchDB", defaults, true)
@@ -181,13 +185,13 @@ end
 -- :: register an event to addon
 function Addon:OnEnable()
     self:Print("Hello World!")
-    self:RegisterEvent("CHAT_MSG_SAY")
+    -- self:RegisterEvent("CHAT_MSG_SAY")
 end
 
 -- :: response to registered event
 function Addon:CHAT_MSG_SAY()
     -- if self.db.profile.showInChat then
-        -- self:Print(self.db.message); -- ** aware that P is capital
+    -- self:Print(self.db.message); -- ** aware that P is capital
     -- end
 
     -- if self.db.profile.showOnScreen then
@@ -197,8 +201,8 @@ end
 
 function Addon:GetMessage(info) return self.db.message end
 
-function Addon:SetMessage(info, newValue) 
-    self.db.message = newValue 
+function Addon:SetMessage(info, newValue)
+    self.db.message = newValue
     self.private.message = newValue
     self.global.message = newValue
     -- self:Print(self.DF.profile.message)
@@ -214,9 +218,6 @@ function Addon:ToggleShowOnScreen(info, value)
     self.DF.profile.showOnScreen = value
 end
 
-
 local LoadUI = CreateFrame("Frame")
 LoadUI:RegisterEvent("PLAYER_LOGIN")
-LoadUI:SetScript("OnEvent", function()
-	Addon:Initialize()
-end)
+LoadUI:SetScript("OnEvent", function() Addon:Initialize() end)
