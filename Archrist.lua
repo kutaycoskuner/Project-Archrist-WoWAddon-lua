@@ -64,7 +64,7 @@ end
 
 -- :: Modules
 Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
-Addon.deleteAucMail = Addon:NewModule("deleteAucMail")
+Addon.deleteAucMail = Addon:NewModule("deleteAucMail", "AceHook-3.0", "AceEvent-3.0")
 -- Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
 -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
 -- Addon.ActionBars = Addon:NewModule("ActionBars", "AceHook-3.0", "AceEvent-3.0")

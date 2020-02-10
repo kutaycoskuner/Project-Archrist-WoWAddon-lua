@@ -1,48 +1,46 @@
-------------------------------------------------------------------------------------------------------------------------
-local A, L, V, P, G, N = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, AddonName
-------------------------------------------------------------------------------------------------------------------------
-local module = A:GetModule('deleteAucMail');
--- ==== Start
-function module:Initialize() 
-
-    self.Initialized = true
-    print(self)
-    print('this is auc')
-    self:RegisterEvent("CHAT_MSG_SAY")
-    -- "MAIL_INBOX_UPDATE"
-    
-    
-end
-
-
-function module:CHAT_MSG_SAY() 
-    self:Print('thi is asdf')
-end
-
--- ==== Callback & Register [last arg]
-local function InitializeCallback()
-	module:Initialize()
-end
-
-A:RegisterModule(module:GetName(), InitializeCallback)
+-- ------------------------------------------------------------------------------------------------------------------------
+-- local A, L, V, P, G, N = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, AddonName
+-- ------------------------------------------------------------------------------------------------------------------------
+-- local module = A:GetModule('deleteAucMail');
 
 -- -- ==== Start
--- function module:Initialize()
---     self.initialized = true
-
---     print('test.lua working')
---     module:RegisterEvent("CHAT_MSG_SAY");
+-- function module:Initialize() 
+--     self.Initialized = true
+--     self:RegisterEvent("MAIL_SHOW")
+--     self:RegisterEvent("MAIL_INBOX_UPDATE")
+--     -- "MAIL_INBOX_UPDATE"
 -- end
 
--- function module:CHAT_MSG_SAY()
-
---     -- print("yay")
---     UIErrorsFrame:AddMessage('test', 1.0, 1.0, 1.0, 5.0)
+-- function module:MAIL_SHOW()
+--     local count, mails, current = 1, 1, 1;
+--     if count == nil then count = 1 end
+--     mails = GetInboxNumItems()
+--     if count > mails then count = 1 end
+--     current = GetInboxInvoiceInfo(count)
+--     if current == "seller_temp_invoice" then
+--         GetInboxText(count);
+--         DeleteInboxItem(count)
+--     else
+--         count = count + 1
+--     end
 -- end
 
+-- function module:MAIL_INBOX_UPDATE() 
+--     local count, mails, current = 1, 1, 1;
+--     if count == nil then count = 1 end
+--     mails = GetInboxNumItems()
+--     if count > mails then count = 1 end
+--     current = GetInboxInvoiceInfo(count)
+--     if current == "seller_temp_invoice" then
+--         GetInboxText(count);
+--         DeleteInboxItem(count)
+--     else
+--         count = count + 1
+--     end
+-- end
+
+-- -- ==== Callback & Register [last arg]
 -- local function InitializeCallback()
---     module:Initialize()
+-- 	module:Initialize()
 -- end
-
--- -- :: InitializeCallback
--- main:RegisterModule(module:GetName(), InitializeCallback)
+-- A:RegisterModule(module:GetName(), InitializeCallback)
