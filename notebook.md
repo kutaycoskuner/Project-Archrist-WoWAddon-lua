@@ -10,10 +10,13 @@ https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmo
 - table copy yi developerdan alip diger tarafa koy
 
 # Problems
+- player reputation system 
+    - database etkilesimleri
 - core profile da yapilan degisikligi gormuyor
 `boyle bir fonksiyon yok` attempt to call method 'UpdateCooldownSettings' (a nil value)
 
 # Completed
+- playerDB yeni bir database yaratildi
 - test if settings importing same table name as main `eger degisim olmazsa evet`
 - database communication
 - tcopy, twipe komutlarini ogren

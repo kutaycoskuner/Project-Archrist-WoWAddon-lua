@@ -28,18 +28,6 @@ local function handleCommand(msg)
         -->> keymatch for player if exists in database
         print('yes ' .. args[1] .. ' is a player')  
     end
-    -- if UnitIsPlayer("Yugeki") then
-    --     print('yes')
-    --  else
-    --     -- color some stuff
-    --  end
-    -- print(args['a'])
-    -- print(args[1])
-    -- print(args[2])
-    -- print(args[3])
-    -- print(#args)
-
-    -- print('corelord') -->> passed
     -- test end
 end
 

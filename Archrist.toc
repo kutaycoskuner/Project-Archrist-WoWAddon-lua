@@ -1,16 +1,16 @@
 # Metadata
 ## Interface: 30300
 ## Title: |cffedededArchrist|r
-## Notes: Raid control addon
+## Notes: Raid assist and control addon
 ## Version: 0.3 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
 ## Author: Orthrin
-## SavedVariables: ArchDB, ArchPrivateDB
+## SavedVariables: ArchDB, ArchPrivateDB, ArchPeopleDB
 ## SavedVariablesPerCharacter: ArchCharacterDB
 ## OptionalDeps: Blizzard_DebugTools, Ace3
 ## X-Embeds: Ace3
 ## X-Discord: https://discord.gg/XCGTYtp
 
-# Pre-Load -> Libraries
+# Pre-Load
 !pre-load\libraries\-load-libraries.xml
 !pre-load\locales\-load-locales.xml
 !pre-load\self\-load-self.xml
