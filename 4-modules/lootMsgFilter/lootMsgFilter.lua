@@ -66,7 +66,7 @@ local function lootMsgFilterCmd(msg)
 end
 
 -- ==== Roll Filter 
-local eliminateGreed = false
+local eliminateGreed = true;
 
 local function rollMsgFilterCmd(msg)
     if msg then

@@ -4,11 +4,17 @@ local module = A:GetModule('raidWarnings');
 
 -- ==== Variables
 local boss = 'none';
-local comms = '/w ' .. UnitName('player') .. " ";
-local raidWarning1 = '{skull} Focus on [%t] {skull}';
-local raidWarning2 = '{square} Stack on Anchor {square}';
-local raidWarning3 = '{circle} Heroism Now! {circle}';
-local raidWarning4 = '{triangle} Combat Res [%t] {triangle}';
+local comms = '/p ' .. UnitName('player') .. " ";
+--
+local rwDefault1 = '{skull} Focus on [%t] {skull}';
+local rwDefault2 = '{square} Innervate me {square}';
+local rwDefault3 = '{circle} Heroism Now! {circle}';
+local rwDefault4 = '{triangle} Combat Res [%t] {triangle}';
+--
+local raidWarning1 = rwDefault1;
+local raidWarning2 = rwDefault2;
+local raidWarning3 = rwDefault3;
+local raidWarning4 = rwDefault4;
 
 -- :: buttons
 local warn1 = CreateFrame("CheckButton", "WarnButton1", UIParent,
@@ -66,10 +72,10 @@ local function selectBoss(boss)
             -- raidWarning4 = '{triangle} Use Harpoons {triangle}'
         else
             boss = 'default'
-            raidWarning1 = '{skull} Focus on [%t] {skull}';
-            raidWarning2 = '';
-            raidWarning3 = '{circle} Heroism Now! {circle}';
-            raidWarning4 = '{triangle} Combat Res [%t] {triangle}';
+            raidWarning1 = rwDefault1;
+            raidWarning2 = rwDefault2;
+            raidWarning3 = rwDefault3;
+            raidWarning4 = rwDefault4;
         end
         DEFAULT_CHAT_FRAME:AddMessage("|cff128ec4[Archrium] Raidwarnings:|r " ..
                                           tostring(boss))
