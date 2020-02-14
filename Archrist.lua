@@ -27,6 +27,7 @@ _G[AddonName] = System;
 
 ------------------------------------------------------------------------------------------------------------------------
 -- local A, L, V, P, G, N = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, AddonName
+-- local module = A:GetModule('test');
 ------------------------------------------------------------------------------------------------------------------------
 
 -- self.private = self.charSettings.profile
@@ -63,10 +64,10 @@ end
 -- :: Create Modules
 -- :: Modules
 do
+    Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
     Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
     Addon.deleteAucMail = Addon:NewModule("deleteAucMail", "AceHook-3.0", "AceEvent-3.0")
     Addon.playerDB = Addon:NewModule("playerDB", "AceHook-3.0", "AceEvent-3.0")
-    -- Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
     -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
 end
 -- :: Macros
