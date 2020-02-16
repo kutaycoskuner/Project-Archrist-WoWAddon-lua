@@ -10,11 +10,13 @@ local CallbackHandler = LibStub("CallbackHandler-1.0")
 local tcopy = table.copy;
 local twipe = table.wipe;
 
--- :: Datebase Tables
+-- :: Addon Tables, Variables
 Addon.callbacks = Addon.callbacks or CallbackHandler:New(Addon);
 Addon.DF = {profile = {}, global = {}}; -- Profiles
 Addon.privateVars = {profile = {}} -- Defaults
 Addon.options = {type = "group", name = AddonName, args = {}};
+Addon.peopleDF = {people = {}};
+ArchModuleInfo = "|cff00c8ff[Archrist]|r |cff00efff";
 
 -- :: Create global addon module
 System[1] = Addon;
@@ -22,13 +24,10 @@ System[2] = {}; -- :: locales
 System[3] = Addon.privateVars.profile or {}; -- :: private global
 System[4] = Addon.DF.profile; -- :: character profile
 System[5] = Addon.DF.global; -- :: global profile 
-System[6] = AddonName;
+System[6] = Addon.peopleDF.people;
+System[7] = ArchModuleInfo;
+System[8] = AddonName;
 _G[AddonName] = System;
-
-------------------------------------------------------------------------------------------------------------------------
--- local A, L, V, P, G, N = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, AddonName
--- local module = A:GetModule('test');
-------------------------------------------------------------------------------------------------------------------------
 
 -- self.private = self.charSettings.profile
 -- self.db = self.data.profile
@@ -68,6 +67,7 @@ do
     Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
     Addon.deleteAucMail = Addon:NewModule("deleteAucMail", "AceHook-3.0", "AceEvent-3.0")
     Addon.playerDB = Addon:NewModule("playerDB", "AceHook-3.0", "AceEvent-3.0")
+    Addon.autoLoot = Addon:NewModule("autoLoot", "AceHook-3.0", "AceEvent-3.0")
     -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
 end
 -- :: Macros
@@ -186,7 +186,7 @@ end
 
 -- :: register an event to addon
 function Addon:OnEnable()
-    self:Print("Hello World!")
+    -- self:Print("Hello World!")
     -- self:RegisterEvent("CHAT_MSG_SAY")
 end
 

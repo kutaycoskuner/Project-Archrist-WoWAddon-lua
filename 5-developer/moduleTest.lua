@@ -1,7 +1,10 @@
--- ------------------------------------------------------------------------------------------------------------------------
--- local A, L, V, P, G, N = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, AddonName
--- local module = A:GetModule('test');
--- ------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+-- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+-- local A, L, V, P, G, C, M, N = unpack(select(2, ...));
+-- local moduleName = '';
+-- local moduleAlert = M .. moduleName .. ": |r";
+-- local module = A:GetModule(moduleName);
+------------------------------------------------------------------------------------------------------------------------
 -- -- ==== Start
 -- function module:Initialize()
 --     self.initialized = true

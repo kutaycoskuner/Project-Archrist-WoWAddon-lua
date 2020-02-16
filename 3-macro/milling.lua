@@ -47,6 +47,7 @@ end
 function module:LOOT_OPENED()
     for i = GetNumLootItems(), 1, -1 do LootSlot(i) end
     module:UnregisterEvent("LOOT_OPENED")
+    module:UnregisterAllEvents()
 
 end
 

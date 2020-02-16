@@ -1,5 +1,6 @@
 ------------------------------------------------------------------------------------------------------------------------
-local A, L, V, P, G, N = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, AddonName
+-- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+local A, L, V, P, G, C, M, N = unpack(select(2, ...));
 ------------------------------------------------------------------------------------------------------------------------
 
 -- ==== Variables

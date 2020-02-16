@@ -3,4 +3,5 @@
     <Include file="lootMsgFilter\-load.xml"/>
     <Include file="deleteAucMail\-load.xml"/>
     <Include file="playerDB\-load.xml"/>
+    <Include file="autoLoot\-load.xml"/>
 </Ui>
