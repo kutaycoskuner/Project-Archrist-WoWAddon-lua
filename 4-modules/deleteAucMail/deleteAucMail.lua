@@ -3,7 +3,7 @@
 local A, L, V, P, G, C, M, N = unpack(select(2, ...));
 local moduleName = 'deleteAucMail';
 local moduleAlert = M .. moduleName .. ": |r";
-local module = A:GetModule(moduleName); 
+local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Start
 function module:Initialize()
@@ -15,21 +15,27 @@ end
 -- ==== Methods
 function module:MAIL_SHOW()
 
-    local mails, current, deleted;
+    local mails, current, deleted, again;
     if deleted == nil then deleted = 0 end
+    -- again = 0;
     mails = GetInboxNumItems() or 0;
     -- test
     for ii = 1, GetInboxNumItems(), 1 do
         current = GetInboxInvoiceInfo(ii)
         if current == "seller_temp_invoice" then
-            GetInboxText(ii - deleted);
-            DeleteInboxItem(ii - deleted);
+            GetInboxText(ii);
+            print(ii);
+            -- DeleteInboxItem(ii);
             deleted = deleted + 1;
+            -- again = 1;
+            break
         end
     end
-    if deleted == 0 then
-        print(moduleAlert .. "total deleted: " .. deleted .. " total mails count: " .. mails)
+    if deleted ~= 0 then
+        print(moduleAlert .. "total deleted: " .. deleted ..
+                  " total mails count: " .. mails)
     end
+    -- if again == 1 then module:MAIL_SHOW(); end
     -- test end
 end
 
