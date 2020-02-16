@@ -1,6 +1,8 @@
 -- ==== Metadata
-local A, L, V, P, G = unpack(select(2, ...)) -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+------------------------------------------------------------------------------------------------------------------------
+local A, L, V, P, G, N = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, AddonName
 local module = A:GetModule('milling');
+------------------------------------------------------------------------------------------------------------------------
 -- local DT = E:GetModule("DataTexts")
 -- source https://www.curseforge.com/wow/addons/millbutton
 --[[
@@ -36,7 +38,7 @@ function setMillButton()
         print('test') --for i = GetNumLootItems(), 1, -1 do LootSlot(i) end
         if not bag then print("|cff128EC4Archrist:|r No more herbs in stacks of 5 or more.") end
     else
-        module:RegisterEvent('LOOT_OPENED')
+        module:RegisterEvent("LOOT_OPENED")
         MillButton:SetAttribute("macrotext", --
                                 "/cast Milling\n/use " .. bag .. " " .. slot)
     end
@@ -44,7 +46,7 @@ end
  
 function module:LOOT_OPENED()
     for i = GetNumLootItems(), 1, -1 do LootSlot(i) end
-    module:UnregisterEvent('LOOT_OPENED')
+    module:UnregisterEvent("LOOT_OPENED")
 
 end
 

@@ -71,7 +71,7 @@ do
     -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
 end
 -- :: Macros
-Addon.milling = Addon:NewModule("milling")
+Addon.milling = Addon:NewModule("milling", "AceEvent-3.0")
 Addon.raidWarnings = Addon:NewModule("raidWarnings")
 
 -- :: fix moduule names

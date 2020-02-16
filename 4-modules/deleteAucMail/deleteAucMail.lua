@@ -6,25 +6,44 @@ local module = A:GetModule('deleteAucMail');
 function module:Initialize()
     self.initialized = true
     -- :: Register some events
-    module:RegisterEvent("MAIL_SHOW");
+    module:RegisterEvent("MAIL_INBOX_UPDATE");
 end
 
 -- ==== Methods
-function module:MAIL_SHOW()
+function module:MAIL_INBOX_UPDATE()
 
-    local current;
-    local deleted = 0;
-    for ii = 1, GetInboxNumItems(), 1 do
-        current = GetInboxInvoiceInfo(ii)
+    local count, mails, current, deleted;
+    if count == nil then count = 1 end
+    if deleted == nil then deleted = 0 end
+    mails = GetInboxNumItems() or 0;
+    if count > mails then count = 1 end
+    -- mails = 3;
+    -- test
+    while count <= mails do
+        current = GetInboxInvoiceInfo(count);
         if current == "seller_temp_invoice" then
-            print(GetInboxText(ii));
-            DeleteInboxItem(ii);
+            GetInboxText(count - deleted);
+            DeleteInboxItem(count - deleted);
             deleted = deleted + 1;
         end
+        count = count + 1;
     end
     if deleted ~= 0 then
-        self:Print(deleted .. ' auction mails deleted')
+        print("total deleted: " .. deleted .. " total mails count: " .. count)
     end
+
+    -- test end
+
+    -- for ii = 1, GetInboxNumItems(), 1 do
+    --     current = GetInboxInvoiceInfo(ii)
+    --     if current == "seller_temp_invoice" then
+    --         -- print(GetInboxText(ii));
+    --         DeleteInboxItem(ii);
+    --         -- deleted = deleted + 1;
+    --         module:MAIL_INBOX_UPDATE();
+    --         -- break;
+    --     end
+    -- end
 
 end
 
