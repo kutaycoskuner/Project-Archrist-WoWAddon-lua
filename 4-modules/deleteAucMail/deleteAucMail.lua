@@ -20,20 +20,19 @@ function module:MAIL_SHOW()
     -- again = 0;
     mails = GetInboxNumItems() or 0;
     -- test
-    for ii = 1, GetInboxNumItems(), 1 do
-        current = GetInboxInvoiceInfo(ii)
-        if current == "seller_temp_invoice" then
-            GetInboxText(ii);
-            print(ii);
-            -- DeleteInboxItem(ii);
+    for ii = 1, mails do
+        if GetInboxInvoiceInfo(ii) == "seller_temp_invoice" then
+            -- GetInboxText(ii);
+            -- print(ii);
+            DeleteInboxItem(ii);
             deleted = deleted + 1;
             -- again = 1;
-            break
         end
     end
     if deleted ~= 0 then
-        print(moduleAlert .. "total deleted: " .. deleted ..
-                  " total mails count: " .. mails)
+        UIErrorsFrame:AddMessage(moduleAlert .. "click mailbox again to delete " .. deleted .. " info mails")
+    else
+        print(moduleAlert .. "You have " .. mails .. " mails in mailbox")
     end
     -- if again == 1 then module:MAIL_SHOW(); end
     -- test end
