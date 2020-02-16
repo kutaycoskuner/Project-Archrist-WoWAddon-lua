@@ -9,11 +9,11 @@ local module = A:GetModule(moduleName);
 function module:Initialize()
     self.initialized = true
     -- :: Register some events
-    module:RegisterEvent("MAIL_SHOW"); -- MAIL_INBOX_UPDATE , MAIL_SHOW
+    module:RegisterEvent("MAIL_INBOX_UPDATE"); -- MAIL_INBOX_UPDATE , MAIL_SHOW
 end
 
 -- ==== Methods
-function module:MAIL_SHOW()
+function module:MAIL_INBOX_UPDATE()
 
     local mails, current, deleted, again;
     if deleted == nil then deleted = 0 end
@@ -30,9 +30,9 @@ function module:MAIL_SHOW()
         end
     end
     if deleted ~= 0 then
-        UIErrorsFrame:AddMessage(moduleAlert .. "click mailbox again to delete " .. deleted .. " info mails")
+        UIErrorsFrame:AddMessage(moduleAlert .. "\nclick mailbox again to delete " .. (deleted-1) .. " info mails")
     else
-        print(moduleAlert .. "You have " .. mails .. " mails in mailbox")
+        -- print(moduleAlert .. "You have " .. mails .. " mails in mailbox")
     end
     -- if again == 1 then module:MAIL_SHOW(); end
     -- test end

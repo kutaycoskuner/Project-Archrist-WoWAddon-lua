@@ -73,6 +73,7 @@ end
 -- :: Macros
 Addon.milling = Addon:NewModule("milling", "AceEvent-3.0")
 Addon.raidWarnings = Addon:NewModule("raidWarnings")
+Addon.discord = Addon:NewModule('discord')
 
 -- :: fix moduule names
 do
