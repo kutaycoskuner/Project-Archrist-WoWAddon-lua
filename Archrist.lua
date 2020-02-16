@@ -74,6 +74,9 @@ end
 Addon.milling = Addon:NewModule("milling", "AceEvent-3.0")
 Addon.raidWarnings = Addon:NewModule("raidWarnings")
 Addon.discord = Addon:NewModule('discord')
+Addon.tank = Addon:NewModule('tank')
+Addon.spread = Addon:NewModule('spread')
+Addon.stack = Addon:NewModule('stack')
 
 -- :: fix moduule names
 do

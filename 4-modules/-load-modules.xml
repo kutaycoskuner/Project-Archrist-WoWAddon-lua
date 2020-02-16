@@ -4,5 +4,5 @@
     <Include file="deleteAucMail\-load.xml"/>
     <Include file="playerDB\-load.xml"/>
     <Include file="autoLoot\-load.xml"/>
-    <Include file="discord\-load.xml"/>
+    <Include file="raidCommands\-load.xml"/>
 </Ui>

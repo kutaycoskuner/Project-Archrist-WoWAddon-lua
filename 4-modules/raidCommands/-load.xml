@@ -1,0 +1,6 @@
+<Ui>
+    <Script file="discord.lua"/>
+    <Script file="tank.lua"/>
+    <Script file="spread.lua"/>
+    <Script file="stack.lua"/>
+</Ui>
