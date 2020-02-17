@@ -1,7 +1,9 @@
--- ==== Metadata
 ------------------------------------------------------------------------------------------------------------------------
-local A, L, V, P, G, N = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, AddonName
-local module = A:GetModule('milling');
+-- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+local A, L, V, P, G, C, M, N = unpack(select(2, ...));
+local moduleName = 'milling';
+local moduleAlert = M .. moduleName .. ": |r";
+local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 -- local DT = E:GetModule("DataTexts")
 -- source https://www.curseforge.com/wow/addons/millbutton
@@ -35,8 +37,8 @@ function setMillButton()
         CastingBarFrame:IsVisible() or UnitCastingInfo("player") then
         -- do nothing if no herb, if looting or casting
         MillButton:SetAttribute("macrotext", "")
-        print('test') --for i = GetNumLootItems(), 1, -1 do LootSlot(i) end
-        if not bag then print("|cff128EC4Archrist:|r No more herbs in stacks of 5 or more.") end
+        -- print('test') --for i = GetNumLootItems(), 1, -1 do LootSlot(i) end
+        if not bag then print(moduleAlert .. "No more herbs in stacks of 5 or more.") end
     else
         module:RegisterEvent("LOOT_OPENED")
         MillButton:SetAttribute("macrotext", --
