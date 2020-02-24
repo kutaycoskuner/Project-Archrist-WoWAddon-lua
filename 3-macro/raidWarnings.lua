@@ -107,6 +107,8 @@ local function selectChannel(channel)
             comms = "/ra "
         elseif (command == "rw" or command == "raidwarning") then
             comms = "/rw "
+        elseif (command == "bg" or command == "battlegrouund") then
+            comms = "/bg "
         else
             comms = '/rw '
         end

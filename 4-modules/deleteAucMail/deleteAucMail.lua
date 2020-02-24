@@ -30,7 +30,7 @@ function module:MAIL_INBOX_UPDATE()
         end
     end
     if deleted ~= 0 then
-        UIErrorsFrame:AddMessage(moduleAlert .. "\nclick mailbox again to delete " .. (deleted) .. " info mails")
+        -- UIErrorsFrame:AddMessage(moduleAlert .. "\nclick mailbox again to delete " .. (deleted) .. " info mails")
     else
         -- print(moduleAlert .. "You have " .. mails .. " mails in mailbox")
     end
