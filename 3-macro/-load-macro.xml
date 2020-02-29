@@ -2,4 +2,5 @@
 ..\FrameXML\UI.xsd">
     <Script file="milling.lua"/>
     <Script file="raidWarnings.lua"/>
+    <Script file="prospecting.lua"/>
 </Ui>
