@@ -70,6 +70,11 @@ local function selectBoss(boss)
             -- raidWarning2 = '{triangle} LEFT {triangle}'
             -- raidWarning3 = '{triangle} RIGHT {triangle}'
             -- raidWarning4 = '{triangle} Use Harpoons {triangle}'
+        elseif (command == "emalon") then
+            raidWarning1 = '{triangle} Run away from the boss {triangle}'
+            raidWarning2 = '{skull} Focus on Big Add {skull}'
+            raidWarning3 = '{skull} Back to boss {skull}'
+            raidWarning4 = '{triangle} Use Harpoons {triangle}'
         else
             boss = 'default'
             raidWarning1 = rwDefault1;
