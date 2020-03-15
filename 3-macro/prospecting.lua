@@ -22,6 +22,7 @@ local function findMineInBag()
     -- print(GetItemInfo(GetContainerItemLink(bag, slot)))
     return (select(1, GetItemInfo(GetContainerItemLink(bag, slot) or 0)) == "Thorium Ore" or 
            select(1, GetItemInfo(GetContainerItemLink(bag, slot) or 0)) == "Fel Iron Ore" or
+           select(1, GetItemInfo(GetContainerItemLink(bag, slot) or 0)) == "Cobalt Ore" or
            select(1, GetItemInfo(GetContainerItemLink(bag, slot) or 0)) == "Adamantite Ore") and 
            select(2, GetContainerItemInfo(bag, slot)) >= 5
     end
