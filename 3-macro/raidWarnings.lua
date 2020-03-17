@@ -72,6 +72,42 @@ local function selectBoss(boss)
             raidWarning3 = '{skull} Back to boss {skull}'
             raidWarning4 = '{triangle} Spread 10 yard {triangle}'
             --
+        elseif (command == "patchwerk") then
+            raidWarning1 = '{triangle} Melee dip into Green slime {triangle}'
+            raidWarning2 = '{skull} Only heal tanks! {skull}'
+            raidWarning3 = '{skull} Back to boss {skull}'
+            raidWarning4 = '{triangle} Spread 10 yard {triangle}'
+            --
+        elseif (command == "grobbulus") then
+            raidWarning1 = '{triangle} Dont stand infront of the boss {triangle}'
+            raidWarning2 = '{square} do not stand in green slime {square}'
+            raidWarning3 = '{skull} Kill the adds as they are 3 {skull}'
+            raidWarning4 = '{triangle} %t run away for the Dispel {triangle}'
+            --
+        elseif (command == "gluth") then
+            raidWarning1 = '{triangle} Kite the zombie {triangle}'
+            raidWarning2 = '{square} %t Combat Res {square}'
+            raidWarning3 = '{skull} AoE Zombies now! {skull}'
+            raidWarning4 = '{triangle} %t run away for the Dispel {triangle}'
+            --
+        elseif (command == "thaddius") then
+            raidWarning1 = '{triangle} <<< Left Slow Down {triangle}'
+            raidWarning2 = '{square} Right Slow Down >>> {square}'
+            raidWarning3 = '{skull} Switch {skull}'
+            raidWarning4 = '{triangle} %t run away for the Dispel {triangle}'
+            --
+        elseif (command == "sapphiron") then
+            raidWarning1 = '{triangle} Move out of Blizzard {triangle}'
+            raidWarning2 = '{square} Hide Behind Ice {square}'
+            raidWarning3 = '{skull} Spread {skull}'
+            raidWarning4 = '{triangle} %t run away for the Dispel {triangle}'
+            --
+        elseif (command == "kel") then
+            raidWarning1 = '{triangle} Spread 11 Yards {triangle}'
+            raidWarning2 = '{square} Interrupt frostbolt! {square}'
+            raidWarning3 = '{skull} Spread {skull}'
+            raidWarning4 = '{triangle} Pets passive! {triangle}'
+            --
         else
             boss = 'default'
             raidWarning1 = rwDefault1;
