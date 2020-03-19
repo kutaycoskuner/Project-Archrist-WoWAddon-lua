@@ -102,7 +102,7 @@ local function selectBoss(boss)
             raidWarning3 = '{skull} Spread {skull}'
             raidWarning4 = '{triangle} %t run away for the Dispel {triangle}'
             --
-        elseif (command == "kel") then
+        elseif (command == "kelthuzad") then
             raidWarning1 = '{triangle} Spread 11 Yards {triangle}'
             raidWarning2 = '{square} Interrupt frostbolt! {square}'
             raidWarning3 = '{skull} Spread {skull}'

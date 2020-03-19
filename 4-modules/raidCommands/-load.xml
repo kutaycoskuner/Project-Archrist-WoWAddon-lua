@@ -3,4 +3,5 @@
     <Script file="tank.lua"/>
     <Script file="spread.lua"/>
     <Script file="stack.lua"/>
+    <Script file="paladinBuffs.lua"></Script>
 </Ui>
