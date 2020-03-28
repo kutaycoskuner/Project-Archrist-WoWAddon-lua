@@ -94,7 +94,7 @@ end
 
 -- :: true false donuyor
 local function rollfilter(self, event, msg)
-	if (eliminateGreed == true and (string.find(msg, "Greed") or string.find(msg, "passed") or string.find(msg, "disenchant"))) then
+	if (eliminateGreed == true and (string.find(msg, "Greed") or string.find(msg, "passed") or string.find(msg, "Disenchant"))) then
         return true
     else
         return false

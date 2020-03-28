@@ -147,4 +147,10 @@ comment discipline {
 # Notes
 - find a tolerance space between unfinished work commit and overstructured one because there is always a risk of messing 
 
-
+# Release
+- delete reference
+- delete git
+- git.ignore
+- error
+- notebook
+- readme

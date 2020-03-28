@@ -78,6 +78,7 @@ Addon.discord = Addon:NewModule('discord')
 Addon.tank = Addon:NewModule('tank')
 Addon.spread = Addon:NewModule('spread')
 Addon.stack = Addon:NewModule('stack')
+Addon.lootRules = Addon:NewModule('lootRules')
 Addon.paladinBuffs = Addon:NewModule('paladinBuffs')
 
 -- :: fix moduule names

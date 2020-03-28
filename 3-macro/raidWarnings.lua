@@ -7,9 +7,9 @@ local boss = 'none';
 local comms = '/p ' .. UnitName('player') .. " ";
 --
 local rwDefault1 = '{skull} Focus on [%t] {skull}';
-local rwDefault2 = '{square} Innervate me {square}';
+local rwDefault2 = '{square} Combat Res [%t] {square}';
 local rwDefault3 = '{circle} Heroism Now! {circle}';
-local rwDefault4 = '{triangle} Combat Res [%t] {triangle}';
+local rwDefault4 = '{triangle} Innervate Please {triangle}';
 --
 local raidWarning1 = rwDefault1;
 local raidWarning2 = rwDefault2;
@@ -60,15 +60,35 @@ local function selectBoss(boss)
         -- :: komut varsa
         if (command ~= nil) then command = string.lower(command); end
         --
+        -- :: Dungeons
         if (command == "skadi") then
             raidWarning1 = '{triangle} Watchout for Breath {triangle}'
             raidWarning2 = '{triangle} LEFT {triangle}'
             raidWarning3 = '{triangle} RIGHT {triangle}'
             raidWarning4 = '{triangle} Use Harpoons {triangle}'
             --
-        elseif (command == "emalon") then
-            raidWarning1 = '{triangle} Run away from the boss {triangle}'
+        elseif (command == "malygos") then
+            raidWarning1 = '{triangle} Spread 11 Yards {triangle}'
+            raidWarning2 = '{square} Interrupt frostbolt! {square}'
+            raidWarning3 = '{skull} Spread {skull}'
+            raidWarning4 = '{triangle} Pets passive! {triangle}'
+            --
+        -- :: Naxxramas
+        elseif (command == "maexxna") then
+            raidWarning1 = '{triangle} Kill the webs {triangle}'
             raidWarning2 = '{skull} Focus on Big Add {skull}'
+            raidWarning3 = '{skull} Back to boss {skull}'
+            raidWarning4 = '{triangle} Spread 10 yard {triangle}'
+            --
+        elseif (command == "noth") then
+            raidWarning1 = '{triangle} Watch for debuffs and dispel {triangle}'
+            raidWarning2 = '{skull} Focus on Big Add {skull}'
+            raidWarning3 = '{skull} Back to boss {skull}'
+            raidWarning4 = '{triangle} Spread 10 yard {triangle}'
+            --
+        elseif (command == "anubrekhan") then
+            raidWarning1 = '{triangle} Locust Swarm!! Run clockwise. {triangle}'
+            raidWarning2 = '{skull} Kill Crypt Lord {skull}'
             raidWarning3 = '{skull} Back to boss {skull}'
             raidWarning4 = '{triangle} Spread 10 yard {triangle}'
             --
@@ -107,6 +127,56 @@ local function selectBoss(boss)
             raidWarning2 = '{square} Interrupt frostbolt! {square}'
             raidWarning3 = '{skull} Spread {skull}'
             raidWarning4 = '{triangle} Pets passive! {triangle}'
+            --
+        -- :: VoA
+        elseif (command == "emalon") then
+            raidWarning1 = '{triangle} Run away from the boss {triangle}'
+            raidWarning2 = '{skull} Focus on Big Add {skull}'
+            raidWarning3 = '{skull} Back to boss {skull}'
+            raidWarning4 = '{triangle} Spread 10 yard {triangle}'
+            --
+        -- :: Ulduar
+        elseif (command == "leviathan") then
+            raidWarning1 = '{triangle} Keep Pyerite Stacks Up! {triangle}'
+            raidWarning2 = '{skull}  {skull}'
+            raidWarning3 = '{skull}  {skull}'
+            raidWarning4 = '{triangle}  {triangle}'
+            --
+        elseif (command == "razorscale") then
+            raidWarning1 = '{triangle}  {triangle}'
+            raidWarning2 = '{skull} Sentinels > Watchers > Guardians {skull}'
+            raidWarning3 = '{skull} Interrupt Watchers {skull}'
+            raidWarning4 = '{triangle} Nuke the Boss {triangle}'
+            --
+        elseif (command == "deconstructor") then
+            raidWarning1 = '{triangle} Kill the adds {triangle}'
+            raidWarning2 = '{skull}  {skull}'
+            raidWarning3 = '{skull}  {skull}'
+            raidWarning4 = '{triangle}  {triangle}'
+            --
+        elseif (command == "ignis") then
+            raidWarning1 = '{triangle}  {triangle}'
+            raidWarning2 = '{skull}  {skull}'
+            raidWarning3 = '{skull}  {skull}'
+            raidWarning4 = '{triangle}  {triangle}'
+            --
+        elseif (command == "assembly") then
+            raidWarning1 = '{triangle}  {triangle}'
+            raidWarning2 = '{skull}  {skull}'
+            raidWarning3 = '{skull}  {skull}'
+            raidWarning4 = '{triangle}  {triangle}'
+            --
+        elseif (command == "kologarn") then
+            raidWarning1 = '{triangle}  {triangle}'
+            raidWarning2 = '{skull}  {skull}'
+            raidWarning3 = '{skull}  {skull}'
+            raidWarning4 = '{triangle}  {triangle}'
+            --
+        elseif (command == "auriaya") then
+            raidWarning1 = '{triangle}  {triangle}'
+            raidWarning2 = '{skull}  {skull}'
+            raidWarning3 = '{skull}  {skull}'
+            raidWarning4 = '{triangle}  {triangle}'
             --
         else
             boss = 'default'
