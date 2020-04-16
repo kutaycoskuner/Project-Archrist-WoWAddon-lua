@@ -1,10 +1,12 @@
 -- ==== Create Addon
+local AceAddon, AceAddonMinor = LibStub("AceAddon-3.0")
+local CallbackHandler = LibStub("CallbackHandler-1.0")
+
 local L = LibStub("AceLocale-3.0"):GetLocale("Archrist") -- :: translations usage: L['<data>']
 local AddonName, System = ... -- :: this declares addon scope variable
-local AceAddon, AceAddonMinor = LibStub("AceAddon-3.0")
+
 local Addon = AceAddon:NewAddon(AddonName, "AceConsole-3.0", "AceEvent-3.0",
                                 "AceTimer-3.0", "AceHook-3.0")
-local CallbackHandler = LibStub("CallbackHandler-1.0")
 
 -- :: lua Functions
 local tcopy = table.copy;
@@ -81,7 +83,7 @@ Addon.stack = Addon:NewModule('stack')
 Addon.lootRules = Addon:NewModule('lootRules')
 Addon.paladinBuffs = Addon:NewModule('paladinBuffs')
 
--- :: fix moduule names
+-- :: fix module names
 do
     local arg2, arg3 = "([%(%)%.%%%+%-%*%?%[%^%$])", "%%%1"
     function Addon:EscapeString(str) return gsub(str, arg2, arg3) end
@@ -136,6 +138,10 @@ function Addon:OnInitialize()
 
     if not ArchCharacterDB then ArchCharacterDB = {} end
 
+    -- if not ArchDB then ArchDB = {} end
+    -- if not ArchPrivateDB then ArchPrivateDB = {} end
+    -- if not ArchPeopleDB then ArchPeopleDB = {} end
+
     self.db = tcopy(self.DF.profile, true)
     self.global = tcopy(self.DF.global, true)
 
@@ -175,11 +181,11 @@ function Addon:OnInitialize()
     -- self.db = LibStub("AceDB-3.0"):New("ArchDB", defaults, true)
     -- LibStub("AceConfig-3.0"):RegisterOptionsTable("Addon", options) -- :: addon, options
     -- self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Addon", "Archrist") -- :: addon, name
-    self:RegisterChatCommand("ar", "ChatCommand")
-    self:RegisterChatCommand("archrist", "ChatCommand")
-    Addon.message = "Welcome Home!"
-    Addon.showInChat = false
-    Addon.showOnScreen = true
+    -- self:RegisterChatCommand("ar", "ChatCommand")
+    -- self:RegisterChatCommand("archrist", "ChatCommand")
+    -- Addon.message = "Welcome Home!"
+    -- Addon.showInChat = false
+    -- Addon.showOnScreen = true
 end
 
 -- :: command handler

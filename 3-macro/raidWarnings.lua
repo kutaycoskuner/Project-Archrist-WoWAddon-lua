@@ -178,6 +178,23 @@ local function selectBoss(boss)
             raidWarning3 = '{skull}  {skull}'
             raidWarning4 = '{triangle}  {triangle}'
             --
+        elseif (command == "vezax") then
+            raidWarning1 = '{triangle} Kill the Saronite {triangle}'
+            raidWarning2 = '{skull}  {skull}'
+            raidWarning3 = '{skull}  {skull}'
+            raidWarning4 = '{triangle} Innervate me please! {triangle}'
+            --
+        elseif (command == "yogg") then
+            raidWarning1 = '{triangle} Kill the Saronite {triangle}'
+            raidWarning2 = '{skull}  {skull}'
+            raidWarning3 = '{skull}  {skull}'
+            raidWarning4 = '{triangle}  {triangle}'
+            --[[
+                brain links
+                get in portals two group
+                portal gets plate
+                
+            ]]
         else
             boss = 'default'
             raidWarning1 = rwDefault1;

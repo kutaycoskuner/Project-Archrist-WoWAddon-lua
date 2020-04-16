@@ -24,7 +24,7 @@ local UnitGUID = UnitGUID
 local ERR_NOT_IN_COMBAT = ERR_NOT_IN_COMBAT
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
---Constants
+--:: Constants
 A.noop = function() end
 A.title = format("|cff1784d1E|r|cffe5e3e3lvUI|r") -->> degisecek
 A.myfaction, A.myLocalizedFaction = UnitFactionGroup("player")
@@ -42,7 +42,7 @@ A.isMacClient = IsMacClient()
 A.NewSign = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:14:14|t" -->> degisecek
 A.InfoColor = "|cfffe7b2c"
 
---Tables
+--:: Tables
 A.media = {}
 A.frames = {}
 A.unitFrameElements = {}
@@ -102,6 +102,9 @@ function A:Initialize()
 	self.private = self.charSettings.profile
 	self.db = self.data.profile
 	self.global = self.data.global
+
+	-- self.db.playerName = UnitName("player")
+	-- self.charSettings.playerName = UnitName("player")
 
 
 	self:InitializeModules()
