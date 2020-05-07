@@ -3,4 +3,5 @@
     <Script file="milling.lua"/>
     <Script file="raidWarnings.lua"/>
     <Script file="prospecting.lua"/>
+    <Script file="disenchanting.lua"/>
 </Ui>

@@ -75,6 +75,7 @@ end
 -- :: Macros
 Addon.milling = Addon:NewModule("milling", "AceEvent-3.0")
 Addon.prospecting = Addon:NewModule("prospecting", "AceEvent-3.0")
+Addon.disenchanting = Addon:NewModule("disenchanting", "AceEvent-3.0")
 Addon.raidWarnings = Addon:NewModule("raidWarnings")
 Addon.discord = Addon:NewModule('discord')
 Addon.tank = Addon:NewModule('tank')
