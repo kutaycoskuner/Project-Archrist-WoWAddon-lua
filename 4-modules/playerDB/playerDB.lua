@@ -1,7 +1,10 @@
 ------------------------------------------------------------------------------------------------------------------------
-local A, L, V, P, G, N = unpack(select(2, ...)); -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, AddonName
+-- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+local A, L, V, P, G, C, M, N = unpack(select(2, ...));
+local moduleName = 'playerDB';
+local moduleAlert = M .. moduleName .. ": |r";
+local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
-local module = A:GetModule('playerDB');
 
 -- ==== Start
 -- if A.db.people == nil then A.db.people = {} end 
@@ -26,8 +29,16 @@ local function handleCommand(msg)
     --:: if first unit is player this function returns true
      if UnitExists('target') then 
         -->> keymatch for player if exists in database
-        print('yes ' .. UnitName('target') .. ' is a player')  
-        A.global.test = UnitName('target')
+        print(moduleAlert .. UnitName('target') .. ' is now in your database')  
+        local name = UnitName("target");
+        A.people[UnitName('target')] = {
+            reputation = 0,
+            discipline = 0,
+            strategy = 0,
+            damage = 0,
+            attendance = 0,
+            gearscore = 0,
+        }
      end
     -- test end
 end
