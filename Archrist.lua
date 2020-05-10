@@ -17,7 +17,7 @@ Addon.callbacks = Addon.callbacks or CallbackHandler:New(Addon);
 Addon.DF = {profile = {}, global = {}}; -- Profiles
 Addon.privateVars = {profile = {}} -- Defaults
 Addon.options = {type = "group", name = AddonName, args = {}};
-Addon.peopleDF = {people = {}};
+Addon.peopleDF = {profile = {}};
 ArchModuleInfo = "|cff00c8ff[Archrist]|r |cff00efff";
 
 -- :: Create global addon module
@@ -26,7 +26,7 @@ System[2] = {}; -- :: locales
 System[3] = Addon.privateVars.profile or {}; -- :: private global
 System[4] = Addon.DF.profile; -- :: character profile
 System[5] = Addon.DF.global; -- :: global profile 
-System[6] = Addon.peopleDF.people;
+System[6] = Addon.peopleDF.global;
 System[7] = ArchModuleInfo;
 System[8] = AddonName;
 _G[AddonName] = System;
@@ -36,61 +36,6 @@ _G[AddonName] = System;
 -- self.global = self.data.global
 
 -- test
-
--- print(System[4])
--- print('arch')
-
--- test end
-
--- ==== Instantiation
--- :: Elaborate Libraries
-do
-    Addon.Libs = {}
-    Addon.LibsMinor = {}
-    function Addon:AddLib(name, major, minor)
-        if not name then return end
-
-        -- in this case: `major` is the lib table and `minor` is the minor version
-        if type(major) == "table" and type(minor) == "number" then
-            self.Libs[name], self.LibsMinor[name] = major, minor
-        else -- in this case: `major` is the lib name and `minor` is the silent switch
-            self.Libs[name], self.LibsMinor[name] = LibStub(major, minor)
-        end
-    end
-
-    Addon:AddLib("AceAddon", AceAddon, AceAddonMinor)
-    Addon:AddLib("AceDB", "AceDB-3.0")
-end
-
--- :: Create Modules
--- :: Modules
-do
-    Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
-    Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
-    Addon.deleteAucMail = Addon:NewModule("deleteAucMail", "AceHook-3.0", "AceEvent-3.0")
-    Addon.playerDB = Addon:NewModule("playerDB", "AceHook-3.0", "AceEvent-3.0")
-    Addon.autoLoot = Addon:NewModule("autoLoot", "AceHook-3.0", "AceEvent-3.0")
-    -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
-end
--- :: Macros
-Addon.milling = Addon:NewModule("milling", "AceEvent-3.0")
-Addon.prospecting = Addon:NewModule("prospecting", "AceEvent-3.0")
-Addon.disenchanting = Addon:NewModule("disenchanting", "AceEvent-3.0")
-Addon.raidWarnings = Addon:NewModule("raidWarnings")
-Addon.discord = Addon:NewModule('discord')
-Addon.tank = Addon:NewModule('tank')
-Addon.spread = Addon:NewModule('spread')
-Addon.stack = Addon:NewModule('stack')
-Addon.lootRules = Addon:NewModule('lootRules')
-Addon.paladinBuffs = Addon:NewModule('paladinBuffs')
-
--- :: fix module names
-do
-    local arg2, arg3 = "([%(%)%.%%%+%-%*%?%[%^%$])", "%%%1"
-    function Addon:EscapeString(str) return gsub(str, arg2, arg3) end
-end
-
--- Main lifecycle event handlers
 
 -- ==== Create Variables
 local defaults = {
@@ -131,6 +76,58 @@ local options = {
     }
 }
 
+-- test end
+
+-- ==== Instantiation
+-- :: Elaborate Libraries
+do
+    Addon.Libs = {}
+    Addon.LibsMinor = {}
+    function Addon:AddLib(name, major, minor)
+        if not name then return end
+
+        -- in this case: `major` is the lib table and `minor` is the minor version
+        if type(major) == "table" and type(minor) == "number" then
+            self.Libs[name], self.LibsMinor[name] = major, minor
+        else -- in this case: `major` is the lib name and `minor` is the silent switch
+            self.Libs[name], self.LibsMinor[name] = LibStub(major, minor)
+        end
+    end
+
+    Addon:AddLib("AceAddon", AceAddon, AceAddonMinor)
+    Addon:AddLib("AceDB", "AceDB-3.0")
+end
+
+do
+    -- :: Create Modules
+    Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
+    Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
+    Addon.deleteAucMail = Addon:NewModule("deleteAucMail", "AceHook-3.0",
+                                          "AceEvent-3.0")
+    Addon.playerDB = Addon:NewModule("playerDB", "AceHook-3.0", "AceEvent-3.0")
+    Addon.autoLoot = Addon:NewModule("autoLoot", "AceHook-3.0", "AceEvent-3.0")
+    -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
+    -- :: Macros
+    Addon.milling = Addon:NewModule("milling", "AceEvent-3.0")
+    Addon.prospecting = Addon:NewModule("prospecting", "AceEvent-3.0")
+    Addon.disenchanting = Addon:NewModule("disenchanting", "AceEvent-3.0")
+    Addon.raidWarnings = Addon:NewModule("raidWarnings", "AceHook-3.0", "AceEvent-3.0")
+    Addon.discord = Addon:NewModule('discord')
+    Addon.tank = Addon:NewModule('tank')
+    Addon.spread = Addon:NewModule('spread')
+    Addon.stack = Addon:NewModule('stack')
+    Addon.lootRules = Addon:NewModule('lootRules')
+    Addon.paladinBuffs = Addon:NewModule('paladinBuffs')
+end
+
+-- :: fix module names
+do
+    local arg2, arg3 = "([%(%)%.%%%+%-%*%?%[%^%$])", "%%%1"
+    function Addon:EscapeString(str) return gsub(str, arg2, arg3) end
+end
+
+-- Main lifecycle event handlers
+
 -- -- ==== Create Modules
 -- -- Addon.Testcore = Addon:NewModule('testa')
 -- ==== Declare Event Behaviors
@@ -138,44 +135,44 @@ local options = {
 function Addon:OnInitialize()
 
     if not ArchCharacterDB then ArchCharacterDB = {} end
-
     -- if not ArchDB then ArchDB = {} end
     -- if not ArchPrivateDB then ArchPrivateDB = {} end
     -- if not ArchPeopleDB then ArchPeopleDB = {} end
 
     self.db = tcopy(self.DF.profile, true)
     self.global = tcopy(self.DF.global, true)
+    self.people = tcopy(self.peopleDF.global, true)
 
     -- **
 
-    if ArchDB then
-        if ArchDB.global then self:CopyTable(self.global, ArchDB.global) end
+    -- if ArchDB then
+    --     if ArchDB.global then self:CopyTable(self.global, ArchDB.global) end
 
-        local profileKey
-        if ArchDB.profileKeys then
-            profileKey =
-                ArchDB.profileKeys[self.myname .. " - " .. self.myrealm]
-        end
+    --     local profileKey
+    --     if ArchDB.profileKeys then
+    --         profileKey =
+    --             ArchDB.profileKeys[self.myname .. " - " .. self.myrealm]
+    --     end
 
-        if profileKey and ArchDB.profiles and ArchDB.profiles[profileKey] then
-            self:CopyTable(self.db, ArchDB.profiles[profileKey])
-        end
-    end
+    --     if profileKey and ArchDB.profiles and ArchDB.profiles[profileKey] then
+    --         self:CopyTable(self.db, ArchDB.profiles[profileKey])
+    --     end
+    -- end
 
-    self.private = tcopy(self.privateVars.profile, true)
+    -- self.private = tcopy(self.privateVars.profile, true)
 
-    if ArchPrivateDB then
-        local profileKey
-        if ArchPrivateDB.profileKeys then
-            profileKey = ArchPrivateDB.profileKeys[self.myname .. " - " ..
-                             self.myrealm]
-        end
+    -- if ArchPrivateDB then
+    --     local profileKey
+    --     if ArchPrivateDB.profileKeys then
+    --         profileKey = ArchPrivateDB.profileKeys[self.myname .. " - " ..
+    --                          self.myrealm]
+    --     end
 
-        if profileKey and ArchPrivateDB.profiles and
-            ArchPrivateDB.profiles[profileKey] then
-            self:CopyTable(self.private, ArchPrivateDB.profiles[profileKey])
-        end
-    end
+    --     if profileKey and ArchPrivateDB.profiles and
+    --         ArchPrivateDB.profiles[profileKey] then
+    --         self:CopyTable(self.private, ArchPrivateDB.profiles[profileKey])
+    --     end
+    -- end
 
     -- **
     -- Called when the addon is loaded
@@ -200,8 +197,9 @@ end
 
 -- :: register an event to addon
 function Addon:OnEnable()
-    -- self:Print("Hello World!")
-    -- self:RegisterEvent("CHAT_MSG_SAY")
+    -- if self.people.test then
+    --     self.people.test = UnitName("player")
+    --   end
 end
 
 -- :: response to registered event

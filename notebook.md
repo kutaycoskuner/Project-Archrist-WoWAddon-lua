@@ -24,6 +24,24 @@ https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmo
 - SavedVariables: ElvDB, ElvPrivateDB
 - SavedVariablesPerCharacter: ElvCharacterDB
 
+# Comment Discipline
+comment discipline {
+    title               :   ==== | "#00c8ff" 
+    problem             :   !!   | "#ff6633"
+    query               :   ??   | "#33ffff"
+    todo                :   >>   | "#99ff33"
+    test                :   test | "#ffa100"
+    highlight           :   **   | "#8fab21"
+    description         :   ::   | "#128EC4"  
+    separator line      :   --   | "#001d26"  
+    disabledProperty    :  none
+}
+#0d6991
+#128EC4
+#262626
+#ededed
+#ff33ff
+
 # Sources
 [1] mayron wow addon creation
 https://www.youtube.com/watch?v=nfaE7NQhMlc&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmoA2G
@@ -112,24 +130,6 @@ background, border, artwork, overlay, highlight
 exportInterfaceFiles code
 exportInterfaceFiles art
 
-# Comment Discipline
-comment discipline {
-    title               :   ==== | "#00c8ff" 
-    problem             :   !!   | "#ff6633"
-    query               :   ??   | "#33ffff"
-    todo                :   >>   | "#99ff33"
-    test                :   test | "#ffa100"
-    highlight           :   **   | "#8fab21"
-    description         :   ::   | "#128EC4"  
-    separator line      :   --   | "#001d26"  
-    disabledProperty    :  none
-}
-#0d6991
-#128EC4
-#262626
-#ededed
-#ff33ff
-
 # File Structure
 
 +-- developer
@@ -154,3 +154,32 @@ comment discipline {
 - error
 - notebook
 - readme
+
+# UseCase
+- Raidscore addon, bir framede insanlari reputation a gore siraya diziyor. Gearscore, reputation, disiplin, strateji, damage, attendance bilgileriyle bir raidscore formulu olusturup burada oncelikli olarak davet ediyorsun ayrica playerlar icin not tutabiliyor. 
+
+# All Slash Commands
+SLASH_RELOADUI1 = "/rl"; -- for quicker reload
+SLASH_RELOADUI2 = "/reloadui";
+SLASH_RELOADUI3 = "/re";
+
+SLASH_RaidWarning1 = "/war"
+SLASH_SelectLeadChannel1 = "/comms"
+
+SLASH_lootFilter1 = "/lootfilter"
+SLASH_rollFilter1 = "/rollfilter"
+
+SLASH_reputation1 = "/rep"
+
+SLASH_DISCORD1 = "/discord"
+SLASH_LOOTRULES1 = "/loot"
+SLASH_GBOS1 = "/gbos"
+SLASH_GBOM1 = "/gbom"
+SLASH_GBOW1 = "/gbow"
+SLASH_GBOK1 = "/gbok"
+SLASH_PALADIN1 = "/pala"
+SLASH_SPREAD1 = "/sp"
+SLASH_SPREAD2 = "/spread"
+SLASH_STACK1 = "/st"
+SLASH_STACK2 = "/stack"
+SLASH_TANK1 = "/tank"

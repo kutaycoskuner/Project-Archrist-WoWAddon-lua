@@ -91,20 +91,25 @@ function A:Initialize()
 	-- twipe(self.db)
 	-- twipe(self.global)
 	-- twipe(self.private)
+	self.data = A.Libs.AceDB:New("ArchDB", self.DF)
+    self.db = self.data.profile
+	self.global = self.data.global
+	-- self.global.test = 'Patates' --:: Calisiyor!!
+
+	self.peopleDB = A.Libs.AceDB:New("ArchPeopleDB", self.peopleDF) --  ikinci parametre NE?
+	self.people = self.peopleDB.global
 
 	self.myguid = UnitGUID("player")
-	self.data = A.Libs.AceDB:New(N.."DB", self.DF)
+
 	-- self.data.RegisterCallback(self, "OnProfileChanged", "UpdateAll")
 	-- self.data.RegisterCallback(self, "OnProfileCopied", "UpdateAll")
 	-- self.data._ResetProfile = self.data.ResetProfile
 	-- self.data.ResetProfile = self.OnProfileReset
-	self.charSettings = A.Libs.AceDB:New(N.."PrivateDB", self.privateVars)
-	self.private = self.charSettings.profile
-	self.db = self.data.profile
-	self.global = self.data.global
+	-- self.charSettings = A.Libs.AceDB:New("ArchPrivateDB", self.privateVars)
+	-- self.private = self.charSettings.profile
 
-	-- self.db.playerName = UnitName("player")
 	-- self.charSettings.playerName = UnitName("player")
+
 
 
 	self:InitializeModules()

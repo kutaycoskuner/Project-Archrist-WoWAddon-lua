@@ -1,10 +1,13 @@
 -- ==== Metadata
-local A, L, V, P, G = unpack(select(2, ...)) -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+------------------------------------------------------------------------------------------------------------------------
+local A, L, V, P, G, N = unpack(select(2, ...)); -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, AddonName
+------------------------------------------------------------------------------------------------------------------------
 local module = A:GetModule('raidWarnings');
 
 -- ==== Variables
 local boss = 'none';
-local comms = '/p ' .. UnitName('player') .. " ";
+local comms = '/p ';
+-- A.global.test = UnitName('target');
 --
 local rwDefault1 = '{skull} Focus on [%t] {skull}';
 local rwDefault2 = '{square} Combat Res [%t] {square}';

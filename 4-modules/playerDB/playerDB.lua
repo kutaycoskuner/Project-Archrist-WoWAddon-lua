@@ -24,10 +24,11 @@ local function handleCommand(msg)
     end
 
     --:: if first unit is player this function returns true
-    if UnitIsPlayer(args[1]) then 
+     if UnitExists('target') then 
         -->> keymatch for player if exists in database
-        print('yes ' .. args[1] .. ' is a player')  
-    end
+        print('yes ' .. UnitName('target') .. ' is a player')  
+        A.global.test = UnitName('target')
+     end
     -- test end
 end
 
