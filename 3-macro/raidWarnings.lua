@@ -42,7 +42,7 @@ warn4:SetAttribute("type", "macro")
 function module:Initialize()
     self.initialized = true
     comms = A.global.comms
-    print(comms)
+    -- print(comms)
     setRaidWarnings();
     
     -- :: Register some events

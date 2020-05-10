@@ -13,17 +13,17 @@ local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 
 # Todo
+- su ana kadar ki modullerin database etkilesimleri: lootfilter, rollfilter
 - hangi druidin cs atacagini goster
 - player reputation system
 - table copy yi developerdan alip diger tarafa koy
 
 # Problems
-- player reputation system 
-    - database etkilesimleri
 - core profile da yapilan degisikligi gormuyor
 `boyle bir fonksiyon yok` attempt to call method 'UpdateCooldownSettings' (a nil value)
 
 # Completed
+- player reputation system: database etkilesimleri
 - uniform alerts
 - playerDB yeni bir database yaratildi
 - test if settings importing same table name as main `eger degisim olmazsa evet`
