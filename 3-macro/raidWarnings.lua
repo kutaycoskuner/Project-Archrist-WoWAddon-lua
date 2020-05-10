@@ -1,12 +1,17 @@
--- ==== Metadata
 ------------------------------------------------------------------------------------------------------------------------
-local A, L, V, P, G, N = unpack(select(2, ...)); -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, AddonName
+-- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+local A, L, V, P, G, C, M, N = unpack(select(2, ...));
+local moduleName = 'raidWarnings';
+local moduleAlert = M .. moduleName .. ": |r";
+local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
-local module = A:GetModule('raidWarnings');
-
 -- ==== Variables
 local boss = 'none';
 local comms = '/p ';
+-- print(moduleAlert .. A..comms)
+-- N.comms = 'lalla';
+-- G.test = 'hello'
+-- A.global.test = 'gage'
 -- A.global.test = UnitName('target');
 --
 local rwDefault1 = '{skull} Focus on [%t] {skull}';
@@ -34,12 +39,14 @@ local warn4 = CreateFrame("CheckButton", "WarnButton4", UIParent,
 warn4:SetAttribute("type", "macro")
 
 -- ==== Start
--- function module:Initialize()
---     self.initialized = true
---     setRaidWarnings();
---     print('init')
---     -- :: Register some events
--- end
+function module:Initialize()
+    self.initialized = true
+    comms = A.global.comms
+    print(comms)
+    setRaidWarnings();
+    
+    -- :: Register some events
+end
 
 -- :: sets raid warning
 function setRaidWarnings()
@@ -227,18 +234,24 @@ local function selectChannel(channel)
         --
         if (command == "w" or command == "test") then
             comms = "/w " .. UnitName('player') .. " "
+            A.global.comms = "/w " .. UnitName('player') .. " "
         elseif (command == "s" or command == "say") then
             comms = "/s "
+            A.global.comms = '/s '
         elseif (command == "p" or command == "party") then
             comms = "/p "
+            A.global.comms = "/p "
         elseif (command == "ra" or command == "raid") then
             comms = "/ra "
+            A.global.comms = "/ra "
         elseif (command == "rw" or command == "raidwarning") then
             comms = "/rw "
+            A.global.comms = "/rw "
         elseif (command == "bg" or command == "battlegrouund") then
             comms = "/bg "
+            A.global.comms = "/bg "
         else
-            comms = '/rw '
+            comms = comms
         end
         DEFAULT_CHAT_FRAME:AddMessage(
             "|cff128ec4[Archrium] WarningChannel:|r " .. tostring(comms))
@@ -249,9 +262,9 @@ local function selectChannel(channel)
 end
 
 -- -- ==== End
-setRaidWarnings();
--- local function InitializeCallback() module:Initialize() end
--- A:RegisterModule(module:GetName(), InitializeCallback)
+-- setRaidWarnings();
+local function InitializeCallback() module:Initialize() end
+A:RegisterModule(module:GetName(), InitializeCallback)
 
 -- ==== Slash Handlers
 SLASH_RaidWarning1 = "/war"

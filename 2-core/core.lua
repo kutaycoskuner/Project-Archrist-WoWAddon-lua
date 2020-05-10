@@ -88,18 +88,25 @@ function A:Initialize()
 	-- print('core')
 	-- test end
 
-	-- twipe(self.db)
-	-- twipe(self.global)
+	twipe(self.db)
+	twipe(self.global)
 	-- twipe(self.private)
+
 	self.data = A.Libs.AceDB:New("ArchDB", self.DF)
     self.db = self.data.profile
 	self.global = self.data.global
-	-- self.global.test = 'Patates' --:: Calisiyor!!
+
+	-- self.global.comms = '/ra ' --:: Calisiyor!!
+	self.global.test = 'Patates' --:: Calisiyor!!
 
 	self.peopleDB = A.Libs.AceDB:New("ArchPeopleDB", self.peopleDF) --  ikinci parametre NE?
 	self.people = self.peopleDB.global
 
 	self.myguid = UnitGUID("player")
+
+	-- test
+	-- print(G.comms)
+    -- test end
 
 	-- self.data.RegisterCallback(self, "OnProfileChanged", "UpdateAll")
 	-- self.data.RegisterCallback(self, "OnProfileCopied", "UpdateAll")
