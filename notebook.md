@@ -13,9 +13,8 @@ local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 
 # Todo
-- su ana kadar ki modullerin database etkilesimleri: lootfilter, rollfilter
-- hangi druidin cs atacagini goster
 - player reputation system
+- hangi druidin cs atacagini goster
 - table copy yi developerdan alip diger tarafa koy
 
 # Problems
@@ -23,6 +22,7 @@ local module = A:GetModule(moduleName);
 `boyle bir fonksiyon yok` attempt to call method 'UpdateCooldownSettings' (a nil value)
 
 # Completed
+- su ana kadar ki modullerin database etkilesimleri: lootfilter, rollfilter
 - player reputation system: database etkilesimleri
 - uniform alerts
 - playerDB yeni bir database yaratildi

@@ -41,6 +41,10 @@ warn4:SetAttribute("type", "macro")
 -- ==== Start
 function module:Initialize()
     self.initialized = true
+
+    if A.global.comms == nil then
+        A.global.comms = '/p '
+    end
     comms = A.global.comms
     -- print(comms)
     setRaidWarnings();
