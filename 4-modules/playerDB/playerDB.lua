@@ -9,10 +9,9 @@ local module = A:GetModule(moduleName);
 -- ==== Start
 -- if A.db.people == nil then A.db.people = {} end 
 
-
-local function handleCommand(msg)
-    -- test 
-    --:: this is separating the given arguments after command
+-- :: Argumanlari ayirip bas harflerini buyutuyor
+local function fixArgs(msg)
+    -- :: this is separating the given arguments after command
     local sep;
     if sep == nil then sep = "%s" end
     local args = {};
@@ -20,26 +19,65 @@ local function handleCommand(msg)
         table.insert(args, str)
     end
 
-    --:: this capitalizes first letters of each given string
-    for ii=1, #args, 1 do
-    args[ii] = args[ii]:lower()
-    args[ii] = args[ii]:gsub("^%l", string.upper)
+    -- :: this capitalizes first letters of each given string
+    for ii = 1, #args, 1 do
+        args[ii] = args[ii]:lower()
+        args[ii] = args[ii]:gsub("^%l", string.upper)
     end
 
-    --:: if first unit is player this function returns true
-     if UnitExists('target') then 
-        -->> keymatch for player if exists in database
-        print(moduleAlert .. UnitName('target') .. ' is now in your database')  
-        local name = UnitName("target");
-        A.people[UnitName('target')] = {
-            reputation = 0,
-            discipline = 0,
-            strategy = 0,
-            damage = 0,
-            attendance = 0,
-            gearscore = 0,
-        }
-     end
+    return args;
+end
+
+local function handleReputation(msg, parameter)
+
+    -- local parName
+    -- if par == 'rep' then
+    --     parName = 'reputation'
+    -- else if par == 'str' then
+    --     parName = "strategy"
+    -- end
+
+    local args = fixArgs(msg)
+    -- :: if first unit is player this function returns true
+    if UnitExists('target') then
+
+        -- :: Create person if not already exists
+        if A.people[UnitName('target')] == nil then
+            A.people[UnitName('target')] =
+                {
+                    reputation = 0,
+                    discipline = 0,
+                    strategy = 0,
+                    damage = 0,
+                    attendance = 0,
+                    gearscore = 0,
+                    note = ''
+                }
+            print(moduleAlert .. ' New player added in your database')
+        end
+
+        -- :: Add Reputation
+        if args[1] then
+            if type(tonumber(args[1])) == "number" then
+                A.people[UnitName('target')][parameter] =
+                    tonumber(A.people[UnitName('target')][parameter]) +
+                        tonumber(args[1])
+                print(moduleAlert .. UnitName('target') .. ' ' .. parameter ..
+                          ' is now ' .. A.people[UnitName('target')][parameter])
+            else
+                print('not worked')
+                print(type(args[1]))
+            end
+        else
+            print(moduleAlert .. UnitName('target'))
+            print(moduleAlert .. 'reputation: ' .. A.people[UnitName('target')].reputation)
+            print(moduleAlert .. 'discipline: ' .. A.people[UnitName('target')].discipline)
+            print(moduleAlert .. 'strategy: ' .. A.people[UnitName('target')].strategy)
+            print(moduleAlert .. 'damage: ' .. A.people[UnitName('target')].damage)
+            print(moduleAlert .. 'attendance: ' .. A.people[UnitName('target')].attendance)
+        end
+
+    end
     -- test end
 end
 
@@ -51,7 +89,18 @@ end
 
 -- ==== Slash Handlers
 SLASH_reputation1 = "/rep"
-SlashCmdList["reputation"] = function(msg) handleCommand(msg) end
+SlashCmdList["reputation"] =
+    function(msg) handleReputation(msg, 'reputation') end
+SLASH_discipline1 = "/dsc"
+SlashCmdList["discipline"] =
+    function(msg) handleReputation(msg, 'discipline') end
+SLASH_strategy1 = "/str"
+SlashCmdList["strategy"] = function(msg) handleReputation(msg, 'strategy') end
+SLASH_damage1 = "/dmg"
+SlashCmdList["damage"] = function(msg) handleReputation(msg, 'damage') end
+SLASH_attendance1 = "/att"
+SlashCmdList["attendance"] =
+    function(msg) handleReputation(msg, 'attendance') end
 
 -- ==== Callback & Register [last arg]
 local function InitializeCallback() module:Initialize() end
@@ -83,5 +132,9 @@ data structure =
 Further additions
 - get and set info about players from ingame gui
 - sync different player databases
+
+- rep, dmg, dsc, str, att
+
+
 
 ]]
