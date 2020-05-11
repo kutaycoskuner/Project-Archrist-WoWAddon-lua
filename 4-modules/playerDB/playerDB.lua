@@ -7,7 +7,9 @@ local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 
 -- ==== Start
--- if A.db.people == nil then A.db.people = {} end 
+-- !! IMPORTANT GLOBAL
+local Raidscore
+local args = {}
 
 -- :: Argumanlari ayirip bas harflerini buyutuyor
 local function fixArgs(msg)
@@ -26,18 +28,80 @@ local function fixArgs(msg)
     end
 
     return args;
+
+end
+
+local function archGetPlayer(player) 
+    print(moduleAlert .. player)
+    print(moduleAlert .. 'reputation: ' ..
+              A.people[player].reputation)
+    print(moduleAlert .. 'discipline: ' ..
+              A.people[player].discipline)
+    print(moduleAlert .. 'strategy: ' ..
+              A.people[player].strategy)
+    print(moduleAlert .. 'damage: ' ..
+              A.people[player].damage)
+    print(moduleAlert .. 'attendance: ' ..
+              A.people[player].attendance)
+    print(moduleAlert .. 'gearscore: ' ..
+              A.people[player].gearscore)
+    print(moduleAlert .. 'note: ' ..
+              A.people[player].note)
 end
 
 local function handleReputation(msg, parameter)
 
-    -- local parName
-    -- if par == 'rep' then
-    --     parName = 'reputation'
-    -- else if par == 'str' then
-    --     parName = "strategy"
-    -- end
+    args = fixArgs(msg)
 
-    local args = fixArgs(msg)
+    if args[1] == nil then
+        if UnitExists('target') then
+            -- :: Create person if not already exists
+            if A.people[UnitName('target')] == nil then
+                A.people[UnitName('target')] =
+                    {
+                        reputation = 0,
+                        discipline = 0,
+                        strategy = 0,
+                        damage = 0,
+                        attendance = 0,
+                        gearscore = 0,
+                        note = ''
+                    }
+                print(moduleAlert .. ' New player added in your database')
+            else
+                archGetPlayer(UnitName('target'))
+            end
+        end
+    else
+        -- :: Eger ikinci arguman args[1] var ise
+        if UnitExists('target') then
+            if type(tonumber(args[1])) == "number" then
+                A.people[UnitName('target')][parameter] =
+                    tonumber(A.people[UnitName('target')][parameter]) +
+                        tonumber(args[1])
+                print(moduleAlert .. UnitName('target') .. ' ' .. parameter ..
+                          ' is now ' .. A.people[UnitName('target')][parameter])
+            end
+        end
+
+        -- >> Burada yazilan ismin varolup olmadigini sorgulayip olmasi durumunda islem yapacak
+        if A.people[args[1]] then
+            if type(tonumber(args[1])) ~= "number" then
+                archGetPlayer(args[1])
+            end
+        else
+            print('not worked')
+        end
+    end
+
+    -- :: if first unit is player this function returns true
+
+    -- test end
+end
+
+local function getGearScoreRecord(msg)
+
+    args = fixArgs(msg)
     -- :: if first unit is player this function returns true
     if UnitExists('target') then
 
@@ -56,29 +120,15 @@ local function handleReputation(msg, parameter)
             print(moduleAlert .. ' New player added in your database')
         end
 
-        -- :: Add Reputation
-        if args[1] then
-            if type(tonumber(args[1])) == "number" then
-                A.people[UnitName('target')][parameter] =
-                    tonumber(A.people[UnitName('target')][parameter]) +
-                        tonumber(args[1])
-                print(moduleAlert .. UnitName('target') .. ' ' .. parameter ..
-                          ' is now ' .. A.people[UnitName('target')][parameter])
-            else
-                print('not worked')
-                print(type(args[1]))
-            end
-        else
-            print(moduleAlert .. UnitName('target'))
-            print(moduleAlert .. 'reputation: ' .. A.people[UnitName('target')].reputation)
-            print(moduleAlert .. 'discipline: ' .. A.people[UnitName('target')].discipline)
-            print(moduleAlert .. 'strategy: ' .. A.people[UnitName('target')].strategy)
-            print(moduleAlert .. 'damage: ' .. A.people[UnitName('target')].damage)
-            print(moduleAlert .. 'attendance: ' .. A.people[UnitName('target')].attendance)
-        end
-
+        -- :: Get Gearscore
+        local Name = GameTooltip:GetUnit();
+        A.people[UnitName('target')].gearscore =
+            GearScore_GetScore(Name, "mouseover")
+        print(
+            moduleAlert .. UnitName('target') .. ' gearscore is updated as ' ..
+                A.people[UnitName('target')].gearscore)
     end
-    -- test end
+
 end
 
 function module:Initialize()
@@ -101,6 +151,8 @@ SlashCmdList["damage"] = function(msg) handleReputation(msg, 'damage') end
 SLASH_attendance1 = "/att"
 SlashCmdList["attendance"] =
     function(msg) handleReputation(msg, 'attendance') end
+SLASH_gsr1 = "/gsr"
+SlashCmdList["gsr"] = function(msg) getGearScoreRecord(msg) end
 
 -- ==== Callback & Register [last arg]
 local function InitializeCallback() module:Initialize() end
