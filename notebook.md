@@ -13,6 +13,7 @@ local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 
 # Todo
+- help command
 - calculate Raidscore
 - ufak bi gui
 - player reputation system

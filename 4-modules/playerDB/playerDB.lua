@@ -24,11 +24,25 @@ local function fixArgs(msg)
     -- :: this capitalizes first letters of each given string
     for ii = 1, #args, 1 do
         args[ii] = args[ii]:lower()
-        args[ii] = args[ii]:gsub("^%l", string.upper)
+        if ii == 1 then args[ii] = args[ii]:gsub("^%l", string.upper) end
     end
 
     return args;
 
+end
+
+-- :: Calculate raidscore
+local function archCalcRS(player)
+    local rep = (tonumber(A.people[player].reputation) * 250)
+    local dsc = (tonumber(A.people[player].discipline) * 300)
+    local str = (tonumber(A.people[player].strategy) * 300)
+    local dmg = (tonumber(A.people[player].damage) * 200)
+    local att = (tonumber(A.people[player].attendance) * 100)
+    local gsr = (tonumber(A.people[player].gearscore) * 1)
+
+    local raidScore = rep + dsc + str + dmg + att + gsr
+
+    return raidScore;
 end
 
 -- :: Create Player Entry
@@ -55,14 +69,16 @@ local function archGetPlayer(player)
     print(moduleAlert .. 'attendance: ' .. A.people[player].attendance)
     print(moduleAlert .. 'gearscore: ' .. A.people[player].gearscore)
     print(moduleAlert .. 'note: ' .. A.people[player].note)
+    print(moduleAlert .. 'Raidscore: ' .. archCalcRS(player))
 end
 
 local function handlePlayerStat(msg, parameter)
 
     args = fixArgs(msg)
 
+    -- :: isim argumani yok ise targeta bak
     if args[1] == nil then
-        if UnitExists('target') then
+        if UnitExists('target') and UnitName('target') ~= UnitName('player') then
             -- :: Create person if not already exists
             if A.people[UnitName('target')] == nil then
                 archAddPlayer(UnitName('target'))
@@ -72,7 +88,26 @@ local function handlePlayerStat(msg, parameter)
         end
     else
         -- :: Eger ikinci arguman args[1] var ise
-        if UnitExists('target') then
+        -- :: Isim oncelikli entry
+        if type(tonumber(args[1])) ~= "number" then
+            if A.people[args[1]] == nil then archAddPlayer(args[1]) end
+            if args[2] then
+                if type(tonumber(args[2])) == "number" then
+                    A.people[args[1]][parameter] =
+                        tonumber(A.people[args[1]][parameter]) +
+                            tonumber(args[2])
+                    print(moduleAlert .. args[1] .. ' ' .. parameter ..
+                              ' is now ' .. A.people[args[1]][parameter])
+                else
+                    print(moduleAlert .. 'your entry is not valid')
+                end
+            else
+                archGetPlayer(args[1])
+            end
+        end
+
+        -- :: Target varsa
+        if UnitExists('target') and UnitName('target') ~= UnitName('player') then
             if A.people[UnitName('target')] == nil then
                 archAddPlayer(UnitName('target'))
             end
@@ -83,15 +118,6 @@ local function handlePlayerStat(msg, parameter)
                         tonumber(args[1])
                 print(moduleAlert .. UnitName('target') .. ' ' .. parameter ..
                           ' is now ' .. A.people[UnitName('target')][parameter])
-            end
-        else
-            -- >> Burada yazilan ismin varolup olmadigini sorgulayip olmasi durumunda islem yapacak
-            if A.people[args[1]] then
-                if type(tonumber(args[1])) ~= "number" then
-                    archGetPlayer(args[1])
-                end
-            else
-                print('not worked')
             end
         end
     end
@@ -112,11 +138,11 @@ local function getGearScoreRecord(msg)
         local Name = GameTooltip:GetUnit();
 
         if Name == UnitName('target') then
-        A.people[UnitName('target')].gearscore =
-            GearScore_GetScore(Name, "mouseover")
-        print(
-            moduleAlert .. UnitName('target') .. ' gearscore is updated as ' ..
-                A.people[UnitName('target')].gearscore)
+            A.people[UnitName('target')].gearscore =
+                GearScore_GetScore(Name, "mouseover")
+            print(moduleAlert .. UnitName('target') ..
+                      ' gearscore is updated as ' ..
+                      A.people[UnitName('target')].gearscore)
         else
             print(moduleAlert .. 'you need to mouseover target to calculate gs')
         end
@@ -124,14 +150,30 @@ local function getGearScoreRecord(msg)
 
 end
 
-local function handleNote(msg) 
+local function handleNote(msg)
+
+    -- :: Burda target oncelikli
     if UnitExists('target') then
         if A.people[UnitName('target')] == nil then
             archAddPlayer(UnitName('target'))
         end
         A.people[UnitName('target')].note = msg
-        print(moduleAlert .. UnitName('target') .. ' note: '.. A.people[UnitName('target')].note)
+        print(moduleAlert .. UnitName('target') .. ' note: ' ..
+                  A.people[UnitName('target')].note)
+    else
+        -- :: Get Name and not after
+        local args = fixArgs(msg)
+        print(args[2])
+        -- print(args)
+        local name = table.remove(args, 1)
+        -- print(name)
+        local note = table.concat(args, ' ')
+        -- print(note)
+        if A.people[name] == nil then archAddPlayer(name) end
+        A.people[name].note = note
+        print(moduleAlert .. name .. ' note: ' .. A.people[name].note)
     end
+
 end
 
 function module:Initialize()
@@ -192,6 +234,8 @@ Further additions
 
 - rep, dmg, dsc, str, att
 
-
+yazilmis isim target'a oncelikli
+/rep <isim> 1 :: bu ismi aliyor
+/rep 1 :: bu targeti aliyor
 
 ]]
