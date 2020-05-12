@@ -1,14 +1,44 @@
--- local frame = AceGUI:Create("Frame")
--- frame:SetTitle("Example Frame")
--- frame:SetStatusText("AceGUI-3.0 Example Container Frame")
+------------------------------------------------------------------------------------------------------------------------
+-- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+local A, L, V, P, G, C, M, N = unpack(select(2, ...));
+local moduleName = 'ArchGUI';
+local moduleAlert = M .. moduleName .. ": |r";
+local module = A:GetModule(moduleName);
+------------------------------------------------------------------------------------------------------------------------
 
--- local textStore
--- local AceGUI = LibStub("AceGUI-3.0")
--- local frame = AceGUI:Create("Frame")
--- frame:SetTitle(AddonName)
--- frame:SetStatusText("AceGUI-3.0 Example Container Frame")
--- frame:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
--- -- Fill Layout - the TabGroup widget will fill the whole frame
+local AceGUI = LibStub("AceGUI-3.0")
+local frameOpen = false
+local textStore
+
+-- :: Sadece Komutla aciliyor
+local function toggleGUI()
+    if not frameOpen then
+        local frame = AceGUI:Create("Frame")
+        frame:SetTitle(N)
+        frame:SetStatusText("AceGUI-3.0 Example Container Frame")
+        frame:SetCallback("OnClose", function(widget)
+            AceGUI:Release(widget)
+            frameOpen = false
+        end)
+        frameOpen = true
+    end
+end
+
+function module:Initialize()
+    self.Initialized = true
+    -- self:RegisterEvent("MAIL_INBOX_UPDATE")
+    -- "MAIL_INBOX_UPDATE"
+end
+
+-- ==== Slash Handlers
+SLASH_arch1 = "/arch"
+SlashCmdList["arch"] = function() toggleGUI() end
+
+-- ==== Callback & Register [last arg]
+local function InitializeCallback() module:Initialize() end
+A:RegisterModule(module:GetName(), InitializeCallback)
+
+-- Fill Layout - the TabGroup widget will fill the whole frame
 -- frame:SetLayout("Fill")
 
 -- local editbox = AceGUI:Create("EditBox")
@@ -24,7 +54,7 @@
 -- button:SetCallback("OnClick", function() print(textStore) end)
 -- frame:AddChild(button)
 
--- function that draws the widgets for the first tab
+-- -- function that draws the widgets for the first tab
 -- local function DrawGroup1(container)
 --     local desc = AceGUI:Create("Label")
 --     desc:SetText("This is Tab 1")

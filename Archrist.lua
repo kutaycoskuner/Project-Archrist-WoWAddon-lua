@@ -106,6 +106,7 @@ do
                                           "AceEvent-3.0")
     Addon.playerDB = Addon:NewModule("playerDB", "AceHook-3.0", "AceEvent-3.0")
     Addon.autoLoot = Addon:NewModule("autoLoot", "AceHook-3.0", "AceEvent-3.0")
+    Addon.ArchGUI = Addon:NewModule("ArchGUI", "AceHook-3.0", "AceEvent-3.0")
     -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
     -- :: Macros
     Addon.milling = Addon:NewModule("milling", "AceEvent-3.0")
