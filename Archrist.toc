@@ -25,3 +25,6 @@ Archrist.lua
 4-modules\-load-modules.xml
 5-developer\-load-developer.xml
 
+# Development
+9-gui\-load-gui.xml
+

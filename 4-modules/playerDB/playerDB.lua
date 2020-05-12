@@ -81,13 +81,14 @@ local function archGetPlayer(player)
                                        archCalcRS(player))
 end
 
+-- ==== Main 
 local function handlePlayerStat(msg, parameter)
 
     args = fixArgs(msg)
 
     -- :: isim argumani yok ise targeta bak
     if args[1] == nil then
-        if UnitExists('target') and UnitName('target') ~= UnitName('player') then
+        if UnitExists('target') and UnitName('target') ~= UnitName('player') and UnitIsPlayer('target') then
             -- :: Create person if not already exists
             if A.people[UnitName('target')] == nil then
                 archAddPlayer(UnitName('target'))
@@ -118,7 +119,7 @@ local function handlePlayerStat(msg, parameter)
         end
 
         -- :: Target varsa
-        if UnitExists('target') and UnitName('target') ~= UnitName('player') then
+        if UnitExists('target') and UnitName('target') ~= UnitName('player') and UnitIsPlayer('target') then
             if A.people[UnitName('target')] == nil then
                 archAddPlayer(UnitName('target'))
             end
@@ -127,7 +128,7 @@ local function handlePlayerStat(msg, parameter)
                 A.people[UnitName('target')][parameter] =
                     tonumber(A.people[UnitName('target')][parameter]) +
                         tonumber(args[1])
-                print(moduleAlert .. UnitName('target') .. ' ' .. parameter ..
+                        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. UnitName('target') .. ' ' .. parameter ..
                           ' is now ' .. A.people[UnitName('target')][parameter])
             end
         end
@@ -138,7 +139,7 @@ local function getGearScoreRecord(msg)
 
     args = fixArgs(msg)
     -- :: if first unit is player this function returns true
-    if UnitExists('target') then
+    if UnitExists('target') and UnitIsPlayer('target') then
 
         -- :: Create person if not already exists
         if A.people[UnitName('target')] == nil then
