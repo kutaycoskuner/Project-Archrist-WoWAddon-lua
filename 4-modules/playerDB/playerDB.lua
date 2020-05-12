@@ -56,20 +56,29 @@ local function archAddPlayer(player)
         gearscore = 0,
         note = ''
     }
-    print(moduleAlert .. ' New player added in your database')
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. ' New player (' .. player ..
+                                       ') added in your database')
 end
 
 -- :: Get Player Stats
 local function archGetPlayer(player)
-    print(moduleAlert .. player)
-    print(moduleAlert .. 'reputation: ' .. A.people[player].reputation)
-    print(moduleAlert .. 'discipline: ' .. A.people[player].discipline)
-    print(moduleAlert .. 'strategy: ' .. A.people[player].strategy)
-    print(moduleAlert .. 'damage: ' .. A.people[player].damage)
-    print(moduleAlert .. 'attendance: ' .. A.people[player].attendance)
-    print(moduleAlert .. 'gearscore: ' .. A.people[player].gearscore)
-    print(moduleAlert .. 'note: ' .. A.people[player].note)
-    print(moduleAlert .. 'Raidscore: ' .. archCalcRS(player))
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. player)
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'reputation: ' ..
+                                       A.people[player].reputation)
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'discipline: ' ..
+                                       A.people[player].discipline)
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'strategy: ' ..
+                                       A.people[player].strategy)
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'damage: ' ..
+                                       A.people[player].damage)
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'attendance: ' ..
+                                       A.people[player].attendance)
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'gearscore: ' ..
+                                       A.people[player].gearscore)
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'note: ' ..
+                                       A.people[player].note)
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Raidscore: ' ..
+                                       archCalcRS(player))
 end
 
 local function handlePlayerStat(msg, parameter)
@@ -96,10 +105,12 @@ local function handlePlayerStat(msg, parameter)
                     A.people[args[1]][parameter] =
                         tonumber(A.people[args[1]][parameter]) +
                             tonumber(args[2])
-                    print(moduleAlert .. args[1] .. ' ' .. parameter ..
-                              ' is now ' .. A.people[args[1]][parameter])
+                    SELECTED_CHAT_FRAME:AddMessage(
+                        moduleAlert .. args[1] .. ' ' .. parameter .. ' is now ' ..
+                            A.people[args[1]][parameter])
                 else
-                    print(moduleAlert .. 'your entry is not valid')
+                    SELECTED_CHAT_FRAME:AddMessage(
+                        moduleAlert .. 'your entry is not valid')
                 end
             else
                 archGetPlayer(args[1])
@@ -140,11 +151,12 @@ local function getGearScoreRecord(msg)
         if Name == UnitName('target') then
             A.people[UnitName('target')].gearscore =
                 GearScore_GetScore(Name, "mouseover")
-            print(moduleAlert .. UnitName('target') ..
-                      ' gearscore is updated as ' ..
-                      A.people[UnitName('target')].gearscore)
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. UnitName('target') .. ' gearscore is updated as ' ..
+                    A.people[UnitName('target')].gearscore)
         else
-            print(moduleAlert .. 'you need to mouseover target to calculate gs')
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. 'you need to mouseover target to calculate gs')
         end
     end
 
@@ -158,12 +170,13 @@ local function handleNote(msg)
             archAddPlayer(UnitName('target'))
         end
         A.people[UnitName('target')].note = msg
-        print(moduleAlert .. UnitName('target') .. ' note: ' ..
-                  A.people[UnitName('target')].note)
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. UnitName('target') ..
+                                           ' note: ' ..
+                                           A.people[UnitName('target')].note)
     else
         -- :: Get Name and not after
         local args = fixArgs(msg)
-        print(args[2])
+        SELECTED_CHAT_FRAME:AddMessage(args[2])
         -- print(args)
         local name = table.remove(args, 1)
         -- print(name)
@@ -171,7 +184,8 @@ local function handleNote(msg)
         -- print(note)
         if A.people[name] == nil then archAddPlayer(name) end
         A.people[name].note = note
-        print(moduleAlert .. name .. ' note: ' .. A.people[name].note)
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. name .. ' note: ' ..
+                                           A.people[name].note)
     end
 
 end

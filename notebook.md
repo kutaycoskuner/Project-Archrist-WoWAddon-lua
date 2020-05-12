@@ -13,6 +13,7 @@ local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 
 # Todo
+- not alma addonu gui icin uygun olur
 - help command
 - calculate Raidscore
 - ufak bi gui
@@ -200,3 +201,4 @@ SLASH_discipline1 = "/dsc"
 SLASH_strategy1 = "/str"
 SLASH_damage1 = "/dmg"
 SLASH_attendance1 = "/att"
+SLASH_note1 = "/not"
