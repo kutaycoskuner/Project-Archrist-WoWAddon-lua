@@ -13,6 +13,8 @@ local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 
 # Todo
+- calculate Raidscore
+- ufak bi gui
 - player reputation system
 - hangi druidin cs atacagini goster
 - table copy yi developerdan alip diger tarafa koy

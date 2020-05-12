@@ -2,7 +2,7 @@
 ## Interface: 30300
 ## Title: |cffedededArchrist|r
 ## Notes: Raid assist and control addon
-## Version: 0.3.2 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
+## Version: 0.4.0 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
 ## Author: Orthrin
 ## SavedVariables: ArchDB, ArchPrivateDB, ArchPeopleDB
 ## SavedVariablesPerCharacter: ArchCharacterDB
@@ -24,7 +24,4 @@ Archrist.lua
 3-macro\-load-macro.xml
 4-modules\-load-modules.xml
 5-developer\-load-developer.xml
-# developer\-load.xml
-# commands\-load.xml
-# macro\-load.xml
 
