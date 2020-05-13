@@ -86,18 +86,7 @@ local function handlePlayerStat(msg, parameter)
 
     args = fixArgs(msg)
 
-    -- :: isim argumani yok ise targeta bak
-    if args[1] == nil then
-        if UnitExists('target') and UnitName('target') ~= UnitName('player') and UnitIsPlayer('target') then
-            -- :: Create person if not already exists
-            if A.people[UnitName('target')] == nil then
-                archAddPlayer(UnitName('target'))
-            else
-                archGetPlayer(UnitName('target'))
-            end
-        end
-    else
-        -- :: Eger ikinci arguman args[1] var ise
+    if args[1] then
         -- :: Isim oncelikli entry
         if type(tonumber(args[1])) ~= "number" then
             if A.people[args[1]] == nil then archAddPlayer(args[1]) end
@@ -130,6 +119,16 @@ local function handlePlayerStat(msg, parameter)
                         tonumber(args[1])
                         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. UnitName('target') .. ' ' .. parameter ..
                           ' is now ' .. A.people[UnitName('target')][parameter])
+            end
+        end
+    else
+        -- :: isim argumani yok ise targeta bak
+        if UnitExists('target') and UnitName('target') ~= UnitName('player') and UnitIsPlayer('target') then
+            -- :: Create person if not already exists
+            if A.people[UnitName('target')] == nil then
+                archAddPlayer(UnitName('target'))
+            else
+                archGetPlayer(UnitName('target'))
             end
         end
     end
@@ -166,7 +165,7 @@ end
 local function handleNote(msg)
 
     -- :: Burda target oncelikli
-    if UnitExists('target') then
+    if UnitExists('target') and UnitIsPlayer('target') then
         if A.people[UnitName('target')] == nil then
             archAddPlayer(UnitName('target'))
         end
