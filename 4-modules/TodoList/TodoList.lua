@@ -41,16 +41,16 @@ local function handleTodo(msg)
     end
     list = A.global.todo
     local args = fixArgs(msg)
-    local issuer = table.remove(args, 1)
+    -- local issuer = table.remove(args, 1)
     local note = table.concat(args, ' ')
 
     if issuer == 'S' then
         issuer = UnitName('player')
     end
 
-    if issuer and note then
-    table.insert(list, {issuedBy = issuer, todo = note})
-    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. list[#list].issuedBy .. ' | ' .. list[#list].todo)
+    if #note > 0 then
+    table.insert(list, {todo = note})
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. list[#list].todo) -- list[#list].issuedBy .. ' | ' ..
     A.global.todo = list
     -- toggleGUI(true)
     else

@@ -27,13 +27,13 @@ function toggleGUI(key)
         if A.global.todo then
             -- :: Labels
             local labelIssuer = AceGUI:Create("Label")
-            labelIssuer:SetText("Issued By")
-            labelIssuer:SetWidth(100)
+            labelIssuer:SetText("")
+            labelIssuer:SetWidth(60)
             frame:AddChild(labelIssuer)
             --
             local labelTodo = AceGUI:Create("Label")
             labelTodo:SetText("Todo")
-            labelTodo:SetWidth(400)
+            labelTodo:SetWidth(480)
             frame:AddChild(labelTodo)
             --
             local labelButton = AceGUI:Create("Label")
@@ -44,13 +44,13 @@ function toggleGUI(key)
             for ii = 1, #A.global.todo do
                 -- :: Bu bir todo
                 local label = AceGUI:Create("Label")
-                label:SetText(A.global.todo[ii].issuedBy .. " ")
-                label:SetWidth(100)
+                label:SetText(ii .. "# ")
+                label:SetWidth(60)
                 frame:AddChild(label)
                 --
-                local editbox = AceGUI:Create("EditBox")
+                local editbox = AceGUI:Create("Label")
                 editbox:SetText(A.global.todo[ii].todo)
-                editbox:SetWidth(400)
+                editbox:SetWidth(480)
                 -- editbox:SetCallback("OnEnterPressed", function(widget, event, text)
                 --     textStore = text
                 -- end)
@@ -71,17 +71,17 @@ function toggleGUI(key)
             -- :: gui Add Todo
             local newIssuer, newTodo
             --
-            local addIssuer = AceGUI:Create("EditBox")
-            addIssuer:SetLabel("Issuer")
-            addIssuer:SetWidth(100)
+            local addIssuer = AceGUI:Create("Label")
+            addIssuer:SetText(#A.global.todo +1 .. "# ")
+            addIssuer:SetWidth(60)
             frame:AddChild(addIssuer)
-            addIssuer:SetCallback("OnEnterPressed", function(widget, event, text)
-                newIssuer = text
-            end)
+            -- addIssuer:SetCallback("OnEnterPressed", function(widget, event, text)
+            --     newIssuer = text
+            -- end)
             --
             local addTodo = AceGUI:Create("EditBox")
             addTodo:SetLabel("Todo")
-            addTodo:SetWidth(400)
+            addTodo:SetWidth(480)
             addTodo:SetCallback("OnEnterPressed", function(widget, event, text)
                 newTodo = text
             end)
@@ -91,7 +91,7 @@ function toggleGUI(key)
             button:SetText("Add")
             button:SetWidth(80)
             button:SetCallback("OnClick", function(widget)
-                table.insert(A.global.todo, {issuedBy = newIssuer, todo = newTodo})
+                table.insert(A.global.todo, {todo = newTodo})
                 --:: Recursive
                 toggleGUI(true)
                 -- editbox = nil

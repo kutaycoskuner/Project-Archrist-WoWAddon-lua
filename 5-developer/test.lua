@@ -18,12 +18,12 @@
 -- end
 
 -- local function handleCommand()
---     print('test')
+--     print(UnitIsConnected('Arkzar'))
 -- end
 
 -- -- ==== Slash Handlersd
--- -- SLASH_test1 = "/test"
--- -- SlashCmdList["test"] = function() handleCommand() end
+-- SLASH_test1 = "/test"
+-- SlashCmdList["test"] = function() handleCommand() end
 
 -- -- -- ==== End
 -- local function InitializeCallback() module:Initialize() end
