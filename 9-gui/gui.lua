@@ -91,7 +91,9 @@ function toggleGUI(key)
             button:SetText("Add")
             button:SetWidth(80)
             button:SetCallback("OnClick", function(widget)
-                table.insert(A.global.todo, {todo = newTodo})
+                local list = A.global.todo
+                table.insert(list, {todo = newTodo})
+                A.global.todo = list
                 --:: Recursive
                 toggleGUI(true)
                 -- editbox = nil
