@@ -25,6 +25,22 @@ function toggleGUI(key)
         frame:SetLayout("Flow")
 
         if A.global.todo then
+            -- :: Labels
+            local labelIssuer = AceGUI:Create("Label")
+            labelIssuer:SetText("Issued By")
+            labelIssuer:SetWidth(100)
+            frame:AddChild(labelIssuer)
+            --
+            local labelTodo = AceGUI:Create("Label")
+            labelTodo:SetText("Todo")
+            labelTodo:SetWidth(400)
+            frame:AddChild(labelTodo)
+            --
+            local labelButton = AceGUI:Create("Label")
+            labelButton:SetText("Complete")
+            labelButton:SetWidth(80)
+            frame:AddChild(labelButton)
+            --
             for ii = 1, #A.global.todo do
                 -- :: Bu bir todo
                 local label = AceGUI:Create("Label")
@@ -52,6 +68,36 @@ function toggleGUI(key)
                 end)
                 frame:AddChild(button)
             end
+            -- :: gui Add Todo
+            local newIssuer, newTodo
+            --
+            local addIssuer = AceGUI:Create("EditBox")
+            addIssuer:SetLabel("Issuer")
+            addIssuer:SetWidth(100)
+            frame:AddChild(addIssuer)
+            addIssuer:SetCallback("OnEnterPressed", function(widget, event, text)
+                newIssuer = text
+            end)
+            --
+            local addTodo = AceGUI:Create("EditBox")
+            addTodo:SetLabel("Todo")
+            addTodo:SetWidth(400)
+            addTodo:SetCallback("OnEnterPressed", function(widget, event, text)
+                newTodo = text
+            end)
+            frame:AddChild(addTodo)
+            --
+            local button = AceGUI:Create("Button")
+            button:SetText("Add")
+            button:SetWidth(80)
+            button:SetCallback("OnClick", function(widget)
+                table.insert(A.global.todo, {issuedBy = newIssuer, todo = newTodo})
+                --:: Recursive
+                toggleGUI(true)
+                -- editbox = nil
+                -- label = nil
+            end)
+            frame:AddChild(button)
         end
     elseif key then
         frame:Release()
@@ -70,8 +116,8 @@ function module:Initialize()
 end
 
 -- ==== Slash Handlers
-SLASH_arch1 = "/arch"
-SlashCmdList["arch"] = function() toggleGUI(false) end
+-- SLASH_arch1 = "/arch"
+-- SlashCmdList["arch"] = function() toggleGUI(false) end
 
 -- ==== Callback & Register [last arg]
 local function InitializeCallback() module:Initialize() end
