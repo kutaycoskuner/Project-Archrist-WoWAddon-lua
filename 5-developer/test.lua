@@ -5,11 +5,14 @@ local moduleName = 'test';
 local moduleAlert = M .. moduleName .. ": |r";
 local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
+-- ==== Variables
+local list = {}
+
 -- ==== Start
 function module:Initialize()
     self.initialized = true
     -- :: Register some events
-    module:RegisterEvent("CHAT_MSG_SAY");
+    -- module:RegisterEvent("CHAT_MSG_SAY");
 end
 
 -- ==== Methods
@@ -32,18 +35,33 @@ local function fixArgs(msg)
     return args;
 end
 
+local function handleTodo(msg)
+    if not A.global.todo then
+        A.global.todo = {}
+    end
+    list = A.global.todo
+    local args = fixArgs(msg)
+    local issuer = table.remove(args, 1)
+    local note = table.concat(args, ' ')
 
-function module:CHAT_MSG_SAY()
-    --print('test')
-end
+    if issuer == 'S' then
+        issuer = UnitName('player')
+    end
 
-local function handleCommand()
-    print('test')
+    if issuer and note then
+    table.insert(list, {issuedBy = issuer, todo = note})
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. list[#list].issuedBy .. ' | ' .. list[#list].todo)
+    A.global.todo = list
+    else
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'You are missing issuer or todo')
+    end
 end
 
 -- ==== Slash Handlersd
-SLASH_test1 = "/test"
-SlashCmdList["test"] = function() handleCommand() end
+SLASH_todo1 = "/todo"
+SlashCmdList["todo"] = function(msg) handleTodo(msg) end
+-- SLASH_test1 = "/trade"
+-- SlashCmdList["trade"] = function(msg) handleTrade(msg) end
 
 -- -- ==== End
 local function InitializeCallback() module:Initialize() end
@@ -56,6 +74,6 @@ A:RegisterModule(module:GetName(), InitializeCallback)
 -- >> take notes for what todo
 -- >> Mainly for glyphs
 --[[
-
+ simdilik sadece ilk girilen entry issuer ve not olarak alsin.
 
 ]]

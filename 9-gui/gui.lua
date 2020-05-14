@@ -7,50 +7,59 @@ local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 
 local AceGUI = LibStub("AceGUI-3.0")
+local frame
 local frameOpen = false
 local textStore
 
 -- :: Sadece Komutla aciliyor
-local function toggleGUI()
+function toggleGUI(key)
     if not frameOpen then
         frameOpen = true
-        local frame = AceGUI:Create("Frame")
+        frame = AceGUI:Create("Frame")
         frame:SetTitle(N)
         -- frame:SetStatusText("AceGUI-3.0 Example Container Frame")
         frame:SetCallback("OnClose", function(widget)
-            AceGUI:Release(widget)
+            -- AceGUI:Release(widget)
             frameOpen = false
         end)
         frame:SetLayout("Flow")
-        --
-        local editbox = AceGUI:Create("EditBox")
-        editbox:SetLabel("Insert text:")
-        editbox:SetWidth(200)
-        editbox:SetCallback("OnEnterPressed",
-                            function(widget, event, text)
-            textStore = text
-        end)
-        frame:AddChild(editbox)
-        --
-        local button = AceGUI:Create("Button")
-        button:SetText("Click Me!")
-        button:SetWidth(200)
-        button:SetCallback("OnClick", function() print(textStore) end)
-        frame:AddChild(button)
 
-        ----
-
-        local tab = AceGUI:Create("TabGroup")
-        tab:SetLayout("Flow")
-        -- Setup which tabs to show
-        tab:SetTabs({{text = "Tab 1", value = "tab1"}, {text = "Tab 2", value = "tab2"}})
-        -- Register callback
-        tab:SetCallback("OnGroupSelected", SelectGroup)
-        -- Set initial Tab (this will fire the OnGroupSelected callback)
-        tab:SelectTab("tab1")
-
-        -- add to the frame container
-        frame:AddChild(tab)
+        if A.global.todo then
+            for ii = 1, #A.global.todo do
+                -- :: Bu bir todo
+                local label = AceGUI:Create("Label")
+                label:SetText(A.global.todo[ii].issuedBy .. " ")
+                label:SetWidth(100)
+                frame:AddChild(label)
+                --
+                local editbox = AceGUI:Create("EditBox")
+                editbox:SetText(A.global.todo[ii].todo)
+                editbox:SetWidth(400)
+                -- editbox:SetCallback("OnEnterPressed", function(widget, event, text)
+                --     textStore = text
+                -- end)
+                frame:AddChild(editbox)
+                --
+                local button = AceGUI:Create("Button")
+                button:SetText("Done!")
+                button:SetWidth(80)
+                button:SetCallback("OnClick", function(widget)
+                    table.remove(A.global.todo, ii)
+                    --:: Recursive
+                    toggleGUI(true)
+                    -- editbox = nil
+                    -- label = nil
+                end)
+                frame:AddChild(button)
+            end
+        end
+    elseif key then
+        frame:Release()
+        frameOpen = false
+        toggleGUI(false)
+    else
+        frame:Release()
+        frameOpen = false
     end
 end
 
@@ -62,7 +71,7 @@ end
 
 -- ==== Slash Handlers
 SLASH_arch1 = "/arch"
-SlashCmdList["arch"] = function() toggleGUI() end
+SlashCmdList["arch"] = function() toggleGUI(false) end
 
 -- ==== Callback & Register [last arg]
 local function InitializeCallback() module:Initialize() end
@@ -119,3 +128,17 @@ local function SelectGroup(container, event, group)
         DrawGroup2(container)
     end
 end
+
+----
+
+-- local tab = AceGUI:Create("TabGroup")
+-- tab:SetLayout("Flow")
+-- -- Setup which tabs to show
+-- tab:SetTabs({{text = "Tab 1", value = "tab1"}, {text = "Tab 2", value = "tab2"}})
+-- -- Register callback
+-- tab:SetCallback("OnGroupSelected", SelectGroup)
+-- -- Set initial Tab (this will fire the OnGroupSelected callback)
+-- tab:SelectTab("tab1")
+
+-- -- add to the frame container
+-- frame:AddChild(tab)
