@@ -52,10 +52,10 @@ local function handleTodo(msg)
     table.insert(list, {issuedBy = issuer, todo = note})
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. list[#list].issuedBy .. ' | ' .. list[#list].todo)
     A.global.todo = list
-    toggleGUI(true)
+    -- toggleGUI(true)
     else
         toggleGUI(false)
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'You are missing issuer or todo')
+        -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'You are missing issuer or todo')
     end
 end
 
