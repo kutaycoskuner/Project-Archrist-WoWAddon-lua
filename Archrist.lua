@@ -104,7 +104,7 @@ do
     Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
     Addon.deleteAucMail = Addon:NewModule("deleteAucMail", "AceHook-3.0",
                                           "AceEvent-3.0")
-    Addon.playerDB = Addon:NewModule("playerDB", "AceHook-3.0", "AceEvent-3.0")
+    Addon.playerDB = Addon:NewModule("PlayerDB", "AceHook-3.0", "AceEvent-3.0")
     Addon.autoLoot = Addon:NewModule("autoLoot", "AceHook-3.0", "AceEvent-3.0")
     Addon.ArchGUI = Addon:NewModule("ArchGUI", "AceHook-3.0", "AceEvent-3.0")
     Addon.TodoList = Addon:NewModule("TodoList", "AceHook-3.0", "AceEvent-3.0")
