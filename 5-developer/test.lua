@@ -7,13 +7,13 @@
 -- ------------------------------------------------------------------------------------------------------------------------
 -- -- ==== Variables
 -- local args = {}
--- local isPlayerExsits = false
+-- local isPlayerExists = false
 
 -- -- ==== Start
 -- function module:Initialize()
 --     self.initialized = true
 --     -- :: Register some events
---     module:RegisterEvent("CHAT_MSG_SYSTEM");
+--     -- module:RegisterEvent("CHAT_MSG_SYSTEM");
 --     module:RegisterEvent("WHO_LIST_UPDATE");
 --     -- module:SetScript("OnEvent", function(self, event, message, sender, ...)
 --     --     print('core')
@@ -41,14 +41,26 @@
 -- end
 
 -- function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()
+
+--     for ii = 1, GetNumWhoResults() do
+--         if GetWhoInfo(ii) == args[1] then
+--         --    print(args[1])
+--            print('this person exists')
+--            isPlayerExists = true
+--            break
+--         end
+--    end
+-- --    FriendsFrame:UnregisterEvent("WHO_LIST_UPDATE");
+
+--     if isPlayerExists then
+--         print('test succceeed')
+--         isPlayerExists = false
+--     else
+--         print('test failed')
+--     end
     
---     -- for ii = 1, GetNumWhoResults() do
---     --      if GetWhoInfo(ii) == args[1] then
---     --         print('this person exists')
---     --         isPlayerExsits = true
---     --      end
---     -- end
 --     FriendsFrame:Hide()
+--     -- FriendsFrame:RegisterEvent("WHO_LIST_UPDATE");
 
 -- end
 
@@ -58,18 +70,6 @@
 --     if args[1] then
 --         SetWhoToUI(1)
 --         SendWho('n-"' .. args[1] .. '"')
---     end
-
---     for ii = 1, GetNumWhoResults() do
---         if GetWhoInfo(ii) == args[1] then
---            print('this person exists')
---            isPlayerExsits = true
---         end
---    end
-
---     if isPlayerExsits then
---         print('test succceeed')
---         isPlayerExsits = false
 --     end
 
 -- end

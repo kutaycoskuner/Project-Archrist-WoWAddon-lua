@@ -5,12 +5,20 @@ local moduleName = 'PlayerDB';
 local moduleAlert = M .. moduleName .. ": |r";
 local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
-
--- ==== Start
+-- ==== Variables
 -- !! IMPORTANT GLOBAL
 local Raidscore
+local mod = 'patates' -- rep / not
 local args = {}
+local isPlayerExists = false
 
+-- ==== Start
+function module:Initialize()
+    self.Initialized = true
+    module:RegisterEvent("WHO_LIST_UPDATE");
+end
+
+-- ==== Methods
 -- :: Argumanlari ayirip bas harflerini buyutuyor
 local function fixArgs(msg)
     -- :: this is separating the given arguments after command
@@ -85,30 +93,18 @@ end
 local function handlePlayerStat(msg, parameter)
 
     args = fixArgs(msg)
+    mod = parameter
 
     if args[1] then
         -- :: Isim oncelikli entry
         if type(tonumber(args[1])) ~= "number" then
-            if A.people[args[1]] == nil then archAddPlayer(args[1]) end
-            if args[2] then
-                if type(tonumber(args[2])) == "number" then
-                    A.people[args[1]][parameter] =
-                        tonumber(A.people[args[1]][parameter]) +
-                            tonumber(args[2])
-                    SELECTED_CHAT_FRAME:AddMessage(
-                        moduleAlert .. args[1] .. ' ' .. parameter .. ' is now ' ..
-                            A.people[args[1]][parameter])
-                else
-                    SELECTED_CHAT_FRAME:AddMessage(
-                        moduleAlert .. 'your entry is not valid')
-                end
-            else
-                archGetPlayer(args[1])
-            end
+            SetWhoToUI(1)
+            SendWho('n-"' .. args[1] .. '"')
         end
 
         -- :: Target varsa
-        if UnitExists('target') and UnitName('target') ~= UnitName('player') and UnitIsPlayer('target') then
+        if UnitExists('target') and UnitName('target') ~= UnitName('player') and
+            UnitIsPlayer('target') then
             if A.people[UnitName('target')] == nil then
                 archAddPlayer(UnitName('target'))
             end
@@ -117,13 +113,15 @@ local function handlePlayerStat(msg, parameter)
                 A.people[UnitName('target')][parameter] =
                     tonumber(A.people[UnitName('target')][parameter]) +
                         tonumber(args[1])
-                        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. UnitName('target') .. ' ' .. parameter ..
-                          ' is now ' .. A.people[UnitName('target')][parameter])
+                SELECTED_CHAT_FRAME:AddMessage(
+                    moduleAlert .. UnitName('target') .. ' ' .. parameter ..
+                        ' is now ' .. A.people[UnitName('target')][parameter])
             end
         end
     else
         -- :: isim argumani yok ise targeta bak
-        if UnitExists('target') and UnitName('target') ~= UnitName('player') and UnitIsPlayer('target') then
+        if UnitExists('target') and UnitName('target') ~= UnitName('player') and
+            UnitIsPlayer('target') then
             -- :: Create person if not already exists
             if A.people[UnitName('target')] == nil then
                 archAddPlayer(UnitName('target'))
@@ -131,6 +129,24 @@ local function handlePlayerStat(msg, parameter)
                 archGetPlayer(UnitName('target'))
             end
         end
+    end
+end
+
+local function addPlayerStat(args, parameter)
+    if A.people[args[1]] == nil then archAddPlayer(args[1]) end
+    if args[2] then
+        if type(tonumber(args[2])) == "number" then
+            A.people[args[1]][parameter] =
+                tonumber(A.people[args[1]][parameter]) + tonumber(args[2])
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. args[1] .. ' ' .. parameter .. ' is now ' ..
+                    A.people[args[1]][parameter])
+        else
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. 'your entry is not valid')
+        end
+    else
+        archGetPlayer(args[1])
     end
 end
 
@@ -175,25 +191,60 @@ local function handleNote(msg)
                                            A.people[UnitName('target')].note)
     else
         -- :: Get Name and not after
-        local args = fixArgs(msg)
-        SELECTED_CHAT_FRAME:AddMessage(args[2])
-        -- print(args)
-        local name = table.remove(args, 1)
-        -- print(name)
-        local note = table.concat(args, ' ')
-        -- print(note)
-        if A.people[name] == nil then archAddPlayer(name) end
-        A.people[name].note = note
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. name .. ' note: ' ..
-                                           A.people[name].note)
+        args = fixArgs(msg)
+        mod = 'not'
+        if args[1] then
+            SetWhoToUI(1)
+            SendWho('n-"' .. args[1] .. '"')
+        end
     end
 
 end
 
-function module:Initialize()
-    self.Initialized = true
-    -- self:RegisterEvent("MAIL_INBOX_UPDATE")
-    -- "MAIL_INBOX_UPDATE"
+local function addNote(args)
+
+    SELECTED_CHAT_FRAME:AddMessage(args[2])
+    -- print(args)
+    local name = table.remove(args, 1)
+    -- print(name)
+    local note = table.concat(args, ' ')
+    -- print(note)
+    if A.people[name] == nil then archAddPlayer(name) end
+    A.people[name].note = note
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. name .. ' note: ' ..
+                                       A.people[name].note)
+
+end
+
+-- ==== Event Handlers
+function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()
+
+    if mod ~= 'patates' then
+
+        for ii = 1, GetNumWhoResults() do
+            print(args[1])
+            if GetWhoInfo(ii) == args[1] then
+                -- print('this person exists')
+                isPlayerExists = true
+                break
+            end
+        end
+
+        if isPlayerExists then
+            if mod == 'not' then
+                addNote(args)
+            else
+                addPlayerStat(args, mod)
+            end
+            isPlayerExists = false
+        else
+            print('Player not found')
+        end
+
+        FriendsFrame:Hide()
+    end
+    mod = 'patates'
+
 end
 
 -- ==== Slash Handlers
