@@ -40,7 +40,7 @@ local function fixArgs(msg)
 end
 
 -- :: Calculate raidscore
-local function archCalcRS(player)
+function Archrist_PlayerDB_calcRaidScore(player)
     local rep = (tonumber(A.people[player].reputation) * 250)
     local dsc = (tonumber(A.people[player].discipline) * 300)
     local str = (tonumber(A.people[player].strategy) * 300)
@@ -48,7 +48,7 @@ local function archCalcRS(player)
     local att = (tonumber(A.people[player].attendance) * 100)
     local gsr = (tonumber(A.people[player].gearscore) * 1)
 
-    local raidScore = rep + dsc + str + dmg + att + gsr
+    local raidScore = rep + dsc + str + dmg + att
 
     return raidScore;
 end
@@ -86,7 +86,7 @@ local function archGetPlayer(player)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'note: ' ..
                                        A.people[player].note)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Raidscore: ' ..
-                                       archCalcRS(player))
+                                       Archrist_PlayerDB_calcRaidScore(player))
 end
 
 -- ==== Main 

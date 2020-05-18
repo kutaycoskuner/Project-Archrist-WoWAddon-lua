@@ -7,6 +7,7 @@ local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 
 local AceGUI = LibStub("AceGUI-3.0")
+local list
 local frame
 local frameOpen = false
 local textStore
@@ -60,7 +61,9 @@ function toggleGUI(key)
                 button:SetText("Done!")
                 button:SetWidth(80)
                 button:SetCallback("OnClick", function(widget)
-                    table.remove(A.global.todo, ii)
+                    list = A.global.todo
+                    table.remove(list, ii)
+                    A.global.todo = list
                     --:: Recursive
                     toggleGUI(true)
                     -- editbox = nil
@@ -91,7 +94,7 @@ function toggleGUI(key)
             button:SetText("Add")
             button:SetWidth(80)
             button:SetCallback("OnClick", function(widget)
-                local list = A.global.todo
+                list = A.global.todo
                 table.insert(list, {todo = newTodo})
                 A.global.todo = list
                 --:: Recursive

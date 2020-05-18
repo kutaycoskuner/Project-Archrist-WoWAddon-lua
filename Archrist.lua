@@ -101,7 +101,7 @@ end
 do
     -- :: Create Modules
     Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
-    Addon.lootMsgFilter = Addon:NewModule("lootMsgFilter")
+    Addon.lootMsgFilter = Addon:NewModule("LootMsgFilter")
     Addon.deleteAucMail = Addon:NewModule("deleteAucMail", "AceHook-3.0",
                                           "AceEvent-3.0")
     Addon.playerDB = Addon:NewModule("PlayerDB", "AceHook-3.0", "AceEvent-3.0")

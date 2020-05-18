@@ -1,10 +1,12 @@
 -- ------------------------------------------------------------------------------------------------------------------------
--- -- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+-- -- :: Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
 -- local A, L, V, P, G, C, M, N = unpack(select(2, ...));
 -- local moduleName = 'test';
 -- local moduleAlert = M .. moduleName .. ": |r";
 -- local module = A:GetModule(moduleName);
 -- ------------------------------------------------------------------------------------------------------------------------
+-- -- ==== Variables
+
 -- -- ==== Start
 -- function module:Initialize()
 --     self.initialized = true
@@ -13,12 +15,13 @@
 -- end
 
 -- -- ==== Methods
--- function module:CHAT_MSG_SAY()
---     --print('test')
--- end
-
 -- local function handleCommand()
 --     print('test')
+-- end
+
+-- -- ==== Event Handlers
+-- function module:CHAT_MSG_SAY()
+--     --print('test')
 -- end
 
 -- -- ==== Slash Handlersd
