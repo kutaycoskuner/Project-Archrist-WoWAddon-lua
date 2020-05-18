@@ -20,7 +20,7 @@ local function TestFunction()
         local Name = GameTooltip:GetUnit();
         if A.people[Name] then
             local gearScore = GearScore_GetScore(Name, "mouseover")
-            if gearScore then
+            if gearScore and gearScore > 0 then
                 local personalData = Archrist_PlayerDB_calcRaidScore(Name)
                 local raidScore = gearScore + personalData
                 GameTooltip:AddLine('RaidScore: ' .. raidScore, 0, 78, 100)

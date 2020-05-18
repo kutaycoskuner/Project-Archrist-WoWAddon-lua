@@ -13,19 +13,21 @@ local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 
 # Todo
-- not alma addonu gui icin uygun olur
 - help command
-- calculate Raidscore
-- ufak bi gui
-- player reputation system
 - hangi druidin cs atacagini goster
 - table copy yi developerdan alip diger tarafa koy
+- update guilds raidscores
+- migrate databases
 
 # Problems
-- core profile da yapilan degisikligi gormuyor
-`boyle bir fonksiyon yok` attempt to call method 'UpdateCooldownSettings' (a nil value)
 
 # Completed
+- core profile da yapilan degisikligi gormuyor
+`boyle bir fonksiyon yok` attempt to call method 'UpdateCooldownSettings' (a nil value)
+- player reputation system
+- ufak bi gui
+- calculate Raidscore
+- not alma addonu gui icin uygun olur
 - su ana kadar ki modullerin database etkilesimleri: lootfilter, rollfilter
 - player reputation system: database etkilesimleri
 - uniform alerts
