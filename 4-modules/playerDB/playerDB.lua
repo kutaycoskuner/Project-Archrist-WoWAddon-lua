@@ -11,11 +11,14 @@ local Raidscore
 local mod = 'patates' -- rep / not
 local args = {}
 local isPlayerExists = false
+local isInCombat = false
 
 -- ==== Start
 function module:Initialize()
     self.Initialized = true
-    module:RegisterEvent("WHO_LIST_UPDATE");
+    module:RegisterEvent("PLAYER_REGEN_ENABLED")
+    module:RegisterEvent("PLAYER_REGEN_DISABLED")
+    module:RegisterEvent("WHO_LIST_UPDATE")
 end
 
 -- ==== Methods
@@ -40,17 +43,47 @@ local function fixArgs(msg)
 end
 
 -- :: Calculate raidscore
-function Archrist_PlayerDB_calcRaidScore(player)
+local function Archrist_PlayerDB_calcRaidScore(player)
     local rep = (tonumber(A.people[player].reputation) * 250)
     local dsc = (tonumber(A.people[player].discipline) * 300)
     local str = (tonumber(A.people[player].strategy) * 300)
     local dmg = (tonumber(A.people[player].damage) * 200)
     local att = (tonumber(A.people[player].attendance) * 100)
-    local gsr = (tonumber(A.people[player].gearscore) * 1)
+    -- local gsr = (tonumber(A.people[player].gearscore) * 1)
 
     local raidScore = rep + dsc + str + dmg + att
 
     return raidScore;
+end
+
+-- :: present player note
+local function Archrist_PlayerDB_getNote(player)
+    if not isInCombat then
+        local Name = GameTooltip:GetUnit();
+        if A.people[Name] then
+            local note = A.people[Name].note
+            if note ~= '' then
+                GameTooltip:AddLine(note, 0.5, 0.5, 0.5, true)
+            end
+        end
+    end
+end
+
+local function Archrist_PlayerDB_getRaidScore()
+    if GearScore_GetScore(Name, "mouseover") then
+        local Name = GameTooltip:GetUnit();
+        if A.people[Name] then
+            local gearScore = GearScore_GetScore(Name, "mouseover")
+            if gearScore and gearScore > 0 then
+                local personalData = Archrist_PlayerDB_calcRaidScore(Name)
+                -- local note = Archrist_PlayerDB_getNote(Name)
+                local raidScore = gearScore + personalData
+                if gearScore ~= raidScore then
+                    GameTooltip:AddLine('RaidScore: ' .. raidScore, 0, 78, 100)
+                end
+            end
+        end
+    end
 end
 
 -- :: Create Player Entry
@@ -90,6 +123,14 @@ local function archGetPlayer(player)
 end
 
 -- ==== Main 
+local function checkStatLimit(player, stat)
+    if A.people[player][stat] >= 5 then
+        A.people[player][stat] = 5
+    elseif A.people[player][stat] <= -5 then
+        A.people[player][stat] = -5
+    end
+end
+
 local function handlePlayerStat(msg, parameter)
 
     args = fixArgs(msg)
@@ -113,6 +154,7 @@ local function handlePlayerStat(msg, parameter)
                 A.people[UnitName('target')][parameter] =
                     tonumber(A.people[UnitName('target')][parameter]) +
                         tonumber(args[1])
+                checkStatLimit(UnitName('target'), parameter)
                 SELECTED_CHAT_FRAME:AddMessage(
                     moduleAlert .. UnitName('target') .. ' ' .. parameter ..
                         ' is now ' .. A.people[UnitName('target')][parameter])
@@ -138,6 +180,7 @@ local function addPlayerStat(args, parameter)
         if type(tonumber(args[2])) == "number" then
             A.people[args[1]][parameter] =
                 tonumber(A.people[args[1]][parameter]) + tonumber(args[2])
+            checkStatLimit(args[1], parameter)
             SELECTED_CHAT_FRAME:AddMessage(
                 moduleAlert .. args[1] .. ' ' .. parameter .. ' is now ' ..
                     A.people[args[1]][parameter])
@@ -186,9 +229,15 @@ local function handleNote(msg)
             archAddPlayer(UnitName('target'))
         end
         A.people[UnitName('target')].note = msg
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. UnitName('target') ..
-                                           ' note: ' ..
-                                           A.people[UnitName('target')].note)
+        if msg ~= '' then
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. UnitName('target') .. ': ' ..
+                    A.people[UnitName('target')].note)
+        else
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. 'Note for ' .. UnitName('target') ..
+                    ' has been pruned.')
+        end
     else
         -- :: Get Name and not after
         args = fixArgs(msg)
@@ -201,30 +250,35 @@ local function handleNote(msg)
 
 end
 
+-- :: add if player note exists on tooltip
 local function addNote(args)
-
-    SELECTED_CHAT_FRAME:AddMessage(args[2])
-    -- print(args)
     local name = table.remove(args, 1)
-    -- print(name)
     local note = table.concat(args, ' ')
-    -- print(note)
+
     if A.people[name] == nil then archAddPlayer(name) end
     A.people[name].note = note
-    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. name .. ' note: ' ..
-                                       A.people[name].note)
 
+    if args[1] then
+        -- print(note)
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. name .. ': ' ..
+                                           A.people[name].note)
+    else
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Note for ' .. name ..
+                                           ' has been pruned.')
+    end
 end
 
 -- ==== Event Handlers
+function module:PLAYER_REGEN_ENABLED() isInCombat = false end
+
+function module:PLAYER_REGEN_DISABLED() isInCombat = true end
+
 function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()
 
     if mod ~= 'patates' then
 
         for ii = 1, GetNumWhoResults() do
-            print(args[1])
             if GetWhoInfo(ii) == args[1] then
-                -- print('this person exists')
                 isPlayerExists = true
                 break
             end
@@ -265,6 +319,10 @@ SLASH_gsr1 = "/gsr"
 SlashCmdList["gsr"] = function(msg) getGearScoreRecord(msg) end
 SLASH_not1 = "/not"
 SlashCmdList["not"] = function(msg) handleNote(msg) end
+
+-- ==== GUI
+GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getNote)
+GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
 
 -- ==== Callback & Register [last arg]
 local function InitializeCallback() module:Initialize() end

@@ -22,6 +22,8 @@ local module = A:GetModule(moduleName);
 # Problems
 
 # Completed
+- limit for parameter
+- get player not on tooltip
 - core profile da yapilan degisikligi gormuyor
 `boyle bir fonksiyon yok` attempt to call method 'UpdateCooldownSettings' (a nil value)
 - player reputation system
