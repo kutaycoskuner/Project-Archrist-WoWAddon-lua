@@ -58,12 +58,14 @@ end
 
 -- :: present player note
 local function Archrist_PlayerDB_getNote(player)
-    if isInCombat == false then
+    if not isInCombat then
         local Name = GameTooltip:GetUnit();
-        if A.people[Name] then
-            local note = A.people[Name].note
-            if note ~= '' then
-                GameTooltip:AddLine(note, 0.5, 0.5, 0.5, true)
+        if Name ~= UnitName('player') then
+            if A.people[Name] then
+                local note = A.people[Name].note
+                if note ~= '' then
+                    GameTooltip:AddLine(note, 0.5, 0.5, 0.5, true)
+                end
             end
         end
     end
@@ -193,38 +195,40 @@ local function addPlayerStat(args, parameter)
     end
 end
 
-local function getGearScoreRecord(msg)
+-- >> Disabled
+-- local function getGearScoreRecord(msg)
 
-    args = fixArgs(msg)
-    -- :: if first unit is player this function returns true
-    if UnitExists('target') and UnitIsPlayer('target') then
+--     args = fixArgs(msg)
+--     -- :: if first unit is player this function returns true
+--     if UnitExists('target') and UnitIsPlayer('target') then
 
-        -- :: Create person if not already exists
-        if A.people[UnitName('target')] == nil then
-            archAddPlayer(UnitName('target'))
-        end
+--         -- :: Create person if not already exists
+--         if A.people[UnitName('target')] == nil then
+--             archAddPlayer(UnitName('target'))
+--         end
 
-        -- :: Get Gearscore
-        local Name = GameTooltip:GetUnit();
+--         -- :: Get Gearscore
+--         local Name = GameTooltip:GetUnit();
 
-        if Name == UnitName('target') then
-            A.people[UnitName('target')].gearscore =
-                GearScore_GetScore(Name, "mouseover")
-            SELECTED_CHAT_FRAME:AddMessage(
-                moduleAlert .. UnitName('target') .. ' gearscore is updated as ' ..
-                    A.people[UnitName('target')].gearscore)
-        else
-            SELECTED_CHAT_FRAME:AddMessage(
-                moduleAlert .. 'you need to mouseover target to calculate gs')
-        end
-    end
+--         if Name == UnitName('target') then
+--             A.people[UnitName('target')].gearscore =
+--                 GearScore_GetScore(Name, "mouseover")
+--             SELECTED_CHAT_FRAME:AddMessage(
+--                 moduleAlert .. UnitName('target') .. ' gearscore is updated as ' ..
+--                     A.people[UnitName('target')].gearscore)
+--         else
+--             SELECTED_CHAT_FRAME:AddMessage(
+--                 moduleAlert .. 'you need to mouseover target to calculate gs')
+--         end
+--     end
 
-end
+-- end
 
 local function handleNote(msg)
 
     -- :: Burda target oncelikli
-    if UnitExists('target') and UnitIsPlayer('target') then
+    if UnitExists('target') and UnitIsPlayer('target') and UnitName('target') ~=
+        UnitName('player') then
         if A.people[UnitName('target')] == nil then
             archAddPlayer(UnitName('target'))
         end
@@ -238,6 +242,8 @@ local function handleNote(msg)
                 moduleAlert .. 'Note for ' .. UnitName('target') ..
                     ' has been pruned.')
         end
+    elseif UnitName('target') == UnitName('player') then
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'You cannot add note for your own character')
     else
         -- :: Get Name and not after
         args = fixArgs(msg)
@@ -269,14 +275,12 @@ local function addNote(args)
 end
 
 -- ==== Event Handlers
-function module:PLAYER_REGEN_ENABLED() 
+function module:PLAYER_REGEN_ENABLED()
     SELECTED_CHAT_FRAME:AddMessage('You are out of combat.')
-    isInCombat = false 
+    isInCombat = false
 end
 
-function module:PLAYER_REGEN_DISABLED() 
-    isInCombat = true
-end
+function module:PLAYER_REGEN_DISABLED() isInCombat = true end
 
 function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()
 
