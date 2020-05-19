@@ -58,7 +58,7 @@ end
 
 -- :: present player note
 local function Archrist_PlayerDB_getNote(player)
-    if not isInCombat then
+    if isInCombat == false then
         local Name = GameTooltip:GetUnit();
         if A.people[Name] then
             local note = A.people[Name].note
@@ -269,9 +269,14 @@ local function addNote(args)
 end
 
 -- ==== Event Handlers
-function module:PLAYER_REGEN_ENABLED() isInCombat = false end
+function module:PLAYER_REGEN_ENABLED() 
+    SELECTED_CHAT_FRAME:AddMessage('You are out of combat.')
+    isInCombat = false 
+end
 
-function module:PLAYER_REGEN_DISABLED() isInCombat = true end
+function module:PLAYER_REGEN_DISABLED() 
+    isInCombat = true
+end
 
 function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()
 
