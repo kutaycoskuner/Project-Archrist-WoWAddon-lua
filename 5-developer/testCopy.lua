@@ -28,6 +28,9 @@
 -- -- SLASH_test1 = "/test"
 -- -- SlashCmdList["test"] = function() handleCommand() end
 
+-- -- -- ==== GUI
+-- -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
+
 -- -- -- ==== End
 -- local function InitializeCallback() module:Initialize() end
 -- A:RegisterModule(module:GetName(), InitializeCallback)

@@ -42,22 +42,48 @@ local function fixArgs(msg)
 
 end
 
+-- :: Create Player Entry
+local function archAddPlayer(player)
+    A.people[player] = {
+        reputation = 0,
+        discipline = 0,
+        strategy = 0,
+        damage = 0,
+        attendance = 0,
+        gearscore = 0,
+        note = ''
+    }
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. ' New player (' .. player ..
+                                       ') added in your database')
+end
+
 -- :: Calculate raidscore
-local function Archrist_PlayerDB_calcRaidScore(player)
+function Archrist_PlayerDB_calcRaidScore(player)
+
+    if not A.people[player] then archAddPlayer(player) end
     local rep = (tonumber(A.people[player].reputation) * 250)
     local dsc = (tonumber(A.people[player].discipline) * 300)
     local str = (tonumber(A.people[player].strategy) * 300)
     local dmg = (tonumber(A.people[player].damage) * 200)
     local att = (tonumber(A.people[player].attendance) * 100)
-    -- local gsr = (tonumber(A.people[player].gearscore) * 1)
-
+    local gsr
     local raidScore = rep + dsc + str + dmg + att
 
-    return raidScore;
+    if GameTooltip:GetUnit() then
+        local Name = GameTooltip:GetUnit();
+        if GearScore_GetScore(Name, "mouseover") then
+            gsr = GearScore_GetScore(Name, "mouseover")
+            -- print(gsr)
+            -- print(raidScore + gsr)
+            return (raidScore + gsr)
+        end
+    end
+
+    return raidScore
 end
 
 -- :: present player note
-local function Archrist_PlayerDB_getNote(player)
+function Archrist_PlayerDB_getNote(player)
     if not isInCombat then
         local Name = GameTooltip:GetUnit();
         if Name ~= UnitName('player') then
@@ -72,35 +98,23 @@ local function Archrist_PlayerDB_getNote(player)
 end
 
 local function Archrist_PlayerDB_getRaidScore()
-    if GearScore_GetScore(Name, "mouseover") then
+    if GameTooltip:GetUnit() then
         local Name = GameTooltip:GetUnit();
-        if A.people[Name] then
-            local gearScore = GearScore_GetScore(Name, "mouseover")
-            if gearScore and gearScore > 0 then
-                local personalData = Archrist_PlayerDB_calcRaidScore(Name)
-                -- local note = Archrist_PlayerDB_getNote(Name)
-                local raidScore = gearScore + personalData
-                if gearScore ~= raidScore then
-                    GameTooltip:AddLine('RaidScore: ' .. raidScore, 0, 78, 100)
+        if GearScore_GetScore(Name, "mouseover") then
+            if A.people[Name] then
+                local gearScore = GearScore_GetScore(Name, "mouseover")
+                if gearScore and gearScore > 0 then
+                    local personalData = Archrist_PlayerDB_calcRaidScore(Name)
+                    -- local note = Archrist_PlayerDB_getNote(Name)
+                    local raidScore = personalData
+                    if gearScore ~= raidScore then
+                        GameTooltip:AddLine('RaidScore: ' .. raidScore, 0, 78,
+                                            100)
+                    end
                 end
             end
         end
     end
-end
-
--- :: Create Player Entry
-local function archAddPlayer(player)
-    A.people[player] = {
-        reputation = 0,
-        discipline = 0,
-        strategy = 0,
-        damage = 0,
-        attendance = 0,
-        gearscore = 0,
-        note = ''
-    }
-    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. ' New player (' .. player ..
-                                       ') added in your database')
 end
 
 -- :: Get Player Stats
@@ -243,7 +257,8 @@ local function handleNote(msg)
                     ' has been pruned.')
         end
     elseif UnitName('target') == UnitName('player') then
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'You cannot add note for your own character')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert ..
+                                           'You cannot add note for your own character')
     else
         -- :: Get Name and not after
         args = fixArgs(msg)
