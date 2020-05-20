@@ -114,7 +114,7 @@ Do it
 -- `comment`
 `#` `length of table`
 {...} `table decleration`
-#tabel = `table.length`
+#table = `table.length`
 self `self referential`
 nil `removes the value`
 --[[]] `multiline comment`
@@ -164,10 +164,8 @@ exportInterfaceFiles art
 - find a tolerance space between unfinished work commit and overstructured one because there is always a risk of messing 
 
 # Release
-- delete reference
 - delete git
 - git.ignore
-- error
 - notebook
 - readme
 
