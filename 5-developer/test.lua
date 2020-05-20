@@ -69,6 +69,8 @@ SlashCmdList["test"] = function(msg) handleCommand(msg) end
 -- -- ==== GUI
 -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
 
+-- -- ==== Initialization
+
 -- -- ==== End
 local function InitializeCallback() module:Initialize() end
 A:RegisterModule(module:GetName(), InitializeCallback)

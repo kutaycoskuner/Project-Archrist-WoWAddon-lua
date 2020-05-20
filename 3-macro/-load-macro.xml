@@ -4,4 +4,5 @@
     <Script file="raidWarnings.lua"/>
     <Script file="prospecting.lua"/>
     <Script file="disenchanting.lua"/>
+    <Script file="Warrior.lua"/>
 </Ui>

@@ -7,16 +7,16 @@
 -- ------------------------------------------------------------------------------------------------------------------------
 -- -- ==== Variables
 
+-- -- ==== Methods
+-- local function handleCommand()
+--     print('test')
+-- end
+
 -- -- ==== Start
 -- function module:Initialize()
 --     self.initialized = true
 --     -- :: Register some events
 --     module:RegisterEvent("CHAT_MSG_SAY");
--- end
-
--- -- ==== Methods
--- local function handleCommand()
---     print('test')
 -- end
 
 -- -- ==== Event Handlers
