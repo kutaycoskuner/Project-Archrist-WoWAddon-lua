@@ -345,8 +345,8 @@ SLASH_not1 = "/not"
 SlashCmdList["not"] = function(msg) handleNote(msg) end
 
 -- ==== GUI
-GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getNote)
 GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
+GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getNote)
 
 -- ==== Callback & Register [last arg]
 local function InitializeCallback() module:Initialize() end
