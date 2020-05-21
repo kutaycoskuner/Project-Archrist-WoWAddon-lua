@@ -31,9 +31,9 @@ f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
 f:SetFrameStrata("FULLSCREEN_DIALOG")
 --
 local frameText = f:CreateFontString(nil, "ARTWORK")
-frameText:SetFont("Fonts\\FRIZQT__.ttf", 11, "OUTLINE")
+frameText:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
 frameText:SetPoint("CENTER", 0, 0)
-frameText:SetText('Combat Res Frame')
+-- frameText:SetText('Combat Res Frame')
 --
 f:SetPoint("CENTER", 536, 200)
 f:Hide()
@@ -65,9 +65,47 @@ local function getIndicator()
         end
         players = players .. add
     end
-    if players == '' then players = 'Combat Res Frame' end
-    if UnitInRaid("player") then f:Show() end
+    if UnitInRaid('player') then f:Show() end
+    if players == '' then players = '|cff464646Combat Res Frame|r' end
     if druids ~= nil then frameText:SetText(players) end
+end
+
+local function scanDruids()
+    if druids == nil then druids = A.global.rebirth end
+    --
+    if not UnitInRaid('player') then
+        druids = {}
+        f:Hide()
+    end
+    --
+    local isExists = false
+    for ii = 1, GetNumRaidMembers() do
+        local druidName, rank, subgroup, level, class = GetRaidRosterInfo(ii)
+        if class == 'Druid' then
+            for yy = 1, #druids do
+                if druids[yy].name == druidName then
+                    isExists = true
+                    break
+                end
+            end
+            --
+            if isExists == false then
+                table.insert(druids, {
+                    name = druidName,
+                    availableAt = calcTimeInSec(),
+                    rebirth = true
+                })
+            end
+            isExists = false
+        end
+    end
+    --
+    -- for ii=1, #druids do
+    --     print(druids[ii].name)
+    -- end
+    --
+    A.global.rebirth = druids
+    getIndicator()
 end
 
 local function handleCommand(msg)
@@ -86,42 +124,11 @@ local function handleCommand(msg)
         f:EnableMouse(true)
     elseif msg == 'help' then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '|cffFF7D0A/cr|r for toggle frame')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '|cffFF7D0A/cr lock|r for locking')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '|cffFF7D0A/cr move|r for move')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '|cffFF7D0A/cr lock|r for lock frame')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '|cffFF7D0A/cr move|r for move frame')
+    elseif msg == 'scan' then
+        scanDruids()
     end
-end
-
-local function scanDruids()
-    if druids == nil then druids = A.global.rebirth end
-    --
-    if not UnitInRaid('player') then
-        druids = {}
-        f:Hide()
-    end
-    --
-    local isExists = false
-    for ii = 1, GetNumRaidMembers() do
-        local playerName, rank, subgroup, level, class = GetRaidRosterInfo(ii)
-        if class == 'Druid' then
-            for yy = 1, #druids do
-                if druids[yy].name == playerName then
-                    isExists = true
-                    break
-                end
-            end
-            if not isExists then
-                table.insert(druids, {
-                    name = playerName,
-                    availableAt = calcTimeInSec(),
-                    rebirth = true
-                })
-                isExists = false
-            end
-        end
-    end
-    --
-    A.global.rebirth = druids
-    getIndicator()
 end
 
 -- :: sets closest cd arrival for cooldowned rebirth
