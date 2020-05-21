@@ -13,12 +13,14 @@ local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 
 # Todo
-- help command
 - migrate databases
+- eat macro
+- butun moduller tarafindan kullanilan fonksiyonlari ayirip global yap
 
 # Problems
 
 # Completed
+- help command
 - update guilds raidscores
 - table copy yi developerdan alip diger tarafa koy
 - hangi druidin cs atacagini goster

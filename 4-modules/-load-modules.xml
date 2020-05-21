@@ -7,4 +7,5 @@
     <Include file="raidCommands\-load.xml"/>
     <Include file="TodoList\-load.xml"/>
     <Include file="CRIndicator\-load.xml"/>
+    <Include file="Help\-load.xml"/>
 </Ui>

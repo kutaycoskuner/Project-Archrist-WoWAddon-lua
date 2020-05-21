@@ -11,8 +11,8 @@
 -- -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
 
 -- -- ==== Methods
--- local function handleCommand()
---     print('test')
+-- local function handleCommand(msg)
+--     SELECTED_CHAT_FRAME:AddMessage('test')
 -- end
 
 -- -- ==== Start
@@ -29,14 +29,14 @@
 
 -- -- ==== Slash Handlersd
 -- -- SLASH_test1 = "/test"
--- -- SlashCmdList["test"] = function() handleCommand() end
+-- -- SlashCmdList["test"] = function(msg) handleCommand(msg) end
 
--- -- -- ==== End
+-- -- ==== End
 -- local function InitializeCallback() module:Initialize() end
 -- A:RegisterModule(module:GetName(), InitializeCallback)
 
--- ==== Todo
+-- -- ==== Todo
 -- --[[]]
 
--- ==== UseCase
+-- -- ==== UseCase
 -- --[[]]

@@ -122,10 +122,6 @@ local function handleCommand(msg)
     elseif msg == 'move' then
         f:SetMovable(true)
         f:EnableMouse(true)
-    elseif msg == 'help' then
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '/cr |cff767676for toggle frame|r')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '/cr lock |cff767676for lock frame|r')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '/cr move |cff767676for move frame|r')
     elseif msg == 'scan' then
         scanDruids()
     end
