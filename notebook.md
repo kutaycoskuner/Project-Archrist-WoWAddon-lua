@@ -14,14 +14,14 @@ local module = A:GetModule(moduleName);
 
 # Todo
 - help command
-- hangi druidin cs atacagini goster
-- table copy yi developerdan alip diger tarafa koy
-- update guilds raidscores
 - migrate databases
 
 # Problems
 
 # Completed
+- update guilds raidscores
+- table copy yi developerdan alip diger tarafa koy
+- hangi druidin cs atacagini goster
 - limit for parameter
 - get player not on tooltip
 - core profile da yapilan degisikligi gormuyor

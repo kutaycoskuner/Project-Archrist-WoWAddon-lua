@@ -291,7 +291,7 @@ end
 
 -- ==== Event Handlers
 function module:PLAYER_REGEN_ENABLED()
-    SELECTED_CHAT_FRAME:AddMessage('You are out of combat.')
+    -- SELECTED_CHAT_FRAME:AddMessage('You are out of combat.')
     isInCombat = false
 end
 

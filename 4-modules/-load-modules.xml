@@ -6,4 +6,5 @@
     <Include file="autoLoot\-load.xml"/>
     <Include file="raidCommands\-load.xml"/>
     <Include file="TodoList\-load.xml"/>
+    <Include file="CRIndicator\-load.xml"/>
 </Ui>

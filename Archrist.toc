@@ -1,13 +1,12 @@
 # Metadata
 ## Interface: 30300
 ## Title: |cffedededArchrist|r
-## Notes: Player database and todo list, external memory addon
-## Version: 0.6.3 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
+## Notes: Player database, todo list, raid assistant, external memory addon
+## Version: 0.6.4 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
 ## Author: Orthrin
 ## SavedVariables: ArchDB, ArchPrivateDB, ArchPeopleDB
 ## SavedVariablesPerCharacter: ArchCharacterDB
-## Dependencies: GearScoreLite
-## OptionalDeps: Blizzard_DebugTools, Ace3
+## OptionalDeps: Blizzard_DebugTools, Ace3, GearScoreLite
 ## X-Embeds: Ace3
 ## X-Discord: https://discord.gg/XCGTYtp
 
