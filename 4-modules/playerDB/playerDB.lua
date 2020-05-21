@@ -100,6 +100,7 @@ end
 local function Archrist_PlayerDB_getRaidScore()
     if GameTooltip:GetUnit() then
         local Name = GameTooltip:GetUnit();
+        if not GearScore_GetScore then return end
         if GearScore_GetScore(Name, "mouseover") then
             if A.people[Name] then
                 local gearScore = GearScore_GetScore(Name, "mouseover")

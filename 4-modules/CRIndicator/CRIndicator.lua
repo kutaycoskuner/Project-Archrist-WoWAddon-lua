@@ -33,7 +33,7 @@ f:SetFrameStrata("FULLSCREEN_DIALOG")
 local frameText = f:CreateFontString(nil, "ARTWORK")
 frameText:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
 frameText:SetPoint("CENTER", 0, 0)
--- frameText:SetText('Combat Res Frame')
+frameText:SetText('|cff464646Combat Res Frame|r')
 --
 f:SetPoint("CENTER", 536, 200)
 f:Hide()
@@ -76,6 +76,7 @@ local function scanDruids()
     if not UnitInRaid('player') then
         druids = {}
         f:Hide()
+        return
     end
     --
     local isExists = false
@@ -123,9 +124,9 @@ local function handleCommand(msg)
         f:SetMovable(true)
         f:EnableMouse(true)
     elseif msg == 'help' then
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '|cffFF7D0A/cr|r for toggle frame')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '|cffFF7D0A/cr lock|r for lock frame')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '|cffFF7D0A/cr move|r for move frame')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '/cr |cff767676for toggle frame|r')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '/cr lock |cff767676for lock frame|r')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '/cr move |cff767676for move frame|r')
     elseif msg == 'scan' then
         scanDruids()
     end
@@ -190,12 +191,9 @@ end
 -- ==== Event Handlers
 function module:COMBAT_LOG_EVENT(event, _, eventType, _, srcName, _, _, dstName,
                                  _, spellId, spellName, _, ...) -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
-    if (spellId == 43046 or spellId == 48477) and eventType ==
-        "SPELL_CAST_SUCCESS" then -- 48477(rebirth)
+    if spellId==48477 and eventType=="SPELL_CAST_SUCCESS" then -- 48477(rebirth)
         startCooldown(srcName)
         getIndicator()
-        -- SELECTED_CHAT_FRAME:AddMessage(date("%S") .. ' ' .. ' ' .. event .. ' ' ..
-        --    spellName)
     end
     -- --
     if inquiryCD then
