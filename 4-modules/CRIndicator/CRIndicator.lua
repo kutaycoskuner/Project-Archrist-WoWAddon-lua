@@ -65,8 +65,7 @@ local function getIndicator()
         end
         players = players .. add
     end
-    if UnitInRaid('player') then f:Show() end
-    if players == '' then players = '|cff464646Combat Res Frame|r' end
+    if UnitInRaid('player') then f:Show() else players = '|cff464646Combat Res Frame|r' end
     if druids ~= nil then frameText:SetText(players) end
 end
 
@@ -135,9 +134,10 @@ end
 -- :: sets closest cd arrival for cooldowned rebirth
 local function setClosestAvailable()
     if #druids > 1 then
+        closestAvailable = druids[1].availableAt
         for ii = 1, #druids - 1 do
-            if druids[ii].availableAt >= druids[ii + 1].availableAt then
-                closestAvailable = druids[ii].availableAt
+            if druids[ii].availableAt <= druids[ii + 1].availableAt then
+                closestAvailable = druids[ii+1].availableAt
                 -- print('closest return is ' .. closestAvailable)
             end
         end
@@ -159,7 +159,7 @@ local function startCooldown(srcName)
     for ii = 1, #druids do
         if druids[ii].name == srcName then
             druids[ii].rebirth = false
-            druids[ii].availableAt = (calcTimeInSec() + 5)
+            druids[ii].availableAt = (calcTimeInSec() + 600) -- saniye olarak ekle
             setClosestAvailable()
         end
     end
@@ -191,7 +191,9 @@ end
 -- ==== Event Handlers
 function module:COMBAT_LOG_EVENT(event, _, eventType, _, srcName, _, _, dstName,
                                  _, spellId, spellName, _, ...) -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
-    if spellId==48477 and eventType=="SPELL_CAST_SUCCESS" then -- 48477(rebirth)
+    -- print(event .. ' ' .. eventType .. ' ' .. srcName .. ' ' .. dstName .. ' ' .. spellId)
+    if spellId == 48477 and eventType == "SPELL_RESURRECT" then -- 48477(rebirth)
+        -- print(spellId)
         startCooldown(srcName)
         getIndicator()
     end

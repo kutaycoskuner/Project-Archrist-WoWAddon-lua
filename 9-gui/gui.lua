@@ -42,15 +42,17 @@ function toggleGUI(key)
             labelButton:SetWidth(80)
             frame:AddChild(labelButton)
             --
-            for ii = 1, #A.global.todo do
-                -- :: Bu bir todo
+            -- :: Set Variable for cache
+            local list = A.global.todo
+            for ii = 1, #list do
+                -- :: her bir todo icin
                 local label = AceGUI:Create("Label")
                 label:SetText(ii .. "# ")
                 label:SetWidth(60)
                 frame:AddChild(label)
                 --
                 local editbox = AceGUI:Create("Label")
-                editbox:SetText(A.global.todo[ii].todo)
+                editbox:SetText(list[ii].todo)
                 editbox:SetWidth(480)
                 -- editbox:SetCallback("OnEnterPressed", function(widget, event, text)
                 --     textStore = text
@@ -61,7 +63,6 @@ function toggleGUI(key)
                 button:SetText("Done!")
                 button:SetWidth(80)
                 button:SetCallback("OnClick", function(widget)
-                    list = A.global.todo
                     table.remove(list, ii)
                     A.global.todo = list
                     --:: Recursive
