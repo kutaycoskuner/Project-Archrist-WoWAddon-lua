@@ -5,4 +5,5 @@
     <Script file="prospecting.lua"/>
     <Script file="disenchanting.lua"/>
     <Script file="Warrior.lua"/>
+    <Script file="EatDrink.lua"/>
 </Ui>
