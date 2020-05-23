@@ -14,12 +14,13 @@ local module = A:GetModule(moduleName);
 
 # Todo
 - migrate databases
-- eat macro
-- butun moduller tarafindan kullanilan fonksiyonlari ayirip global yap
+- raidwarnings i degistirilebilir yap
 
 # Problems
 
 # Completed
+- eat macro
+- butun moduller tarafindan kullanilan fonksiyonlari ayirip global yap
 - help command
 - update guilds raidscores
 - table copy yi developerdan alip diger tarafa koy
