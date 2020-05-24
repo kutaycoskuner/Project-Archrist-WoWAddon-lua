@@ -1,76 +1,61 @@
--- ------------------------------------------------------------------------------------------------------------------------
--- -- :: Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
--- local A, L, V, P, G, C, M, N = unpack(select(2, ...));
--- local moduleName = 'test';
--- local moduleAlert = M .. moduleName .. ": |r";
--- local module = A:GetModule(moduleName);
--- ------------------------------------------------------------------------------------------------------------------------
--- -- ==== Variables
--- local drinks = {"Conjured Mana Strudel","Pungent Seal Whey","Honeymint Tea"}
--- local foods = {"Conjured Mana Strudel","Honey-Spiced Lichen", "Sour Goat Cheese", "Succulent Orca Stew"}
--- local foodClass = {"Warrior", 'Rogue', 'Death Knight', 'Hunter'}
+------------------------------------------------------------------------------------------------------------------------
+-- :: Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+local A, L, V, P, G, C, M, N = unpack(select(2, ...));
+local moduleName = 'test';
+local moduleAlert = M .. moduleName .. ": |r";
+local module = A:GetModule(moduleName);
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Variables
+-- Areana CC Tracker
 
--- -- ==== Macro
--- --[[
--- /run setFeedButton() 
--- /click feedButton  
--- ]]
 
--- -- ==== Methods
--- local feed = CreateFrame("CheckButton", "feedButton", UIParent,
---                          "SecureActionButtonTemplate")
--- feed:SetAttribute("type", "macro")
 
--- local function findConsumableInBag()
---     local function findItem(bag, slot)
---         local consumable = GetItemInfo(GetContainerItemLink(bag, slot) or 0)
---         local class = UnitClass("player")
---         local search 
---         --
---         for ii=1, #foodClass do
---             if class == foodClass[ii] then
---                 search = foods
---                 break
---             else
---                 search = drinks
---             end
---         end
---         --
---         for ii = 1, #search do
---             if consumable == search[ii] then
---                 -- print(drinks[ii])d
---                 return select(1, consumable)
---             end
---         end
---     end
---     --
---     for ii = 0, 4 do
---         for jj= 1, GetContainerNumSlots(ii) do
---             if findItem(ii, jj) then return ii, jj end
---         end
---     end
--- end
 
--- function setFeedButton()
---     local bag, slot = findConsumableInBag()
---     if (not bag or not slot) then
---         -- do nothing if no herb, if looting or casting
---         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "Could not find any food")
---     else
---         feedButton:SetAttribute("macrotext", --
---         "#showtooltip \n/use " .. bag .. " " .. slot)
---     end
--- end
+-- -- ==== GUI
+-- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
 
--- -- ==== Start
--- function module:Initialize() self.initialized = true end
+-- ==== Methods
+local function handleCommand(msg)
+    SELECTED_CHAT_FRAME:AddMessage('test')
+end
 
--- -- ==== End
--- local function InitializeCallback() module:Initialize() end
--- A:RegisterModule(module:GetName(), InitializeCallback)
+-- ==== Start
+function module:Initialize()
+    self.initialized = true
+    -- :: Register some events
+    module:RegisterEvent("CHAT_MSG_SAY");
+end
 
--- -- ==== Todo
--- --[[]]
+-- ==== Event Handlers
+function module:CHAT_MSG_SAY()
+    --print('test')
+end
 
--- -- ==== UseCase
--- --[[]]
+-- ==== Slash Handlersd
+-- SLASH_test1 = "/test"
+-- SlashCmdList["test"] = function(msg) handleCommand(msg) end
+
+-- ==== End
+local function InitializeCallback() module:Initialize() end
+A:RegisterModule(module:GetName(), InitializeCallback)
+
+-- ==== Todo
+--[[
+    warrior = ['']
+    paladin = {'repentance', 'hammer of the wrath'}
+    warlock = {'fear'}
+    priest = {'psychic scream', 'psychic horror'}
+    mage = {'polymorph'}
+    death knight {'stun', ''}
+    rogue = {'sap', 'blind'}
+    hunter = {'frost trap'}
+    shaman = {'hex'}
+    druid = {'cyclone'}
+]]
+
+-- ==== UseCase
+--[[
+    1- Check for player classes in party
+    2- Determine defined classes cc skills
+    3- present available cc names
+]]

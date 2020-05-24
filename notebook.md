@@ -15,10 +15,13 @@ local module = A:GetModule(moduleName);
 # Todo
 - migrate databases
 - raidwarnings i degistirilebilir yap
+- arena cc caller
+- database default folder
 
 # Problems
 
 # Completed
+- kimin cani azsa ona atma
 - eat macro
 - butun moduller tarafindan kullanilan fonksiyonlari ayirip global yap
 - help command

@@ -124,6 +124,7 @@ do
     Addon.lootRules = Addon:NewModule('lootRules')
     Addon.paladinBuffs = Addon:NewModule('paladinBuffs')
     Addon.Warrior = Addon:NewModule('Warrior', "AceHook-3.0", "AceEvent-3.0")
+    Addon.shaman = Addon:NewModule('Shaman', "AceHook-3.0", "AceEvent-3.0")
 end
 
 -- :: fix module names
