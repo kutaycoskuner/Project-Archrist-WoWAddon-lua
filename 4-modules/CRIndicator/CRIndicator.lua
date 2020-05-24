@@ -6,10 +6,11 @@ local moduleAlert = M .. moduleName .. ": |r";
 local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
-local druids
+local people
 local inquiryCD = true
 local closestAvailable = 0
 local isFrameVisible = false
+local spellCooldown = Arch_spellCooldowns
 
 -- -- ==== GUI
 local f = CreateFrame("frame", "MyAddonFrame")
@@ -39,60 +40,73 @@ f:SetPoint("CENTER", 536, 200)
 f:Hide()
 
 -- ==== Methods
-local function calcTimeInSec()
-    local date = date("%H:%M:%S")
-    local sep = ':';
-    if sep == nil then sep = "%s" end
-    local args = {};
-    for str in string.gmatch(date, "([^" .. sep .. "]+)") do
-        table.insert(args, str)
-    end
-    if args[1] == 0 then args[1] = 12 end
-    return tonumber(args[1] * 3600 + args[2] * 60 + args[3])
-end
-
 local function getIndicator()
     local players = ''
     local dru = '|cffFF7D0A'
     local cooldown = '|cff464646'
     local endtext = '|r'
-    for ii = 1, #druids do
+    for ii = 1, #people do
         local add = ''
-        if not druids[ii].rebirth then
-            add = '' -- cooldown .. druids[ii].name .. endtext .. ' '
+        if not people[ii].rebirth then
+            add = '' -- cooldown .. people[ii].name .. endtext .. ' '
         else
-            add = dru .. druids[ii].name .. endtext .. ' '
+            add = dru .. people[ii].name .. endtext .. ' '
         end
         players = players .. add
+        --
+        if ii == 3 then
+            break
+        end
     end
-    if UnitInRaid('player') then f:Show() else players = '|cff464646Combat Res Frame|r' end
-    if druids ~= nil then frameText:SetText(players) end
+    --
+    if UnitInRaid('player') then
+        f:Show()
+    else
+        f:Hide()
+    end
+    --
+    if people ~= nil then 
+        frameText:SetText(players) 
+    else
+        frameText:SetText('|cff464646Combat Res Frame|r') 
+    end
 end
 
 local function scanDruids()
-    if druids == nil then druids = A.global.rebirth end
+    if people == nil then people = A.global.rebirth end
     --
     if not UnitInRaid('player') then
-        druids = {}
-        f:Hide()
-        return
+        people = {}
+        -- return
     end
+    -- test 
+    -- if not UnitInRaid('player') and #people < 1 then
+    --     table.insert(people, {
+    --         name = UnitName('player'),
+    --         availableAt = GetTime(),
+    --         rebirth = true
+    --     })
+    --     A.global.rebirth = people
+    --     getIndicator()
+    --     return
+    -- end
+    -- test end
     --
     local isExists = false
     for ii = 1, GetNumRaidMembers() do
         local druidName, rank, subgroup, level, class = GetRaidRosterInfo(ii)
         if class == 'Druid' then
-            for yy = 1, #druids do
-                if druids[yy].name == druidName then
+            for yy = 1, #people do
+                if people[yy].name == druidName then
                     isExists = true
                     break
                 end
             end
             --
             if isExists == false then
-                table.insert(druids, {
+                table.insert(people, {
                     name = druidName,
-                    availableAt = calcTimeInSec(),
+                    availableAt = GetTime(),
                     rebirth = true
                 })
             end
@@ -100,11 +114,7 @@ local function scanDruids()
         end
     end
     --
-    -- for ii=1, #druids do
-    --     print(druids[ii].name)
-    -- end
-    --
-    A.global.rebirth = druids
+    A.global.rebirth = people
     getIndicator()
 end
 
@@ -129,20 +139,20 @@ end
 
 -- :: sets closest cd arrival for cooldowned rebirth
 local function setClosestAvailable()
-    if #druids > 1 then
-        closestAvailable = druids[1].availableAt
-        for ii = 1, #druids - 1 do
-            if druids[ii].availableAt <= druids[ii + 1].availableAt then
-                closestAvailable = druids[ii+1].availableAt
+    if #people > 1 then
+        closestAvailable = people[1].availableAt
+        for ii = 1, #people - 1 do
+            if people[ii].availableAt <= people[ii + 1].availableAt then
+                closestAvailable = people[ii + 1].availableAt
                 -- print('closest return is ' .. closestAvailable)
             end
         end
-    elseif #druids == 1 then
-        closestAvailable = druids[1].availableAt
+    elseif #people == 1 then
+        closestAvailable = people[1].availableAt
     else
         closestAvailable = 0
     end
-    if closestAvailable > calcTimeInSec() then
+    if closestAvailable > GetTime() then
         inquiryCD = true
         return
     end
@@ -151,33 +161,39 @@ local function setClosestAvailable()
 end
 
 -- :: This function activates rebirth cooldown and turns rebirth availability false for given druid
-local function startCooldown(srcName)
-    for ii = 1, #druids do
-        if druids[ii].name == srcName then
-            druids[ii].rebirth = false
-            druids[ii].availableAt = (calcTimeInSec() + 600) -- saniye olarak ekle
+local function startCooldown(srcName, spell)
+    -- local start, duration, enabled = GetSpellCooldown(spell)
+    -- print(srcName .. ' ' .. spell)
+    -- start, duration, enabled = GetSpellCooldown(30823)
+    -- print(start .. ' ' .. duration ..' ' .. enabled )
+    for ii = 1, #people do
+        if people[ii].name == srcName then
+            people[ii].rebirth = false
+            people[ii].availableAt = (GetTime() + spellCooldown(spell)) -- saniye olarak ekle
             setClosestAvailable()
         end
     end
+    getIndicator()
 end
 
 -- :: controls with random combat logs if rebirth is available
 local function endCooldown()
-    if druids == nil then druids = A.global.rebirth end
-    for ii = 1, #druids do
-        if druids[ii].availableAt >= closestAvailable then
-            druids[ii].rebirth = true
-            -- print(druids[ii].name .. ' can use now')
+    if people == nil then people = A.global.rebirth end
+    for ii = 1, #people do
+        if people[ii].availableAt >= closestAvailable then
+            people[ii].rebirth = true
+            -- print(people[ii].name .. ' can use now')
         end
     end
     setClosestAvailable()
+    getIndicator()
 end
 
 -- ==== Start
 function module:Initialize()
     self.initialized = true
     if A.global.rebirth == nil then A.global.rebirth = {} end
-    if not UnitInRaid('player') then druids, A.global.rebirth = {}, {} end
+    if not UnitInRaid('player') then people, A.global.rebirth = {}, {} end
     scanDruids()
     -- :: Register some events
     module:RegisterEvent("COMBAT_LOG_EVENT")
@@ -187,17 +203,19 @@ end
 -- ==== Event Handlers
 function module:COMBAT_LOG_EVENT(event, _, eventType, _, srcName, _, _, dstName,
                                  _, spellId, spellName, _, ...) -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
-    -- print(event .. ' ' .. eventType .. ' ' .. srcName .. ' ' .. dstName .. ' ' .. spellId)
-    if spellId == 48477 and eventType == "SPELL_RESURRECT" then -- 48477(rebirth)
+    -- print(event .. ' ' .. eventType .. ' ' .. srcName .. ' ' .. spellId)
+    -- :: Raidde degilse rebirth listesini sifirliyor
+    -- if not UnitInRaid('player') then people = {} getIndicator() return end
+
+    -- :: Rebirth cast edilmis ise
+    if (spellId == 48477 and eventType == "SPELL_RESURRECT") then -- 48477(rebirth)
         -- print(spellId)
-        startCooldown(srcName)
-        getIndicator()
+        startCooldown(srcName, spellId)
     end
-    -- --
+    -- :: Checktime if some cd exists
     if inquiryCD then
-        if closestAvailable <= calcTimeInSec() then
+        if closestAvailable <= GetTime() then
             endCooldown()
-            getIndicator()
         end
     end
 end
@@ -218,7 +236,7 @@ A:RegisterModule(module:GetName(), InitializeCallback)
 -- ==== UseCase
 --[[
     -->> Displays next combat resser on screen
-    1- Loops through druids in raid
+    1- Loops through people in raid
     2- If druid used his rebirth within [cd] adds true false variable to them
     3- If cr is true for druid registers druid for display
     4- Checks for raid if is anyone dead display if its true 

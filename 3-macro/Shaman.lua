@@ -83,3 +83,12 @@
 -- -- ==== Todo
 
 -- -- ==== UseCase
+
+-- /run t=0 if t==2 then CastSpell(58790) t=0 end if t==1 then CastSpell(58504) t=2 end if t==0 then CancelItemTempEnchantment(1) CancelItemTempEnchantment(2) t=1 end 
+
+
+-- /run local a,b,_,c,d,_=GetWeaponEnchantInfo() local t=0 if a and t==0 then CancelItemTempEnchantment(1) t=1 end if c and t==1 then CancelItemTempEnchantment(2) t=0 end 
+-- /castsequence reset=5 Windfury Weapon, Flametongue Weapon
+
+
+-- CastSpellByName("Windfury Weapon", 16)

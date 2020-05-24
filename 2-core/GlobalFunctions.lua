@@ -39,6 +39,20 @@ function Arch_trivialColor(msg)
     return (trivialColor .. tostring(msg) .. colorEnd)
 end
 
+-- :: Time
+function Arch_calcTimeInSec()
+    local date = date("%H:%M:%S")
+    local sep = ':';
+    if sep == nil then sep = "%s" end
+    local args = {};
+    for str in string.gmatch(date, "([^" .. sep .. "]+)") do
+        table.insert(args, str)
+    end
+    if args[1] == 0 then args[1] = 12 end
+    return tonumber(args[1] * 3600 + args[2] * 60 + args[3])
+end
+
+
 -- :: String Manipulation
 function Arch_fixArgs(msg)
     -- :: this is separating the given arguments after command
@@ -58,6 +72,15 @@ function Arch_fixArgs(msg)
     return args;
 end
 
+
+-- :: Spells
+function Arch_spellCooldowns(spellId)
+    if spellId == 2484 then -- earthbind totem [shaman]
+        return 10.5
+    elseif spellId == 48477 then -- rebirth [druid]
+        return 600
+    end
+end
 
 -- -- ==== Start
 -- function module:Initialize()
