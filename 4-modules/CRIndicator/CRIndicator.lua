@@ -34,7 +34,7 @@ f:SetFrameStrata("FULLSCREEN_DIALOG")
 local frameText = f:CreateFontString(nil, "ARTWORK")
 frameText:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
 frameText:SetPoint("CENTER", 0, 0)
-frameText:SetText('|cff464646Combat Res Frame|r')
+frameText:SetText("|cff464646Combat Res Frame|r")
 --
 f:SetPoint("CENTER", 536, 200)
 f:Hide()
@@ -45,6 +45,7 @@ local function getIndicator()
     local dru = '|cffFF7D0A'
     local cooldown = '|cff464646'
     local endtext = '|r'
+    --
     for ii = 1, #people do
         local add = ''
         if not people[ii].rebirth then
@@ -54,9 +55,7 @@ local function getIndicator()
         end
         players = players .. add
         --
-        if ii == 3 then
-            break
-        end
+        if ii == 3 then break end
     end
     --
     if UnitInRaid('player') then
@@ -65,10 +64,10 @@ local function getIndicator()
         f:Hide()
     end
     --
-    if people ~= nil then 
-        frameText:SetText(players) 
-    else
-        frameText:SetText('|cff464646Combat Res Frame|r') 
+    if players == '' then
+        frameText:SetText("|cff464646Combat Res Frame|r")
+    elseif  players  ~= nil then
+        frameText:SetText(players)
     end
 end
 
@@ -80,37 +79,47 @@ local function scanDruids()
         -- return
     end
     -- test 
-    -- if not UnitInRaid('player') and #people < 1 then
-    --     table.insert(people, {
-    --         name = UnitName('player'),
-    --         availableAt = GetTime(),
-    --         rebirth = true
-    --     })
-    --     A.global.rebirth = people
-    --     getIndicator()
-    --     return
-    -- end
+    if not UnitInRaid('player') and #people < 1 then
+        table.insert(people, {
+            name = UnitName('player'),
+            availableAt = GetTime(),
+            rebirth = true
+        })
+    end
+    --
+    if UnitInRaid('player') or GetNumPartyMembers() >= 1 then
+        for ii = 1, #people do
+            if people[ii].name == UnitName('player') and UnitClass('player') ~=
+                'Druid' then
+                table.remove(people, ii)
+                break
+            end
+        end
+    end
     -- test end
     --
-    local isExists = false
-    for ii = 1, GetNumRaidMembers() do
-        local druidName, rank, subgroup, level, class = GetRaidRosterInfo(ii)
-        if class == 'Druid' then
-            for yy = 1, #people do
-                if people[yy].name == druidName then
-                    isExists = true
-                    break
+    if UnitInRaid('player') then
+        local isExists = false
+        for ii = 1, GetNumRaidMembers() do
+            local druidName, rank, subgroup, level, class =
+                GetRaidRosterInfo(ii)
+            if class == 'Druid' then
+                for yy = 1, #people do
+                    if people[yy].name == druidName then
+                        isExists = true
+                        break
+                    end
                 end
+                --
+                if isExists == false then
+                    table.insert(people, {
+                        name = druidName,
+                        availableAt = GetTime(),
+                        rebirth = true
+                    })
+                end
+                isExists = false
             end
-            --
-            if isExists == false then
-                table.insert(people, {
-                    name = druidName,
-                    availableAt = GetTime(),
-                    rebirth = true
-                })
-            end
-            isExists = false
         end
     end
     --
@@ -192,7 +201,7 @@ end
 -- ==== Start
 function module:Initialize()
     self.initialized = true
-    if A.global.rebirth == nil then A.global.rebirth = {} end
+    if A.global.rebirth == nil then people, A.global.rebirth = {}, {} end
     if not UnitInRaid('player') then people, A.global.rebirth = {}, {} end
     scanDruids()
     -- :: Register some events
@@ -213,11 +222,7 @@ function module:COMBAT_LOG_EVENT(event, _, eventType, _, srcName, _, _, dstName,
         startCooldown(srcName, spellId)
     end
     -- :: Checktime if some cd exists
-    if inquiryCD then
-        if closestAvailable <= GetTime() then
-            endCooldown()
-        end
-    end
+    if inquiryCD then if closestAvailable <= GetTime() then endCooldown() end end
 end
 
 function module:PARTY_MEMBERS_CHANGED() scanDruids() end
