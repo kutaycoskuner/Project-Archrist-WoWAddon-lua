@@ -15,6 +15,20 @@ setEnhancement:SetAttribute("type", "macro")
 -- ==== Methods
 function Arch_shamanWeapons()
     local a, b, _, c, d, _ = GetWeaponEnchantInfo()
+    local time = 1780000
+    local gcd = GetSpellCooldown("Lightning Shield")
+    --
+    if b == nil then b = 1 end
+    if d == nil then d = 1 end
+    --
+    if gcd ~= 0 then return end
+    --
+    if (b > time and d > time) then
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'already enhanced')
+        enhanceButton:SetAttribute("macrotext", "")
+        return
+    end
+    --
     if mod == 4 then mod = 1 end
     if mod == 1 then
         if a then
