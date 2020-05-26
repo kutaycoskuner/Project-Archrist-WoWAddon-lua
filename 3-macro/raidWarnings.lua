@@ -16,10 +16,14 @@ rwDefault[3] = '{circle} Heroism Now! {circle}'
 rwDefault[4] = '{triangle} Innervate Please {triangle}'
 --
 local raidWarning = {}
+raidWarning[1] = ''
+raidWarning[2] = ''
+raidWarning[3] = ''
+raidWarning[4] = ''
 --
 local fixArgs = Arch_fixArgs
 local focus = Arch_focusColor
-
+--
 -- :: buttons
 local warn1 = CreateFrame("CheckButton", "WarnButton1", UIParent,
                           "SecureActionButtonTemplate")
@@ -69,8 +73,14 @@ local function setRaidWarnings(msg)
         return
     end
     --
+    if entry == nil or entry == '' then 
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'you need to enter a valid text')
+        return
+    end
+    --
     if entry == 'default' then
-        A.global.raidWarnings[rw], raidWarning[mod] = rwDefault[mod], rwDefault[mod]
+        A.global.raidWarnings[rw] = rwDefault[mod]
+        raidWarning[mod] = rwDefault[mod]
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Your ' .. rw .. ' set as: ' .. focus(rwDefault[mod]))
         return
     end 
@@ -82,10 +92,10 @@ end
 
 -- :: sets raid warning
 function Arch_setRaidWarnings()
-    -- WarnButton1:SetAttribute("macrotext", comms .. raidWarning[1])
-    -- WarnButton2:SetAttribute("macrotext", comms .. raidWarning[2])
-    -- WarnButton3:SetAttribute("macrotext", comms .. raidWarning[3])
-    -- WarnButton4:SetAttribute("macrotext", comms .. raidWarning[4])
+    WarnButton1:SetAttribute("macrotext", comms .. raidWarning[1])
+    WarnButton2:SetAttribute("macrotext", comms .. raidWarning[2])
+    WarnButton3:SetAttribute("macrotext", comms .. raidWarning[3])
+    WarnButton4:SetAttribute("macrotext", comms .. raidWarning[4])
 end
 
 -- :: selecting boss via slash command
@@ -231,6 +241,11 @@ local function selectBoss(boss)
             raidWarning[2] = '{skull}  {skull}'
             raidWarning[3] = '{skull}  {skull}'
             raidWarning[4] = '{triangle}  {triangle}'
+        elseif command == 'wg' then
+            raidWarning[1] = '{triangle} Stack Sieges and Attack NorthWest Gate {triangle}'
+            raidWarning[2] = '{skull} Attack Cannons {skull}'
+            raidWarning[3] = '{skull} Get Broken Temple Workshop {skull}'
+            raidWarning[4] = '{triangle} Protect Sieges {triangle}'
             --[[
                 brain links
                 get in portals two group
@@ -279,11 +294,15 @@ local function selectChannel(channel)
         elseif (command == "rw" or command == "raidwarning") then
             comms = "/rw "
             A.global.comms = "/rw "
-        elseif (command == "bg" or command == "battlegrouund") then
+        elseif (command == "bg" or command == "battleground") then
             comms = "/bg "
             A.global.comms = "/bg "
+        elseif (command == "wg" or command == "wintegrasp") then
+            comms = "/1 "
+            A.global.comms = "/1 "
         else
             comms = comms
+            A.global.comms = comms
         end
         DEFAULT_CHAT_FRAME:AddMessage(
             "|cff128ec4[Archrium] WarningChannel:|r " .. tostring(comms))
