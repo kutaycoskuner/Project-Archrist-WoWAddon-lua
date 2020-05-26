@@ -116,7 +116,7 @@ do
     Addon.prospecting = Addon:NewModule("prospecting", "AceEvent-3.0")
     Addon.disenchanting = Addon:NewModule("disenchanting", "AceEvent-3.0")
     Addon.EatDrink = Addon:NewModule("EatDrink", "AceEvent-3.0")
-    Addon.raidWarnings = Addon:NewModule("raidWarnings", "AceHook-3.0", "AceEvent-3.0")
+    Addon.raidWarnings = Addon:NewModule("RaidWarnings", "AceHook-3.0", "AceEvent-3.0")
     Addon.discord = Addon:NewModule('discord')
     Addon.tank = Addon:NewModule('tank')
     Addon.spread = Addon:NewModule('spread')
