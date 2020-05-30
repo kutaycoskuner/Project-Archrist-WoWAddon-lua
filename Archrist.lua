@@ -1,3 +1,5 @@
+-- ==== Credit
+-- This Addon is created by inspecting ElvUI codes
 -- ==== Create Addon
 local AceAddon, AceAddonMinor = LibStub("AceAddon-3.0")
 local CallbackHandler = LibStub("CallbackHandler-1.0")

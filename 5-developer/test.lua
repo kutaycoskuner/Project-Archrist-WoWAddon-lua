@@ -13,7 +13,10 @@ local realmName = GetRealmName()
 
 -- ==== Methods
 local function handleCommand(msg)
-    SELECTED_CHAT_FRAME:AddMessage('test')
+    local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType,
+    itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice =
+        GetItemInfo(msg)
+    SELECTED_CHAT_FRAME:AddMessage(itemLink .. ', ' .. date("%d-%m-%y"))
 end
 
 -- ==== Start
@@ -24,12 +27,11 @@ function module:Initialize()
     -- :: Register some events
     -- "TRADE_ACCEPT_UPDATE"
     -- https://wowwiki.fandom.com/wiki/Events/Trade
-    module:RegisterEvent("CHAT_MSG_SAY");
+    -- module:RegisterEvent("CHAT_MSG_SAY");
 end
 
 -- ==== Event Handlers
 function module:CHAT_MSG_SAY()
-    print(date("%d-%m-%y"))
 end
 
 -- ==== Slash Handlersd
@@ -46,15 +48,20 @@ A:RegisterModule(module:GetName(), InitializeCallback)
 -- ==== UseCase
 --[[
 
-    1- Creates a database to track who got item in raid
-    data structure = {
-        [playerName] = {
-            {item: , date: },
-            {item: , date: },
-            {item: , date: },
+    1 -->> Creates a database to track who got item in raid
+        data structure = {
+            [playerName] = {
+                {item: , date: },
+                {item: , date: },
+                {item: , date: },
+            }
         }
-    }
 
-    1- if trade succeed between two characters create data
+    2 -->> Trigger with event trade event
+        if player is in raid
+        if target has same guild with player
+        if traded item is epic
+
+    3 -->>  if trade succeed between two characters register person
 
 ]]
