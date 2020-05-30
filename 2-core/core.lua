@@ -97,10 +97,13 @@ function A:Initialize()
 	self.global = self.data.global
 
 	-- self.global.comms = '/ra ' --:: Calisiyor!!
-	self.global.test = 'Patates' --:: Calisiyor!!
+	-- self.global.test = 'Patates' --:: Calisiyor!!
 
 	self.peopleDB = A.Libs.AceDB:New("ArchPeopleDB", self.peopleDF) --  ikinci parametre NE?
 	self.people = self.peopleDB.global
+
+	self.lootDB = A.Libs.AceDB:New("ArchLootDB", self.lootDF) --  ikinci parametre NE?
+	self.loot = self.lootDB.global
 
 	self.myguid = UnitGUID("player")
 

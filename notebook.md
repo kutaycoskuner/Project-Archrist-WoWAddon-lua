@@ -5,11 +5,11 @@
 https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmoA2G&index=7
 
 ------------------------------------------------------------------------------------------------------------------------
--- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
-local A, L, V, P, G, C, M, N = unpack(select(2, ...));
-local moduleName = 'raidWarnings';
-local moduleAlert = M .. moduleName .. ": |r";
-local module = A:GetModule(moduleName);
+-- -- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+-- local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
+-- local moduleName = 'raidWarnings';
+-- local moduleAlert = M .. moduleName .. ": |r";
+-- local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 
 # Todo

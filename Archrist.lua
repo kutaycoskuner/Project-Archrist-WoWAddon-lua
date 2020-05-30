@@ -13,12 +13,13 @@ local tcopy = table.copy;
 local twipe = table.wipe;
 
 -- :: Addon Tables, Variables
-Addon.callbacks = Addon.callbacks or CallbackHandler:New(Addon);
-Addon.DF = {profile = {}, global = {}}; -- Profiles
+Addon.callbacks = Addon.callbacks or CallbackHandler:New(Addon)
+Addon.DF = {profile = {}, global = {}} -- Profiles
 Addon.privateVars = {profile = {}} -- Defaults
-Addon.options = {type = "group", name = AddonName, args = {}};
-Addon.peopleDF = {profile = {}};
-ArchModuleInfo = "|cff00c8ff[Archrist]|r |cff00efff";
+Addon.options = {type = "group", name = AddonName, args = {}}
+Addon.peopleDF = {profile = {}}
+Addon.lootDF = {profile = {}, global = {}}
+ArchModuleInfo = "|cff00c8ff[Archrist]|r |cff00efff"
 
 -- :: Create global addon module
 System[1] = Addon;
@@ -27,9 +28,18 @@ System[3] = Addon.privateVars.profile or {}; -- :: private global
 System[4] = Addon.DF.profile or {}; -- :: character profile
 System[5] = Addon.DF.global; -- :: global profile 
 System[6] = Addon.peopleDF.global;
-System[7] = ArchModuleInfo;
-System[8] = AddonName;
+System[7] = Addon.lootDF.global;
+System[8] = ArchModuleInfo;
+System[9] = AddonName;
 _G[AddonName] = System;
+
+------------------------------------------------------------------------------------------------------------------------
+-- -- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+-- local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
+-- local moduleName = 'raidWarnings';
+-- local moduleAlert = M .. moduleName .. ": |r";
+-- local module = A:GetModule(moduleName);
+------------------------------------------------------------------------------------------------------------------------
 
 -- self.private = self.charSettings.profile
 -- self.db = self.data.profile
@@ -37,44 +47,6 @@ _G[AddonName] = System;
 
 -- test
 
--- ==== Create Variables
-local defaults = {
-    profile = {
-        message = "Welcome Home!",
-        showInChat = false,
-        showOnScreen = true
-    }
-}
-
-local options = {
-    name = "Archrist",
-    handler = Addon, -- :: addon
-    type = "group",
-    args = {
-        msg = {
-            type = "input",
-            name = L["Message"],
-            desc = L["The message to be displayed when you get home."],
-            usage = L["<Your message>"],
-            get = "GetMessage",
-            set = "SetMessage"
-        },
-        showInChat = {
-            type = "toggle",
-            name = "Show in Chat",
-            desc = "Toggles the display of the message in the chat window.",
-            get = "IsShowInChat",
-            set = "ToggleShowInChat"
-        },
-        showOnScreen = {
-            type = "toggle",
-            name = "Show on Screen",
-            desc = "Toggles the display of the message on the screen.",
-            get = "IsShowOnScreen",
-            set = "ToggleShowOnScreen"
-        }
-    }
-}
 
 -- test end
 
@@ -100,30 +72,30 @@ end
 
 do
     -- :: Create Modules
-    Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
+    Addon.test = Addon:NewModule("Test", "AceHook-3.0", "AceEvent-3.0")
     Addon.lootMsgFilter = Addon:NewModule("LootMsgFilter")
-    Addon.deleteAucMail = Addon:NewModule("deleteAucMail", "AceHook-3.0",
+    Addon.deleteAucMail = Addon:NewModule("DeleteAucMail", "AceHook-3.0",
                                           "AceEvent-3.0")
     Addon.playerDB = Addon:NewModule("PlayerDB", "AceHook-3.0", "AceEvent-3.0")
-    Addon.autoLoot = Addon:NewModule("autoLoot", "AceHook-3.0", "AceEvent-3.0")
-    Addon.ArchGUI = Addon:NewModule("ArchGUI", "AceHook-3.0", "AceEvent-3.0")
-    Addon.TodoList = Addon:NewModule("TodoList", "AceHook-3.0", "AceEvent-3.0")
-    Addon.CRIndicator = Addon:NewModule("CRIndicator", "AceHook-3.0", "AceEvent-3.0")
-    Addon.Help = Addon:NewModule("Help", "AceHook-3.0", "AceEvent-3.0")
+    Addon.autoLoot = Addon:NewModule("AutoLoot", "AceHook-3.0", "AceEvent-3.0")
+    Addon.archGUI = Addon:NewModule("ArchGUI", "AceHook-3.0", "AceEvent-3.0")
+    Addon.todoList = Addon:NewModule("TodoList", "AceHook-3.0", "AceEvent-3.0")
+    Addon.cRIndicator = Addon:NewModule("CRIndicator", "AceHook-3.0", "AceEvent-3.0")
+    Addon.help = Addon:NewModule("Help", "AceHook-3.0", "AceEvent-3.0")
     -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
     -- :: Macros
-    Addon.milling = Addon:NewModule("milling", "AceEvent-3.0")
-    Addon.prospecting = Addon:NewModule("prospecting", "AceEvent-3.0")
-    Addon.disenchanting = Addon:NewModule("disenchanting", "AceEvent-3.0")
-    Addon.EatDrink = Addon:NewModule("EatDrink", "AceEvent-3.0")
+    Addon.milling = Addon:NewModule("Milling", "AceEvent-3.0")
+    Addon.prospecting = Addon:NewModule("Prospecting", "AceEvent-3.0")
+    Addon.disenchanting = Addon:NewModule("Disenchanting", "AceEvent-3.0")
+    Addon.eatDrink = Addon:NewModule("EatDrink", "AceEvent-3.0")
     Addon.raidWarnings = Addon:NewModule("RaidWarnings", "AceHook-3.0", "AceEvent-3.0")
-    Addon.discord = Addon:NewModule('discord')
-    Addon.tank = Addon:NewModule('tank')
-    Addon.spread = Addon:NewModule('spread')
-    Addon.stack = Addon:NewModule('stack')
-    Addon.lootRules = Addon:NewModule('lootRules')
-    Addon.paladinBuffs = Addon:NewModule('paladinBuffs')
-    Addon.Warrior = Addon:NewModule('Warrior', "AceHook-3.0", "AceEvent-3.0")
+    Addon.discord = Addon:NewModule('Discord')
+    Addon.tank = Addon:NewModule('Tank')
+    Addon.spread = Addon:NewModule('Spread')
+    Addon.stack = Addon:NewModule('Stack')
+    Addon.lootRules = Addon:NewModule('LootRules')
+    Addon.paladinBuffs = Addon:NewModule('PaladinBuffs')
+    Addon.warrior = Addon:NewModule('Warrior', "AceHook-3.0", "AceEvent-3.0")
     Addon.shaman = Addon:NewModule('Shaman', "AceHook-3.0", "AceEvent-3.0")
 end
 
@@ -142,13 +114,15 @@ end
 function Addon:OnInitialize()
 
     if not ArchCharacterDB then ArchCharacterDB = {} end
-    -- if not ArchDB then ArchDB = {} end
-    -- if not ArchPrivateDB then ArchPrivateDB = {} end
-    -- if not ArchPeopleDB then ArchPeopleDB = {} end
+    if not ArchDB then ArchDB = {} end
+    if not ArchPrivateDB then ArchPrivateDB = {} end
+    if not ArchPeopleDB then ArchPeopleDB = {} end
+    if not ArchLootDB then ArchLootDB = {} end
 
     self.db = tcopy(self.DF.profile, true)
     self.global = tcopy(self.DF.global, true)
     self.people = tcopy(self.peopleDF.global, true)
+    self.loot = tcopy(self.lootDF.global, true)
 
     -- **
 
@@ -191,52 +165,6 @@ function Addon:OnInitialize()
     -- Addon.message = "Welcome Home!"
     -- Addon.showInChat = false
     -- Addon.showOnScreen = true
-end
-
--- :: command handler
-function Addon:ChatCommand(input)
-    if not input or input:trim() == "" then
-        -- InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
-    else
-        LibStub("AceConfigCmd-3.0"):HandleCommand("ar", "Addon", input) -- :: key, addon, input
-    end
-end
-
--- :: register an event to addon
-function Addon:OnEnable()
-    -- if self.people.test then
-    --     self.people.test = UnitName("player")
-    --   end
-end
-
--- :: response to registered event
-function Addon:CHAT_MSG_SAY()
-    -- if self.db.profile.showInChat then
-    -- self:Print(self.db.message); -- ** aware that P is capital
-    -- end
-
-    -- if self.db.profile.showOnScreen then
-    --     UIErrorsFrame:AddMessage(self.db.profile.message, 1.0, 1.0, 1.0, 5.0)
-    -- end
-end
-
-function Addon:GetMessage(info) return self.db.message end
-
-function Addon:SetMessage(info, newValue)
-    self.db.message = newValue
-    self.private.message = newValue
-    self.global.message = newValue
-    -- self:Print(self.DF.profile.message)
-end
-
-function Addon:IsShowInChat(info) return self.DF.profile.showInChat end
-
-function Addon:IsShowOnScreen(info) return self.DF.profile.showOnScreen end
-
-function Addon:ToggleShowInChat(info, value) self.DF.profile.showInChat = value end
-
-function Addon:ToggleShowOnScreen(info, value)
-    self.DF.profile.showOnScreen = value
 end
 
 local LoadUI = CreateFrame("Frame")

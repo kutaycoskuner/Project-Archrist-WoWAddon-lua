@@ -4,7 +4,7 @@
 ## Notes: Player database, todo list, raid assistant, external memory addon
 ## Version: 0.7.2 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
 ## Author: Orthrin
-## SavedVariables: ArchDB, ArchPrivateDB, ArchPeopleDB
+## SavedVariables: ArchDB, ArchPrivateDB, ArchPeopleDB, ArchLootDB
 ## SavedVariablesPerCharacter: ArchCharacterDB
 ## OptionalDeps: Blizzard_DebugTools, Ace3, GearScoreLite
 ## X-Embeds: Ace3

@@ -1,10 +1,10 @@
--- ------------------------------------------------------------------------------------------------------------------------
--- -- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
--- local A, L, V, P, G, C, M, N = unpack(select(2, ...));
--- local moduleName = 'deleteAucMail';
--- local moduleAlert = M .. moduleName .. ": |r";
--- local module = A:GetModule(moduleName);
--- ------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+-- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
+local moduleName = 'DeleteAucMail';
+local moduleAlert = M .. moduleName .. ": |r";
+local module = A:GetModule(moduleName);
+------------------------------------------------------------------------------------------------------------------------
 -- -- ==== Start
 -- function module:Initialize()
 --     self.initialized = true

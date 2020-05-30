@@ -1,7 +1,10 @@
--- ------------------------------------------------------------------------------------------------------------------------
--- local A, L, V, P, G, N = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, AddonName
--- local module = A:GetModule('autoLoot');
--- ------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+-- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
+local moduleName = 'AutoLoot';
+local moduleAlert = M .. moduleName .. ": |r";
+local module = A:GetModule(moduleName);
+------------------------------------------------------------------------------------------------------------------------
 
 
 -- -- ===== Loot Msg Filter

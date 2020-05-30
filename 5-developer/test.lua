@@ -1,69 +1,60 @@
--- ------------------------------------------------------------------------------------------------------------------------
--- -- :: Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
--- local A, L, V, P, G, C, M, N = unpack(select(2, ...));
--- local moduleName = 'test';
--- local moduleAlert = M .. moduleName .. ": |r";
--- local module = A:GetModule(moduleName);
--- ------------------------------------------------------------------------------------------------------------------------
--- -- ==== Variables
--- -- Areana CC Tracker
+------------------------------------------------------------------------------------------------------------------------
+-- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
+local moduleName = 'Test';
+local moduleAlert = M .. moduleName .. ": |r";
+local module = A:GetModule(moduleName);
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Variables
+local realmName = GetRealmName()
 
+-- -- ==== GUI
+-- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
 
+-- ==== Methods
+local function handleCommand(msg)
+    SELECTED_CHAT_FRAME:AddMessage('test')
+end
 
+-- ==== Start
+function module:Initialize()
+    self.initialized = true
+    -- :: Database Connection
+    if not A.loot[realmName] then A.loot[realmName] = {} end
+    -- :: Register some events
+    -- "TRADE_ACCEPT_UPDATE"
+    -- https://wowwiki.fandom.com/wiki/Events/Trade
+    module:RegisterEvent("CHAT_MSG_SAY");
+end
 
--- -- -- ==== GUI
--- -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
+-- ==== Event Handlers
+function module:CHAT_MSG_SAY()
+    print(date("%d-%m-%y"))
+end
 
--- -- ==== Methods
--- local function handleCommand(msg)
---     CastSpellByName("Windfury Weapon")
---     SELECTED_CHAT_FRAME:AddMessage(GetTime())
---     -- local start, duration, enabled = GetSpellCooldown(48477)
---     -- local cooldownMS, gcdMS = GetSpellBaseCooldown(48477)
---     -- -- print(start .. ' ' .. duration ..' ' .. enabled )
---     -- SELECTED_CHAT_FRAME:AddMessage(start .. ' ' .. duration ..' ' .. enabled)
---     -- SELECTED_CHAT_FRAME:AddMessage(cooldownMS .. ' ' .. gcdMS)
--- end
+-- ==== Slash Handlersd
+SLASH_test1 = "/test"
+SlashCmdList["test"] = function(msg) handleCommand(msg) end
 
+-- ==== End
+local function InitializeCallback() module:Initialize() end
+A:RegisterModule(module:GetName(), InitializeCallback)
 
+-- ==== Todo
+--[[]]
 
--- -- ==== Start
--- function module:Initialize()
---     self.initialized = true
---     -- :: Register some events
---     -- module:RegisterEvent("CHAT_MSG_SAY");
--- end
+-- ==== UseCase
+--[[
 
--- -- ==== Event Handlers
--- -- function module:CHAT_MSG_SAY()
--- --     --print('test')
--- -- end
+    1- Creates a database to track who got item in raid
+    data structure = {
+        [playerName] = {
+            {item: , date: },
+            {item: , date: },
+            {item: , date: },
+        }
+    }
 
--- -- ==== Slash Handlersd
--- SLASH_test1 = "/test"
--- SlashCmdList["test"] = function(msg) handleCommand(msg) end
+    1- if trade succeed between two characters create data
 
--- -- ==== End
--- local function InitializeCallback() module:Initialize() end
--- A:RegisterModule(module:GetName(), InitializeCallback)
-
--- -- ==== Todo
--- --[[
---     warrior = ['']
---     paladin = {'repentance', 'hammer of the wrath'}
---     warlock = {'fear'}
---     priest = {'psychic scream', 'psychic horror'}
---     mage = {'polymorph'}
---     death knight {'stun', ''}
---     rogue = {'sap', 'blind'}
---     hunter = {'frost trap'}
---     shaman = {'hex'}
---     druid = {'cyclone'}
--- ]]
-
--- -- ==== UseCase
--- --[[
---     1- Check for player classes in party
---     2- Determine defined classes cc skills
---     3- present available cc names
--- ]]
+]]

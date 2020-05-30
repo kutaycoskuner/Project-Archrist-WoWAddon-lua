@@ -18,6 +18,7 @@
 -- -- ==== Start
 -- function module:Initialize()
 --     self.initialized = true
+--     -- :: Database Connection
 --     -- :: Register some events
 --     module:RegisterEvent("CHAT_MSG_SAY");
 -- end
