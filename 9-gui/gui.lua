@@ -10,115 +10,180 @@ local AceGUI = LibStub("AceGUI-3.0")
 local list
 local frame
 local frameOpen = false
+local recursive = false
+local realmName = GetRealmName()
 local textStore
+local currentLootList = {}
+local focus = Arch_focusColor
 
+-- ==== Module GUI
+local function TodoListGUI()
+    if A.global.todo then
+        -- :: Labels
+        local labelIssuer = AceGUI:Create("Label")
+        labelIssuer:SetText("")
+        labelIssuer:SetWidth(60)
+        frame:AddChild(labelIssuer)
+        --
+        local labelTodo = AceGUI:Create("Label")
+        labelTodo:SetText("Todo")
+        labelTodo:SetWidth(480)
+        frame:AddChild(labelTodo)
+        --
+        local labelButton = AceGUI:Create("Label")
+        labelButton:SetText("Complete")
+        labelButton:SetWidth(80)
+        frame:AddChild(labelButton)
+        --
+        -- :: Set Variable for cache
+        local list = A.global.todo
+        for ii = 1, #list do
+            -- :: her bir todo icin
+            local label = AceGUI:Create("Label")
+            label:SetText(ii .. "# ")
+            label:SetWidth(60)
+            frame:AddChild(label)
+            --
+            local editbox = AceGUI:Create("Label")
+            editbox:SetText(list[ii].todo)
+            editbox:SetWidth(480)
+            frame:AddChild(editbox)
+            --
+            local button = AceGUI:Create("Button")
+            button:SetText("Done!")
+            button:SetWidth(80)
+            button:SetCallback("OnClick", function(widget)
+                table.remove(list, ii)
+                A.global.todo = list
+                -- :: Recursive
+                recursive = true
+                toggleGUI('TodoList')
+                -- editbox = nil
+                -- label = nil
+            end)
+            frame:AddChild(button)
+        end
+        -- :: gui Add Todo
+        local newIssuer, newTodo
+        --
+        local addIssuer = AceGUI:Create("Label")
+        addIssuer:SetText(#A.global.todo + 1 .. "# ")
+        addIssuer:SetWidth(60)
+        frame:AddChild(addIssuer)
+        -- addIssuer:SetCallback("OnEnterPressed", function(widget, event, text)
+        --     newIssuer = text
+        -- end)
+        --
+        local addTodo = AceGUI:Create("EditBox")
+        addTodo:SetLabel("Todo")
+        addTodo:SetWidth(480)
+        addTodo:SetCallback("OnEnterPressed",
+                            function(widget, event, text) newTodo = text end)
+        frame:AddChild(addTodo)
+        --
+        local button = AceGUI:Create("Button")
+        button:SetText("Add")
+        button:SetWidth(80)
+        button:SetCallback("OnClick", function(widget)
+            list = A.global.todo
+            table.insert(list, {todo = newTodo})
+            A.global.todo = list
+            -- :: Recursive
+            recursive = true
+            toggleGUI('TodoList')
+        end)
+        frame:AddChild(button)
+    end
+end
+
+local function LootDatabaseGUI()
+    if #currentLootList > 0 then
+        for ii = 1, #currentLootList do
+            local unit = AceGUI:Create("Frame")
+            unit:SetTitle(currentLootList[ii][1])
+            unit:SetWidth(300)
+            unit:SetHeight(140)
+            frame:AddChild(unit)
+            --
+            local add = AceGUI:Create("Label")
+            add:SetText('Acquired total ' .. focus(currentLootList[ii][2]) ..
+                            ' items in guild runs\nLast Items: \n')
+            add:SetWidth(300)
+            unit:AddChild(add)
+            --
+            for yy = 3, 5 do
+                local add = AceGUI:Create("Label")
+                add:SetText(currentLootList[ii][yy][1] .. ' ' ..
+                                currentLootList[ii][yy][2])
+                add:SetWidth(300)
+                unit:AddChild(add)
+            end
+        end
+        -- :: Set Variable for cache
+    end
+end
+
+-- ==== Core
 -- :: Sadece Komutla aciliyor
 function toggleGUI(key)
     if not frameOpen then
         frameOpen = true
         frame = AceGUI:Create("Frame")
-        frame:SetTitle(N)
+        frame:SetTitle(N .. ' ' .. key)
         -- frame:SetStatusText("AceGUI-3.0 Example Container Frame")
         frame:SetCallback("OnClose", function(widget)
             -- AceGUI:Release(widget)
             frameOpen = false
         end)
         frame:SetLayout("Flow")
-
-        if A.global.todo then
-            -- :: Labels
-            local labelIssuer = AceGUI:Create("Label")
-            labelIssuer:SetText("")
-            labelIssuer:SetWidth(60)
-            frame:AddChild(labelIssuer)
-            --
-            local labelTodo = AceGUI:Create("Label")
-            labelTodo:SetText("Todo")
-            labelTodo:SetWidth(480)
-            frame:AddChild(labelTodo)
-            --
-            local labelButton = AceGUI:Create("Label")
-            labelButton:SetText("Complete")
-            labelButton:SetWidth(80)
-            frame:AddChild(labelButton)
-            --
-            -- :: Set Variable for cache
-            local list = A.global.todo
-            for ii = 1, #list do
-                -- :: her bir todo icin
-                local label = AceGUI:Create("Label")
-                label:SetText(ii .. "# ")
-                label:SetWidth(60)
-                frame:AddChild(label)
-                --
-                local editbox = AceGUI:Create("Label")
-                editbox:SetText(list[ii].todo)
-                editbox:SetWidth(480)
-                -- editbox:SetCallback("OnEnterPressed", function(widget, event, text)
-                --     textStore = text
-                -- end)
-                frame:AddChild(editbox)
-                --
-                local button = AceGUI:Create("Button")
-                button:SetText("Done!")
-                button:SetWidth(80)
-                button:SetCallback("OnClick", function(widget)
-                    table.remove(list, ii)
-                    A.global.todo = list
-                    --:: Recursive
-                    toggleGUI(true)
-                    -- editbox = nil
-                    -- label = nil
-                end)
-                frame:AddChild(button)
-            end
-            -- :: gui Add Todo
-            local newIssuer, newTodo
-            --
-            local addIssuer = AceGUI:Create("Label")
-            addIssuer:SetText(#A.global.todo +1 .. "# ")
-            addIssuer:SetWidth(60)
-            frame:AddChild(addIssuer)
-            -- addIssuer:SetCallback("OnEnterPressed", function(widget, event, text)
-            --     newIssuer = text
-            -- end)
-            --
-            local addTodo = AceGUI:Create("EditBox")
-            addTodo:SetLabel("Todo")
-            addTodo:SetWidth(480)
-            addTodo:SetCallback("OnEnterPressed", function(widget, event, text)
-                newTodo = text
-            end)
-            frame:AddChild(addTodo)
-            --
-            local button = AceGUI:Create("Button")
-            button:SetText("Add")
-            button:SetWidth(80)
-            button:SetCallback("OnClick", function(widget)
-                list = A.global.todo
-                table.insert(list, {todo = newTodo})
-                A.global.todo = list
-                --:: Recursive
-                toggleGUI(true)
-                -- editbox = nil
-                -- label = nil
-            end)
-            frame:AddChild(button)
-        end
-    elseif key then
+        -- test
+        if key == 'TodoList' then TodoListGUI() end
+        if key == 'LootDatabase' then LootDatabaseGUI() end
+        -- test
+    elseif recursive then
         frame:Release()
         frameOpen = false
-        toggleGUI(false)
+        toggleGUI(key)
     else
         frame:Release()
         frameOpen = false
     end
 end
 
+function Arch_setGUI(key)
+    recursive = false
+    toggleGUI(key)
+end
+
 function module:Initialize()
     self.Initialized = true
-    -- self:RegisterEvent("MAIL_INBOX_UPDATE")
+    self:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
     -- "MAIL_INBOX_UPDATE"
+end
+
+-- ==== Events
+function module:CHAT_MSG_WHISPER_INFORM()
+    if string.match(arg1, 'test') then
+        if not A.loot[realmName][arg2] then A.loot[realmName][arg2] = {} end
+        local player = A.loot[realmName][arg2]
+        -- print(arg2 .. ' acquired ' .. #player .. ' items in guild runs.')
+        -- print('last items: ')
+        local nominee = {}
+        nominee[1] = arg2
+        nominee[2] = #player
+        for ii = 1, #player do
+            if GetItemInfo(player[ii][1]) then
+                local _, a = GetItemInfo(player[ii][1])
+                nominee[2 + ii] = {player[ii][2], a}
+            end
+            if ii == 3 then break end
+        end
+        for ii = 3, 5 do if not nominee[ii] then nominee[ii] = '' end end
+        local previous = #currentLootList
+        table.insert(currentLootList, 1, nominee)
+        table.insert(currentLootList, 1, nominee)
+        -- if #currentLootList > previous then Arch_setGUI('LootDatabase') end
+    end
 end
 
 -- ==== Slash Handlers

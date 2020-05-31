@@ -54,7 +54,7 @@ local function handleTodo(msg)
     A.global.todo = list
     -- toggleGUI(true)
     else
-        toggleGUI(false)
+        Arch_setGUI(moduleName)
         -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'You are missing issuer or todo')
     end
 end
