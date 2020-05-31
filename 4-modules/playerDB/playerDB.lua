@@ -302,7 +302,7 @@ function module:PLAYER_REGEN_DISABLED() isInCombat = true end
 
 function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()
 
-    if mod ~= 'patates' then
+    if mod ~= 'patates' and mod ~= 'lootEntry'  then
 
         for ii = 1, GetNumWhoResults() do
             if GetWhoInfo(ii) == args[1] then
@@ -342,8 +342,8 @@ SlashCmdList["damage"] = function(msg) handlePlayerStat(msg, 'damage') end
 SLASH_attendance1 = "/att"
 SlashCmdList["attendance"] =
     function(msg) handlePlayerStat(msg, 'attendance') end
-SLASH_gsr1 = "/gsr"
-SlashCmdList["gsr"] = function(msg) getGearScoreRecord(msg) end
+-- SLASH_gsr1 = "/gsr"
+-- SlashCmdList["gsr"] = function(msg) getGearScoreRecord(msg) end
 SLASH_not1 = "/not"
 SlashCmdList["not"] = function(msg) handleNote(msg) end
 
