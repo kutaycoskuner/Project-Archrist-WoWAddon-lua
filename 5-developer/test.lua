@@ -13,7 +13,7 @@ local loot = {} -- 1-itemName, 2-date
 local item, count, link, target, rarity
 local args = {}
 local fixArgs = Arch_fixArgs
-local setGUI = Arch_setGUI
+-- local setGUI = Arch_setGUI
 
 -- -- ==== GUI
 -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)

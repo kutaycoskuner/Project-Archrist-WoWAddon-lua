@@ -242,9 +242,9 @@ local function selectBoss(boss)
             raidWarning[3] = '{skull}  {skull}'
             raidWarning[4] = '{triangle}  {triangle}'
         elseif command == 'wg' then
-            raidWarning[1] = '{triangle} Stack Sieges and Attack NorthWest Gate {triangle}'
-            raidWarning[2] = '{skull} Attack Cannons {skull}'
-            raidWarning[3] = '{skull} Get Broken Temple Workshop {skull}'
+            raidWarning[1] = '{triangle} STACK SIEGES AT SUNKEN AND ATTACK NE {triangle}'
+            raidWarning[2] = '{skull} YELL FOR CANNONER IF YOU DONT HAVE ONE {skull}'
+            raidWarning[3] = '{skull}  {skull}'
             raidWarning[4] = '{triangle} Protect Sieges {triangle}'
             --[[
                 brain links
@@ -322,7 +322,7 @@ SLASH_RaidWarning1 = "/war"
 SlashCmdList["RaidWarning"] = function(boss) selectBoss(boss) end
 SLASH_SelectLeadChannel1 = "/comms"
 SlashCmdList["SelectLeadChannel"] = function(channel) selectChannel(channel) end
-SLASH_RaidWarnings1 = "/rw"
+SLASH_RaidWarnings1 = "/rwa"
 SlashCmdList["RaidWarnings"] = function(msg) setRaidWarnings(msg) end
 
 -- ==== Example Usage [last arg]

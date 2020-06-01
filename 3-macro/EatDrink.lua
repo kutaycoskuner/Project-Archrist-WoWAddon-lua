@@ -7,7 +7,7 @@ local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
 local drinks = {"Conjured Mana Strudel","Pungent Seal Whey","Honeymint Tea"}
-local foods = {"Conjured Mana Strudel","Honey-Spiced Lichen", "Sour Goat Cheese","Salted Venison", "Succulent Orca Stew"}
+local foods = {"Conjured Mana Strudel","Honey-Spiced Lichen", "Sour Goat Cheese","Salted Venison", "Succulent Orca Stew", "Mead Basted Caribou"}
 local foodClass = {"Warrior", 'Rogue', 'Death Knight', 'Hunter'}
 
 -- ==== Macro

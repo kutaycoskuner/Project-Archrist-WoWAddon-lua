@@ -97,29 +97,39 @@ local function TodoListGUI()
 end
 
 local function LootDatabaseGUI()
-    if #currentLootList > 0 then
+    frame:SetWidth(240)
+    frame:SetPoint("CENTER", 640, 0);
+    local heading = AceGUI:Create('Heading')
+    heading:SetText('Loot Database')
+    heading:SetRelativeWidth(1)
+    frame:AddChild(heading)
+    if #currentLootList >= 0 then
         for ii = 1, #currentLootList do
-            local unit = AceGUI:Create("Frame")
-            unit:SetTitle(currentLootList[ii][1])
-            unit:SetWidth(300)
-            unit:SetHeight(140)
+            local unit = AceGUI:Create("SimpleGroup")
+            unit:SetFullWidth(true)
+            -- unit:SetTitle(currentLootList[ii][1])
+            -- unit:SetWidth(300)
+            -- unit:SetHeight(140)
+            -- unit:SetPoint('CENTER')
             frame:AddChild(unit)
             --
             local add = AceGUI:Create("Label")
-            add:SetText('Acquired total ' .. focus(currentLootList[ii][2]) ..
-                            ' items in guild runs\nLast Items: \n')
-            add:SetWidth(300)
+            add:SetText(focus(currentLootList[ii][1]) .. ' acquired total ' ..
+                            focus(currentLootList[ii][2]) ..
+                            ' items in guild\nLast Items: \n')
+            add:SetWidth(200)
             unit:AddChild(add)
             --
             for yy = 3, 5 do
                 local add = AceGUI:Create("Label")
                 add:SetText(currentLootList[ii][yy][1] .. ' ' ..
                                 currentLootList[ii][yy][2])
-                add:SetWidth(300)
+                add:SetWidth(200)
                 unit:AddChild(add)
             end
         end
         -- :: Set Variable for cache
+
     end
 end
 
@@ -129,7 +139,7 @@ function toggleGUI(key)
     if not frameOpen then
         frameOpen = true
         frame = AceGUI:Create("Frame")
-        frame:SetTitle(N .. ' ' .. key)
+        frame:SetTitle(N)
         -- frame:SetStatusText("AceGUI-3.0 Example Container Frame")
         frame:SetCallback("OnClose", function(widget)
             -- AceGUI:Release(widget)
@@ -158,19 +168,20 @@ end
 function module:Initialize()
     self.Initialized = true
     self:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
+    self:RegisterEvent("CHAT_MSG_RAID_WARNING")
     -- "MAIL_INBOX_UPDATE"
 end
 
 -- ==== Events
 function module:CHAT_MSG_WHISPER_INFORM()
-    if string.match(arg1, 'test') then
+    if string.match(arg1, 'You are now being considered for') then
         if not A.loot[realmName][arg2] then A.loot[realmName][arg2] = {} end
         local player = A.loot[realmName][arg2]
         -- print(arg2 .. ' acquired ' .. #player .. ' items in guild runs.')
         -- print('last items: ')
         local nominee = {}
         nominee[1] = arg2
-        nominee[2] = #player
+        nominee[2] = (#player or 0)
         for ii = 1, #player do
             if GetItemInfo(player[ii][1]) then
                 local _, a = GetItemInfo(player[ii][1])
@@ -178,13 +189,31 @@ function module:CHAT_MSG_WHISPER_INFORM()
             end
             if ii == 3 then break end
         end
-        for ii = 3, 5 do if not nominee[ii] then nominee[ii] = '' end end
+        for ii = 3, 5 do if not nominee[ii] then nominee[ii] = {'',''} end end
         local previous = #currentLootList
         table.insert(currentLootList, 1, nominee)
-        table.insert(currentLootList, 1, nominee)
-        -- if #currentLootList > previous then Arch_setGUI('LootDatabase') end
+        if #currentLootList > previous then
+            if not frameOpen then
+                Arch_setGUI('LootDatabase')
+            else
+                frame:Release()
+                frameOpen = false
+                Arch_setGUI('LootDatabase')
+            end
+        end
     end
 end
+
+function module:CHAT_MSG_RAID_WARNING()
+    if string.match(arg1, 'now under consideration') then
+        currentLootList = {}
+        frame:Release()
+        frameOpen = false
+        Arch_setGUI('LootDatabase')
+    end
+end
+
+
 
 -- ==== Slash Handlers
 -- SLASH_arch1 = "/arch"
