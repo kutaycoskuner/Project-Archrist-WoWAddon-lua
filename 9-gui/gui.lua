@@ -97,12 +97,14 @@ local function TodoListGUI()
 end
 
 local function LootDatabaseGUI()
-    frame:SetWidth(240)
+    frame:SetWidth(280)
     frame:SetPoint("CENTER", 640, 0);
     local heading = AceGUI:Create('Heading')
     heading:SetText('Loot Database')
     heading:SetRelativeWidth(1)
     frame:AddChild(heading)
+    frame:ReleaseChildren()
+    -- 
     if #currentLootList >= 0 then
         for ii = 1, #currentLootList do
             local unit = AceGUI:Create("SimpleGroup")
@@ -116,16 +118,66 @@ local function LootDatabaseGUI()
             local add = AceGUI:Create("Label")
             add:SetText(focus(currentLootList[ii][1]) .. ' acquired total ' ..
                             focus(currentLootList[ii][2]) ..
-                            ' items in guild\nLast Items: \n')
-            add:SetWidth(200)
+                            ' items in guild\n\n')
+            add:SetWidth(220)
             unit:AddChild(add)
             --
             for yy = 3, 5 do
-                local add = AceGUI:Create("Label")
-                add:SetText(currentLootList[ii][yy][1] .. ' ' ..
-                                currentLootList[ii][yy][2])
-                add:SetWidth(200)
+                local add1 = AceGUI:Create("Label")
+                add1:SetText(currentLootList[ii][yy][1])
+                add1:SetWidth(60)
+                unit:AddChild(add1)
+                local add = AceGUI:Create("InteractiveLabel")
+                add:SetText(currentLootList[ii][yy][2])
+                add:SetWidth(160)
+                -- add:SetCallback("OnEnter", function(self)
+                --     if string.match(currentLootList[ii][yy][2], "item[%-?%d:]+") then
+                --         local itemString =
+                --             string.match(currentLootList[ii][yy][2],
+                --                          "item[%-?%d:]+")
+                --         -- hooksecurefunc("GameTooltip_SetDefaultAnchor",
+                --         --                function(self, parent)
+                --         --     self:SetOwner(parent, "ANCHOR_CURSOR")
+                --         -- end)
+                --         -- GameTooltip:SetOwner(add, "ANCHOR_RIGHT")
+                --         -- GameTooltip:SetX()
+                --         GameTooltip:SetHyperlink(itemString)
+                --     end
+                -- end)
+                add:SetCallback("OnEnter", function(self)
+                    -- GameTooltip:SetOwner(UIParent, "ANCHOR_NONE")
+                    -- GameTooltip:SetText("LootDB", 0.5, 0.5, 0.5, 0.75, true)
+                    -- GameTooltip:SetX(arguments)
+                    if string.match(currentLootList[ii][yy][2], "item[%-?%d:]+") then
+                        -- hooksecurefunc("GameTooltip_SetDefaultAnchor",
+                        --                function(self, parent)
+                        --     self:SetOwner(parent, "ANCHOR_CURSOR")
+                        -- end)
+                        GameTooltip:SetHyperlink(
+                            string.match(currentLootList[ii][yy][2],
+                                         "item[%-?%d:]+"))
+                    end
+                end)
+                add:SetCallback("OnLeave", function(self)
+                    -- hooksecurefunc("GameTooltip_SetDefaultAnchor",
+                    --                    function(self, parent)
+                    --         self:SetOwner(UIParent, "ANCHOR_RIGHT")
+                    --     end)
+                    GameTooltip:SetText("LootDB", 0.5, 0.5, 0.5, 0.75, true)
+                end)
                 unit:AddChild(add)
+                -- add:SetMouseEnabled(true)
+                -- -- set handler for mouse enter:
+                -- add:SetHandler("OnMouseEnter", function(self)
+                --     InitializeTooltip(ItemTooltip, self, BOTTOMLEFT, 0, 0)
+                --     ItemTooltip:SetLink(self:GetText())
+                -- end)
+
+                -- -- set handler for mouse exit:
+                -- add:SetHandler("OnMouseExit",
+                --                  function(self)
+                --     ClearTooltip(ItemTooltip)
+                -- end)
             end
         end
         -- :: Set Variable for cache
@@ -165,6 +217,34 @@ function Arch_setGUI(key)
     toggleGUI(key)
 end
 
+function GUI_insertPerson(target)
+    local player = A.loot[realmName][target]
+    -- print(arg2 .. ' acquired ' .. #player .. ' items in guild runs.')
+    -- print('last items: ')
+    local nominee = {}
+    nominee[1] = target
+    nominee[2] = (#player or 0)
+    for ii = 1, #player do
+        if GetItemInfo(player[ii][1]) then
+            local _, a = GetItemInfo(player[ii][1])
+            nominee[2 + ii] = {player[ii][2], a}
+        end
+        if ii == 3 then break end
+    end
+    for ii = 3, 5 do if not nominee[ii] then nominee[ii] = {'', ''} end end
+    local previous = #currentLootList
+    table.insert(currentLootList, 1, nominee)
+    if #currentLootList > previous then
+        if not frameOpen then
+            Arch_setGUI('LootDatabase')
+        else
+            frame:Release()
+            frameOpen = false
+            Arch_setGUI('LootDatabase')
+        end
+    end
+end
+
 function module:Initialize()
     self.Initialized = true
     self:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
@@ -176,31 +256,7 @@ end
 function module:CHAT_MSG_WHISPER_INFORM()
     if string.match(arg1, 'You are now being considered for') then
         if not A.loot[realmName][arg2] then A.loot[realmName][arg2] = {} end
-        local player = A.loot[realmName][arg2]
-        -- print(arg2 .. ' acquired ' .. #player .. ' items in guild runs.')
-        -- print('last items: ')
-        local nominee = {}
-        nominee[1] = arg2
-        nominee[2] = (#player or 0)
-        for ii = 1, #player do
-            if GetItemInfo(player[ii][1]) then
-                local _, a = GetItemInfo(player[ii][1])
-                nominee[2 + ii] = {player[ii][2], a}
-            end
-            if ii == 3 then break end
-        end
-        for ii = 3, 5 do if not nominee[ii] then nominee[ii] = {'',''} end end
-        local previous = #currentLootList
-        table.insert(currentLootList, 1, nominee)
-        if #currentLootList > previous then
-            if not frameOpen then
-                Arch_setGUI('LootDatabase')
-            else
-                frame:Release()
-                frameOpen = false
-                Arch_setGUI('LootDatabase')
-            end
-        end
+        GUI_insertPerson(arg2)
     end
 end
 
@@ -212,8 +268,6 @@ function module:CHAT_MSG_RAID_WARNING()
         Arch_setGUI('LootDatabase')
     end
 end
-
-
 
 -- ==== Slash Handlers
 -- SLASH_arch1 = "/arch"

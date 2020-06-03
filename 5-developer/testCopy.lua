@@ -1,10 +1,10 @@
--- ------------------------------------------------------------------------------------------------------------------------
--- -- :: Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
--- local A, L, V, P, G, C, M, N = unpack(select(2, ...));
+------------------------------------------------------------------------------------------------------------------------
+-- -- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+-- local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
 -- local moduleName = 'test';
 -- local moduleAlert = M .. moduleName .. ": |r";
 -- local module = A:GetModule(moduleName);
--- ------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
 -- -- ==== Variables
 
 -- -- -- ==== GUI
@@ -20,7 +20,7 @@
 --     self.initialized = true
 --     -- :: Database Connection
 --     -- :: Register some events
---     module:RegisterEvent("CHAT_MSG_SAY");
+-- --    module:RegisterEvent("CHAT_MSG_SAY");
 -- end
 
 -- -- ==== Event Handlers

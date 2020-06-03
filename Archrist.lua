@@ -74,7 +74,7 @@ end
 
 do
     -- :: Create Modules
-    Addon.test = Addon:NewModule("Test", "AceHook-3.0", "AceEvent-3.0")
+    Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
     Addon.lootMsgFilter = Addon:NewModule("LootMsgFilter")
     Addon.deleteAucMail = Addon:NewModule("DeleteAucMail", "AceHook-3.0",
                                           "AceEvent-3.0")
@@ -84,6 +84,7 @@ do
     Addon.todoList = Addon:NewModule("TodoList", "AceHook-3.0", "AceEvent-3.0")
     Addon.cRIndicator = Addon:NewModule("CRIndicator", "AceHook-3.0", "AceEvent-3.0")
     Addon.help = Addon:NewModule("Help", "AceHook-3.0", "AceEvent-3.0")
+    Addon.lootDB = Addon:NewModule("LootDB", "AceHook-3.0", "AceEvent-3.0")
     -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
     -- :: Macros
     Addon.milling = Addon:NewModule("Milling", "AceEvent-3.0")

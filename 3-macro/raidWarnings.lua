@@ -42,12 +42,15 @@ warn4:SetAttribute("type", "macro")
 function module:Initialize()
     self.initialized = true
 
-    if A.global.comms == nil then
-        A.global.comms = '/p '
-    end
+    if A.global.comms == nil then A.global.comms = '/p ' end
     --
     if A.global.raidWarnings == nil then
-        A.global.raidWarnings = {rw1 = rwDefault[1], rw2 = rwDefault[2], rw3 = rwDefault[3], rw4 = rwDefault[4]}
+        A.global.raidWarnings = {
+            rw1 = rwDefault[1],
+            rw2 = rwDefault[2],
+            rw3 = rwDefault[3],
+            rw4 = rwDefault[4]
+        }
     end
     --
     raidWarning[1] = A.global.raidWarnings.rw1
@@ -61,41 +64,50 @@ function module:Initialize()
     -- :: Register some events
 end
 
-local function setRaidWarnings(msg)
-    local args = fixArgs(msg)
-    local mod = tonumber(table.remove(args, 1))
-    local entry = table.concat(args, ' ')
-    local rw = 'rw' .. tostring(mod)
-    local default = 'rwDefault' .. tostring(mod)
-    -- :: Defensive
-    if type(tonumber(mod)) ~= "number" then 
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'you have to give 1-4 as first argument')
-        return
-    end
-    --
-    if entry == nil or entry == '' then 
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'you need to enter a valid text')
-        return
-    end
-    --
-    if entry == 'default' then
-        A.global.raidWarnings[rw] = rwDefault[mod]
-        raidWarning[mod] = rwDefault[mod]
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Your ' .. rw .. ' set as: ' .. focus(rwDefault[mod]))
-        return
-    end 
-    --
-    A.global.raidWarnings[rw], raidWarning[mod] = entry, entry
-    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Your ' .. rw .. ' set as: ' .. focus(entry))
-
-end
-
 -- :: sets raid warning
 function Arch_setRaidWarnings()
     WarnButton1:SetAttribute("macrotext", comms .. raidWarning[1])
     WarnButton2:SetAttribute("macrotext", comms .. raidWarning[2])
     WarnButton3:SetAttribute("macrotext", comms .. raidWarning[3])
     WarnButton4:SetAttribute("macrotext", comms .. raidWarning[4])
+end
+
+local function setRaidWarnings(msg)
+    local pass = false
+    local args = fixArgs(msg)
+    local mod = tonumber(table.remove(args, 1))
+    local entry = string.upper(table.concat(args, ' '))
+    local rw = 'rw' .. tostring(mod)
+    local default = 'rwDefault' .. tostring(mod)
+    -- :: Defensive
+    for ii = 1, 4 do if tonumber(mod) == ii then pass = true end end
+    if pass then
+        if entry == nil or entry == '' then
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. 'you need to enter a valid text')
+            return
+        end
+        --
+        if entry == 'default' then
+            A.global.raidWarnings[rw] = rwDefault[mod]
+            raidWarning[mod] = rwDefault[mod]
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. 'Your ' .. rw .. ' set as: ' ..
+                    focus(rwDefault[mod]))
+            return
+        end
+        --
+        A.global.raidWarnings[rw] = entry
+        raidWarning[tonumber(mod)] = entry
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Your ' .. rw ..
+                                           ' set as: ' .. focus(entry))
+    else
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert ..
+                                           'you need to enter numbers between 1-4 as first argument')
+        return
+    end
+    Arch_setRaidWarnings()
+
 end
 
 -- :: selecting boss via slash command
@@ -125,7 +137,7 @@ local function selectBoss(boss)
             raidWarning[3] = '{skull} Spread {skull}'
             raidWarning[4] = '{triangle} Pets passive! {triangle}'
             --
-        -- :: Naxxramas
+            -- :: Naxxramas
         elseif (command == "maexxna") then
             raidWarning[1] = '{triangle} Kill the webs {triangle}'
             raidWarning[2] = '{skull} Focus on Big Add {skull}'
@@ -133,13 +145,15 @@ local function selectBoss(boss)
             raidWarning[4] = '{triangle} Spread 10 yard {triangle}'
             --
         elseif (command == "noth") then
-            raidWarning[1] = '{triangle} Watch for debuffs and dispel {triangle}'
+            raidWarning[1] =
+                '{triangle} Watch for debuffs and dispel {triangle}'
             raidWarning[2] = '{skull} Focus on Big Add {skull}'
             raidWarning[3] = '{skull} Back to boss {skull}'
             raidWarning[4] = '{triangle} Spread 10 yard {triangle}'
             --
         elseif (command == "anubrekhan") then
-            raidWarning[1] = '{triangle} Locust Swarm!! Run clockwise. {triangle}'
+            raidWarning[1] =
+                '{triangle} Locust Swarm!! Run clockwise. {triangle}'
             raidWarning[2] = '{skull} Kill Crypt Lord {skull}'
             raidWarning[3] = '{skull} Back to boss {skull}'
             raidWarning[4] = '{triangle} Spread 10 yard {triangle}'
@@ -151,7 +165,8 @@ local function selectBoss(boss)
             raidWarning[4] = '{triangle} Spread 10 yard {triangle}'
             --
         elseif (command == "grobbulus") then
-            raidWarning[1] = '{triangle} Dont stand infront of the boss {triangle}'
+            raidWarning[1] =
+                '{triangle} Dont stand infront of the boss {triangle}'
             raidWarning[2] = '{square} do not stand in green slime {square}'
             raidWarning[3] = '{skull} Kill the adds as they are 3 {skull}'
             raidWarning[4] = '{triangle} %t run away for the Dispel {triangle}'
@@ -180,14 +195,14 @@ local function selectBoss(boss)
             raidWarning[3] = '{skull} Spread {skull}'
             raidWarning[4] = '{triangle} Pets passive! {triangle}'
             --
-        -- :: VoA
+            -- :: VoA
         elseif (command == "emalon") then
             raidWarning[1] = '{triangle} Run away from the boss {triangle}'
             raidWarning[2] = '{skull} Focus on Big Add {skull}'
             raidWarning[3] = '{skull} Back to boss {skull}'
             raidWarning[4] = '{triangle} Spread 10 yard {triangle}'
             --
-        -- :: Ulduar
+            -- :: Ulduar
         elseif (command == "leviathan") then
             raidWarning[1] = '{triangle} Keep Pyerite Stacks Up! {triangle}'
             raidWarning[2] = '{skull}  {skull}'
@@ -242,9 +257,11 @@ local function selectBoss(boss)
             raidWarning[3] = '{skull}  {skull}'
             raidWarning[4] = '{triangle}  {triangle}'
         elseif command == 'wg' then
-            raidWarning[1] = '{triangle} STACK SIEGES AT SUNKEN AND ATTACK NE {triangle}'
-            raidWarning[2] = '{skull} YELL FOR CANNONER IF YOU DONT HAVE ONE {skull}'
-            raidWarning[3] = '{skull}  {skull}'
+            raidWarning[1] =
+                '{triangle} STACK SIEGES AT BROKEN AND ATTACK NW {triangle}'
+            raidWarning[2] =
+                '{skull} YELL FOR CANNONER IF YOU DONT HAVE ONE {skull}'
+            raidWarning[3] = '{skull} CANNONERS KILL CANNONS & PEOPLE {skull}'
             raidWarning[4] = '{triangle} Protect Sieges {triangle}'
             --[[
                 brain links
@@ -297,7 +314,7 @@ local function selectChannel(channel)
         elseif (command == "bg" or command == "battleground") then
             comms = "/bg "
             A.global.comms = "/bg "
-        elseif (command == "wg" or command == "wintegrasp") then
+        elseif (command == "wg" or command == "wintegrasp" or command == "1") then
             comms = "/1 "
             A.global.comms = "/1 "
         else
@@ -318,11 +335,11 @@ local function InitializeCallback() module:Initialize() end
 A:RegisterModule(module:GetName(), InitializeCallback)
 
 -- ==== Slash Handlers
-SLASH_RaidWarning1 = "/war"
+SLASH_RaidWarning1 = "/battle"
 SlashCmdList["RaidWarning"] = function(boss) selectBoss(boss) end
 SLASH_SelectLeadChannel1 = "/comms"
 SlashCmdList["SelectLeadChannel"] = function(channel) selectChannel(channel) end
-SLASH_RaidWarnings1 = "/rwa"
+SLASH_RaidWarnings1 = "/war"
 SlashCmdList["RaidWarnings"] = function(msg) setRaidWarnings(msg) end
 
 -- ==== Example Usage [last arg]
