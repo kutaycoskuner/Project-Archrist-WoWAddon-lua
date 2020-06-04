@@ -19,6 +19,11 @@ local focus = Arch_focusColor
 -- ==== Module GUI
 local function TodoListGUI()
     if A.global.todo then
+        local heading = AceGUI:Create('Heading')
+        heading:SetText('Todo List')
+        heading:SetRelativeWidth(1)
+        frame:ReleaseChildren()
+        frame:AddChild(heading)
         -- :: Labels
         local labelIssuer = AceGUI:Create("Label")
         labelIssuer:SetText("")
@@ -96,16 +101,33 @@ local function TodoListGUI()
     end
 end
 
+local function setPoint(self)
+    local scale = self:GetEffectiveScale()
+    local x, y = GetCursorPosition()
+    self:ClearAllPoints()
+    self:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", x / scale,
+                  (y + 10) / scale)
+end
+
+local function setGameTooltip(widget)
+    -- GameTooltip:SetOwner(frame, "ANCHOR_CURSOR", 0, 0);
+    -- GameTooltip_SetDefaultAnchor(GameTooltip, UIParent)
+    -- GameTooltip:ClearAllPoints();
+    -- GameTooltip:SetPoint("bottomleft", frame, "topright", 0, 0);
+    -- GameTooltip:ClearLines()
+    -- print(frame)
+end
+
 local function LootDatabaseGUI()
     frame:SetWidth(280)
     frame:SetPoint("CENTER", 640, 0);
     local heading = AceGUI:Create('Heading')
     heading:SetText('Loot Database')
     heading:SetRelativeWidth(1)
-    frame:AddChild(heading)
     frame:ReleaseChildren()
+    frame:AddChild(heading)
     -- 
-    if #currentLootList >= 0 then
+    if #currentLootList > 0 then
         for ii = 1, #currentLootList do
             local unit = AceGUI:Create("SimpleGroup")
             unit:SetFullWidth(true)
@@ -119,65 +141,49 @@ local function LootDatabaseGUI()
             add:SetText(focus(currentLootList[ii][1]) .. ' acquired total ' ..
                             focus(currentLootList[ii][2]) ..
                             ' items in guild\n\n')
-            add:SetWidth(220)
+            add:SetWidth(200)
             unit:AddChild(add)
+            --
+            -- local button = AceGUI:Create("Button")
+            -- button:SetText('x')
+            -- button:SetPoint(..., "TOPRIGHT")
+            -- unit:AddChild(button)
             --
             for yy = 3, 5 do
                 local add1 = AceGUI:Create("Label")
                 add1:SetText(currentLootList[ii][yy][1])
                 add1:SetWidth(60)
                 unit:AddChild(add1)
-                local add = AceGUI:Create("InteractiveLabel")
+                --
+                add = AceGUI:Create("InteractiveLabel")
                 add:SetText(currentLootList[ii][yy][2])
                 add:SetWidth(160)
-                -- add:SetCallback("OnEnter", function(self)
-                --     if string.match(currentLootList[ii][yy][2], "item[%-?%d:]+") then
-                --         local itemString =
-                --             string.match(currentLootList[ii][yy][2],
-                --                          "item[%-?%d:]+")
-                --         -- hooksecurefunc("GameTooltip_SetDefaultAnchor",
-                --         --                function(self, parent)
-                --         --     self:SetOwner(parent, "ANCHOR_CURSOR")
-                --         -- end)
-                --         -- GameTooltip:SetOwner(add, "ANCHOR_RIGHT")
-                --         -- GameTooltip:SetX()
-                --         GameTooltip:SetHyperlink(itemString)
-                --     end
-                -- end)
-                add:SetCallback("OnEnter", function(self)
-                    -- GameTooltip:SetOwner(UIParent, "ANCHOR_NONE")
-                    -- GameTooltip:SetText("LootDB", 0.5, 0.5, 0.5, 0.75, true)
-                    -- GameTooltip:SetX(arguments)
+                --
+                add:SetCallback("OnEnter", function(widget)
                     if string.match(currentLootList[ii][yy][2], "item[%-?%d:]+") then
-                        -- hooksecurefunc("GameTooltip_SetDefaultAnchor",
-                        --                function(self, parent)
-                        --     self:SetOwner(parent, "ANCHOR_CURSOR")
+
+                        -- >>
+                        -- hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
+                        --     tooltip:SetOwner(parent, "ANCHOR_CURSOR")
+                        --     setPoint(tooltip)
+                        --     tooltip.default = 1
                         -- end)
+                        GameTooltip_SetDefaultAnchor(GameTooltip, UIParent)
+                        GameTooltip:ClearAllPoints();
+                        setPoint(GameTooltip)
+                        GameTooltip:ClearLines()
+                        -- >>
                         GameTooltip:SetHyperlink(
                             string.match(currentLootList[ii][yy][2],
                                          "item[%-?%d:]+"))
+                        GameTooltip:Show()
                     end
                 end)
+                --
                 add:SetCallback("OnLeave", function(self)
-                    -- hooksecurefunc("GameTooltip_SetDefaultAnchor",
-                    --                    function(self, parent)
-                    --         self:SetOwner(UIParent, "ANCHOR_RIGHT")
-                    --     end)
-                    GameTooltip:SetText("LootDB", 0.5, 0.5, 0.5, 0.75, true)
+                    GameTooltip:Hide()
                 end)
                 unit:AddChild(add)
-                -- add:SetMouseEnabled(true)
-                -- -- set handler for mouse enter:
-                -- add:SetHandler("OnMouseEnter", function(self)
-                --     InitializeTooltip(ItemTooltip, self, BOTTOMLEFT, 0, 0)
-                --     ItemTooltip:SetLink(self:GetText())
-                -- end)
-
-                -- -- set handler for mouse exit:
-                -- add:SetHandler("OnMouseExit",
-                --                  function(self)
-                --     ClearTooltip(ItemTooltip)
-                -- end)
             end
         end
         -- :: Set Variable for cache
@@ -201,6 +207,12 @@ function toggleGUI(key)
         -- test
         if key == 'TodoList' then TodoListGUI() end
         if key == 'LootDatabase' then LootDatabaseGUI() end
+        if key == 'LootDatabasePrune' then
+            -- print('test')
+            currentLootList = {}
+            recursive = true
+            toggleGUI('LootDatabase')
+        end
         -- test
     elseif recursive then
         frame:Release()
@@ -221,6 +233,12 @@ function GUI_insertPerson(target)
     local player = A.loot[realmName][target]
     -- print(arg2 .. ' acquired ' .. #player .. ' items in guild runs.')
     -- print('last items: ')
+    --:: repetition engelleyici
+    for ii=1, #currentLootList do
+        if currentLootList[ii][1] == target then
+            return
+        end
+    end
     local nominee = {}
     nominee[1] = target
     nominee[2] = (#player or 0)
@@ -263,8 +281,6 @@ end
 function module:CHAT_MSG_RAID_WARNING()
     if string.match(arg1, 'now under consideration') then
         currentLootList = {}
-        frame:Release()
-        frameOpen = false
         Arch_setGUI('LootDatabase')
     end
 end

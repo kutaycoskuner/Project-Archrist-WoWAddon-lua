@@ -19,15 +19,16 @@ local fixArgs = Arch_fixArgs
 -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
 
 -- ==== Methods
-local function handleCommand(msg) 
-    if msg ~= '' then
+local function handleCommand(msg)
+    if msg == 'x' then
+        -- print('a')
+        Arch_setGUI('LootDatabasePrune')
+    elseif msg ~= '' then
         msg = fixArgs(msg)
         msg = msg[1]
-        if A.loot[realmName][msg] then
-            GUI_insertPerson(msg)
-        end
+        if A.loot[realmName][msg] then GUI_insertPerson(msg) end
     else
-        Arch_setGUI('LootDatabase') 
+        Arch_setGUI('LootDatabase')
     end
 end
 
