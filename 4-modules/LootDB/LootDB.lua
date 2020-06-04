@@ -13,6 +13,7 @@ local loot = {} -- 1-itemName, 2-date
 local item, count, link, target, rarity
 local args = {}
 local fixArgs = Arch_fixArgs
+local focus = Arch_focusColor
 -- local setGUI = Arch_setGUI
 
 -- -- ==== GUI
@@ -22,11 +23,16 @@ local fixArgs = Arch_fixArgs
 local function handleCommand(msg)
     if msg == 'x' then
         -- print('a')
-        Arch_setGUI('LootDatabasePrune')
+        Arch_setGUI('LootDatabasePrune', true)
     elseif msg ~= '' then
         msg = fixArgs(msg)
         msg = msg[1]
-        if A.loot[realmName][msg] then GUI_insertPerson(msg) end
+        if A.loot[realmName][msg] then
+            GUI_insertPerson(msg)
+        else
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. focus(msg) .. ' is not found in your database')
+        end
     else
         Arch_setGUI('LootDatabase')
     end

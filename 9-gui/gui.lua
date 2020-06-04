@@ -120,7 +120,7 @@ end
 
 local function LootDatabaseGUI()
     frame:SetWidth(280)
-    frame:SetPoint("CENTER", 640, 0);
+    frame:SetPoint("CENTER", 620, 0);
     local heading = AceGUI:Create('Heading')
     heading:SetText('Loot Database')
     heading:SetRelativeWidth(1)
@@ -198,19 +198,13 @@ function toggleGUI(key)
         frameOpen = true
         frame = AceGUI:Create("Frame")
         frame:SetTitle(N)
-        -- frame:SetStatusText("AceGUI-3.0 Example Container Frame")
-        frame:SetCallback("OnClose", function(widget)
-            -- AceGUI:Release(widget)
-            frameOpen = false
-        end)
+        frame:SetCallback("OnClose", function(widget) frameOpen = false end)
         frame:SetLayout("Flow")
         -- test
         if key == 'TodoList' then TodoListGUI() end
         if key == 'LootDatabase' then LootDatabaseGUI() end
         if key == 'LootDatabasePrune' then
-            -- print('test')
             currentLootList = {}
-            recursive = true
             toggleGUI('LootDatabase')
         end
         -- test
@@ -224,35 +218,42 @@ function toggleGUI(key)
     end
 end
 
-function Arch_setGUI(key)
+function Arch_setGUI(key, isRecursive)
     recursive = false
+    if isRecursive then recursive = true end
     toggleGUI(key)
 end
 
 function GUI_insertPerson(target)
+    local isPersonExists = false
     local player = A.loot[realmName][target]
-    -- print(arg2 .. ' acquired ' .. #player .. ' items in guild runs.')
-    -- print('last items: ')
-    --:: repetition engelleyici
-    for ii=1, #currentLootList do
+    -- :: kisi varsa sil
+    for ii = 1, #currentLootList do
         if currentLootList[ii][1] == target then
-            return
+            table.remove(currentLootList, ii)
+            isPersonExists = true
         end
     end
-    local nominee = {}
-    nominee[1] = target
-    nominee[2] = (#player or 0)
-    for ii = 1, #player do
-        if GetItemInfo(player[ii][1]) then
-            local _, a = GetItemInfo(player[ii][1])
-            nominee[2 + ii] = {player[ii][2], a}
+    -- :: kisi yoksa ekle
+    if not isPersonExists then
+        local nominee = {}
+        nominee[1] = target
+        nominee[2] = (#player or 0)
+        for ii = 1, #player do
+            if GetItemInfo(player[ii][1]) then
+                local _, a = GetItemInfo(player[ii][1])
+                nominee[2 + ii] = {player[ii][2], a}
+            end
+            if ii == 3 then break end
         end
-        if ii == 3 then break end
+        for ii = 3, 5 do
+            if not nominee[ii] then nominee[ii] = {'', ''} end
+        end
+        local previous = #currentLootList
+        table.insert(currentLootList, 1, nominee)
     end
-    for ii = 3, 5 do if not nominee[ii] then nominee[ii] = {'', ''} end end
-    local previous = #currentLootList
-    table.insert(currentLootList, 1, nominee)
-    if #currentLootList > previous then
+    -- :: eger bir onceki listeden farkliysa listeyi guncelle
+    if #currentLootList ~= previous then
         if not frameOpen then
             Arch_setGUI('LootDatabase')
         else
@@ -280,7 +281,9 @@ end
 
 function module:CHAT_MSG_RAID_WARNING()
     if string.match(arg1, 'now under consideration') then
+        -- print(currentLootList[1])
         currentLootList = {}
+        -- print(currentLootList[0])
         Arch_setGUI('LootDatabase')
     end
 end
