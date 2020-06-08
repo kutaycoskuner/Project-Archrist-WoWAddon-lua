@@ -12,7 +12,8 @@ local module = A:GetModule(moduleName);
 
 -- ==== Methods
 local function handleCommand(msg)
-    SELECTED_CHAT_FRAME:AddMessage('test')
+    -- local slots = C_ActionBar.FindSpellActionButtons(47450)
+    -- SELECTED_CHAT_FRAME:AddMessage(slots)
 end
 
 -- ==== Start
@@ -20,17 +21,19 @@ function module:Initialize()
     self.initialized = true
     -- :: Database Connection
     -- :: Register some events
-    module:RegisterEvent("CHAT_MSG_SAY");
+    -- module:RegisterEvent("COMBAT_LOG_EVENT");
 end
 
 -- ==== Event Handlers
-function module:CHAT_MSG_SAY()
+function module:COMBAT_LOG_EVENT(event, _, eventType, _, srcName, _, _, dstName,
+    _, spellId, spellName, _, ...)
+    -- print(event .. ' ' .. eventType .. ' ' .. srcName  .. ' ' .. dstName  .. ' ' .. spellId  .. ' ' .. spellName)
     --print('test')
 end
 
 -- ==== Slash Handlersd
--- SLASH_test1 = "/test"
--- SlashCmdList["test"] = function(msg) handleCommand(msg) end
+SLASH_test1 = "/test"
+SlashCmdList["test"] = function(msg) handleCommand(msg) end
 
 -- ==== End
 local function InitializeCallback() module:Initialize() end

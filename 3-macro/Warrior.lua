@@ -24,6 +24,8 @@ local setOffhand = CreateFrame("CheckButton", "offhandButton", UIParent,
                                "SecureActionButtonTemplate")
 setOffhand:SetAttribute("type", "macro")
 
+-- /run local i if not i then i=1 end if i=1 then end
+
 -- ==== Methods
 local function handleShield(msg)
     if msg ~= '' and msg ~= ' ' and msg ~= nil then shield = GetItemInfo(msg) end

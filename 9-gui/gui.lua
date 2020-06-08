@@ -131,6 +131,7 @@ local function LootDatabaseGUI()
         for ii = 1, #currentLootList do
             local unit = AceGUI:Create("SimpleGroup")
             unit:SetFullWidth(true)
+            unit:SetLayout('Flow')
             -- unit:SetTitle(currentLootList[ii][1])
             -- unit:SetWidth(300)
             -- unit:SetHeight(140)
@@ -150,40 +151,61 @@ local function LootDatabaseGUI()
             -- unit:AddChild(button)
             --
             for yy = 3, 5 do
-                local add1 = AceGUI:Create("Label")
-                add1:SetText(currentLootList[ii][yy][1])
-                add1:SetWidth(60)
-                unit:AddChild(add1)
-                --
-                add = AceGUI:Create("InteractiveLabel")
-                add:SetText(currentLootList[ii][yy][2])
-                add:SetWidth(160)
-                --
-                add:SetCallback("OnEnter", function(widget)
-                    if string.match(currentLootList[ii][yy][2], "item[%-?%d:]+") then
-
-                        -- >>
-                        -- hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
-                        --     tooltip:SetOwner(parent, "ANCHOR_CURSOR")
-                        --     setPoint(tooltip)
-                        --     tooltip.default = 1
-                        -- end)
-                        GameTooltip_SetDefaultAnchor(GameTooltip, UIParent)
-                        GameTooltip:ClearAllPoints();
-                        setPoint(GameTooltip)
-                        GameTooltip:ClearLines()
-                        -- >>
-                        GameTooltip:SetHyperlink(
-                            string.match(currentLootList[ii][yy][2],
-                                         "item[%-?%d:]+"))
-                        GameTooltip:Show()
+                if currentLootList[ii][yy] ~= nil then
+                    local add1 = AceGUI:Create("Label")
+                    add1:SetText(currentLootList[ii][yy][1] or '')
+                    add1:SetWidth(240)
+                    unit:AddChild(add1)
+                    --
+                    if currentLootList[ii][yy][1] then
+                        local removeBtn = AceGUI:Create('Button')
+                        -- removeBtn:SetPoint('RIGHT')
+                        removeBtn:SetWidth(40)
+                        removeBtn:SetHeight(15)
+                        removeBtn:SetText('x')
+                        removeBtn:SetCallback("OnClick", function(widget)
+                            table.remove(A.loot[realmName][currentLootList[ii][1]], yy-2)
+                            currentLootList[ii][yy] = {nil, nil}
+                            -- table.remove(current)
+                            recursive = true
+                            toggleGUI('LootDatabase')
+                        end)
+                        unit:AddChild(removeBtn)
                     end
-                end)
-                --
-                add:SetCallback("OnLeave", function(self)
-                    GameTooltip:Hide()
-                end)
-                unit:AddChild(add)
+                    --
+                    add = AceGUI:Create("InteractiveLabel")
+                    add:SetText(currentLootList[ii][yy][2])
+                    add:SetWidth(160)
+                    --
+                    add:SetCallback("OnEnter", function(widget)
+                        if string.match(currentLootList[ii][yy][2] or '',
+                                        "item[%-?%d:]+") then
+
+                            -- >>
+                            -- hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
+                            --     tooltip:SetOwner(parent, "ANCHOR_CURSOR")
+                            --     setPoint(tooltip)
+                            --     tooltip.default = 1
+                            -- end)
+                            GameTooltip_SetDefaultAnchor(GameTooltip, UIParent)
+                            GameTooltip:ClearAllPoints();
+                            setPoint(GameTooltip)
+                            GameTooltip:ClearLines()
+                            -- >>
+                            GameTooltip:SetHyperlink(
+                                string.match(currentLootList[ii][yy][2],
+                                             "item[%-?%d:]+"))
+                            GameTooltip:Show()
+                        end
+                    end)
+                    --
+                    add:SetCallback("OnLeave",
+                                    function(self)
+                        GameTooltip:Hide()
+                    end)
+                    unit:AddChild(add)
+                    --
+                end
             end
         end
         -- :: Set Variable for cache
@@ -247,9 +269,9 @@ function GUI_insertPerson(target)
             if ii == 3 then break end
         end
         for ii = 3, 5 do
-            if not nominee[ii] then nominee[ii] = {'', ''} end
+            if not nominee[ii] then nominee[ii] = {nil, nil} end
         end
-        local previous = #currentLootList
+        local previous = #currentLootList or 0
         table.insert(currentLootList, 1, nominee)
     end
     -- :: eger bir onceki listeden farkliysa listeyi guncelle

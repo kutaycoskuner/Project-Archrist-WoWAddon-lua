@@ -10,7 +10,7 @@ local realmName = GetRealmName()
 local mod = 'patates' -- rep / not
 local isPlayerExists = false
 local loot = {} -- 1-itemName, 2-date
-local item, count, link, target, rarity
+local item, count, link, target, rarity, name, type
 local args = {}
 local fixArgs = Arch_fixArgs
 local focus = Arch_focusColor
@@ -44,12 +44,14 @@ local function getItem(msg)
           itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice =
         GetItemInfo(msg)
 
-    if itemName and (itemType == 'Weapon' or itemType == 'Armor') then
+    -- if itemName and (itemType == 'Weapon' or itemType == 'Armor') then
         item = itemLink:match("item:(%d+):")
         rarity = itemRarity
         link = itemLink
         count = GetItemCount(item, nil, nil)
-    end
+        name = itemName
+        type = itemType
+    -- end
 
     -- print(itemEquipLoc .. ' ' .. itemSubType .. ' ' .. itemType)
 
@@ -73,15 +75,21 @@ local function insertLoot(player, stuff, rarity)
                                 if not db[player] then
                                     db[player] = {}
                                 end
-                                for ii = 1, #db[player] do
-                                    if db[player][ii][1] == stuff then
-                                        if stuff ~= "Fragment of Val'anyr" then
-                                            return
-                                        end
-                                    end
+                                -- for ii = 1, #db[player] do
+                                --     if db[player][ii][1] == stuff then
+                                --         if stuff ~= "Fragment of Val'anyr" then
+                                --             return
+                                --         end
+                                --     end
+                                -- end
+
+                                -- test 
+                                if type == 'Weapon' or type == 'Armor' then
                                 end
+                                -- test
                                 loot[1] = stuff
                                 loot[2] = date("%d-%m-%y")
+                                loot[3] = name
                                 table.insert(db[player], 1, loot)
                                 SELECTED_CHAT_FRAME:AddMessage(
                                     moduleAlert .. link .. ' added to ' ..
@@ -119,14 +127,27 @@ function module:TRADE_PLAYER_ITEM_CHANGED()
 end
 
 function module:TRADE_CLOSED()
-    if (count > GetItemCount(item, nil, nil)) then
-        print('test')
-        insertLoot(target, item, rarity)
+    local itemCount
+    --
+    if GetItemCount(item, nil, nil) == nil then
+        itemCount = 0
+    else
+        itemCount = GetItemCount(item, nil, nil)
+    end
+    --
+    if not count then count = 0 end
+    --
+    if (UnitName("npc") == target) then
+        if (count > itemCount) then insertLoot(target, item, rarity) end
     end
 end
 
 function module:TRADE_SHOW()
-    target = UnitName('target')
+    target = UnitName('npc')
+    if UnitInRaid('player') then
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Please give raid loot one by one to ' ..
+                                       target)
+    end
     if GetTradePlayerItemLink(1) then
         item = GetTradePlayerItemLink(1)
         getItem(item)
