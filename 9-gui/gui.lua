@@ -15,6 +15,9 @@ local realmName = GetRealmName()
 local textStore
 local currentLootList = {}
 local focus = Arch_focusColor
+local fixArgs = Arch_fixArgs
+
+local lootFramePos
 
 -- ==== Module GUI
 local function TodoListGUI()
@@ -120,7 +123,12 @@ end
 
 local function LootDatabaseGUI()
     frame:SetWidth(280)
-    frame:SetPoint("CENTER", 620, 0);
+    frame:ClearAllPoints()
+    if A.global.lootFrame == {} then
+        frame:SetPoint("CENTER", 0, 0)
+    else
+        frame:SetPoint(lootFramePos[1],lootFramePos[3], lootFramePos[4])
+    end
     local heading = AceGUI:Create('Heading')
     heading:SetText('Loot Database')
     heading:SetRelativeWidth(1)
@@ -164,7 +172,9 @@ local function LootDatabaseGUI()
                         removeBtn:SetHeight(15)
                         removeBtn:SetText('x')
                         removeBtn:SetCallback("OnClick", function(widget)
-                            table.remove(A.loot[realmName][currentLootList[ii][1]], yy-2)
+                            table.remove(
+                                A.loot[realmName][currentLootList[ii][1]],
+                                yy - 2)
                             currentLootList[ii][yy] = {nil, nil}
                             -- table.remove(current)
                             recursive = true
@@ -220,7 +230,25 @@ function toggleGUI(key)
         frameOpen = true
         frame = AceGUI:Create("Frame")
         frame:SetTitle(N)
-        frame:SetCallback("OnClose", function(widget) frameOpen = false end)
+        --
+        -- frame:SetMovable(true)
+        -- frame:EnableMouse(true)
+        -- frame:RegisterForDrag("LeftButton")
+        -- frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
+        -- frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
+        -- frame:SetScript("OnDragStop", function(self)
+        --     self:StopMovingOrSizing()
+        -- end)
+        --
+        frame:SetCallback("OnClose", function(widget)
+            frameOpen = false
+            local a, b, c, d, e = frame:GetPoint()
+            -- print(a,b,c,d,e)
+            A.global.lootFrame = {a,c,d,e}
+            lootFramePos = A.global.lootFrame
+            -- print(lootFramePos[1], lootFramePos[2], lootFramePos[3], lootFramePos[4])
+            -- print(A.global.lootFrame[1].. d)
+        end)
         frame:SetLayout("Flow")
         -- test
         if key == 'TodoList' then TodoListGUI() end
@@ -288,6 +316,8 @@ end
 
 function module:Initialize()
     self.Initialized = true
+    if not A.global.lootFrame then A.global.lootFrame = {"CENTER","CENTER",0,0} end
+    lootFramePos = A.global.lootFrame
     self:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
     self:RegisterEvent("CHAT_MSG_RAID_WARNING")
     -- "MAIL_INBOX_UPDATE"

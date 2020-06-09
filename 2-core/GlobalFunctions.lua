@@ -19,21 +19,15 @@ local colorEnd = '|r'
 -- ==== Functions
 
 -- :: Colors
-function Arch_addonColor(msg)
-    return (addonColor .. tostring(msg) .. colorEnd)
-end
+function Arch_addonColor(msg) return (addonColor .. tostring(msg) .. colorEnd) end
 
-function Arch_moduleColor(msg)
-    return (moduleColor .. tostring(msg) .. colorEnd)
-end
+function Arch_moduleColor(msg) return (moduleColor .. tostring(msg) .. colorEnd) end
 
 function Arch_commandColor(msg)
     return (commandColor .. tostring(msg) .. colorEnd)
 end
 
-function Arch_focusColor(msg)
-    return (focusColor .. tostring(msg) .. colorEnd)
-end
+function Arch_focusColor(msg) return (focusColor .. tostring(msg) .. colorEnd) end
 
 function Arch_trivialColor(msg)
     return (trivialColor .. tostring(msg) .. colorEnd)
@@ -52,7 +46,6 @@ function Arch_calcTimeInSec()
     return tonumber(args[1] * 3600 + args[2] * 60 + args[3])
 end
 
-
 -- :: String Manipulation
 function Arch_fixArgs(msg)
     -- :: this is separating the given arguments after command
@@ -65,13 +58,12 @@ function Arch_fixArgs(msg)
 
     -- :: this capitalizes first letters of each given string
     for ii = 1, #args, 1 do
-        args[ii] = args[ii]:lower()
+        if type(args[ii]) == 'string' then args[ii] = args[ii]:lower() end
         if ii == 1 then args[ii] = args[ii]:gsub("^%l", string.upper) end
     end
 
     return args;
 end
-
 
 -- :: Spells
 function Arch_spellCooldowns(spellId)
