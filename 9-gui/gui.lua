@@ -127,7 +127,7 @@ local function LootDatabaseGUI()
     if A.global.lootFrame == {} then
         frame:SetPoint("CENTER", 0, 0)
     else
-        frame:SetPoint(lootFramePos[1],lootFramePos[3], lootFramePos[4])
+        frame:SetPoint(lootFramePos[1], lootFramePos[3], lootFramePos[4])
     end
     local heading = AceGUI:Create('Heading')
     heading:SetText('Loot Database')
@@ -139,11 +139,12 @@ local function LootDatabaseGUI()
         for ii = 1, #currentLootList do
             local unit = AceGUI:Create("SimpleGroup")
             unit:SetFullWidth(true)
-            unit:SetLayout('Flow')
+            -- closeBtn:ClearAllPoints()
             -- unit:SetTitle(currentLootList[ii][1])
             -- unit:SetWidth(300)
             -- unit:SetHeight(140)
             -- unit:SetPoint('CENTER')
+            unit:SetLayout('Flow')
             frame:AddChild(unit)
             --
             local add = AceGUI:Create("Label")
@@ -152,6 +153,19 @@ local function LootDatabaseGUI()
                             ' items in guild\n\n')
             add:SetWidth(200)
             unit:AddChild(add)
+
+            local closeBtn = AceGUI:Create('Button')
+            closeBtn:ClearAllPoints()
+            closeBtn:SetWidth(40)
+            closeBtn:SetHeight(15)
+            closeBtn:SetText('x')
+            closeBtn:SetCallback("OnClick", function(widget)
+                currentLootList[ii] = nil
+                recursive = true
+                toggleGUI('LootDatabase')
+            end)
+            closeBtn:SetPoint("TOPRIGHT")
+            unit:AddChild(closeBtn)
             --
             -- local button = AceGUI:Create("Button")
             -- button:SetText('x')
@@ -168,7 +182,7 @@ local function LootDatabaseGUI()
                     if currentLootList[ii][yy][1] then
                         local removeBtn = AceGUI:Create('Button')
                         -- removeBtn:SetPoint('RIGHT')
-                        removeBtn:SetWidth(40)
+                        removeBtn:SetWidth(38)
                         removeBtn:SetHeight(15)
                         removeBtn:SetText('x')
                         removeBtn:SetCallback("OnClick", function(widget)
@@ -244,7 +258,7 @@ function toggleGUI(key)
             frameOpen = false
             local a, b, c, d, e = frame:GetPoint()
             -- print(a,b,c,d,e)
-            A.global.lootFrame = {a,c,d,e}
+            A.global.lootFrame = {a, c, d, e}
             lootFramePos = A.global.lootFrame
             -- print(lootFramePos[1], lootFramePos[2], lootFramePos[3], lootFramePos[4])
             -- print(A.global.lootFrame[1].. d)
@@ -316,7 +330,9 @@ end
 
 function module:Initialize()
     self.Initialized = true
-    if not A.global.lootFrame then A.global.lootFrame = {"CENTER","CENTER",0,0} end
+    if not A.global.lootFrame then
+        A.global.lootFrame = {"CENTER", "CENTER", 0, 0}
+    end
     lootFramePos = A.global.lootFrame
     self:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
     self:RegisterEvent("CHAT_MSG_RAID_WARNING")

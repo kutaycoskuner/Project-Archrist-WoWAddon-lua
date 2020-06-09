@@ -73,6 +73,7 @@ local function handleCommand(msg)
                 table.insert(A.loot[realmName][player], 1, core)
                 SELECTED_CHAT_FRAME:AddMessage(
                     moduleAlert .. link .. ' added to ' .. player)
+                GUI_insertPerson(args[1])
             end
             return
         end
