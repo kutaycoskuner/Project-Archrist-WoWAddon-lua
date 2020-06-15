@@ -190,7 +190,19 @@ local function LootDatabaseGUI()
                                 A.loot[realmName][currentLootList[ii][1]],
                                 yy - 2)
                             currentLootList[ii][yy] = {nil, nil}
-                            -- table.remove(current)
+                            for jj = 1, #A.loot[realmName][currentLootList[ii][1]] do
+                                if A.loot[realmName][currentLootList[ii][1]][jj] then
+                                    local _, a = GetItemInfo(A.loot[realmName][currentLootList[ii][1]][jj][3])
+                                    currentLootList[ii][jj+2] =
+                                        {
+                                            A.loot[realmName][currentLootList[ii][1]][jj][1],
+                                            a
+                                        }
+                                end
+                                if jj == 3 then
+                                    break
+                                end
+                            end
                             recursive = true
                             toggleGUI('LootDatabase')
                         end)
@@ -288,10 +300,11 @@ function Arch_setGUI(key, isRecursive)
     toggleGUI(key)
 end
 
-function GUI_insertPerson(target)
+function GUI_insertPerson(target, reload)
     local isPersonExists = false
     local player = A.loot[realmName][target]
     -- :: kisi varsa sil
+    -- if target == nil then target = '' end
     for ii = 1, #currentLootList do
         if currentLootList[ii][1] == target then
             table.remove(currentLootList, ii)
@@ -299,14 +312,14 @@ function GUI_insertPerson(target)
         end
     end
     -- :: kisi yoksa ekle
-    if not isPersonExists then
+    if not isPersonExists or reload ~= nil then
         local nominee = {}
-        nominee[1] = target
-        nominee[2] = (#player or 0)
+        nominee[1] = target -- name
+        nominee[2] = (#player or 0) -- item count
         for ii = 1, #player do
-            if GetItemInfo(player[ii][1]) then
-                local _, a = GetItemInfo(player[ii][1])
-                nominee[2 + ii] = {player[ii][2], a}
+            if GetItemInfo(player[ii][3]) then -- [3] id ye bakiyor
+                local _, a = GetItemInfo(player[ii][3])
+                nominee[2 + ii] = {player[ii][1], a}
             end
             if ii == 3 then break end
         end
@@ -317,15 +330,14 @@ function GUI_insertPerson(target)
         table.insert(currentLootList, 1, nominee)
     end
     -- :: eger bir onceki listeden farkliysa listeyi guncelle
-    if #currentLootList ~= previous then
-        if not frameOpen then
-            Arch_setGUI('LootDatabase')
-        else
-            frame:Release()
-            frameOpen = false
-            Arch_setGUI('LootDatabase')
-        end
+    if not frameOpen then
+        Arch_setGUI('LootDatabase')
+    else
+        frame:Release()
+        frameOpen = false
+        Arch_setGUI('LootDatabase')
     end
+
 end
 
 function module:Initialize()

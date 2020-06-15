@@ -10,7 +10,7 @@ local realmName = GetRealmName()
 local mod = 'patates' -- rep / not
 local isPlayerExists = false
 local loot = {} -- 1-itemName, 2-date
-local item, count, link, target, rarity, name, type
+local item, count, link, tradeTarget, rarity, name, type
 local args = {}
 local fixArgs = Arch_fixArgs
 local focus = Arch_focusColor
@@ -29,8 +29,7 @@ local function getItem(msg)
     -- if itemName and (itemType == 'Weapon' or itemType == 'Armor') then
     item = itemLink:match("item:(%d+):")
 
-    itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType,
-          itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice =
+    itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice =
         GetItemInfo(item)
 
     rarity = itemRarity
@@ -44,12 +43,60 @@ local function getItem(msg)
 
 end
 
+local function insertLoot(player, stuff, rarity)
+    -- :: Rarity check
+    if rarity >= 4 then
+        -- :: Guild check
+        if UnitInRaid('player') then
+            for ii = 1, GetNumGuildMembers() do
+                local playerName = GetGuildRosterInfo(ii)
+                if playerName == player then
+                    -- :: Raid check
+                    for yy = 1, GetNumRaidMembers() do
+                        local playerName = GetRaidRosterInfo(yy)
+                        if playerName == player then
+                            -- :: Insert
+                            -- test
+                            if not A.loot[realmName][player] then
+                                A.loot[realmName][player] = {}
+                            end
+                            -- :: item daha once eklenmisse kabul etmiyor
+                            for jj = 1, #A.loot[realmName][player] do
+                                if A.loot[realmName][player][jj][1] == stuff and
+                                    A.loot[realmName][player][jj][2] ==
+                                    date("%d-%m-%y") then
+                                    SELECTED_CHAT_FRAME:AddMessage(
+                                        moduleAlert .. link ..
+                                            ' already exists on ' .. player)
+                                    return
+                                end
+                            end
+                            -- >> 
+                            -- if type == 'Weapon' or type == 'Armor' then
+                            -- end
+                            -- >>
+                            local loot = {}
+                            loot = {date("%d-%m-%y"), name, stuff}
+                            table.insert(A.loot[realmName][player], 1, loot)
+                            SELECTED_CHAT_FRAME:AddMessage(
+                                moduleAlert .. link .. ' added to ' .. player)
+                            -- test
+                            return
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
 local function handleCommand(msg)
     if msg == 'x' then
         Arch_setGUI('LootDatabasePrune', true)
     elseif msg == 'wipe' then
         A.loot[realmName] = {}
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'your loot database has been wiped.')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert ..
+                                           'your loot database has been wiped.')
     elseif msg ~= '' then
         msg = fixArgs(msg)
         if msg[2] then
@@ -74,13 +121,11 @@ local function handleCommand(msg)
                 end
                 local core = {}
                 getItem(loot)
-                core[1] = item
-                core[2] = date("%d-%m-%y")
-                core[3] = name
+                core = {date("%d-%m-%y"), name, item}
                 table.insert(A.loot[realmName][player], 1, core)
                 SELECTED_CHAT_FRAME:AddMessage(
                     moduleAlert .. link .. ' added to ' .. player)
-                GUI_insertPerson(args[1])
+                GUI_insertPerson(args[1], true)
             end
             return
         end
@@ -93,51 +138,6 @@ local function handleCommand(msg)
         end
     else
         Arch_setGUI('LootDatabase')
-    end
-end
-
-local function insertLoot(player, stuff, rarity)
-    -- :: Rarity check
-    if rarity >= 4 then
-        -- :: Guild check
-        if UnitInRaid('player') then
-            for ii = 1, GetNumGuildMembers() do
-                local playerName = GetGuildRosterInfo(ii)
-                if playerName == player then
-                    -- :: Raid check
-                    for yy = 1, GetNumRaidMembers() do
-                        local playerName = GetRaidRosterInfo(yy)
-                        if playerName == player then
-                            -- :: Insert
-                            local db = A.loot[realmName]
-                            if not db[player] then
-                                db[player] = {}
-                            end
-                            -- :: item daha once eklenmisse kabul etmiyor
-                            for ii = 1, #db[player] do
-                                if db[player][ii][1] == stuff and
-                                    db[player][ii][2] == date("%d-%m-%y") then
-                                    if stuff ~= "Fragment of Val'anyr" then
-                                        return
-                                    end
-                                end
-                            end
-                            -- test 
-                            -- if type == 'Weapon' or type == 'Armor' then
-                            -- end
-                            -- test
-                            loot[1] = stuff
-                            loot[2] = date("%d-%m-%y")
-                            loot[3] = name
-                            table.insert(db[player], 1, loot)
-                            SELECTED_CHAT_FRAME:AddMessage(
-                                moduleAlert .. link .. ' added to ' .. target)
-                            return
-                        end
-                    end
-                end
-            end
-        end
     end
 end
 
@@ -175,15 +175,15 @@ function module:TRADE_CLOSED()
     --
     if count == nil then count = 0 end
     --
-    if (count > itemCount) then insertLoot(target, item, rarity) end
+    if (count > itemCount) then insertLoot(tradeTarget, item, rarity) end
 end
 
 function module:TRADE_SHOW()
-    target = UnitName('npc')
+    tradeTarget = UnitName('npc')
     if UnitInRaid('player') then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert ..
                                            'Please give raid loot one by one to ' ..
-                                           target)
+                                           tradeTarget)
     end
     if GetTradePlayerItemLink(1) then
         item = GetTradePlayerItemLink(1)
@@ -220,7 +220,7 @@ A:RegisterModule(module:GetName(), InitializeCallback)
 
     2 -->> Trigger with event trade event
         if player is in raid
-        if target has same guild with player
+        if tradeTarget has same guild with player
         if traded item is epic
 
     3 -->>  if trade succeed between two characters register person
