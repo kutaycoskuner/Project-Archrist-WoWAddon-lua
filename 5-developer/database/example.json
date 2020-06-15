@@ -1,0 +1,18 @@
+{
+    "global": {
+        "Frosthold": {
+            "Toni": {
+                "1": [
+                    "ItemLink",
+                    "Date",
+                    "Name"
+                ],
+                "2": [
+                    "ItemLink",
+                    "Date",
+                    "Name"
+                ]
+            }
+        }
+    }
+}

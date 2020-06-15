@@ -28,6 +28,11 @@ local function getItem(msg)
 
     -- if itemName and (itemType == 'Weapon' or itemType == 'Armor') then
     item = itemLink:match("item:(%d+):")
+
+    itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType,
+          itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice =
+        GetItemInfo(item)
+
     rarity = itemRarity
     link = itemLink
     count = GetItemCount(item, nil, nil)
@@ -41,8 +46,10 @@ end
 
 local function handleCommand(msg)
     if msg == 'x' then
-        -- print('a')
         Arch_setGUI('LootDatabasePrune', true)
+    elseif msg == 'wipe' then
+        A.loot[realmName] = {}
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'your loot database has been wiped.')
     elseif msg ~= '' then
         msg = fixArgs(msg)
         if msg[2] then
@@ -67,9 +74,9 @@ local function handleCommand(msg)
                 end
                 local core = {}
                 getItem(loot)
-                core[1] = loot
+                core[1] = item
                 core[2] = date("%d-%m-%y")
-                core[3] = 'Manual Entry'
+                core[3] = name
                 table.insert(A.loot[realmName][player], 1, core)
                 SELECTED_CHAT_FRAME:AddMessage(
                     moduleAlert .. link .. ' added to ' .. player)
@@ -125,7 +132,7 @@ local function insertLoot(player, stuff, rarity)
                             table.insert(db[player], 1, loot)
                             SELECTED_CHAT_FRAME:AddMessage(
                                 moduleAlert .. link .. ' added to ' .. target)
-                            break
+                            return
                         end
                     end
                 end
