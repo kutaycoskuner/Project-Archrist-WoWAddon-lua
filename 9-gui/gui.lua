@@ -154,18 +154,18 @@ local function LootDatabaseGUI()
             add:SetWidth(200)
             unit:AddChild(add)
 
-            local closeBtn = AceGUI:Create('Button')
-            closeBtn:ClearAllPoints()
-            closeBtn:SetWidth(40)
-            closeBtn:SetHeight(15)
-            closeBtn:SetText('x')
-            closeBtn:SetCallback("OnClick", function(widget)
-                currentLootList[ii] = nil
-                recursive = true
-                toggleGUI('LootDatabase')
-            end)
-            closeBtn:SetPoint("TOPRIGHT")
-            unit:AddChild(closeBtn)
+            -- local closeBtn = AceGUI:Create('Button')
+            -- closeBtn:ClearAllPoints()
+            -- closeBtn:SetWidth(40)
+            -- closeBtn:SetHeight(15)
+            -- closeBtn:SetText('x')
+            -- closeBtn:SetCallback("OnClick", function(widget)
+            --     currentLootList[ii] = nil
+            --     recursive = true
+            --     toggleGUI('LootDatabase')
+            -- end)
+            -- closeBtn:SetPoint("TOPRIGHT")
+            -- unit:AddChild(closeBtn)
             --
             -- local button = AceGUI:Create("Button")
             -- button:SetText('x')
@@ -191,18 +191,27 @@ local function LootDatabaseGUI()
                                 yy - 2)
                             currentLootList[ii][yy] = {nil, nil}
                             for jj = 1, #A.loot[realmName][currentLootList[ii][1]] do
-                                if A.loot[realmName][currentLootList[ii][1]][jj] then
-                                    local _, a = GetItemInfo(A.loot[realmName][currentLootList[ii][1]][jj][3])
+                                if A.loot[realmName][currentLootList[ii][1]][jj] ~= nil then
+                                    local _, link = GetItemInfo(A.loot[realmName][currentLootList[ii][1]][jj][3])
                                     currentLootList[ii][jj+2] =
                                         {
                                             A.loot[realmName][currentLootList[ii][1]][jj][1],
-                                            a
+                                            link
                                         }
                                 end
                                 if jj == 3 then
                                     break
                                 end
                             end
+                            if #A.loot[realmName][currentLootList[ii][1]] < 3 then
+                                for kk = 3, #A.loot[realmName][currentLootList[ii][1]]+1, -1 do
+                                    currentLootList[ii][kk+2] = nil
+                                end
+                            end
+                            if #A.loot[realmName][currentLootList[ii][1]] == nil then
+                                currentLootList[ii] = nil
+                            end
+                            currentLootList[ii][2] = #A.loot[realmName][currentLootList[ii][1]] or 0
                             recursive = true
                             toggleGUI('LootDatabase')
                         end)

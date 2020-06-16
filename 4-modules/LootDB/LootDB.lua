@@ -11,6 +11,7 @@ local mod = 'patates' -- rep / not
 local isPlayerExists = false
 local loot = {} -- 1-itemName, 2-date
 local item, count, link, tradeTarget, rarity, name, type
+local blocker = false
 local args = {}
 local fixArgs = Arch_fixArgs
 local focus = Arch_focusColor
@@ -62,8 +63,8 @@ local function insertLoot(player, stuff, rarity)
                             end
                             -- :: item daha once eklenmisse kabul etmiyor
                             for jj = 1, #A.loot[realmName][player] do
-                                if A.loot[realmName][player][jj][1] == stuff and
-                                    A.loot[realmName][player][jj][2] ==
+                                if A.loot[realmName][player][jj][3] == stuff and
+                                    A.loot[realmName][player][jj][1] ==
                                     date("%d-%m-%y") then
                                     SELECTED_CHAT_FRAME:AddMessage(
                                         moduleAlert .. link ..
@@ -175,15 +176,20 @@ function module:TRADE_CLOSED()
     --
     if count == nil then count = 0 end
     --
-    if (count > itemCount) then insertLoot(tradeTarget, item, rarity) end
+    if (count > itemCount) and blocker == false then
+        blocker = true
+        insertLoot(tradeTarget, item, rarity)
+    end
 end
 
 function module:TRADE_SHOW()
+    blocker = false
+    count = 0
     tradeTarget = UnitName('npc')
     if UnitInRaid('player') then
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert ..
-                                           'Please give raid loot one by one to ' ..
-                                           tradeTarget)
+        -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert ..
+        --                                    'Please give raid loot one by one to ' ..
+        --                                    tradeTarget)
     end
     if GetTradePlayerItemLink(1) then
         item = GetTradePlayerItemLink(1)
