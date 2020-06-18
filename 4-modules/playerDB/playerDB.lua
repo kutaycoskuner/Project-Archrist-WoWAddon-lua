@@ -133,8 +133,8 @@ local function archGetPlayer(player)
                                        A.people[realmName][player].damage)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'attendance: ' ..
                                        A.people[realmName][player].attendance)
-    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'gearscore: ' ..
-                                       A.people[realmName][player].gearscore)
+    -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'gearscore: ' ..
+    --                                    A.people[realmName][player].gearscore)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'note: ' ..
                                        A.people[realmName][player].note)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Raidscore: ' ..

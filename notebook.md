@@ -210,3 +210,8 @@ SLASH_strategy1 = "/str"
 SLASH_damage1 = "/dmg"
 SLASH_attendance1 = "/att"
 SLASH_note1 = "/not"
+
+## CC list
+
+>> Warrior
+5246 - Intimidating shout

@@ -369,11 +369,13 @@ function module:CHAT_MSG_WHISPER_INFORM()
 end
 
 function module:CHAT_MSG_RAID_WARNING()
+    if arg2 == UnitName('player') then
     if string.match(arg1, 'now under consideration') then
         -- print(currentLootList[1])
         currentLootList = {}
         -- print(currentLootList[0])
         Arch_setGUI('LootDatabase')
+    end
     end
 end
 
