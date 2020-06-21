@@ -13,6 +13,8 @@ local args = {}
 local isPlayerExists = false
 local isInCombat = false
 local realmName = GetRealmName()
+local focusColor = Arch_focusColor
+local quantitative = {'reputation','strategy','discipline','attendance','damage'}
 
 -- ==== Start
 function module:Initialize()
@@ -139,6 +141,42 @@ local function archGetPlayer(player)
                                        A.people[realmName][player].note)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Raidscore: ' ..
                                        Archrist_PlayerDB_calcRaidScore(player))
+end
+
+local function raidRepCheck(msg)
+    if UnitInRaid('player') then
+        local blacklist = {}
+        for ii = 1, GetNumRaidMembers() do
+            local person = GetRaidRosterInfo(ii)
+            if A.people[realmName][person] == nil then
+                archAddPlayer(person)
+            else
+                for yy=1, #quantitative do
+                    -- print(A.people[realmName][person][yy])
+                    if A.people[realmName][person][quantitative[yy]] < 0 then
+                        table.insert(blacklist,person)
+                        break
+                    end
+                end
+            end
+        end
+        --
+        if #blacklist > 0 then
+            local checklist = ''
+            for ii=1, #blacklist do
+                checklist = checklist .. blacklist[ii]
+                if not ii == #blacklist then
+                    checklist = checklist .. ', '
+                end
+            end
+            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor('Blacklist: ') .. checklist)
+            return
+        else
+            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'nobody in raid in your blacklist')
+        end
+    else
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'you are not in raid')
+    end
 end
 
 -- ==== Main 
@@ -342,8 +380,8 @@ SlashCmdList["damage"] = function(msg) handlePlayerStat(msg, 'damage') end
 SLASH_attendance1 = "/att"
 SlashCmdList["attendance"] =
     function(msg) handlePlayerStat(msg, 'attendance') end
--- SLASH_gsr1 = "/gsr"
--- SlashCmdList["gsr"] = function(msg) getGearScoreRecord(msg) end
+SLASH_raidRepCheck1 = "/rrep"
+SlashCmdList["raidRepCheck"] = function(msg) raidRepCheck() end
 SLASH_not1 = "/not"
 SlashCmdList["not"] = function(msg) handleNote(msg) end
 
