@@ -13,6 +13,7 @@ local args = {}
 local isPlayerExists = false
 local isInCombat = false
 local realmName = GetRealmName()
+local faction = UnitFactionGroup('player')
 local focusColor = Arch_focusColor
 local quantitative = {'reputation','strategy','discipline','attendance','damage'}
 
