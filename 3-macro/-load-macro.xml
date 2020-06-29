@@ -7,4 +7,5 @@
     <Script file="Warrior.lua"/>
     <Script file="EatDrink.lua"/>
     <Script file="Shaman.lua"/>
+    <Script file="Tactics.lua"/>
 </Ui>

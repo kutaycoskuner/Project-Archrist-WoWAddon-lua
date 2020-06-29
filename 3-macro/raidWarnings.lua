@@ -133,9 +133,9 @@ local function selectBoss(boss)
             --
         elseif (command == "malygos") then
             raidWarning[1] = '{triangle} Spread 11 Yards {triangle}'
-            raidWarning[2] = '{square} Interrupt frostbolt! {square}'
+            raidWarning[2] = '{square} Stay In Dome MDPS Take Discs {square}'
             raidWarning[3] = '{skull} Spread {skull}'
-            raidWarning[4] = '{triangle} Pets passive! {triangle}'
+            raidWarning[4] = '{triangle} Move Move Move {triangle}'
             --
             -- :: Naxxramas
         elseif (command == "maexxna") then

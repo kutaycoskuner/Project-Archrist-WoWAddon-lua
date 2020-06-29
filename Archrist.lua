@@ -101,6 +101,7 @@ do
     Addon.warrior = Addon:NewModule('Warrior', "AceHook-3.0", "AceEvent-3.0")
     Addon.shaman = Addon:NewModule('Shaman', "AceHook-3.0", "AceEvent-3.0")
     Addon.attendance = Addon:NewModule('Attendance', "AceHook-3.0", "AceEvent-3.0")
+    Addon.tactics = Addon:NewModule('Tactics', "AceHook-3.0", "AceEvent-3.0")
 end
 
 -- :: fix module names
