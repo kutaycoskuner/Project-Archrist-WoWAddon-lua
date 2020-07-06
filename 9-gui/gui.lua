@@ -6,6 +6,7 @@ local moduleAlert = M .. moduleName .. ": |r";
 local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 
+local announceChannel
 local AceGUI = LibStub("AceGUI-3.0")
 local list
 local frame
@@ -20,19 +21,16 @@ local fixArgs = Arch_fixArgs
 --
 
 local diverseRaid = {
-    {["Tank"] = {
-        ["Tank I"] = false, 
-        ["Tank II"] = false}
-    }, 
-    {["Heal"] = {
+    {["Tank"] = {["Tank I"] = false, ["Tank II"] = false}}, {
+        ["Heal"] = {
             ["Paladin"] = false,
             ["Druid"] = false,
             ["Priest"] = false,
             ["Shaman"] = false
 
         }
-    }, 
-    {["MDPS"] = {
+    }, {
+        ["MDPS"] = {
             ["Warrior"] = false,
             ["Paladin"] = false,
             ["Death Knight"] = false,
@@ -40,8 +38,8 @@ local diverseRaid = {
             ["Enhancement"] = false,
             ["Feral"] = false
         }
-    }, 
-    {["RDPS"] = {
+    }, {
+        ["RDPS"] = {
             ["Mage"] = false,
             ["Warlock"] = false,
             ["Hunter"] = false,
@@ -277,7 +275,7 @@ end
 
 local function diverseRaidGUI()
     frame:SetWidth(280)
-    frame:SetHeight(668)
+    frame:SetHeight(730)
     frame:ClearAllPoints()
     if A.global.lootFrame == {} then
         frame:SetPoint("CENTER", 0, 0)
@@ -289,7 +287,7 @@ local function diverseRaidGUI()
     heading:SetRelativeWidth(1)
     frame:ReleaseChildren()
     frame:AddChild(heading)
-    -- 
+    --
     for ii = 1, #diverseRaid do
         for key in pairs(diverseRaid[ii]) do
             local group = AceGUI:Create("SimpleGroup")
@@ -306,13 +304,32 @@ local function diverseRaidGUI()
                 specTick:SetValue(diverseRaid[ii][key][subkey])
                 specTick:SetLabel(subkey)
                 specTick:SetCallback("OnValueChanged", function(self, value)
-                    diverseRaid[ii][key][subkey] = not diverseRaid[ii][key][subkey]
+                    diverseRaid[ii][key][subkey] =
+                        not diverseRaid[ii][key][subkey]
                     -- print(diverseRaid[ii][key][subkey])
                 end)
                 group:AddChild(specTick)
             end
         end
     end
+    -- 
+    local channel = AceGUI:Create('EditBox')
+    channel:SetText(announceChannel or 'Set announce channel key here')
+    channel:SetFullWidth(true)
+    channel:SetCallback("OnEnterPressed", function(widget, event, text)
+        announceChannel = text
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "Announce Channel is now: " .. announceChannel)
+    end)
+    frame:AddChild(channel)
+    --
+    -- local announce = AceGUI:Create('Button')
+    -- announce:SetText('Announce')
+    -- announce:SetFullWidth(true)
+    -- announce:SetCallback("OnClick", function(widget, event, text)
+    --     print(announceChannel)
+    -- end)
+    -- frame:AddChild(announce)
+    --
 end
 
 -- ==== Core
@@ -407,9 +424,7 @@ function GUI_insertPerson(target, reload)
 
 end
 
-function return_diverseRaid()
-    return diverseRaid
-end
+function return_diverseRaid() return {diverseRaid, announceChannel} end
 
 function module:Initialize()
     self.Initialized = true

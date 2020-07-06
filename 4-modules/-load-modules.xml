@@ -9,4 +9,5 @@
     <Include file="CRIndicator\-load.xml"/>
     <Include file="Help\-load.xml"/>
     <Include file="LootDB\-load.xml"/>
+    <Include file="VoA\-load.xml"/>
 </Ui>
