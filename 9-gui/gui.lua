@@ -17,6 +17,41 @@ local currentLootList = {}
 local focus = Arch_focusColor
 local fixArgs = Arch_fixArgs
 
+--
+
+local diverseRaid = {
+    {["Tank"] = {
+        ["Tank I"] = false, 
+        ["Tank II"] = false}
+    }, 
+    {["Heal"] = {
+            ["Paladin"] = false,
+            ["Druid"] = false,
+            ["Priest"] = false,
+            ["Shaman"] = false
+
+        }
+    }, 
+    {["MDPS"] = {
+            ["Warrior"] = false,
+            ["Paladin"] = false,
+            ["Death Knight"] = false,
+            ["Rogue"] = false,
+            ["Enhancement"] = false,
+            ["Feral"] = false
+        }
+    }, 
+    {["RDPS"] = {
+            ["Mage"] = false,
+            ["Warlock"] = false,
+            ["Hunter"] = false,
+            ["Elemental"] = false,
+            ["Balance"] = false,
+            ["Shadow"] = false
+        }
+    }
+}
+
 local lootFramePos
 
 -- ==== Module GUI
@@ -139,11 +174,6 @@ local function LootDatabaseGUI()
         for ii = 1, #currentLootList do
             local unit = AceGUI:Create("SimpleGroup")
             unit:SetFullWidth(true)
-            -- closeBtn:ClearAllPoints()
-            -- unit:SetTitle(currentLootList[ii][1])
-            -- unit:SetWidth(300)
-            -- unit:SetHeight(140)
-            -- unit:SetPoint('CENTER')
             unit:SetLayout('Flow')
             frame:AddChild(unit)
             --
@@ -154,24 +184,6 @@ local function LootDatabaseGUI()
             add:SetWidth(200)
             unit:AddChild(add)
 
-            -- local closeBtn = AceGUI:Create('Button')
-            -- closeBtn:ClearAllPoints()
-            -- closeBtn:SetWidth(40)
-            -- closeBtn:SetHeight(15)
-            -- closeBtn:SetText('x')
-            -- closeBtn:SetCallback("OnClick", function(widget)
-            --     currentLootList[ii] = nil
-            --     recursive = true
-            --     toggleGUI('LootDatabase')
-            -- end)
-            -- closeBtn:SetPoint("TOPRIGHT")
-            -- unit:AddChild(closeBtn)
-            --
-            -- local button = AceGUI:Create("Button")
-            -- button:SetText('x')
-            -- button:SetPoint(..., "TOPRIGHT")
-            -- unit:AddChild(button)
-            --
             for yy = 3, 5 do
                 if currentLootList[ii][yy] ~= nil then
                     local add1 = AceGUI:Create("Label")
@@ -191,9 +203,12 @@ local function LootDatabaseGUI()
                                 yy - 2)
                             currentLootList[ii][yy] = {nil, nil}
                             for jj = 1, #A.loot[realmName][currentLootList[ii][1]] do
-                                if A.loot[realmName][currentLootList[ii][1]][jj] ~= nil then
-                                    local _, link = GetItemInfo(A.loot[realmName][currentLootList[ii][1]][jj][3])
-                                    currentLootList[ii][jj+2] =
+                                if A.loot[realmName][currentLootList[ii][1]][jj] ~=
+                                    nil then
+                                    local _, link =
+                                        GetItemInfo(
+                                            A.loot[realmName][currentLootList[ii][1]][jj][3])
+                                    currentLootList[ii][jj + 2] =
                                         {
                                             A.loot[realmName][currentLootList[ii][1]][jj][1],
                                             link
@@ -204,14 +219,16 @@ local function LootDatabaseGUI()
                                 end
                             end
                             if #A.loot[realmName][currentLootList[ii][1]] < 3 then
-                                for kk = 3, #A.loot[realmName][currentLootList[ii][1]]+1, -1 do
-                                    currentLootList[ii][kk+2] = nil
+                                for kk = 3, #A.loot[realmName][currentLootList[ii][1]] +
+                                    1, -1 do
+                                    currentLootList[ii][kk + 2] = nil
                                 end
                             end
                             if #A.loot[realmName][currentLootList[ii][1]] == nil then
                                 currentLootList[ii] = nil
                             end
-                            currentLootList[ii][2] = #A.loot[realmName][currentLootList[ii][1]] or 0
+                            currentLootList[ii][2] =
+                                #A.loot[realmName][currentLootList[ii][1]] or 0
                             recursive = true
                             toggleGUI('LootDatabase')
                         end)
@@ -258,6 +275,46 @@ local function LootDatabaseGUI()
     end
 end
 
+local function diverseRaidGUI()
+    frame:SetWidth(280)
+    frame:SetHeight(668)
+    frame:ClearAllPoints()
+    if A.global.lootFrame == {} then
+        frame:SetPoint("CENTER", 0, 0)
+    else
+        frame:SetPoint(lootFramePos[1], lootFramePos[3], lootFramePos[4])
+    end
+    local heading = AceGUI:Create('Heading')
+    heading:SetText('Diverse Raid')
+    heading:SetRelativeWidth(1)
+    frame:ReleaseChildren()
+    frame:AddChild(heading)
+    -- 
+    for ii = 1, #diverseRaid do
+        for key in pairs(diverseRaid[ii]) do
+            local group = AceGUI:Create("SimpleGroup")
+            group:SetFullWidth(true)
+            group:SetLayout('Flow')
+            frame:AddChild(group)
+            --
+            local groupName = AceGUI:Create("Heading")
+            groupName:SetText(key)
+            groupName:SetRelativeWidth(1)
+            group:AddChild(groupName)
+            for subkey in pairs(diverseRaid[ii][key]) do
+                local specTick = AceGUI:Create("CheckBox")
+                specTick:SetValue(diverseRaid[ii][key][subkey])
+                specTick:SetLabel(subkey)
+                specTick:SetCallback("OnValueChanged", function(self, value)
+                    diverseRaid[ii][key][subkey] = not diverseRaid[ii][key][subkey]
+                    -- print(diverseRaid[ii][key][subkey])
+                end)
+                group:AddChild(specTick)
+            end
+        end
+    end
+end
+
 -- ==== Core
 -- :: Sadece Komutla aciliyor
 function toggleGUI(key)
@@ -292,6 +349,7 @@ function toggleGUI(key)
             currentLootList = {}
             toggleGUI('LootDatabase')
         end
+        if key == "DiverseRaid" then diverseRaidGUI() end
         -- test
     elseif recursive then
         frame:Release()
@@ -349,6 +407,10 @@ function GUI_insertPerson(target, reload)
 
 end
 
+function return_diverseRaid()
+    return diverseRaid
+end
+
 function module:Initialize()
     self.Initialized = true
     if not A.global.lootFrame then
@@ -370,12 +432,12 @@ end
 
 function module:CHAT_MSG_RAID_WARNING()
     if arg2 == UnitName('player') then
-    if string.match(arg1, 'now under consideration') then
-        -- print(currentLootList[1])
-        currentLootList = {}
-        -- print(currentLootList[0])
-        Arch_setGUI('LootDatabase')
-    end
+        if string.match(arg1, 'now under consideration') then
+            -- print(currentLootList[1])
+            currentLootList = {}
+            -- print(currentLootList[0])
+            Arch_setGUI('LootDatabase')
+        end
     end
 end
 
