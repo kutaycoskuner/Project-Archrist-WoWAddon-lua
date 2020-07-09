@@ -51,12 +51,12 @@ local diverseRaid = {
         }
     }
 }
---:: PuGRaid Variables
+-- :: PuGRaid Variables
 local raidText, need, counter, notes
-    local structure = {
-        {['Tank'] = false}, {['Heal'] = false}, {['MDPS'] = false},
-        {['RDPS'] = false}
-    }
+local structure = {
+    {['Tank'] = false}, {['Heal'] = false}, {['MDPS'] = false},
+    {['RDPS'] = false}
+}
 
 -- ==== Module GUI
 local function TodoListGUI()
@@ -331,6 +331,61 @@ local function diverseRaidGUI()
     frame:AddChild(channel)
 end
 
+local function pugRaid_VariableTest()
+    if not raidText then raidText = "" end
+    if not need then need = "" end
+    if not notes then notes = "" end
+    if not counter then counter = "" end
+end
+
+local function pugRaid_textChange(isAnnouncement)
+    if true then --  GetNumRaidMembers() > 14 
+        counter = '- ' .. tostring(GetNumRaidMembers()) .. '/25 '
+        --
+        if isAnnouncement and announceChannel and announceChannel ~= "" then
+            SendChatMessage(raidText .. need .. counter .. notes, "channel",
+                            nil, announceChannel)
+        else
+            SELECTED_CHAT_FRAME:AddMessage(
+                raidText .. need .. counter .. notes)
+        end
+    else
+        if isAnnouncement and announceChannel and announceChannel ~= "" then
+            SendChatMessage(raidText .. need .. notes, "channel",
+                            nil, announceChannel)
+        else
+            SELECTED_CHAT_FRAME:AddMessage(
+                raidText .. need .. notes)
+        end
+    end
+end
+
+local function pugRaid_calcNeed()
+    pugRaid_VariableTest()
+    need = "Need: "
+    for ii = 1, #structure do
+        for key in pairs(structure[ii]) do
+            if structure[ii][key] then need = need .. tostring(key) end
+            if structure[ii][key] then
+                local last = true
+                for yy = ii + 1, #structure do
+                    for subkey in pairs(structure[yy]) do
+                        if structure[yy][subkey] then
+                            last = false
+                            break
+                        end
+                    end
+                end
+                if last then
+                    need = need .. ' '
+                else
+                    need = need .. ", "
+                end
+            end
+        end
+    end
+end
+
 local function pugRaidGUI()
     frame:SetWidth(280)
     frame:SetHeight(380)
@@ -345,65 +400,52 @@ local function pugRaidGUI()
     heading:SetRelativeWidth(1)
     frame:ReleaseChildren()
     frame:AddChild(heading)
-    --
+    -- :: Main Raid Note [required]
     local raidName = AceGUI:Create('EditBox')
     raidName:SetText(raidText or 'Set your main announce here')
     raidName:SetFullWidth(true)
     raidName:SetCallback("OnEnterPressed", function(widget, event, text)
-        raidText = text
-        if not need then
-            need = ""
-        end
-        if not counter then
-            counter = ""
-        end
-        if not notes then
-            notes = ""
-        end
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. raidText .. need .. notes .. counter)
+        raidText = text .. ' - '
+        pugRaid_VariableTest()
+        pugRaid_textChange(false)
     end)
     frame:AddChild(raidName)
     -- LFM EoE 25 - Need All | x/18 | no more balance please
     -- [Raid Text] | [Need] | [Counter] | [Notes]
+    -- :: Needed Roles [required]
     for ii = 1, #structure do
         for key in pairs(structure[ii]) do
             local roleBox = AceGUI:Create('CheckBox')
             roleBox:SetLabel(key)
             roleBox:SetCallback("OnValueChanged", function(self, value)
                 structure[ii][key] = not structure[ii][key]
-                need = "- Need: "
+                pugRaid_calcNeed()
+                local all = true
                 for ii = 1, #structure do
                     for key in pairs(structure[ii]) do
-                        if structure[ii][key] then
-                            need = need .. tostring(key) .. " "
+                        if not structure[ii][key] then
+                            all = false
+                            break
                         end
                     end
                 end
-                if not counter then
-                    counter = ""
-                end
-                if not notes then
-                    notes = ""
-                end
-                SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. raidText .. need .. notes .. counter)
+                if all then need = 'Need All ' end
+                pugRaid_textChange(false)
             end)
             frame:AddChild(roleBox)
         end
     end
-    --
-    local additional = AceGUI:Create('MultiLineEditBox')
-    additional:SetLabel('')
+    -- :: Additional Notes
+    local additional = AceGUI:Create('EditBox')
     additional:SetText(notes or 'Set additional notes here')
     additional:SetFullWidth(true)
     additional:SetCallback("OnEnterPressed", function(widget, event, text)
-        notes = text
-        if not counter then
-            counter = ""
-        end
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. raidText .. need .. notes .. counter)
+        pugRaid_VariableTest()
+        if text and text ~= "" then notes = '- ' .. text end
+        pugRaid_textChange(false)
     end)
     frame:AddChild(additional)
-    --
+    -- :: Announce Channel key
     local channel = AceGUI:Create('EditBox')
     channel:SetText(announceChannel or 'Set announce channel key here')
     channel:SetFullWidth(true)
@@ -419,25 +461,10 @@ local function pugRaidGUI()
     annButton:SetText('Announce')
     annButton:SetFullWidth(true)
     annButton:SetCallback("OnClick", function(widget, event, text)
-        counter = " " .. tostring(GetNumRaidMembers()) .. "/18"
-        need = "- Need: "
+        counter = '- ' .. tostring(GetNumRaidMembers()) .. "/25 "
         notes = notes or ""
-        for ii = 1, #structure do
-            for key in pairs(structure[ii]) do
-                if structure[ii][key] then
-                    need = need .. tostring(key) .. " "
-                end
-            end
-        end
-        if GetNumRaidMembers() > 10 then
-            -- SendChatMessage(raidText .. need .. notes .. counter,
-            --                 "channel", nil, announceChannel)
-            SELECTED_CHAT_FRAME:AddMessage(raidText .. need .. notes .. counter)
-        else
-            -- SendChatMessage(raidText .. need .. notes,
-            --                 "channel", nil, announceChannel)
-            SELECTED_CHAT_FRAME:AddMessage(raidText .. need .. notes .. counter)
-        end
+        pugRaid_calcNeed()
+        pugRaid_textChange(true)
     end)
     frame:AddChild(annButton)
 end
