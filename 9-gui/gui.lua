@@ -329,6 +329,14 @@ local function diverseRaidGUI()
                                            announceChannel)
     end)
     frame:AddChild(channel)
+    -- :: AnnounceButton
+    local annButton = AceGUI:Create('Button')
+    annButton:SetText('Announce')
+    annButton:SetFullWidth(true)
+    annButton:SetCallback("OnClick", function(widget, event, text)
+        VoA_announce(false)
+    end)
+    frame:AddChild(annButton)
 end
 
 local function pugRaid_VariableTest()
@@ -339,23 +347,21 @@ local function pugRaid_VariableTest()
 end
 
 local function pugRaid_textChange(isAnnouncement)
-    if GetNumRaidMembers() > 14  then
+    if GetNumRaidMembers() > 14 then
         counter = '- ' .. tostring(GetNumRaidMembers()) .. '/25 '
         --
         if isAnnouncement and announceChannel and announceChannel ~= "" then
             SendChatMessage(raidText .. need .. counter .. notes, "channel",
                             nil, announceChannel)
         else
-            SELECTED_CHAT_FRAME:AddMessage(
-                raidText .. need .. counter .. notes)
+            SELECTED_CHAT_FRAME:AddMessage(raidText .. need .. counter .. notes)
         end
     else
         if isAnnouncement and announceChannel and announceChannel ~= "" then
-            SendChatMessage(raidText .. need .. notes, "channel",
-                            nil, announceChannel)
+            SendChatMessage(raidText .. need .. notes, "channel", nil,
+                            announceChannel)
         else
-            SELECTED_CHAT_FRAME:AddMessage(
-                raidText .. need .. notes)
+            SELECTED_CHAT_FRAME:AddMessage(raidText .. need .. notes)
         end
     end
 end
@@ -456,7 +462,7 @@ local function pugRaidGUI()
                                            announceChannel)
     end)
     frame:AddChild(channel)
-    --
+    -- :: AnnounceButton
     local annButton = AceGUI:Create('Button')
     annButton:SetText('Announce')
     annButton:SetFullWidth(true)

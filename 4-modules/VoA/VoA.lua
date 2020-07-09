@@ -11,15 +11,15 @@ local diverseRaid = {
     {["Tank"] = {["Tank I"] = "tank", ["Tank II"] = "tank"}}, {
         ["Heal"] = {
             ["Paladin"] = "hpal",
-            ["Druid"] = "dru",
-            ["Priest"] = "pri",
-            ["Shaman"] = "sha"
+            ["Druid"] = "druid",
+            ["Priest"] = "priest",
+            ["Shaman"] = "shaman"
 
         }
     }, {
         ["MDPS"] = {
-            ["Warrior"] = "war",
-            ["Paladin"] = "ret",
+            ["Warrior"] = "warrior",
+            ["Paladin"] = "retri",
             ["Death Knight"] = "dk",
             ["Rogue"] = "rog",
             ["Enhancement"] = "enh",
@@ -32,7 +32,7 @@ local diverseRaid = {
             ["Hunter"] = "hunt",
             ["Elemental"] = "ele",
             ["Balance"] = "bala",
-            ["Shadow"] = "sha"
+            ["Shadow"] = "shadow"
         }
     }
 }
@@ -49,60 +49,64 @@ local count = " " .. tostring(GetNumRaidMembers()) .. "/18"
 -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
 
 -- ==== Methods
-local function handleCommand(msg)
+function VoA_announce(inner)
     -- local raid = return_diverseRaid()
-    Arch_setGUI('DiverseRaid', true)
-    for ii = 1, #diverseRaid do
-        for key in pairs(diverseRaid[ii]) do
-            roles[key] = ""
-            for subkey in pairs(diverseRaid[ii][key]) do
-                if not (return_diverseRaid()[1][ii][key][subkey]) then
-                    roles[key] = roles[key] .. diverseRaid[ii][key][subkey] ..
-                                     " "
+    if inner then
+        Arch_setGUI('DiverseRaid', true)
+        for ii = 1, #diverseRaid do
+            for key in pairs(diverseRaid[ii]) do
+                roles[key] = ""
+                for subkey in pairs(diverseRaid[ii][key]) do
+                    if not (return_diverseRaid()[1][ii][key][subkey]) then
+                        roles[key] =
+                            roles[key] .. diverseRaid[ii][key][subkey] .. " "
+                    end
                 end
             end
         end
-    end
-    if (roles["Tank"] ~= "") then
-        tank = "Tank "
-        if (roles["MDPS"] ~= "") or (roles["RDPS"] ~= "") or
-            (roles["Heal"] ~= "") then tank = tank .. "& " end
-    else
-        tank = ""
-    end
-    if (roles["Heal"] ~= "") then
-        heal = "Heals: " .. roles["Heal"]
-        if (roles["MDPS"] ~= "") or (roles["RDPS"] ~= "") then
-            heal = heal .. "& "
-        end
-    else
-        heal = ""
-    end
-    if (roles["MDPS"] ~= "") then
-        mdps = "MDPS: " .. roles["MDPS"]
-        if (roles["RDPS"] ~= "") then mdps = mdps .. "& " end
-    else
-        mdps = ""
-    end
-    if (roles["RDPS"] ~= "") then
-        rdps = "RDPS: " .. roles["RDPS"]
-    else
-        rdps = ""
-    end
-    if (type(tonumber(return_diverseRaid()[2])) == "number") then
-        count = " " .. tostring(GetNumRaidMembers()) .. "/18"
-        if GetNumRaidMembers() > 10 then
-            SendChatMessage(announce .. tank .. heal .. mdps .. rdps .. count,
-                            "channel", nil, return_diverseRaid()[2]);
+        if (roles["Tank"] ~= "") then
+            tank = "Tank "
+            if (roles["MDPS"] ~= "") or (roles["RDPS"] ~= "") or
+                (roles["Heal"] ~= "") then tank = tank .. "& " end
         else
-            SendChatMessage(announce .. tank .. heal .. mdps .. rdps, "channel",
-                            nil, return_diverseRaid()[2]);
+            tank = ""
         end
-    else
-        SELECTED_CHAT_FRAME:AddMessage(
-            announce .. tank .. heal .. mdps .. rdps .. count)
+        if (roles["Heal"] ~= "") then
+            heal = "Heals: " .. roles["Heal"]
+            if (roles["MDPS"] ~= "") or (roles["RDPS"] ~= "") then
+                heal = heal .. "& "
+            end
+        else
+            heal = ""
+        end
+        if (roles["MDPS"] ~= "") then
+            mdps = "MDPS: " .. roles["MDPS"]
+            if (roles["RDPS"] ~= "") then mdps = mdps .. "& " end
+        else
+            mdps = ""
+        end
+        if (roles["RDPS"] ~= "") then
+            rdps = "RDPS: " .. roles["RDPS"]
+        else
+            rdps = ""
+        end
     end
-
+    if not inner then
+        if (type(tonumber(return_diverseRaid()[2])) == "number") then
+            count = " " .. tostring(GetNumRaidMembers()) .. "/18"
+            if GetNumRaidMembers() > 10 then
+                SendChatMessage(announce .. tank .. heal .. mdps .. rdps ..
+                                    count, "channel", nil,
+                                return_diverseRaid()[2]);
+            else
+                SendChatMessage(announce .. tank .. heal .. mdps .. rdps,
+                                "channel", nil, return_diverseRaid()[2]);
+            end
+        else
+            SELECTED_CHAT_FRAME:AddMessage(
+                announce .. tank .. heal .. mdps .. rdps .. count)
+        end
+    end
 end
 
 -- ==== Start
@@ -122,7 +126,7 @@ end
 
 -- ==== Slash Handlersd
 SLASH_voa1 = "/voa"
-SlashCmdList["voa"] = function(msg) handleCommand(msg) end
+SlashCmdList["voa"] = function(msg) VoA_announce(true) end
 
 -- ==== End
 local function InitializeCallback() module:Initialize() end
