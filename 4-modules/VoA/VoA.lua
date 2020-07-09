@@ -36,7 +36,7 @@ local diverseRaid = {
         }
     }
 }
-local announce = "LFM VoA Spec Run: Need "
+local announce = "LFM VoA18 [Koralon&Emalon] Need "
 local roles = {["Tank"] = "", ["Heal"] = "", ["MDPS"] = "", ["RDPS"] = ""}
 
 local tank = ""
@@ -90,9 +90,17 @@ local function handleCommand(msg)
         rdps = ""
     end
     if (type(tonumber(return_diverseRaid()[2])) == "number") then
-        SendChatMessage(announce .. tank .. heal .. mdps .. rdps .. count, "channel", nil, return_diverseRaid()[2]);
+        count = " " .. tostring(GetNumRaidMembers()) .. "/18"
+        if GetNumRaidMembers() > 10 then
+            SendChatMessage(announce .. tank .. heal .. mdps .. rdps .. count,
+                            "channel", nil, return_diverseRaid()[2]);
+        else
+            SendChatMessage(announce .. tank .. heal .. mdps .. rdps, "channel",
+                            nil, return_diverseRaid()[2]);
+        end
     else
-        SELECTED_CHAT_FRAME:AddMessage(announce .. tank .. heal .. mdps .. rdps .. count)
+        SELECTED_CHAT_FRAME:AddMessage(
+            announce .. tank .. heal .. mdps .. rdps .. count)
     end
 
 end

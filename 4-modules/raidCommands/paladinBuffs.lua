@@ -17,23 +17,23 @@ local PALA = ""
 local function announcePaladinBuffs()
     PALA = "";
     if GBOS ~= nil then
-        PALA = PALA .. "GBOS " .. GBOS .. " | "
+        PALA = PALA .. "GBOS " .. GBOS .. " - "
     end
     if GBOM ~= nil then
-        PALA = PALA .. "GBOM " .. GBOM .. " | "
+        PALA = PALA .. "GBOM " .. GBOM .. " - "
     end
     if GBOW ~= nil then
-        PALA = PALA .. "GBOW " .. GBOW .. " | "
+        PALA = PALA .. "GBOW " .. GBOW .. " - "
     end
     if GBOK ~= nil then
-        PALA = PALA .. "GBOK " .. GBOK .. " | "
+        PALA = PALA .. "GBOK " .. GBOK .. " - "
     end
     if string.len( PALA ) > 2 then
     PALA = PALA:sub(1, -3)
     end
     print(PALA);
     if isEnabled then
-        SendChatMessage(PALA,"RAID_WARNING") -- RAID_WARNING, SAY
+        SendChatMessage(PALA,"RAID_WARNING",nil) -- RAID_WARNING, SAY
     end
 end
 

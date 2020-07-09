@@ -86,6 +86,7 @@ do
     Addon.help = Addon:NewModule("Help", "AceHook-3.0", "AceEvent-3.0")
     Addon.lootDB = Addon:NewModule("LootDB", "AceHook-3.0", "AceEvent-3.0")
     Addon.voa = Addon:NewModule("VoA", "AceHook-3.0", "AceEvent-3.0")
+    Addon.pug = Addon:NewModule("Pug", "AceHook-3.0", "AceEvent-3.0")
     -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
     -- :: Macros
     Addon.milling = Addon:NewModule("Milling", "AceEvent-3.0")

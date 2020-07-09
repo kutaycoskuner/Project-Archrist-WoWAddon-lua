@@ -42,82 +42,40 @@ function module:Initialize()
     --
     if A.global.tactics == nil then
         A.global.tactics = {
-            tacticDefault[1],
-            tacticDefault[2],
-            tacticDefault[3],
-            tacticDefault[4],
-            tacticDefault[5],
-            tacticDefault[6],
-            tacticDefault[7],
-            tacticDefault[8]
+            tacticDefault[1], tacticDefault[2], tacticDefault[3],
+            tacticDefault[4], tacticDefault[5], tacticDefault[6],
+            tacticDefault[7], tacticDefault[8]
         }
     end
     --
     tactics[1] = A.global.tactics[1]
-    tactics[1] = A.global.tactics[2]
-    tactics[1] = A.global.tactics[3]
-    tactics[1] = A.global.tactics[4]
-    tactics[1] = A.global.tactics[5]
-    tactics[1] = A.global.tactics[6]
-    tactics[1] = A.global.tactics[7]
-    tactics[1] = A.global.tactics[8]
+    tactics[2] = A.global.tactics[2]
+    tactics[3] = A.global.tactics[3]
+    tactics[4] = A.global.tactics[4]
+    tactics[5] = A.global.tactics[5]
+    tactics[6] = A.global.tactics[6]
+    tactics[7] = A.global.tactics[7]
+    tactics[8] = A.global.tactics[8]
     --
     comms = A.global.comms
     --
-    Arch_callTactics()
+    -- Arch_callTactics()
     -- :: Register some events
 end
 
 -- :: sets raid warning
 function Arch_callTactics()
-    SELECTED_CHAT_FRAME:AddMessage(tactics[1])
-    -- WarnButton1:SetAttribute("macrotext", comms .. tactics[1])
-    -- WarnButton2:SetAttribute("macrotext", comms .. tactics[2])
-    -- WarnButton3:SetAttribute("macrotext", comms .. tactics[3])
-    -- WarnButton4:SetAttribute("macrotext", comms .. tactics[4])
+    for ii = 1, 8 do
+        if (tactics[ii] ~= '') then
+            SendChatMessage(tactics[ii], "raid", nil, nil)
+        end
+    end
 end
-
--- local function setRaidWarnings(msg)
---     local pass = false
---     local args = fixArgs(msg)
---     local mod = tonumber(table.remove(args, 1))
---     local entry = string.upper(table.concat(args, ' '))
---     local rw = 'rw' .. tostring(mod)
---     local default = 'tacticDefault' .. tostring(mod)
---     -- :: Defensive
---     for ii = 1, 4 do if tonumber(mod) == ii then pass = true end end
---     if pass then
---         if entry == nil or entry == '' then
---             SELECTED_CHAT_FRAME:AddMessage(
---                 moduleAlert .. 'you need to enter a valid text')
---             return
---         end
---         --
---         if entry == 'default' then
---             A.global.tactics[rw] = tacticDefault[mod]
---             tactics[mod] = tacticDefault[mod]
---             SELECTED_CHAT_FRAME:AddMessage(
---                 moduleAlert .. 'Your ' .. rw .. ' set as: ' ..
---                     focus(tacticDefault[mod]))
---             return
---         end
---         --
---         A.global.raidWarnings[rw] = entry
---         tactics[tonumber(mod)] = entry
---         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Your ' .. rw ..
---                                            ' set as: ' .. focus(entry))
---     else
---         SELECTED_CHAT_FRAME:AddMessage(moduleAlert ..
---                                            'you need to enter numbers between 1-4 as first argument')
---         return
---     end
---     Arch_callTactics()
-
--- end
 
 -- :: selecting boss via slash command
 local function selectBoss(boss)
-    if boss then
+    local target = boss
+    if boss~='' then
         local firsti, lasti, command, value =
             string.find(boss, "(%w+) \"(.*)\"");
         if (command == nil) then
@@ -135,21 +93,74 @@ local function selectBoss(boss)
             tactics[2] = '{triangle} LEFT {triangle}'
             tactics[3] = '{triangle} RIGHT {triangle}'
             tactics[4] = '{triangle} Use Harpoons {triangle}'
+            tactics[5] = ''
+            tactics[6] = ''
+            tactics[7] = ''
+            tactics[8] = ''
             --
-        elseif (command == "malygos") then
-            tactics[1] = '{triangle} Spread 11 Yards {triangle}'
-            tactics[2] = '{square} Stay In Dome MDPS Take Discs {square}'
-            tactics[3] = '{skull} Spread {skull}'
-            tactics[4] = '{triangle} Move Move Move {triangle}'
+            -- :: ToC
+        elseif (command == "beasts") then
+            tactics[1] = '1- Do not stand in fire'
+            tactics[2] = '2- If you got Snobold in your head get in melee range'
+            tactics[3] = '3- DPS hardswitch on Snobold as soon as it in melee range'
+            tactics[4] = '4- [Shaman] Hero at first Charge'
+            tactics[5] = '5'
+            tactics[6] = '6'
+            tactics[7] = '7'
+            tactics[8] = '8'
+            --
+        elseif (command == "jarraxus") then
+            tactics[1] = '1- [Interrupter] Interrupt Jarraxus\'s cast'
+            tactics[2] = '2- Hardswitch on adds as soon as they spawn'
+            tactics[3] = '3- [Mage] Steal Nether Power buff from Jarraxus with haste'
+            tactics[4] = ''
+            tactics[5] = ''
+            tactics[6] = ''
+            tactics[7] = ''
+            tactics[8] = ''
+            --
+        elseif (command == "faction") then
+            tactics[1] = '1- [Warlock] Banish/Fear Druid Healer'
+            tactics[2] = '2- [Paladin] Turn evil warlock\'s pet'
+            tactics[3] = '3- [Mage] Poly Paladin'
+            tactics[4] = '4- [MT] keep warrior/dk away from raid'
+            tactics[5] = ''
+            tactics[6] = ''
+            tactics[7] = ''
+            tactics[8] = ''
+            --
+        elseif (command == "valkyr") then
+            tactics[1] = '1- [Interrupter] Interrupt Jarraxus\'s cast'
+            tactics[2] = '2- Hardswitch on adds as soon as they spawn'
+            tactics[3] = '3- [Mage] Steal Nether Power buff from Jarraxus with haste'
+            tactics[4] = ''
+            tactics[5] = ''
+            tactics[6] = ''
+            tactics[7] = ''
+            tactics[8] = ''
+            --
+        elseif (command == "anubarak") then
+            tactics[1] = '1- [Interrupter] Interrupt Jarraxus\'s cast'
+            tactics[2] = '2- Hardswitch on adds as soon as they spawn'
+            tactics[3] = '3- [Mage] Steal Nether Power buff from Jarraxus with haste'
+            tactics[4] = ''
+            tactics[5] = ''
+            tactics[6] = ''
+            tactics[7] = ''
+            tactics[8] = ''
             --
         else
-            Arch_callTactics()
-            -- boss = 'default'
-            -- tactics[1] = tacticDefault[1];
-            -- tactics[2] = tacticDefault[2];
-            -- tactics[3] = tacticDefault[3];
-            -- tactics[4] = tacticDefault[4];
+            tactics[1] = ''
+            tactics[2] = ''
+            tactics[3] = ''
+            tactics[4] = ''
+            tactics[5] = ''
+            tactics[6] = ''
+            tactics[7] = ''
+            tactics[8] = ''
+            target = 'none'
         end
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Tactics for ' .. focus(target))
     else
         Arch_callTactics()
     end

@@ -256,6 +256,33 @@ local function selectBoss(boss)
             raidWarning[2] = '{skull}  {skull}'
             raidWarning[3] = '{skull}  {skull}'
             raidWarning[4] = '{triangle}  {triangle}'
+            -- :: ToGC
+        elseif (command == "Beasts") then
+            raidWarning[1] = '{triangle} Snobold Get In Melee Cleave Range {triangle}'
+            raidWarning[2] = '{skull} If you have poison get in the range of fire debuff {skull}'
+            raidWarning[3] = '{skull} Run away from charge path {skull}'
+            raidWarning[4] = '{triangle}  {triangle}'
+        elseif (command == "Jarraxus") then
+            raidWarning[1] = '{triangle} Hardswitch to adds! {triangle}'
+            raidWarning[2] = '{skull} Steal the Nether Power {skull}'
+            raidWarning[3] = '{skull} Run away from charge path {skull}'
+            raidWarning[4] = '{triangle}  {triangle}'
+        elseif (command == "Faction") then
+            raidWarning[1] = '{triangle} Snobold Get In Melee Cleave Range {triangle}'
+            raidWarning[2] = '{skull} If you have poison get in the range of fire debuff {skull}'
+            raidWarning[3] = '{skull} Run away from charge path {skull}'
+            raidWarning[4] = '{triangle}  {triangle}'
+        elseif (command == "Twin") then
+            raidWarning[1] = '{triangle} Snobold Get In Melee Cleave Range {triangle}'
+            raidWarning[2] = '{skull} If you have poison get in the range of fire debuff {skull}'
+            raidWarning[3] = '{skull} Run away from charge path {skull}'
+            raidWarning[4] = '{triangle}  {triangle}'
+        elseif (command == "Anub") then
+            raidWarning[1] = '{triangle} Kill the adds {triangle}'
+            raidWarning[2] = '{skull} Marked People Run through station, Keep HoP ready {skull}'
+            raidWarning[3] = '{skull} Slow Down Heal {skull}'
+            raidWarning[4] = '{triangle}  {triangle}'
+            -- :: Wintergrasp
         elseif command == 'wg' then
             raidWarning[1] =
                 '{triangle} STACK SIEGES AT BROKEN AND ATTACK NW {triangle}'

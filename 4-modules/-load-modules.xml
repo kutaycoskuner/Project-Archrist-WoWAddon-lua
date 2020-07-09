@@ -10,4 +10,5 @@
     <Include file="Help\-load.xml"/>
     <Include file="LootDB\-load.xml"/>
     <Include file="VoA\-load.xml"/>
+    <Include file="Pug\-load.xml"/>
 </Ui>

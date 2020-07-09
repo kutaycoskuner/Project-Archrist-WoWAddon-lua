@@ -17,7 +17,9 @@ local textStore
 local currentLootList = {}
 local focus = Arch_focusColor
 local fixArgs = Arch_fixArgs
-
+--
+local lootFramePos
+local voaFramePos
 --
 
 local diverseRaid = {
@@ -49,8 +51,12 @@ local diverseRaid = {
         }
     }
 }
-
-local lootFramePos
+--:: PuGRaid Variables
+local raidText, need, counter, notes
+    local structure = {
+        {['Tank'] = false}, {['Heal'] = false}, {['MDPS'] = false},
+        {['RDPS'] = false}
+    }
 
 -- ==== Module GUI
 local function TodoListGUI()
@@ -277,10 +283,10 @@ local function diverseRaidGUI()
     frame:SetWidth(280)
     frame:SetHeight(730)
     frame:ClearAllPoints()
-    if A.global.lootFrame == {} then
+    if A.global.voaFrame == {} then
         frame:SetPoint("CENTER", 0, 0)
     else
-        frame:SetPoint(lootFramePos[1], lootFramePos[3], lootFramePos[4])
+        frame:SetPoint(voaFramePos[1], voaFramePos[3], voaFramePos[4])
     end
     local heading = AceGUI:Create('Heading')
     heading:SetText('Diverse Raid')
@@ -318,18 +324,122 @@ local function diverseRaidGUI()
     channel:SetFullWidth(true)
     channel:SetCallback("OnEnterPressed", function(widget, event, text)
         announceChannel = text
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "Announce Channel is now: " .. announceChannel)
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert ..
+                                           "Announce Channel is now: " ..
+                                           announceChannel)
+    end)
+    frame:AddChild(channel)
+end
+
+local function pugRaidGUI()
+    frame:SetWidth(280)
+    frame:SetHeight(380)
+    frame:ClearAllPoints()
+    if A.global.voaFrame == {} then
+        frame:SetPoint("CENTER", 0, 0)
+    else
+        frame:SetPoint(voaFramePos[1], voaFramePos[3], voaFramePos[4])
+    end
+    local heading = AceGUI:Create('Heading')
+    heading:SetText('PuG Raid Organizer')
+    heading:SetRelativeWidth(1)
+    frame:ReleaseChildren()
+    frame:AddChild(heading)
+    --
+    local raidName = AceGUI:Create('EditBox')
+    raidName:SetText(raidText or 'Set your main announce here')
+    raidName:SetFullWidth(true)
+    raidName:SetCallback("OnEnterPressed", function(widget, event, text)
+        raidText = text
+        if not need then
+            need = ""
+        end
+        if not counter then
+            counter = ""
+        end
+        if not notes then
+            notes = ""
+        end
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. raidText .. need .. notes .. counter)
+    end)
+    frame:AddChild(raidName)
+    -- LFM EoE 25 - Need All | x/18 | no more balance please
+    -- [Raid Text] | [Need] | [Counter] | [Notes]
+    for ii = 1, #structure do
+        for key in pairs(structure[ii]) do
+            local roleBox = AceGUI:Create('CheckBox')
+            roleBox:SetLabel(key)
+            roleBox:SetCallback("OnValueChanged", function(self, value)
+                structure[ii][key] = not structure[ii][key]
+                need = "- Need: "
+                for ii = 1, #structure do
+                    for key in pairs(structure[ii]) do
+                        if structure[ii][key] then
+                            need = need .. tostring(key) .. " "
+                        end
+                    end
+                end
+                if not counter then
+                    counter = ""
+                end
+                if not notes then
+                    notes = ""
+                end
+                SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. raidText .. need .. notes .. counter)
+            end)
+            frame:AddChild(roleBox)
+        end
+    end
+    --
+    local additional = AceGUI:Create('MultiLineEditBox')
+    additional:SetLabel('')
+    additional:SetText(notes or 'Set additional notes here')
+    additional:SetFullWidth(true)
+    additional:SetCallback("OnEnterPressed", function(widget, event, text)
+        notes = text
+        if not counter then
+            counter = ""
+        end
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. raidText .. need .. notes .. counter)
+    end)
+    frame:AddChild(additional)
+    --
+    local channel = AceGUI:Create('EditBox')
+    channel:SetText(announceChannel or 'Set announce channel key here')
+    channel:SetFullWidth(true)
+    channel:SetCallback("OnEnterPressed", function(widget, event, text)
+        announceChannel = text
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert ..
+                                           "Announce Channel is now: " ..
+                                           announceChannel)
     end)
     frame:AddChild(channel)
     --
-    -- local announce = AceGUI:Create('Button')
-    -- announce:SetText('Announce')
-    -- announce:SetFullWidth(true)
-    -- announce:SetCallback("OnClick", function(widget, event, text)
-    --     print(announceChannel)
-    -- end)
-    -- frame:AddChild(announce)
-    --
+    local annButton = AceGUI:Create('Button')
+    annButton:SetText('Announce')
+    annButton:SetFullWidth(true)
+    annButton:SetCallback("OnClick", function(widget, event, text)
+        counter = " " .. tostring(GetNumRaidMembers()) .. "/18"
+        need = "- Need: "
+        notes = notes or ""
+        for ii = 1, #structure do
+            for key in pairs(structure[ii]) do
+                if structure[ii][key] then
+                    need = need .. tostring(key) .. " "
+                end
+            end
+        end
+        if GetNumRaidMembers() > 10 then
+            -- SendChatMessage(raidText .. need .. notes .. counter,
+            --                 "channel", nil, announceChannel)
+            SELECTED_CHAT_FRAME:AddMessage(raidText .. need .. notes .. counter)
+        else
+            -- SendChatMessage(raidText .. need .. notes,
+            --                 "channel", nil, announceChannel)
+            SELECTED_CHAT_FRAME:AddMessage(raidText .. need .. notes .. counter)
+        end
+    end)
+    frame:AddChild(annButton)
 end
 
 -- ==== Core
@@ -340,21 +450,14 @@ function toggleGUI(key)
         frame = AceGUI:Create("Frame")
         frame:SetTitle(N)
         --
-        -- frame:SetMovable(true)
-        -- frame:EnableMouse(true)
-        -- frame:RegisterForDrag("LeftButton")
-        -- frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
-        -- frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
-        -- frame:SetScript("OnDragStop", function(self)
-        --     self:StopMovingOrSizing()
-        -- end)
-        --
         frame:SetCallback("OnClose", function(widget)
             frameOpen = false
             local a, b, c, d, e = frame:GetPoint()
             -- print(a,b,c,d,e)
             A.global.lootFrame = {a, c, d, e}
+            A.global.voaFrame = {a, c, d, e}
             lootFramePos = A.global.lootFrame
+            voaFramePos = A.global.voaFrame
             -- print(lootFramePos[1], lootFramePos[2], lootFramePos[3], lootFramePos[4])
             -- print(A.global.lootFrame[1].. d)
         end)
@@ -367,6 +470,7 @@ function toggleGUI(key)
             toggleGUI('LootDatabase')
         end
         if key == "DiverseRaid" then diverseRaidGUI() end
+        if key == "pugRaid" then pugRaidGUI() end
         -- test
     elseif recursive then
         frame:Release()
@@ -432,6 +536,11 @@ function module:Initialize()
         A.global.lootFrame = {"CENTER", "CENTER", 0, 0}
     end
     lootFramePos = A.global.lootFrame
+    --
+    if not A.global.voaFrame then
+        A.global.voaFrame = {"CENTER", "CENTER", 0, 0}
+    end
+    voaFramePos = A.global.voaFrame
     self:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
     self:RegisterEvent("CHAT_MSG_RAID_WARNING")
     -- "MAIL_INBOX_UPDATE"
