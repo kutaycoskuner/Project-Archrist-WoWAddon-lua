@@ -339,7 +339,7 @@ local function pugRaid_VariableTest()
 end
 
 local function pugRaid_textChange(isAnnouncement)
-    if true then --  GetNumRaidMembers() > 14 
+    if GetNumRaidMembers() > 14  then
         counter = '- ' .. tostring(GetNumRaidMembers()) .. '/25 '
         --
         if isAnnouncement and announceChannel and announceChannel ~= "" then
