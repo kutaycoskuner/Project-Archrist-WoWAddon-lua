@@ -51,45 +51,43 @@ local count = " " .. tostring(GetNumRaidMembers()) .. "/18"
 -- ==== Methods
 function VoA_announce(inner)
     -- local raid = return_diverseRaid()
-    if inner then
-        Arch_setGUI('DiverseRaid', true)
-        for ii = 1, #diverseRaid do
-            for key in pairs(diverseRaid[ii]) do
-                roles[key] = ""
-                for subkey in pairs(diverseRaid[ii][key]) do
-                    if not (return_diverseRaid()[1][ii][key][subkey]) then
-                        roles[key] =
-                            roles[key] .. diverseRaid[ii][key][subkey] .. " "
-                    end
+    if inner then Arch_setGUI('DiverseRaid', true) end
+    for ii = 1, #diverseRaid do
+        for key in pairs(diverseRaid[ii]) do
+            roles[key] = ""
+            for subkey in pairs(diverseRaid[ii][key]) do
+                if not (return_diverseRaid()[1][ii][key][subkey]) then
+                    roles[key] = roles[key] .. diverseRaid[ii][key][subkey] ..
+                                     " "
                 end
             end
         end
-        if (roles["Tank"] ~= "") then
-            tank = "Tank "
-            if (roles["MDPS"] ~= "") or (roles["RDPS"] ~= "") or
-                (roles["Heal"] ~= "") then tank = tank .. "& " end
-        else
-            tank = ""
+    end
+    if (roles["Tank"] ~= "") then
+        tank = "Tank "
+        if (roles["MDPS"] ~= "") or (roles["RDPS"] ~= "") or
+            (roles["Heal"] ~= "") then tank = tank .. "& " end
+    else
+        tank = ""
+    end
+    if (roles["Heal"] ~= "") then
+        heal = "Heals: " .. roles["Heal"]
+        if (roles["MDPS"] ~= "") or (roles["RDPS"] ~= "") then
+            heal = heal .. "& "
         end
-        if (roles["Heal"] ~= "") then
-            heal = "Heals: " .. roles["Heal"]
-            if (roles["MDPS"] ~= "") or (roles["RDPS"] ~= "") then
-                heal = heal .. "& "
-            end
-        else
-            heal = ""
-        end
-        if (roles["MDPS"] ~= "") then
-            mdps = "MDPS: " .. roles["MDPS"]
-            if (roles["RDPS"] ~= "") then mdps = mdps .. "& " end
-        else
-            mdps = ""
-        end
-        if (roles["RDPS"] ~= "") then
-            rdps = "RDPS: " .. roles["RDPS"]
-        else
-            rdps = ""
-        end
+    else
+        heal = ""
+    end
+    if (roles["MDPS"] ~= "") then
+        mdps = "MDPS: " .. roles["MDPS"]
+        if (roles["RDPS"] ~= "") then mdps = mdps .. "& " end
+    else
+        mdps = ""
+    end
+    if (roles["RDPS"] ~= "") then
+        rdps = "RDPS: " .. roles["RDPS"]
+    else
+        rdps = ""
     end
     if not inner then
         if (type(tonumber(return_diverseRaid()[2])) == "number") then
