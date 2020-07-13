@@ -103,13 +103,13 @@ local function selectBoss(boss)
             tactics[1] = '1- Do not stand in fire'
             tactics[2] = '2- If you got Snobold in your head get in melee range'
             tactics[3] = '3- DPS hardswitch on Snobold as soon as it in melee range'
-            tactics[4] = '4- [Shaman] Hero at first Charge'
-            tactics[5] = '5'
-            tactics[6] = '6'
-            tactics[7] = '7'
-            tactics[8] = '8'
+            tactics[4] = '4- [Shaman] Hero at worms [H] | Hero at first charge of Icehowl  [N]'
+            tactics[5] = '5- RDPS and Heal stay 20yard away from boss to be not silenced'
+            tactics[6] = ''
+            tactics[7] = ''
+            tactics[8] = ''
             --
-        elseif (command == "jarraxus") then
+        elseif (command == "jarraxus") then 
             tactics[1] = '1- [Interrupter] Interrupt Jarraxus\'s cast'
             tactics[2] = '2- Hardswitch on adds as soon as they spawn'
             tactics[3] = '3- [Mage] Steal Nether Power buff from Jarraxus with haste'
@@ -121,8 +121,8 @@ local function selectBoss(boss)
             --
         elseif (command == "faction") then
             tactics[1] = '1- [Warlock] Banish/Fear Druid Healer'
-            tactics[2] = '2- [Paladin] Turn evil warlock\'s pet'
-            tactics[3] = '3- [Mage] Poly Paladin'
+            tactics[2] = '2- [Paladin] Turn evil if warlock\'s pet exists'
+            tactics[3] = '3- [Mage] Poly Paladin/Resto Shaman'
             tactics[4] = '4- [MT] keep warrior/dk away from raid'
             tactics[5] = ''
             tactics[6] = ''
@@ -130,20 +130,20 @@ local function selectBoss(boss)
             tactics[8] = ''
             --
         elseif (command == "valkyr") then
-            tactics[1] = '1- [Interrupter] Interrupt Jarraxus\'s cast'
-            tactics[2] = '2- Hardswitch on adds as soon as they spawn'
-            tactics[3] = '3- [Mage] Steal Nether Power buff from Jarraxus with haste'
-            tactics[4] = ''
+            tactics[1] = '1- Everyone get dark except soakers and off tank'
+            tactics[2] = '2- Switch to dark/white when ability cast requires opposite color'
+            tactics[3] = '3- After ability change your color to dark again and attack to White Valkyr'
+            tactics[4] = '4- Hero after first ability'
             tactics[5] = ''
             tactics[6] = ''
             tactics[7] = ''
             tactics[8] = ''
             --
         elseif (command == "anubarak") then
-            tactics[1] = '1- [Interrupter] Interrupt Jarraxus\'s cast'
-            tactics[2] = '2- Hardswitch on adds as soon as they spawn'
-            tactics[3] = '3- [Mage] Steal Nether Power buff from Jarraxus with haste'
-            tactics[4] = ''
+            tactics[1] = '1- [Hunter] Plant ice platforms N, SW, SE'
+            tactics[2] = '2- Use Holy wrath by order on add casts'
+            tactics[3] = '3- [Paladin] Use HoP on Phase 2 with given order'
+            tactics[4] = '4- Platforms will be used as ordered N, SW, SE'
             tactics[5] = ''
             tactics[6] = ''
             tactics[7] = ''
