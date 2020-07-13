@@ -363,13 +363,12 @@ local function pugRaid_textChange(isAnnouncement)
     if notes ~= "" or counter ~= "" and string.sub(lastNeed, -1) ~= " " then
         lastNeed = need .. pugDelimeter
     end
+    counter = tostring(GetNumRaidMembers()) .. '/' .. pugRaidType
+    if notes ~= "" and string.sub(counter, -1) ~= " " then
+        counter = counter .. pugDelimeter
+    end
+    --
     if pugShowCounter then
-        -- :: counter
-        counter = tostring(GetNumRaidMembers()) .. '/' .. pugRaidType
-        if notes ~= "" and string.sub(counter, -1) ~= " " then
-            counter = counter .. pugDelimeter
-        end
-        --
         if isAnnouncement and announceChannel and announceChannel ~= "" then
             SendChatMessage(lastRaidText .. lastNeed .. counter .. lastNotes,
                             "channel", nil, announceChannel)
@@ -392,7 +391,13 @@ local function pugRaid_calcNeed()
     need = "Need: "
     for ii = 1, #structure do
         for key in pairs(structure[ii]) do
-            if structure[ii][key] then need = need .. tostring(key) end
+            if structure[ii][key] then
+                if structure[ii][key] == true or structure[ii][key] == '' then
+                    need = need .. tostring(key)
+                else
+                    need = need .. structure[ii][key]
+                end
+            end
             if structure[ii][key] then
                 local last = true
                 for yy = ii + 1, #structure do
@@ -415,7 +420,7 @@ end
 
 local function pugRaidGUI()
     frame:SetWidth(280)
-    frame:SetHeight(380)
+    frame:SetHeight(580)
     frame:ClearAllPoints()
     if A.global.voaFrame == {} then
         frame:SetPoint("CENTER", 0, 0)
@@ -433,19 +438,14 @@ local function pugRaidGUI()
     raidType:SetList(rt)
     raidType:SetText('Raid Type')
     raidType:SetFullWidth(true)
-    raidType:SetHeight(25)
+    raidType:SetHeight(40)
+    raidType:SetLabel('Raid Type')
     raidType:SetCallback("OnValueChanged",
                          function(widget, event, text) pugRaidType = text end)
     frame:AddChild(raidType)
-    -- :: Show Counter?
-    local showCounter = AceGUI:Create('CheckBox')
-    showCounter:SetLabel('Show people in raid')
-    showCounter:SetCallback("OnValueChanged", function(self, value)
-        pugShowCounter = not pugShowCounter
-    end)
-    frame:AddChild(showCounter)
     -- :: Main Raid Note [required]
     local raidName = AceGUI:Create('EditBox')
+    raidName:SetLabel('Main Raid Text')
     raidName:SetText(raidText or 'Set your main announce here')
     raidName:SetFullWidth(true)
     raidName:SetCallback("OnEnterPressed", function(widget, event, text)
@@ -462,7 +462,11 @@ local function pugRaidGUI()
             local roleBox = AceGUI:Create('CheckBox')
             roleBox:SetLabel(key)
             roleBox:SetCallback("OnValueChanged", function(self, value)
-                structure[ii][key] = not structure[ii][key]
+                if structure[ii][key] ~= false then
+                    structure[ii][key] = false
+                else
+                    structure[ii][key] = true
+                end
                 pugRaid_calcNeed()
                 local all = true
                 for ii = 1, #structure do
@@ -477,10 +481,22 @@ local function pugRaidGUI()
                 pugRaid_textChange(false)
             end)
             frame:AddChild(roleBox)
+            --
+            local roleData = AceGUI:Create('EditBox')
+            roleData:SetText(structure[ii][key] or '')
+            roleData:SetFullWidth(true)
+            roleData:SetCallback("OnEnterPressed", function(widget, event, text)
+                structure[ii][key] = text
+                pugRaid_VariableTest()
+                pugRaid_calcNeed()
+                pugRaid_textChange(false)
+            end)
+            frame:AddChild(roleData)
         end
     end
     -- :: Additional Notes
     local additional = AceGUI:Create('EditBox')
+    additional:SetLabel('Additional Notes')
     additional:SetText(notes or 'Set additional notes here')
     additional:SetFullWidth(true)
     additional:SetCallback("OnEnterPressed", function(widget, event, text)
@@ -491,6 +507,7 @@ local function pugRaidGUI()
     frame:AddChild(additional)
     -- :: Delimeter key
     local delimeter = AceGUI:Create('EditBox')
+    delimeter:SetLabel('Raid Delimeter')
     delimeter:SetText(pugDelimeter or 'Set delimeter here')
     delimeter:SetFullWidth(true)
     delimeter:SetCallback("OnEnterPressed", function(widget, event, text)
@@ -498,6 +515,13 @@ local function pugRaidGUI()
         pugRaid_textChange(false)
     end)
     frame:AddChild(delimeter)
+    -- :: Show Counter?
+    local showCounter = AceGUI:Create('CheckBox')
+    showCounter:SetLabel('Show people in raid')
+    showCounter:SetCallback("OnValueChanged", function(self, value)
+        pugShowCounter = not pugShowCounter
+    end)
+    frame:AddChild(showCounter)
     -- :: Announce Channel key
     local channel = AceGUI:Create('EditBox')
     channel:SetText(announceChannel or 'Set announce channel key here')
