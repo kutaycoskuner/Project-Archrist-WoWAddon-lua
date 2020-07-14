@@ -355,26 +355,27 @@ local function pugRaid_textChange(isAnnouncement)
     local lastRaidText = raidText
     local lastNeed = need
     local lastNotes = notes
+    local lastCounter = counter
     if (need ~= "" or notes ~= "" or counter ~= "") and
         string.sub(lastRaidText, -1) ~= " " then
         lastRaidText = raidText .. pugDelimeter
     end
     -- :: Need
-    if notes ~= "" or counter ~= "" and string.sub(lastNeed, -1) ~= " " then
+    if (notes ~= "" or (pugShowCounter)) and string.sub(lastNeed, -1) ~= " " then
         lastNeed = need .. pugDelimeter
     end
     counter = tostring(GetNumRaidMembers()) .. '/' .. pugRaidType
     if notes ~= "" and string.sub(counter, -1) ~= " " then
-        counter = counter .. pugDelimeter
+        lastCounter =  counter .. pugDelimeter
     end
     --
     if pugShowCounter then
         if isAnnouncement and announceChannel and announceChannel ~= "" then
-            SendChatMessage(lastRaidText .. lastNeed .. counter .. lastNotes,
+            SendChatMessage(lastRaidText .. lastNeed .. lastCounter .. lastNotes,
                             "channel", nil, announceChannel)
         else
             SELECTED_CHAT_FRAME:AddMessage(
-                lastRaidText .. lastNeed .. counter .. lastNotes)
+                lastRaidText .. lastNeed .. lastCounter .. lastNotes)
         end
     else
         if isAnnouncement and announceChannel and announceChannel ~= "" then
@@ -388,7 +389,7 @@ end
 
 local function pugRaid_calcNeed()
     pugRaid_VariableTest()
-    need = "Need: "
+    need = "Need "
     for ii = 1, #structure do
         for key in pairs(structure[ii]) do
             if structure[ii][key] then
@@ -420,7 +421,7 @@ end
 
 local function pugRaidGUI()
     frame:SetWidth(280)
-    frame:SetHeight(580)
+    frame:SetHeight(576)
     frame:ClearAllPoints()
     if A.global.voaFrame == {} then
         frame:SetPoint("CENTER", 0, 0)
@@ -486,7 +487,7 @@ local function pugRaidGUI()
             roleData:SetText(structure[ii][key] or '')
             roleData:SetFullWidth(true)
             roleData:SetCallback("OnEnterPressed", function(widget, event, text)
-                structure[ii][key] = text
+                structure[ii][key] = tostring(key) .. ": " .. text
                 pugRaid_VariableTest()
                 pugRaid_calcNeed()
                 pugRaid_textChange(false)
