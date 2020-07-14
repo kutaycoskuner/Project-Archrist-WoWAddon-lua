@@ -352,6 +352,7 @@ local function selectChannel(channel)
         elseif (command == "bg" or command == "battleground") then
             comms = "/bg "
             A.global.comms = "/bg "
+            Arch_comms = "BATTLEGROUND"
         elseif (command == "wg" or command == "wintegrasp" or command == "1") then
             comms = "/1 "
             A.global.comms = "/1 "

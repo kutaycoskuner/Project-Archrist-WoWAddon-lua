@@ -97,13 +97,23 @@ local function selectBoss(boss)
             tactics[6] = ''
             tactics[7] = ''
             tactics[8] = ''
+        -- :: Battlegrounds
+        elseif (command == "strand") then
+            tactics[1] = '1- Protect Demos'
+            tactics[2] = '2- RDPS get in turret slot'
+            tactics[3] = '3- Get bombs'
+            tactics[4] = ''
+            tactics[5] = ''
+            tactics[6] = ''
+            tactics[7] = ''
+            tactics[8] = ''
             --
             -- :: ToC
         elseif (command == "beasts") then
             tactics[1] = '1- Do not stand in fire'
             tactics[2] = '2- If you got Snobold in your head get in melee range'
             tactics[3] = '3- DPS hardswitch on Snobold as soon as it in melee range'
-            tactics[4] = '4- [Shaman] Hero at worms [H] | Hero at first charge of Icehowl  [N]'
+            tactics[4] = '4- [Shaman] Hero at worms [H] / Hero at first charge of Icehowl  [N]'
             tactics[5] = '5- RDPS and Heal stay 20yard away from boss to be not silenced'
             tactics[6] = ''
             tactics[7] = ''
@@ -144,7 +154,7 @@ local function selectBoss(boss)
             tactics[2] = '2- Use Holy wrath by order on add casts'
             tactics[3] = '3- [Paladin] Use HoP on Phase 2 with given order'
             tactics[4] = '4- Platforms will be used as ordered N, SW, SE'
-            tactics[5] = ''
+            tactics[5] = '5- Hero at start at Phase 3'
             tactics[6] = ''
             tactics[7] = ''
             tactics[8] = ''
