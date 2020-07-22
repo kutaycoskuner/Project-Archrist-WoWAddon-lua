@@ -75,7 +75,7 @@ end
 -- :: selecting boss via slash command
 local function selectBoss(boss)
     local target = boss
-    if boss~='' then
+    if boss ~= '' then
         local firsti, lasti, command, value =
             string.find(boss, "(%w+) \"(.*)\"");
         if (command == nil) then
@@ -97,7 +97,49 @@ local function selectBoss(boss)
             tactics[6] = ''
             tactics[7] = ''
             tactics[8] = ''
-        -- :: Battlegrounds
+        -- :: Ulduar
+        elseif (command == "koralon") then
+            tactics[1] = '1- Protect Demos'
+            tactics[2] = '2- RDPS get in turret slot'
+            tactics[3] = '3- Get bombs'
+            tactics[4] = ''
+            tactics[5] = ''
+            tactics[6] = ''
+            tactics[7] = ''
+            tactics[8] = ''
+            --
+        elseif (command == "algalon") then
+            tactics[1] = '1- Protect Demos'
+            tactics[2] = '2- RDPS get in turret slot'
+            tactics[3] = '3- Get bombs'
+            tactics[4] = ''
+            tactics[5] = ''
+            tactics[6] = ''
+            tactics[7] = ''
+            tactics[8] = ''
+            --
+            -- :: VoA
+        elseif (command == "koralon") then
+            tactics[1] = '1- Protect Demos'
+            tactics[2] = '2- RDPS get in turret slot'
+            tactics[3] = '3- Get bombs'
+            tactics[4] = ''
+            tactics[5] = ''
+            tactics[6] = ''
+            tactics[7] = ''
+            tactics[8] = ''
+            --
+        elseif (command == "emalon") then
+            tactics[1] = '1- Leave mid for healers'
+            tactics[2] = '2- RDPS spread stairside /range 10 dont use mid'
+            tactics[3] = '3- MDPS use diagonal way when you move towards adds dont get in range of healers'
+            tactics[4] = '4- Hero/Bloodlust after add kill if exhaustion otherwise at start'
+            tactics[5] = ''
+            tactics[6] = ''
+            tactics[7] = ''
+            tactics[8] = ''
+            --
+            -- :: Battlegrounds
         elseif (command == "strand") then
             tactics[1] = '1- Protect Demos'
             tactics[2] = '2- RDPS get in turret slot'
@@ -112,17 +154,21 @@ local function selectBoss(boss)
         elseif (command == "beasts") then
             tactics[1] = '1- Do not stand in fire'
             tactics[2] = '2- If you got Snobold in your head get in melee range'
-            tactics[3] = '3- DPS hardswitch on Snobold as soon as it in melee range'
-            tactics[4] = '4- [Shaman] Hero at worms [H] / Hero at first charge of Icehowl  [N]'
-            tactics[5] = '5- RDPS and Heal stay 20yard away from boss to be not silenced'
+            tactics[3] =
+                '3- DPS hardswitch on Snobold as soon as it in melee range'
+            tactics[4] =
+                '4- [Shaman] Hero at worms [H] / Hero at first charge of Icehowl  [N]'
+            tactics[5] =
+                '5- RDPS and Heal stay 20yard away from boss to be not silenced'
             tactics[6] = ''
             tactics[7] = ''
             tactics[8] = ''
             --
-        elseif (command == "jarraxus") then 
+        elseif (command == "jarraxus") then
             tactics[1] = '1- [Interrupter] Interrupt Jarraxus\'s cast'
             tactics[2] = '2- Hardswitch on adds as soon as they spawn'
-            tactics[3] = '3- [Mage] Steal Nether Power buff from Jarraxus with haste'
+            tactics[3] =
+                '3- [Mage] Steal Nether Power buff from Jarraxus with haste'
             tactics[4] = ''
             tactics[5] = ''
             tactics[6] = ''
@@ -141,8 +187,10 @@ local function selectBoss(boss)
             --
         elseif (command == "valkyr") then
             tactics[1] = '1- Everyone get dark except soakers and off tank'
-            tactics[2] = '2- Switch to dark/white when ability cast requires opposite color'
-            tactics[3] = '3- After ability change your color to dark again and attack to White Valkyr'
+            tactics[2] =
+                '2- Switch to dark/white when ability cast requires opposite color'
+            tactics[3] =
+                '3- After ability change your color to dark again and attack to White Valkyr'
             tactics[4] = '4- Hero after first ability'
             tactics[5] = ''
             tactics[6] = ''
@@ -170,7 +218,8 @@ local function selectBoss(boss)
             tactics[8] = ''
             target = 'none'
         end
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Tactics for ' .. focus(target))
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Tactics for ' ..
+                                           focus(target))
     else
         Arch_callTactics()
     end

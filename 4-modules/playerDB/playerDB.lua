@@ -13,14 +13,14 @@ local args = {}
 local isPlayerExists = false
 local isInCombat = false
 local realmName = GetRealmName()
-local faction = UnitFactionGroup('player')
+local factionName =  UnitFactionGroup('player') 
 local focusColor = Arch_focusColor
 local quantitative = {'reputation','strategy','discipline','attendance','damage'}
 
 -- ==== Start
 function module:Initialize()
     self.Initialized = true
-    if not A.people[realmName] then A.people[realmName] = {} end
+    if not A.people[realmName][factionName] then A.people[realmName][factionName] = {} end
     module:RegisterEvent("PLAYER_REGEN_ENABLED")
     module:RegisterEvent("PLAYER_REGEN_DISABLED")
     module:RegisterEvent("WHO_LIST_UPDATE")
@@ -49,7 +49,7 @@ end
 
 -- :: Create Player Entry
 local function archAddPlayer(player)
-    A.people[realmName][player] = {
+    A.people[realmName][factionName][player] = {
         reputation = 0,
         discipline = 0,
         strategy = 0,
@@ -65,12 +65,12 @@ end
 -- :: Calculate raidscore
 function Archrist_PlayerDB_calcRaidScore(player)
 
-    if not A.people[realmName][player] then archAddPlayer(player) end
-    local rep = (tonumber(A.people[realmName][player].reputation) * 250)
-    local dsc = (tonumber(A.people[realmName][player].discipline) * 300)
-    local str = (tonumber(A.people[realmName][player].strategy) * 300)
-    local dmg = (tonumber(A.people[realmName][player].damage) * 200)
-    local att = (tonumber(A.people[realmName][player].attendance) * 100)
+    if not A.people[realmName][factionName][player] then archAddPlayer(player) end
+    local rep = (tonumber(A.people[realmName][factionName][player].reputation) * 250)
+    local dsc = (tonumber(A.people[realmName][factionName][player].discipline) * 300)
+    local str = (tonumber(A.people[realmName][factionName][player].strategy) * 300)
+    local dmg = (tonumber(A.people[realmName][factionName][player].damage) * 200)
+    local att = (tonumber(A.people[realmName][factionName][player].attendance) * 100)
     local gsr
     local raidScore = rep + dsc + str + dmg + att
 
@@ -92,8 +92,8 @@ function Archrist_PlayerDB_getNote(player)
     if not isInCombat then
         local Name = GameTooltip:GetUnit();
         if Name ~= UnitName('player') then
-            if A.people[realmName][Name] then
-                local note = A.people[realmName][Name].note
+            if A.people[realmName][factionName][Name] then
+                local note = A.people[realmName][factionName][Name].note
                 if note ~= '' then
                     GameTooltip:AddLine(note, 0.5, 0.5, 0.5, true)
                 end
@@ -107,7 +107,7 @@ local function Archrist_PlayerDB_getRaidScore()
         local Name = GameTooltip:GetUnit();
         if not GearScore_GetScore then return end
         if GearScore_GetScore(Name, "mouseover") then
-            if A.people[realmName][Name] then
+            if A.people[realmName][factionName][Name] then
                 local gearScore = GearScore_GetScore(Name, "mouseover")
                 if gearScore and gearScore > 0 then
                     local personalData = Archrist_PlayerDB_calcRaidScore(Name)
@@ -127,19 +127,19 @@ end
 local function archGetPlayer(player)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. player)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'reputation: ' ..
-                                       A.people[realmName][player].reputation)
+                                       A.people[realmName][factionName][player].reputation)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'discipline: ' ..
-                                       A.people[realmName][player].discipline)
+                                       A.people[realmName][factionName][player].discipline)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'strategy: ' ..
-                                       A.people[realmName][player].strategy)
+                                       A.people[realmName][factionName][player].strategy)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'damage: ' ..
-                                       A.people[realmName][player].damage)
+                                       A.people[realmName][factionName][player].damage)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'attendance: ' ..
-                                       A.people[realmName][player].attendance)
+                                       A.people[realmName][factionName][player].attendance)
     -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'gearscore: ' ..
-    --                                    A.people[realmName][player].gearscore)
+    --                                    A.people[realmName][factionName][player].gearscore)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'note: ' ..
-                                       A.people[realmName][player].note)
+                                       A.people[realmName][factionName][player].note)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Raidscore: ' ..
                                        Archrist_PlayerDB_calcRaidScore(player))
 end
@@ -149,12 +149,12 @@ local function raidRepCheck(msg)
         local blacklist = {}
         for ii = 1, GetNumRaidMembers() do
             local person = GetRaidRosterInfo(ii)
-            if A.people[realmName][person] == nil then
+            if A.people[realmName][factionName][person] == nil then
                 archAddPlayer(person)
             else
                 for yy=1, #quantitative do
-                    -- print(A.people[realmName][person][yy])
-                    if A.people[realmName][person][quantitative[yy]] < 0 then
+                    -- print(A.people[realmName][factionName][person][yy])
+                    if A.people[realmName][factionName][person][quantitative[yy]] < 0 then
                         table.insert(blacklist,person)
                         break
                     end
@@ -182,10 +182,10 @@ end
 
 -- ==== Main 
 local function checkStatLimit(player, stat)
-    if A.people[realmName][player][stat] >= 5 then
-        A.people[realmName][player][stat] = 5
-    elseif A.people[realmName][player][stat] <= -5 then
-        A.people[realmName][player][stat] = -5
+    if A.people[realmName][factionName][player][stat] >= 5 then
+        A.people[realmName][factionName][player][stat] = 5
+    elseif A.people[realmName][factionName][player][stat] <= -5 then
+        A.people[realmName][factionName][player][stat] = -5
     end
 end
 
@@ -204,18 +204,18 @@ local function handlePlayerStat(msg, parameter)
         -- :: Target varsa
         if UnitExists('target') and UnitName('target') ~= UnitName('player') and
             UnitIsPlayer('target') then
-            if A.people[realmName][UnitName('target')] == nil then
+            if A.people[realmName][factionName][UnitName('target')] == nil then
                 archAddPlayer(UnitName('target'))
             end
 
             if type(tonumber(args[1])) == "number" then
-                A.people[realmName][UnitName('target')][parameter] =
-                    tonumber(A.people[realmName][UnitName('target')][parameter]) +
+                A.people[realmName][factionName][UnitName('target')][parameter] =
+                    tonumber(A.people[realmName][factionName][UnitName('target')][parameter]) +
                         tonumber(args[1])
                 checkStatLimit(UnitName('target'), parameter)
                 SELECTED_CHAT_FRAME:AddMessage(
                     moduleAlert .. UnitName('target') .. ' ' .. parameter ..
-                        ' is now ' .. A.people[realmName][UnitName('target')][parameter])
+                        ' is now ' .. A.people[realmName][factionName][UnitName('target')][parameter])
             end
         end
     else
@@ -223,7 +223,7 @@ local function handlePlayerStat(msg, parameter)
         if UnitExists('target') and UnitName('target') ~= UnitName('player') and
             UnitIsPlayer('target') then
             -- :: Create person if not already exists
-            if A.people[realmName][UnitName('target')] == nil then
+            if A.people[realmName][factionName][UnitName('target')] == nil then
                 archAddPlayer(UnitName('target'))
             else
                 archGetPlayer(UnitName('target'))
@@ -233,15 +233,15 @@ local function handlePlayerStat(msg, parameter)
 end
 
 local function addPlayerStat(args, parameter)
-    if A.people[realmName][args[1]] == nil then archAddPlayer(args[1]) end
+    if A.people[realmName][factionName][args[1]] == nil then archAddPlayer(args[1]) end
     if args[2] then
         if type(tonumber(args[2])) == "number" then
-            A.people[realmName][args[1]][parameter] =
-                tonumber(A.people[realmName][args[1]][parameter]) + tonumber(args[2])
+            A.people[realmName][factionName][args[1]][parameter] =
+                tonumber(A.people[realmName][factionName][args[1]][parameter]) + tonumber(args[2])
             checkStatLimit(args[1], parameter)
             SELECTED_CHAT_FRAME:AddMessage(
                 moduleAlert .. args[1] .. ' ' .. parameter .. ' is now ' ..
-                    A.people[realmName][args[1]][parameter])
+                    A.people[realmName][factionName][args[1]][parameter])
         else
             SELECTED_CHAT_FRAME:AddMessage(
                 moduleAlert .. 'your entry is not valid')
@@ -259,7 +259,7 @@ end
 --     if UnitExists('target') and UnitIsPlayer('target') then
 
 --         -- :: Create person if not already exists
---         if A.people[realmName][UnitName('target')] == nil then
+--         if A.people[realmName][factionName][UnitName('target')] == nil then
 --             archAddPlayer(UnitName('target'))
 --         end
 
@@ -267,11 +267,11 @@ end
 --         local Name = GameTooltip:GetUnit();
 
 --         if Name == UnitName('target') then
---             A.people[realmName][UnitName('target')].gearscore =
+--             A.people[realmName][factionName][UnitName('target')].gearscore =
 --                 GearScore_GetScore(Name, "mouseover")
 --             SELECTED_CHAT_FRAME:AddMessage(
 --                 moduleAlert .. UnitName('target') .. ' gearscore is updated as ' ..
---                     A.people[realmName][UnitName('target')].gearscore)
+--                     A.people[realmName][factionName][UnitName('target')].gearscore)
 --         else
 --             SELECTED_CHAT_FRAME:AddMessage(
 --                 moduleAlert .. 'you need to mouseover target to calculate gs')
@@ -285,14 +285,14 @@ local function handleNote(msg)
     -- :: Burda target oncelikli
     if UnitExists('target') and UnitIsPlayer('target') and UnitName('target') ~=
         UnitName('player') then
-        if A.people[realmName][UnitName('target')] == nil then
+        if A.people[realmName][factionName][UnitName('target')] == nil then
             archAddPlayer(UnitName('target'))
         end
-        A.people[realmName][UnitName('target')].note = msg
+        A.people[realmName][factionName][UnitName('target')].note = msg
         if msg ~= '' then
             SELECTED_CHAT_FRAME:AddMessage(
                 moduleAlert .. UnitName('target') .. ': ' ..
-                    A.people[realmName][UnitName('target')].note)
+                    A.people[realmName][factionName][UnitName('target')].note)
         else
             SELECTED_CHAT_FRAME:AddMessage(
                 moduleAlert .. 'Note for ' .. UnitName('target') ..
@@ -318,13 +318,13 @@ local function addNote(args)
     local name = table.remove(args, 1)
     local note = table.concat(args, ' ')
 
-    if A.people[realmName][name] == nil then archAddPlayer(name) end
-    A.people[realmName][name].note = note
+    if A.people[realmName][factionName][name] == nil then archAddPlayer(name) end
+    A.people[realmName][factionName][name].note = note
 
     if args[1] then
         -- print(note)
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. name .. ': ' ..
-                                           A.people[realmName][name].note)
+                                           A.people[realmName][factionName][name].note)
     else
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Note for ' .. name ..
                                            ' has been pruned.')
