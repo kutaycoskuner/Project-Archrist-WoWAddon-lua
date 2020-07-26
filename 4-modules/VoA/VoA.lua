@@ -71,7 +71,7 @@ function VoA_announce(inner)
         tank = ""
     end
     if (roles["Heal"] ~= "") then
-        heal = "Heals: " .. roles["Heal"]
+        heal = "Heal: " .. roles["Heal"]
         if (roles["MDPS"] ~= "") or (roles["RDPS"] ~= "") then
             heal = heal .. "& "
         end

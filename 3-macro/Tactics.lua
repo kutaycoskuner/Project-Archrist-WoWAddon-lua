@@ -67,7 +67,11 @@ end
 function Arch_callTactics()
     for ii = 1, 8 do
         if (tactics[ii] ~= '') then
-            SendChatMessage(tactics[ii], "raid", nil, nil)
+            if string.sub(tactics[ii],1,1) == "!" then
+                SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. tactics[ii])
+            else
+                SendChatMessage(tactics[ii], "raid", nil, nil)
+            end 
         end
     end
 end
@@ -112,7 +116,7 @@ local function selectBoss(boss)
             tactics[1] = '1- Protect Demos'
             tactics[2] = '2- RDPS get in turret slot'
             tactics[3] = '3- Get bombs'
-            tactics[4] = ''
+            tactics[4] = '! 1- Hatirla'
             tactics[5] = ''
             tactics[6] = ''
             tactics[7] = ''
