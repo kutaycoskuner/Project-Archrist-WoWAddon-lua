@@ -1,14 +1,19 @@
 ----------------------------------------------------------------------------------------------------------
 local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 ----------------------------------------------------------------------------------------------------------
+--[[
+    No tag  = Announce Tactics
+    [!]     = Self reminders
+    [=]     = Combat Warnings
+]]
 
 Arch_tactics = {
         --==== Dungeons
         --:: Utgarde Pinnacle
         ["skadi"] = {
-            "! {triangle} LEFT {triangle}",
-            '{triangle} RIGHT {triangle}',
-            '{triangle} Use Harpoons {triangle}',
+            "=1 {triangle} LEFT {triangle}",
+            '=2 {triangle} RIGHT {triangle}',
+            '=4 {triangle} Use Harpoons {triangle}',
         },
         --==== Raids
         --:: VoA
@@ -20,8 +25,21 @@ Arch_tactics = {
             '2- RDPS spread stairside /range 10 dont use mid',
             '3- MDPS use diagonal way when you move towards adds dont get in range of healers',
             '4- Hero/Bloodlust after add kill if exhaustion otherwise at start',
+            '! Set tanks who is add / who is boss'
+        },
+        ["toravon"] = {
+            "1- [Tanks] Face Toravon away from raid",
+            "2- [Tanks] Switch between 6 Frostbite stacks",
+            "3- [Healers] Stay away from frozen orbs",
+            "4- [RDPS] Focus Frozen Orbs as they spawn",
+            "5- [MDPS] Cleave if Frozen Orb is close to you",
+            "! Remind frost aura or frost resist totem",
+            "=4 {triangle} Kill Frozen Orbs! {triangle}",
         },
         --:: Ulduar
+        ["algalon"] = {
+
+        },
         --:: ToGC
         ["beasts"] = {
             '1- Do not stand in fire',

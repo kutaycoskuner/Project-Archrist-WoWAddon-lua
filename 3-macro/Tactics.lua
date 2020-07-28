@@ -68,8 +68,14 @@ function Arch_callTactics()
                 SELECTED_CHAT_FRAME:AddMessage(
                     moduleAlert .. string.sub(tactics[ii], 3))
             elseif string.sub(tactics[ii], 1, 1) == "=" then
-                Arch_RaidWarnings[warning] = string.sub(tactics[ii], 3)
-                if warning ~= 4 then warning = warning + 1 end
+                SELECTED_CHAT_FRAME:AddMessage(string.sub(tactics[ii],2,2))
+                if type(tonumber(string.sub(tactics[ii],2,2))) == "number" then
+                    Arch_RaidWarnings[tonumber(string.sub(tactics[ii],2,2))] = string.sub(tactics[ii], 4)
+                else
+                    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "Please give 1-4 number after warning prefix")
+                --     Arch_RaidWarnings[warning] = string.sub(tactics[ii], 3)
+                --     if warning ~= 4 then warning = warning + 1 end
+                end
             else
                 SendChatMessage(tactics[ii], "raid", nil, nil)
             end
