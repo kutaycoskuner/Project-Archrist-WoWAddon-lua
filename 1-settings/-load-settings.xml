@@ -3,4 +3,5 @@
     <Script file="options.lua"/>
     <Script file="profile.lua"/>
     <Script file="private.lua"/>
+    <Script file="tactics.lua"/>
 </Ui>

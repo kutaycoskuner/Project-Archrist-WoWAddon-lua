@@ -8,6 +8,7 @@ local module = A:GetModule(moduleName);
 -- ==== Variables
 local boss = 'none';
 local comms = '/p ';
+local bossName
 --
 local tacticDefault = {}
 tacticDefault[1] = "{skull} Focus on [%t] {skull}"
@@ -21,13 +22,8 @@ tacticDefault[9] = '{triangle} Innervate Please {triangle}'
 --
 local tactics = {}
 tactics[1] = ''
-tactics[2] = ''
-tactics[3] = ''
-tactics[4] = ''
-tactics[5] = ''
-tactics[6] = ''
-tactics[7] = ''
-tactics[8] = ''
+
+local tacticsDatabase = Arch_tactics
 
 --
 local fixArgs = Arch_fixArgs
@@ -65,13 +61,18 @@ end
 
 -- :: sets raid warning
 function Arch_callTactics()
-    for ii = 1, 8 do
+    local warning = 1
+    for ii = 1, (#tacticsDatabase[bossName] or 0) do
         if (tactics[ii] ~= '') then
-            if string.sub(tactics[ii],1,1) == "!" then
-                SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. tactics[ii])
+            if string.sub(tactics[ii], 1, 1) == "!" then
+                SELECTED_CHAT_FRAME:AddMessage(
+                    moduleAlert .. string.sub(tactics[ii], 3))
+            elseif string.sub(tactics[ii], 1, 1) == "=" then
+                Arch_RaidWarnings[warning] = string.sub(tactics[ii], 3)
+                if warning ~= 4 then warning = warning + 1 end
             else
                 SendChatMessage(tactics[ii], "raid", nil, nil)
-            end 
+            end
         end
     end
 end
@@ -90,137 +91,12 @@ local function selectBoss(boss)
         end
         -- :: komut varsa
         if (command ~= nil) then command = string.lower(command); end
-        --
+        bossName = command
         -- :: Dungeons
-        if (command == "skadi") then
-            tactics[1] = focus('mdps') .. 'Kill the snobolds as they spawn'
-            tactics[2] = '{triangle} LEFT {triangle}'
-            tactics[3] = '{triangle} RIGHT {triangle}'
-            tactics[4] = '{triangle} Use Harpoons {triangle}'
-            tactics[5] = ''
-            tactics[6] = ''
-            tactics[7] = ''
-            tactics[8] = ''
-        -- :: Ulduar
-        elseif (command == "koralon") then
-            tactics[1] = '1- Protect Demos'
-            tactics[2] = '2- RDPS get in turret slot'
-            tactics[3] = '3- Get bombs'
-            tactics[4] = ''
-            tactics[5] = ''
-            tactics[6] = ''
-            tactics[7] = ''
-            tactics[8] = ''
-            --
-        elseif (command == "algalon") then
-            tactics[1] = '1- Protect Demos'
-            tactics[2] = '2- RDPS get in turret slot'
-            tactics[3] = '3- Get bombs'
-            tactics[4] = '! 1- Hatirla'
-            tactics[5] = ''
-            tactics[6] = ''
-            tactics[7] = ''
-            tactics[8] = ''
-            --
-            -- :: VoA
-        elseif (command == "koralon") then
-            tactics[1] = '1- Protect Demos'
-            tactics[2] = '2- RDPS get in turret slot'
-            tactics[3] = '3- Get bombs'
-            tactics[4] = ''
-            tactics[5] = ''
-            tactics[6] = ''
-            tactics[7] = ''
-            tactics[8] = ''
-            --
-        elseif (command == "emalon") then
-            tactics[1] = '1- Leave mid for healers'
-            tactics[2] = '2- RDPS spread stairside /range 10 dont use mid'
-            tactics[3] = '3- MDPS use diagonal way when you move towards adds dont get in range of healers'
-            tactics[4] = '4- Hero/Bloodlust after add kill if exhaustion otherwise at start'
-            tactics[5] = ''
-            tactics[6] = ''
-            tactics[7] = ''
-            tactics[8] = ''
-            --
-            -- :: Battlegrounds
-        elseif (command == "strand") then
-            tactics[1] = '1- Protect Demos'
-            tactics[2] = '2- RDPS get in turret slot'
-            tactics[3] = '3- Get bombs'
-            tactics[4] = ''
-            tactics[5] = ''
-            tactics[6] = ''
-            tactics[7] = ''
-            tactics[8] = ''
-            --
-            -- :: ToC
-        elseif (command == "beasts") then
-            tactics[1] = '1- Do not stand in fire'
-            tactics[2] = '2- If you got Snobold in your head get in melee range'
-            tactics[3] =
-                '3- DPS hardswitch on Snobold as soon as it in melee range'
-            tactics[4] =
-                '4- [Shaman] Hero at worms [H] / Hero at first charge of Icehowl  [N]'
-            tactics[5] =
-                '5- RDPS and Heal stay 20yard away from boss to be not silenced'
-            tactics[6] = ''
-            tactics[7] = ''
-            tactics[8] = ''
-            --
-        elseif (command == "jarraxus") then
-            tactics[1] = '1- [Interrupter] Interrupt Jarraxus\'s cast'
-            tactics[2] = '2- Hardswitch on adds as soon as they spawn'
-            tactics[3] =
-                '3- [Mage] Steal Nether Power buff from Jarraxus with haste'
-            tactics[4] = ''
-            tactics[5] = ''
-            tactics[6] = ''
-            tactics[7] = ''
-            tactics[8] = ''
-            --
-        elseif (command == "faction") then
-            tactics[1] = '1- [Warlock] Banish/Fear Druid Healer'
-            tactics[2] = '2- [Paladin] Turn evil if warlock\'s pet exists'
-            tactics[3] = '3- [Mage] Poly Paladin/Resto Shaman'
-            tactics[4] = '4- [MT] keep warrior/dk away from raid'
-            tactics[5] = ''
-            tactics[6] = ''
-            tactics[7] = ''
-            tactics[8] = ''
-            --
-        elseif (command == "valkyr") then
-            tactics[1] = '1- Everyone get dark except soakers and off tank'
-            tactics[2] =
-                '2- Switch to dark/white when ability cast requires opposite color'
-            tactics[3] =
-                '3- After ability change your color to dark again and attack to White Valkyr'
-            tactics[4] = '4- Hero after first ability'
-            tactics[5] = ''
-            tactics[6] = ''
-            tactics[7] = ''
-            tactics[8] = ''
-            --
-        elseif (command == "anubarak") then
-            tactics[1] = '1- [Hunter] Plant ice platforms N, SW, SE'
-            tactics[2] = '2- Use Holy wrath by order on add casts'
-            tactics[3] = '3- [Paladin] Use HoP on Phase 2 with given order'
-            tactics[4] = '4- Platforms will be used as ordered N, SW, SE'
-            tactics[5] = '5- Hero at start at Phase 3'
-            tactics[6] = ''
-            tactics[7] = ''
-            tactics[8] = ''
-            --
-        else
-            tactics[1] = ''
-            tactics[2] = ''
-            tactics[3] = ''
-            tactics[4] = ''
-            tactics[5] = ''
-            tactics[6] = ''
-            tactics[7] = ''
-            tactics[8] = ''
-            target = 'none'
+        if (tacticsDatabase[command]) then
+            for ii = 1, #tacticsDatabase[command] do
+                tactics[ii] = tacticsDatabase[command][ii]
+            end
         end
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Tactics for ' ..
                                            focus(target))
@@ -238,10 +114,3 @@ A:RegisterModule(module:GetName(), InitializeCallback)
 SLASH_Tactics1 = "/tact"
 SlashCmdList["Tactics"] = function(boss) selectBoss(boss) end
 
--- ==== Example Usage [last arg]
---[[
-/click WarnButton1;  
-/click WarnButton2; 
-/click WarnButton3; 
-/click WarnButton4; 
---]]

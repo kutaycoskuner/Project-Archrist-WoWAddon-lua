@@ -24,11 +24,11 @@ Basic text interface for addon guidance
 Lootdatabase module for guild runs  
 `Loot Message Filter`  
 Filter out greed and disenchanting rolls  
-`Player Database`  
+`Player Database`   
 Take notes and grade player on their performance  
-`PUG Raid Organizer`  
-Dynamic PUG Raid announcement module  
-`To Do List`  
-Basic To do list  
-`VoA`  
-Vault of Archavon spec run announcement module
+`PUG Raid Organizer`    
+Dynamic PUG Raid announcement module    
+`To Do List`    
+Basic To do list    
+`VoA`    
+Vault of Archavon spec run announcement module  

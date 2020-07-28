@@ -1,0 +1,75 @@
+----------------------------------------------------------------------------------------------------------
+local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+----------------------------------------------------------------------------------------------------------
+
+Arch_tactics = {
+        --==== Dungeons
+        --:: Utgarde Pinnacle
+        ["skadi"] = {
+            "! {triangle} LEFT {triangle}",
+            '{triangle} RIGHT {triangle}',
+            '{triangle} Use Harpoons {triangle}',
+        },
+        --==== Raids
+        --:: VoA
+        ["koralon"] = {
+            "",
+        },
+        ["emalon"] = {
+            '1- Leave mid for healers',
+            '2- RDPS spread stairside /range 10 dont use mid',
+            '3- MDPS use diagonal way when you move towards adds dont get in range of healers',
+            '4- Hero/Bloodlust after add kill if exhaustion otherwise at start',
+        },
+        --:: Ulduar
+        --:: ToGC
+        ["beasts"] = {
+            '1- Do not stand in fire',
+            '2- If you got Snobold in your head get in melee range',
+            '3- DPS hardswitch on Snobold as soon as it in melee range',
+            '4- [Shaman] Hero at worms [H] / Hero at first charge of Icehowl  [N]',
+            '5- RDPS and Heal stay 20yard away from boss to be not silenced',
+            "= focus marked snobold",
+            "= RDPS and Heals stack on stations",
+        },
+        ["jarraxus"] = {
+            '1- [Interrupter] Interrupt Jarraxus\'s cast',
+            '2- Hardswitch on adds as soon as they spawn',
+            '3- [Mage] Steal Nether Power buff from Jarraxus with haste',
+            '! set interrupter',
+            '! say hero at volcano, burst cd at gate',
+        },
+        ["faction"] = {
+            '! 1- [Warlock] Banish/Fear Druid Healer',
+            '! 2- [Paladin] Turn evil if warlock\'s pet exists',
+            '! 3- [Mage] Poly Paladin/Resto Shaman',
+            '! 4- [MT] keep warrior/dk away from raid',
+        },
+        ["valkyr"] = {
+            '1- Everyone get dark except soakers and off tank',
+            '2- Switch to dark/white when ability cast requires opposite color',
+            '3- After ability change your color to dark again and attack to White Valkyr',
+            '4- Hero after first ability',
+            "! set soakers",
+        },
+        ["anub"] = {
+            '1- [Hunter] Plant ice platforms N, SW, SE',
+            '2- Use Holy wrath by order on add casts',
+            '3- [Paladin] Use HoP on Phase 2 with given order',
+            '4- Platforms will be used as ordered N, SW, SE',
+            '5- Hero at start at Phase 3',
+        },
+        --:: Onyxia
+        ["onyxia"] = {
+            "",
+        },
+        --:: ICC
+        --:: RS
+
+        --==== Battlegrounds
+        ["strand"] = {
+            '1- Protect Demos',
+            '2- RDPS get in turret slot',
+            '3- Get Bombs'
+        },
+}
