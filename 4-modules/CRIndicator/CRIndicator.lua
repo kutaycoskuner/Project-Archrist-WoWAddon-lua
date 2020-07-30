@@ -66,7 +66,7 @@ local function getIndicator()
     --
     if players == '' then
         frameText:SetText("|cff464646Combat Res Frame|r")
-    elseif  players  ~= nil then
+    elseif players ~= nil then
         frameText:SetText(players)
     end
 end
@@ -128,21 +128,47 @@ local function scanDruids()
 end
 
 local function handleCommand(msg)
-    if msg == '' then
-        if isFrameVisible then
-            f:Hide()
-        else
-            f:Show()
+    if UnitName('target') and UnitAffectingCombat("player") then
+        if msg ~= '' then
+            if people[tonumber(msg)] then
+                if people[tonumber(msg)].rebirth then
+                    SendChatMessage(
+                        '{triangle} ' .. people[tonumber(msg)].name ..
+                            ' combat res ' .. UnitName('target') ..
+                            ' {triangle}', "raid_warning", nil, nil)
+                    -- SELECTED_CHAT_FRAME:AddMessage(
+                    --     '{triangle} ' .. people[tonumber(msg)].name ..
+                    --         ' combat res ' .. UnitName('target') ..
+                    --         ' {triangle}')
+                    return
+                end
+            end
         end
-        isFrameVisible = not isFrameVisible
-    elseif msg == 'lock' then
-        f:SetMovable(false)
-        f:EnableMouse(false)
-    elseif msg == 'move' then
-        f:SetMovable(true)
-        f:EnableMouse(true)
-    elseif msg == 'scan' then
-        scanDruids()
+        for ii = 1, #people do
+            if people[ii].rebirth then
+                SendChatMessage('{triangle} ' .. people[ii].name ..
+                                    ' combat res ' .. UnitName('target') ..
+                                    ' {triangle}', "raid_warning", nil, nil)
+                break
+            end
+        end
+    else
+        if msg == '' then
+            if isFrameVisible then
+                f:Hide()
+            else
+                f:Show()
+            end
+            isFrameVisible = not isFrameVisible
+        elseif msg == 'lock' then
+            f:SetMovable(false)
+            f:EnableMouse(false)
+        elseif msg == 'move' then
+            f:SetMovable(true)
+            f:EnableMouse(true)
+        elseif msg == 'scan' then
+            scanDruids()
+        end
     end
 end
 

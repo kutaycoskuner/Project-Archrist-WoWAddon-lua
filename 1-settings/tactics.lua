@@ -2,12 +2,22 @@
 local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 ----------------------------------------------------------------------------------------------------------
 --[[
-    No tag  = Announce Tactics
-    [!]     = Self reminders
-    [=]     = Combat Warnings
+    No tag          = Announce Tactics
+    [!]             = Self reminders
+    [=][number]     = Combat Warnings
+
+    CR order gibi genel seyler icin bir seyler bul
+    pots now
+    hero now
+
 ]]
 
 Arch_tactics = {
+        --==== Pre-Raid Check
+        ["genel"] = {
+            "! Log dosyasini sil combat log ac",
+            "! Pot ve flask al",
+        },
         --==== Dungeons
         --:: Utgarde Pinnacle
         ["skadi"] = {
@@ -79,7 +89,14 @@ Arch_tactics = {
         },
         --:: Onyxia
         ["onyxia"] = {
-            "",
+            "! Avoid tail and head classical dragon",
+            "! Avoid cracks",
+            "! 3 tank east west adds",
+            "ON p2 leave path of the boss",
+            "all ranged on boss all mdps adds",
+            "big ads ccleave and prio",
+            "65 p2 40 p3",
+            "max melee",
         },
         --:: ICC
         --:: RS
