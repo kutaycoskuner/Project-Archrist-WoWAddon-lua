@@ -367,14 +367,21 @@ function module:PLAYER_REGEN_DISABLED() isInCombat = true end
 function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()
 
     if mod ~= 'patates' and mod ~= 'lootEntry' then
-
+        -- print(args[1] .. " " .. type(args[1]) .. " " .. #args[1])
         for ii = 1, GetNumWhoResults() do
             if GetWhoInfo(ii) == args[1] then
                 isPlayerExists = true
                 break
             end
         end
-
+        --
+        if not isPlayerExists and string.sub(args[1],1,1) == '/' then
+            table.remove(args,1)
+            args = table.concat(args," ")
+            args = fixArgs(args)
+            isPlayerExists = true
+        end
+        --
         if isPlayerExists then
             if mod == 'not' then
                 addNote(args)
