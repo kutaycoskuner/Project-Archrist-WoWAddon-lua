@@ -127,29 +127,16 @@ end
 
 -- :: Get Player Stats
 local function archGetPlayer(player)
-    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. player)
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor(player))
     factionName = UnitFactionGroup('player')
     for yy = 1, #quantitative do
-        -- print(A.people[realmName][person][yy])
         if A.people[realmName][player][quantitative[yy]] ~= 0 then
             SELECTED_CHAT_FRAME:AddMessage(
                 moduleAlert .. quantitative[yy] .. ': ' ..
                     A.people[realmName][player][quantitative[yy]])
         end
     end
-
-    -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'reputation: ' ..
-    --                                    A.people[realmName][player].reputation)
-    -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'discipline: ' ..
-    --                                    A.people[realmName][player].discipline)
-    -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'strategy: ' ..
-    --                                    A.people[realmName][player].strategy)
-    -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'damage: ' ..
-    --                                    A.people[realmName][player].damage)
-    -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'attendance: ' ..
-    --                                    A.people[realmName][player].attendance)
-    -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'gearscore: ' ..
-    --                                    A.people[realmName][player].gearscore)
+    --
     if A.people[realmName][player].note ~= '' then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'note: ' ..
                                            A.people[realmName][player].note)
@@ -159,6 +146,7 @@ end
 local function raidRepCheck(msg)
     if UnitInRaid('player') then
         local blacklist = {}
+        local whitelist = {}
         for ii = 1, GetNumRaidMembers() do
             local person = GetRaidRosterInfo(ii)
             if A.people[realmName][person] == nil then
@@ -169,21 +157,38 @@ local function raidRepCheck(msg)
                     if A.people[realmName][person][quantitative[yy]] < 0 then
                         table.insert(blacklist, person)
                         break
+                    elseif A.people[realmName][person][quantitative[yy]] > 0 then
+                        if Archrist_PlayerDB_calcRaidScore(person) > 0 then
+                            table.insert(whitelist, person)
+                            break
+                        end
                     end
                 end
             end
         end
         --
-        local checklist = ''
-        if #blacklist > 0 then
-            for ii = 1, #blacklist do
-                checklist = checklist .. blacklist[ii]
-                if not ii == #blacklist then
-                    checklist = checklist .. ', '
+        local checkWhitelist = ''
+        if #whitelist > 0 then
+            for ii = 1, #whitelist do
+                checkWhitelist = checkWhitelist .. whitelist[ii]
+                if not ii == #whitelist then
+                    checkWhitelist = checkWhitelist .. ', '
                 end
             end
             SELECTED_CHAT_FRAME:AddMessage(
-                moduleAlert .. focusColor('Blacklist: ') .. checklist)
+                moduleAlert .. focusColor('Whitelist: ') .. checkWhitelist)
+        end
+        --
+        local checkBlacklist = ''
+        if #blacklist > 0 then
+            for ii = 1, #blacklist do
+                checkBlacklist = checkBlacklist .. blacklist[ii]
+                if not ii == #blacklist then
+                    checkBlacklist = checkBlacklist .. ', '
+                end
+            end
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. focusColor('Blacklist: ') .. checkBlacklist)
             return
         else
             SELECTED_CHAT_FRAME:AddMessage(
@@ -191,19 +196,6 @@ local function raidRepCheck(msg)
         end
     else
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'you are not in raid')
-        -- :: Report Duplicates
-        -- local hash = {}
-        -- local asdList = ''
-
-        -- for k in pairs(A.people[realmName]) do
-        --     -- print(k)
-        --     if not hash[k] then
-        --         hash[k] = true
-        --     else
-        --         asdList = asdList .. k
-        --     end
-        -- end
-        -- print(asdList)
     end
 end
 
