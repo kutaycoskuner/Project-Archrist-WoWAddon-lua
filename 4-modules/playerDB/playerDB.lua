@@ -171,7 +171,7 @@ local function raidRepCheck(msg)
         if #whitelist > 0 then
             for ii = 1, #whitelist do
                 checkWhitelist = checkWhitelist .. whitelist[ii]
-                if not ii == #whitelist then
+                if ii ~= #whitelist then
                     checkWhitelist = checkWhitelist .. ', '
                 end
             end
@@ -183,7 +183,7 @@ local function raidRepCheck(msg)
         if #blacklist > 0 then
             for ii = 1, #blacklist do
                 checkBlacklist = checkBlacklist .. blacklist[ii]
-                if not ii == #blacklist then
+                if ii ~= #blacklist then
                     checkBlacklist = checkBlacklist .. ', '
                 end
             end
