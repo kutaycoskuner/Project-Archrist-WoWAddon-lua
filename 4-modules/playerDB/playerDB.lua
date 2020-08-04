@@ -218,27 +218,29 @@ local function handlePlayerStat(msg, parameter)
         if type(tonumber(args[1])) ~= "number" then
             SetWhoToUI(1)
             SendWho('n-"' .. args[1] .. '"')
+        else
+            -- :: Target varsa
+            if UnitExists('target') and UnitName('target') ~= UnitName('player') and
+                UnitIsPlayer('target') then
+                -- factionName = UnitFactionGroup('target')
+                if A.people[realmName][UnitName('target')] == nil then
+                    archAddPlayer(UnitName('target'))
+                end
+
+                if type(tonumber(args[1])) == "number" then
+                    A.people[realmName][UnitName('target')][parameter] =
+                        tonumber(
+                            A.people[realmName][UnitName('target')][parameter]) +
+                            tonumber(args[1])
+                    checkStatLimit(UnitName('target'), parameter)
+                    SELECTED_CHAT_FRAME:AddMessage(
+                        moduleAlert .. UnitName('target') .. ' ' .. parameter ..
+                            ' is now ' ..
+                            A.people[realmName][UnitName('target')][parameter])
+                end
+            end
         end
 
-        -- :: Target varsa
-        if UnitExists('target') and UnitName('target') ~= UnitName('player') and
-            UnitIsPlayer('target') then
-            factionName = UnitFactionGroup('target')
-            if A.people[realmName][UnitName('target')] == nil then
-                archAddPlayer(UnitName('target'))
-            end
-
-            if type(tonumber(args[1])) == "number" then
-                A.people[realmName][UnitName('target')][parameter] =
-                    tonumber(A.people[realmName][UnitName('target')][parameter]) +
-                        tonumber(args[1])
-                checkStatLimit(UnitName('target'), parameter)
-                SELECTED_CHAT_FRAME:AddMessage(
-                    moduleAlert .. UnitName('target') .. ' ' .. parameter ..
-                        ' is now ' ..
-                        A.people[realmName][UnitName('target')][parameter])
-            end
-        end
     else
         -- :: isim argumani yok ise targeta bak
         if UnitExists('target') and UnitName('target') ~= UnitName('player') and
@@ -374,6 +376,8 @@ function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()
                 break
             end
         end
+        ToggleFriendsFrame(2)
+        -- FriendsFrame:Hide()
         --
         if not isPlayerExists and string.sub(args[1],1,1) == '/' then
             table.remove(args,1)
@@ -392,8 +396,6 @@ function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()
         else
             print('Player not found')
         end
-
-        FriendsFrame:Hide()
     end
     mod = 'patates'
 
@@ -435,7 +437,7 @@ A:RegisterModule(module:GetName(), InitializeCallback)
 -- ==== UseCase
 --[[
 this component works with a command and requires name parameter
-- /rep -> presents /rep help
+- -> presents /rep help
 - /rep <playerName> -> presents reputation of given player if there is not creates 0
 - /rep <playerName> [d | s | c] <number> g->  changes discipline, strategy or core points of character if empty plain reputation
 - /rep <playerName> [n] <args> gives an opportunity to leave comment about player
