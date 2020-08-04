@@ -4,4 +4,6 @@
     <Script file="profile.lua"/>
     <Script file="private.lua"/>
     <Script file="tactics.lua"/>
+    <Script file="spells.lua"/>
+    <Script file="classColors.lua"/>
 </Ui>

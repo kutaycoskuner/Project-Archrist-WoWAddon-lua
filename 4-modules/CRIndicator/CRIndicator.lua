@@ -10,7 +10,9 @@ local people
 local inquiryCD = true
 local closestAvailable = 0
 local isFrameVisible = false
-local spellCooldown = Arch_spellCooldowns
+-- local spellCooldown = Arch_spellCooldowns
+local spells = Arch_spells
+local classColors = Arch_classColors
 
 -- -- ==== GUI
 local f = CreateFrame("frame", "MyAddonFrame")
@@ -40,18 +42,26 @@ f:SetPoint("CENTER", 536, 200)
 f:Hide()
 
 -- ==== Methods
+local function getSpellCooldown(spellName)
+    if spells[spellName] then
+        return spells[spellName][2]
+        -- print(spells[spellName][2] .. " tada")
+    end
+end
+
 local function getIndicator()
     local players = ''
-    local dru = '|cffFF7D0A'
+    local color = '|cffFF7D0A'
     local cooldown = '|cff464646'
     local endtext = '|r'
     --
     for ii = 1, #people do
+        color = classColors[people[ii].class] or '|cff464646'
         local add = ''
         if not people[ii].rebirth then
             add = '' -- cooldown .. people[ii].name .. endtext .. ' '
         else
-            add = dru .. people[ii].name .. endtext .. ' '
+            add = color .. people[ii].name .. endtext .. ' '
         end
         players = players .. add
         --
@@ -61,7 +71,7 @@ local function getIndicator()
     if UnitInRaid('player') then
         f:Show()
     else
-        f:Hide()
+        -- f:Hide()
     end
     --
     if players == '' then
@@ -82,8 +92,10 @@ local function scanDruids()
     if not UnitInRaid('player') and #people < 1 then
         table.insert(people, {
             name = UnitName('player'),
+            class = UnitClass('player'),
             availableAt = GetTime(),
-            rebirth = true
+            rebirth = true,
+            alive = true
         })
     end
     --
@@ -101,9 +113,9 @@ local function scanDruids()
     if UnitInRaid('player') then
         local isExists = false
         for ii = 1, GetNumRaidMembers() do
-            local druidName, rank, subgroup, level, class =
+            local druidName, rank, subgroup, level, vclass =
                 GetRaidRosterInfo(ii)
-            if class == 'Druid' then
+            if vclass == 'Druid' then
                 for yy = 1, #people do
                     if people[yy].name == druidName then
                         isExists = true
@@ -114,12 +126,25 @@ local function scanDruids()
                 if isExists == false then
                     table.insert(people, {
                         name = druidName,
+                        class = vclass,
                         availableAt = GetTime(),
-                        rebirth = true
+                        rebirth = true,
+                        alive = true
                     })
                 end
                 isExists = false
             end
+        end
+        -- :: Artik raidde olmayanlari cikar
+        for ii = 1, #people do
+            local stillIn = false
+            for yy = 1, GetNumRaidMembers() do
+                local druidName = GetRaidRosterInfo(yy)
+                if druidName == people[ii].name then
+                    stillIn = true
+                end
+            end
+            if not stillIn then table.remove(people, ii) end
         end
     end
     --
@@ -196,7 +221,7 @@ local function setClosestAvailable()
 end
 
 -- :: This function activates rebirth cooldown and turns rebirth availability false for given druid
-local function startCooldown(srcName, spell)
+local function startCooldown(srcName, spellID, spellName)
     -- local start, duration, enabled = GetSpellCooldown(spell)
     -- print(srcName .. ' ' .. spell)
     -- start, duration, enabled = GetSpellCooldown(30823)
@@ -204,8 +229,17 @@ local function startCooldown(srcName, spell)
     for ii = 1, #people do
         if people[ii].name == srcName then
             people[ii].rebirth = false
-            people[ii].availableAt = (GetTime() + spellCooldown(spell)) -- saniye olarak ekle
+            people[ii].availableAt = (GetTime() + getSpellCooldown(spellName)) -- saniye olarak ekle
             setClosestAvailable()
+        end
+    end
+    getIndicator()
+end
+
+local function removeBear(srcName) 
+    for ii=1, #people do
+        if srcName == people[ii].name then
+            table.remove(people,ii)
         end
     end
     getIndicator()
@@ -238,15 +272,27 @@ end
 -- ==== Event Handlers
 function module:COMBAT_LOG_EVENT(event, _, eventType, _, srcName, _, _, dstName,
                                  _, spellId, spellName, _, ...) -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
-    -- print(event .. ' ' .. eventType .. ' ' .. srcName .. ' ' .. spellId)
+    -- :: Print event names
+    -- SELECTED_CHAT_FRAME:AddMessage(
+    --     event .. ' ' .. eventType .. ' ' .. "srcName" .. ' ' .. spellId .. " " ..
+    --         spellName)
     -- :: Raidde degilse rebirth listesini sifirliyor
     -- if not UnitInRaid('player') then people = {} getIndicator() return end
 
     -- :: Rebirth cast edilmis ise
-    if (spellId == 48477 and eventType == "SPELL_RESURRECT") then -- 48477(rebirth)
+    if spellName == "Rebirth" and eventType == "SPELL_RESURRECT" then -- 48477(rebirth)
         -- print(spellId)
-        startCooldown(srcName, spellId)
+        startCooldown(srcName, spellId, spellName)
     end
+    -- :: remove bear when you see mangle spell
+    -- if spellName == "Mangle (Bear)" and eventType == "SPELL_AURA_APPLIED" then
+    --     removeBear(srcName)
+    -- end
+    -- test shaman
+    -- if spellName == "Lesser Healing Wave" and eventType == "SPELL_HEAL" then -- shaman lesser healing wave
+    --     startCooldown(srcName, spellId, spellName)
+    -- end
+    -- test
     -- :: Checktime if some cd exists
     if inquiryCD then if closestAvailable <= GetTime() then endCooldown() end end
 end

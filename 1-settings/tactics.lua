@@ -2,6 +2,7 @@
 local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 ----------------------------------------------------------------------------------------------------------
 --[[
+    !! Used by Tactics Module
     No tag          = Announce Tactics
     [!]             = Self reminders
     [=][number]     = Combat Warnings

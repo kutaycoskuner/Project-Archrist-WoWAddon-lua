@@ -65,15 +65,6 @@ function Arch_fixArgs(msg)
     return args;
 end
 
--- :: Spells
-function Arch_spellCooldowns(spellId)
-    if spellId == 2484 then -- earthbind totem [shaman]
-        return 10.5
-    elseif spellId == 48477 then -- rebirth [druid]
-        return 600
-    end
-end
-
 -- -- ==== Start
 -- function module:Initialize()
 --     self.initialized = true
