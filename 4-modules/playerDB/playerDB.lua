@@ -143,6 +143,83 @@ local function archGetPlayer(player)
     end
 end
 
+-- ==== Main 
+local function checkStatLimit(player, stat)
+    if A.people[realmName][player][stat] >= 5 then
+        A.people[realmName][player][stat] = 5
+    elseif A.people[realmName][player][stat] <= -5 then
+        A.people[realmName][player][stat] = -5
+    end
+end
+
+local function handlePlayerStat(msg, parameter, pass)
+
+    args = fixArgs(msg)
+    mod = parameter
+
+    if args[1] then
+        -- :: Isim oncelikli entry
+        if type(tonumber(args[1])) ~= "number" then
+            SetWhoToUI(1)
+            SendWho('n-"' .. args[1] .. '"')
+        else
+            -- :: Target varsa
+            if UnitExists('target') and UnitName('target') ~= UnitName('player') and
+                UnitIsPlayer('target') then
+                -- factionName = UnitFactionGroup('target')
+                if A.people[realmName][UnitName('target')] == nil then
+                    archAddPlayer(UnitName('target'))
+                end
+
+                if type(tonumber(args[1])) == "number" then
+                    A.people[realmName][UnitName('target')][parameter] =
+                        tonumber(
+                            A.people[realmName][UnitName('target')][parameter]) +
+                            tonumber(args[1])
+                    checkStatLimit(UnitName('target'), parameter)
+                    SELECTED_CHAT_FRAME:AddMessage(
+                        moduleAlert .. focusColor(UnitName('target')) .. ' ' .. parameter ..
+                            ' is now ' ..
+                            A.people[realmName][UnitName('target')][parameter])
+                end
+            end
+        end
+
+    else
+        -- :: isim argumani yok ise targeta bak
+        if UnitExists('target') and UnitName('target') ~= UnitName('player') and
+            UnitIsPlayer('target') then
+            factionName = UnitFactionGroup('target')
+            -- :: Create person if not already exists
+            if A.people[realmName][UnitName('target')] == nil then
+                archAddPlayer(UnitName('target'))
+            else
+                archGetPlayer(UnitName('target'))
+            end
+        end
+    end
+end
+
+local function addPlayerStat(args, parameter)
+    if A.people[realmName][args[1]] == nil then archAddPlayer(args[1]) end
+    if args[2] then
+        if type(tonumber(args[2])) == "number" then
+            A.people[realmName][args[1]][parameter] =
+                tonumber(A.people[realmName][args[1]][parameter]) +
+                    tonumber(args[2])
+            checkStatLimit(args[1], parameter)
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. args[1] .. ' ' .. parameter .. ' is now ' ..
+                    A.people[realmName][args[1]][parameter])
+        else
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. 'your entry is not valid')
+        end
+    else
+        archGetPlayer(args[1])
+    end
+end
+
 local function raidRepCheck(msg)
     if UnitInRaid('player') then
         local blacklist = {}
@@ -189,90 +266,25 @@ local function raidRepCheck(msg)
             end
             SELECTED_CHAT_FRAME:AddMessage(
                 moduleAlert .. focusColor('Blacklist: ') .. checkBlacklist)
-            return
+            -- return
         else
             SELECTED_CHAT_FRAME:AddMessage(
                 moduleAlert .. 'nobody in raid in your blacklist')
         end
+        --
+        -- :: add raidwise reputation
+        -- print(args[1])
+        if msg ~= nil and msg ~= '' then
+            for ii = 1, GetNumRaidMembers() do
+                -- local person = GetRaidRosterInfo(ii)
+                args[1] = GetRaidRosterInfo(ii)
+                args[2] = msg
+                addPlayerStat(args, 'reputation')
+                -- handlePlayerStat(person .. ' ' .. msg, 'reputation') 
+            end
+        end
     else
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'you are not in raid')
-    end
-end
-
--- ==== Main 
-local function checkStatLimit(player, stat)
-    if A.people[realmName][player][stat] >= 5 then
-        A.people[realmName][player][stat] = 5
-    elseif A.people[realmName][player][stat] <= -5 then
-        A.people[realmName][player][stat] = -5
-    end
-end
-
-local function handlePlayerStat(msg, parameter)
-
-    args = fixArgs(msg)
-    mod = parameter
-
-    if args[1] then
-        -- :: Isim oncelikli entry
-        if type(tonumber(args[1])) ~= "number" then
-            SetWhoToUI(1)
-            SendWho('n-"' .. args[1] .. '"')
-        else
-            -- :: Target varsa
-            if UnitExists('target') and UnitName('target') ~= UnitName('player') and
-                UnitIsPlayer('target') then
-                -- factionName = UnitFactionGroup('target')
-                if A.people[realmName][UnitName('target')] == nil then
-                    archAddPlayer(UnitName('target'))
-                end
-
-                if type(tonumber(args[1])) == "number" then
-                    A.people[realmName][UnitName('target')][parameter] =
-                        tonumber(
-                            A.people[realmName][UnitName('target')][parameter]) +
-                            tonumber(args[1])
-                    checkStatLimit(UnitName('target'), parameter)
-                    SELECTED_CHAT_FRAME:AddMessage(
-                        moduleAlert .. UnitName('target') .. ' ' .. parameter ..
-                            ' is now ' ..
-                            A.people[realmName][UnitName('target')][parameter])
-                end
-            end
-        end
-
-    else
-        -- :: isim argumani yok ise targeta bak
-        if UnitExists('target') and UnitName('target') ~= UnitName('player') and
-            UnitIsPlayer('target') then
-            factionName = UnitFactionGroup('target')
-            -- :: Create person if not already exists
-            if A.people[realmName][UnitName('target')] == nil then
-                archAddPlayer(UnitName('target'))
-            else
-                archGetPlayer(UnitName('target'))
-            end
-        end
-    end
-end
-
-local function addPlayerStat(args, parameter)
-    if A.people[realmName][args[1]] == nil then archAddPlayer(args[1]) end
-    if args[2] then
-        if type(tonumber(args[2])) == "number" then
-            A.people[realmName][args[1]][parameter] =
-                tonumber(A.people[realmName][args[1]][parameter]) +
-                    tonumber(args[2])
-            checkStatLimit(args[1], parameter)
-            SELECTED_CHAT_FRAME:AddMessage(
-                moduleAlert .. args[1] .. ' ' .. parameter .. ' is now ' ..
-                    A.people[realmName][args[1]][parameter])
-        else
-            SELECTED_CHAT_FRAME:AddMessage(
-                moduleAlert .. 'your entry is not valid')
-        end
-    else
-        archGetPlayer(args[1])
     end
 end
 
@@ -379,9 +391,9 @@ function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()
         ToggleFriendsFrame(2)
         -- FriendsFrame:Hide()
         --
-        if not isPlayerExists and string.sub(args[1],1,1) == '/' then
-            table.remove(args,1)
-            args = table.concat(args," ")
+        if not isPlayerExists and string.sub(args[1], 1, 1) == '/' then
+            table.remove(args, 1)
+            args = table.concat(args, " ")
             args = fixArgs(args)
             isPlayerExists = true
         end
@@ -416,7 +428,7 @@ SLASH_attendance1 = "/att"
 SlashCmdList["attendance"] =
     function(msg) handlePlayerStat(msg, 'attendance') end
 SLASH_raidRepCheck1 = "/rrep"
-SlashCmdList["raidRepCheck"] = function(msg) raidRepCheck() end
+SlashCmdList["raidRepCheck"] = function(msg) raidRepCheck(msg) end
 SLASH_not1 = "/not"
 SlashCmdList["not"] = function(msg) handleNote(msg) end
 
