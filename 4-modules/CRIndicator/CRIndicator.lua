@@ -58,12 +58,13 @@ local function getIndicator()
     for ii = 1, #people do
         color = classColors[people[ii].class] or '|cff464646'
         local add = ''
-        if not people[ii].rebirth then
+        if not people[ii].rebirth or not people[ii].alive then
             add = '' -- cooldown .. people[ii].name .. endtext .. ' '
         else
             add = color .. people[ii].name .. endtext .. ' '
         end
         players = players .. add
+        -- combatResser = players
         --
         if ii == 3 then break end
     end
@@ -153,10 +154,12 @@ local function scanDruids()
 end
 
 local function handleCommand(msg)
-    if UnitName('target') and UnitAffectingCombat("player") then
+    if UnitName('target') and
+        (UnitAffectingCombat("player") or UnitIsDeadOrGhost('player')) then
+        --
         if msg ~= '' then
             if people[tonumber(msg)] then
-                if people[tonumber(msg)].rebirth then
+                if people[tonumber(msg)].rebirth and people[ii].alive then
                     SendChatMessage(
                         '{triangle} ' .. people[tonumber(msg)].name ..
                             ' combat res ' .. UnitName('target') ..
@@ -169,14 +172,16 @@ local function handleCommand(msg)
                 end
             end
         end
+        --
         for ii = 1, #people do
-            if people[ii].rebirth then
+            if people[ii].rebirth and people[ii].alive then
                 SendChatMessage('{triangle} ' .. people[ii].name ..
                                     ' combat res ' .. UnitName('target') ..
                                     ' {triangle}', "raid_warning", nil, nil)
                 break
             end
         end
+        --
     else
         if msg == '' then
             if isFrameVisible then
@@ -236,11 +241,9 @@ local function startCooldown(srcName, spellID, spellName)
     getIndicator()
 end
 
-local function removeBear(srcName) 
-    for ii=1, #people do
-        if srcName == people[ii].name then
-            table.remove(people,ii)
-        end
+local function removeBear(srcName)
+    for ii = 1, #people do
+        if srcName == people[ii].name then table.remove(people, ii) end
     end
     getIndicator()
 end
@@ -270,18 +273,31 @@ function module:Initialize()
 end
 
 -- ==== Event Handlers
-function module:COMBAT_LOG_EVENT(event, _, eventType, _, srcName, _, _, dstName,
-                                 _, spellId, spellName, _, ...) -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
+function module:COMBAT_LOG_EVENT(event, _, eventType, _, srcName, isDead, _,
+                                 dstName, _, spellId, spellName, _, ...) -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
     -- :: Print event names
     -- SELECTED_CHAT_FRAME:AddMessage(
-    --     event .. ' ' .. eventType .. ' ' .. "srcName" .. ' ' .. spellId .. " " ..
-    --         spellName)
+    --     event .. ' | ' .. eventType .. ' | ' .. isDead .. ' | ' .. dstName)
     -- :: Raidde degilse rebirth listesini sifirliyor
     -- if not UnitInRaid('player') then people = {} getIndicator() return end
-
+    -- :: Dead
+    if eventType == "UNIT_DIED" then
+        for ii = 1, #people do 
+            if dstName == people[ii].name then 
+                people[ii].alive = false
+                getIndicator()
+                break
+            end 
+        end
+    end
     -- :: Rebirth cast edilmis ise
     if spellName == "Rebirth" and eventType == "SPELL_RESURRECT" then -- 48477(rebirth)
-        -- print(spellId)
+        for ii = 1, #people do 
+            if dstName == people[ii].name then 
+                people[ii].alive = true
+                break
+            end 
+        end
         startCooldown(srcName, spellId, spellName)
     end
     -- :: remove bear when you see mangle spell

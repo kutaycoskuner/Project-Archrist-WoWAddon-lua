@@ -90,14 +90,15 @@ Arch_tactics = {
         },
         --:: Onyxia
         ["onyxia"] = {
-            "! Avoid tail and head classical dragon",
-            "! Avoid cracks",
-            "! 3 tank east west adds",
-            "ON p2 leave path of the boss",
-            "all ranged on boss all mdps adds",
-            "big ads ccleave and prio",
-            "65 p2 40 p3",
-            "max melee",
+            "1- [Melee] Stay in max range",
+            "2- Avoid tail and head hit from side",
+            "3- Avoid cracks",
+            "4- All ranged on boss All mdps on adds",
+            "5- Mdps interrupt big adds big ads ccleave and prio",
+            "6- Phase 2 starts at 65% Heroism should be just just before",
+            "7- [Tanks] 3 tank east west adds",
+            "! ON p2 leave path of the boss",
+            "! 65 p2 40 p3",
         },
         --:: ICC
         --:: RS
