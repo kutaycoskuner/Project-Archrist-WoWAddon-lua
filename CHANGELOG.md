@@ -2,6 +2,7 @@
 `Started 29-Jul-2020`
 
 [0.9.6]
+17-Aug-2020 Discord, strings seperated to settings
 16-Aug-2020 CRIndicator, partial dead tracking mechanism
 05-Aug-2020 Added PlayerDB, raidwise reputation
 Rework CRIndicator, set database for spells instead of data function

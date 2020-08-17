@@ -6,4 +6,5 @@
     <Script file="tactics.lua"/>
     <Script file="spells.lua"/>
     <Script file="classColors.lua"/>
+    <Script file="raidAlerts.lua"/>
 </Ui>
