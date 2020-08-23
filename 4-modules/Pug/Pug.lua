@@ -8,26 +8,34 @@ local module = A:GetModule(moduleName);
 -- ==== Variables
 local channelKey -- channel key is for giving number of announcechannel
 
-local announce = "LFM VoA Spec Run: Need "
-local roles = {["Tank"] = "", ["Heal"] = "", ["MDPS"] = "", ["RDPS"] = ""}
-
-local tank = ""
-local heal = ""
-local mdps = ""
-local rdps = ""
-local count = " " .. tostring(GetNumRaidMembers()) .. "/18"
-
 -- -- ==== GUI
 -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
 
 -- ==== Methods
 local function handleCommand(msg)
-    -- local raid = return_diverseRaid()
-    Arch_setGUI('pugRaid')
+    if msg == "1" then
+        Arch_gui_pugRaid_announce()
+    else
+        Arch_setGUI('pugRaid')
+    end
 end
 
 -- ==== Start
 function module:Initialize()
+    if not A.global.pugRaid then
+        A.global.pugRaid = {
+            ["raidType"] = {},
+            ["raidText"] = "",
+            ["needData"] = {
+                {['Tank'] = false}, {['Heal'] = false}, {['MDPS'] = false},
+                {['RDPS'] = false}
+            },
+            ["additionalNote"] = "",
+            ["delimeter"] = " - ",
+            ["showCounter"] = false,
+            ["channelKey"] = {}
+        }
+    end
     self.initialized = true
     -- :: Database Connection
     -- :: Register some events

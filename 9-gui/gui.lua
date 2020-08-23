@@ -26,35 +26,7 @@ local pugRaidType
 local pugShowCounter = false
 --
 
-local diverseRaid = {
-    {["Tank"] = {["Tank I"] = false, ["Tank II"] = false}}, {
-        ["Heal"] = {
-            ["Paladin"] = false,
-            ["Druid"] = false,
-            ["Priest"] = false,
-            ["Shaman"] = false
-
-        }
-    }, {
-        ["MDPS"] = {
-            ["Warrior"] = false,
-            ["Paladin"] = false,
-            ["Death Knight"] = false,
-            ["Rogue"] = false,
-            ["Enhancement"] = false,
-            ["Feral"] = false
-        }
-    }, {
-        ["RDPS"] = {
-            ["Mage"] = false,
-            ["Warlock"] = false,
-            ["Hunter"] = false,
-            ["Elemental"] = false,
-            ["Balance"] = false,
-            ["Shadow"] = false
-        }
-    }
-}
+local diverseRaid
 -- :: PuGRaid Variables
 local raidText, need, counter, notes
 local structure = {
@@ -164,124 +136,124 @@ local function setGameTooltip(widget)
     -- print(frame)
 end
 
-local function LootDatabaseGUI()
-    frame:SetWidth(280)
-    frame:ClearAllPoints()
-    if A.global.lootFrame == {} then
-        frame:SetPoint("CENTER", 0, 0)
-    else
-        frame:SetPoint(lootFramePos[1], lootFramePos[3], lootFramePos[4])
-    end
-    local heading = AceGUI:Create('Heading')
-    heading:SetText('Loot Database')
-    heading:SetRelativeWidth(1)
-    frame:ReleaseChildren()
-    frame:AddChild(heading)
-    -- 
-    if #currentLootList > 0 then
-        for ii = 1, #currentLootList do
-            local unit = AceGUI:Create("SimpleGroup")
-            unit:SetFullWidth(true)
-            unit:SetLayout('Flow')
-            frame:AddChild(unit)
-            --
-            local add = AceGUI:Create("Label")
-            add:SetText(focus(currentLootList[ii][1]) .. ' acquired total ' ..
-                            focus(currentLootList[ii][2]) ..
-                            ' items in guild\n\n')
-            add:SetWidth(200)
-            unit:AddChild(add)
+-- local function LootDatabaseGUI()
+--     frame:SetWidth(280)
+--     frame:ClearAllPoints()
+--     if A.global.lootFrame == {} then
+--         frame:SetPoint("CENTER", 0, 0)
+--     else
+--         frame:SetPoint(lootFramePos[1], lootFramePos[3], lootFramePos[4])
+--     end
+--     local heading = AceGUI:Create('Heading')
+--     heading:SetText('Loot Database')
+--     heading:SetRelativeWidth(1)
+--     frame:ReleaseChildren()
+--     frame:AddChild(heading)
+--     -- 
+--     if #currentLootList > 0 then
+--         for ii = 1, #currentLootList do
+--             local unit = AceGUI:Create("SimpleGroup")
+--             unit:SetFullWidth(true)
+--             unit:SetLayout('Flow')
+--             frame:AddChild(unit)
+--             --
+--             local add = AceGUI:Create("Label")
+--             add:SetText(focus(currentLootList[ii][1]) .. ' acquired total ' ..
+--                             focus(currentLootList[ii][2]) ..
+--                             ' items in guild\n\n')
+--             add:SetWidth(200)
+--             unit:AddChild(add)
 
-            for yy = 3, 5 do
-                if currentLootList[ii][yy] ~= nil then
-                    local add1 = AceGUI:Create("Label")
-                    add1:SetText(currentLootList[ii][yy][1] or '')
-                    add1:SetWidth(240)
-                    unit:AddChild(add1)
-                    --
-                    if currentLootList[ii][yy][1] then
-                        local removeBtn = AceGUI:Create('Button')
-                        -- removeBtn:SetPoint('RIGHT')
-                        removeBtn:SetWidth(38)
-                        removeBtn:SetHeight(15)
-                        removeBtn:SetText('x')
-                        removeBtn:SetCallback("OnClick", function(widget)
-                            table.remove(
-                                A.loot[realmName][currentLootList[ii][1]],
-                                yy - 2)
-                            currentLootList[ii][yy] = {nil, nil}
-                            for jj = 1, #A.loot[realmName][currentLootList[ii][1]] do
-                                if A.loot[realmName][currentLootList[ii][1]][jj] ~=
-                                    nil then
-                                    local _, link =
-                                        GetItemInfo(
-                                            A.loot[realmName][currentLootList[ii][1]][jj][3])
-                                    currentLootList[ii][jj + 2] =
-                                        {
-                                            A.loot[realmName][currentLootList[ii][1]][jj][1],
-                                            link
-                                        }
-                                end
-                                if jj == 3 then
-                                    break
-                                end
-                            end
-                            if #A.loot[realmName][currentLootList[ii][1]] < 3 then
-                                for kk = 3, #A.loot[realmName][currentLootList[ii][1]] +
-                                    1, -1 do
-                                    currentLootList[ii][kk + 2] = nil
-                                end
-                            end
-                            if #A.loot[realmName][currentLootList[ii][1]] == nil then
-                                currentLootList[ii] = nil
-                            end
-                            currentLootList[ii][2] =
-                                #A.loot[realmName][currentLootList[ii][1]] or 0
-                            recursive = true
-                            toggleGUI('LootDatabase')
-                        end)
-                        unit:AddChild(removeBtn)
-                    end
-                    --
-                    add = AceGUI:Create("InteractiveLabel")
-                    add:SetText(currentLootList[ii][yy][2])
-                    add:SetWidth(160)
-                    --
-                    add:SetCallback("OnEnter", function(widget)
-                        if string.match(currentLootList[ii][yy][2] or '',
-                                        "item[%-?%d:]+") then
+--             for yy = 3, 5 do
+--                 if currentLootList[ii][yy] ~= nil then
+--                     local add1 = AceGUI:Create("Label")
+--                     add1:SetText(currentLootList[ii][yy][1] or '')
+--                     add1:SetWidth(240)
+--                     unit:AddChild(add1)
+--                     --
+--                     if currentLootList[ii][yy][1] then
+--                         local removeBtn = AceGUI:Create('Button')
+--                         -- removeBtn:SetPoint('RIGHT')
+--                         removeBtn:SetWidth(38)
+--                         removeBtn:SetHeight(15)
+--                         removeBtn:SetText('x')
+--                         removeBtn:SetCallback("OnClick", function(widget)
+--                             table.remove(
+--                                 A.loot[realmName][currentLootList[ii][1]],
+--                                 yy - 2)
+--                             currentLootList[ii][yy] = {nil, nil}
+--                             for jj = 1, #A.loot[realmName][currentLootList[ii][1]] do
+--                                 if A.loot[realmName][currentLootList[ii][1]][jj] ~=
+--                                     nil then
+--                                     local _, link =
+--                                         GetItemInfo(
+--                                             A.loot[realmName][currentLootList[ii][1]][jj][3])
+--                                     currentLootList[ii][jj + 2] =
+--                                         {
+--                                             A.loot[realmName][currentLootList[ii][1]][jj][1],
+--                                             link
+--                                         }
+--                                 end
+--                                 if jj == 3 then
+--                                     break
+--                                 end
+--                             end
+--                             if #A.loot[realmName][currentLootList[ii][1]] < 3 then
+--                                 for kk = 3, #A.loot[realmName][currentLootList[ii][1]] +
+--                                     1, -1 do
+--                                     currentLootList[ii][kk + 2] = nil
+--                                 end
+--                             end
+--                             if #A.loot[realmName][currentLootList[ii][1]] == nil then
+--                                 currentLootList[ii] = nil
+--                             end
+--                             currentLootList[ii][2] =
+--                                 #A.loot[realmName][currentLootList[ii][1]] or 0
+--                             recursive = true
+--                             toggleGUI('LootDatabase')
+--                         end)
+--                         unit:AddChild(removeBtn)
+--                     end
+--                     --
+--                     add = AceGUI:Create("InteractiveLabel")
+--                     add:SetText(currentLootList[ii][yy][2])
+--                     add:SetWidth(160)
+--                     --
+--                     add:SetCallback("OnEnter", function(widget)
+--                         if string.match(currentLootList[ii][yy][2] or '',
+--                                         "item[%-?%d:]+") then
 
-                            -- >>
-                            -- hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
-                            --     tooltip:SetOwner(parent, "ANCHOR_CURSOR")
-                            --     setPoint(tooltip)
-                            --     tooltip.default = 1
-                            -- end)
-                            GameTooltip_SetDefaultAnchor(GameTooltip, UIParent)
-                            GameTooltip:ClearAllPoints();
-                            setPoint(GameTooltip)
-                            GameTooltip:ClearLines()
-                            -- >>
-                            GameTooltip:SetHyperlink(
-                                string.match(currentLootList[ii][yy][2],
-                                             "item[%-?%d:]+"))
-                            GameTooltip:Show()
-                        end
-                    end)
-                    --
-                    add:SetCallback("OnLeave",
-                                    function(self)
-                        GameTooltip:Hide()
-                    end)
-                    unit:AddChild(add)
-                    --
-                end
-            end
-        end
-        -- :: Set Variable for cache
+--                             -- >>
+--                             -- hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
+--                             --     tooltip:SetOwner(parent, "ANCHOR_CURSOR")
+--                             --     setPoint(tooltip)
+--                             --     tooltip.default = 1
+--                             -- end)
+--                             GameTooltip_SetDefaultAnchor(GameTooltip, UIParent)
+--                             GameTooltip:ClearAllPoints();
+--                             setPoint(GameTooltip)
+--                             GameTooltip:ClearLines()
+--                             -- >>
+--                             GameTooltip:SetHyperlink(
+--                                 string.match(currentLootList[ii][yy][2],
+--                                              "item[%-?%d:]+"))
+--                             GameTooltip:Show()
+--                         end
+--                     end)
+--                     --
+--                     add:SetCallback("OnLeave",
+--                                     function(self)
+--                         GameTooltip:Hide()
+--                     end)
+--                     unit:AddChild(add)
+--                     --
+--                 end
+--             end
+--         end
+--         -- :: Set Variable for cache
 
-    end
-end
+--     end
+-- end
 
 local function diverseRaidGUI()
     frame:SetWidth(280)
@@ -311,11 +283,13 @@ local function diverseRaidGUI()
             group:AddChild(groupName)
             for subkey in pairs(diverseRaid[ii][key]) do
                 local specTick = AceGUI:Create("CheckBox")
-                specTick:SetValue(diverseRaid[ii][key][subkey])
+                specTick:SetValue(A.global.voaRaid[ii][key][subkey])
                 specTick:SetLabel(subkey)
                 specTick:SetCallback("OnValueChanged", function(self, value)
-                    diverseRaid[ii][key][subkey] =
-                        not diverseRaid[ii][key][subkey]
+                    -- diverseRaid[ii][key][subkey] =
+                    --     not diverseRaid[ii][key][subkey]
+                    A.global.voaRaid[ii][key][subkey] =
+                        not A.global.voaRaid[ii][key][subkey]
                     -- print(diverseRaid[ii][key][subkey])
                 end)
                 group:AddChild(specTick)
@@ -352,37 +326,50 @@ end
 
 local function pugRaid_textChange(isAnnouncement)
     -- :: RaidText
-    local lastRaidText = raidText
+    local lastRaidText = (raidText or "  ")
     local lastNeed = need
     local lastNotes = notes
     local lastCounter = counter
     if (need ~= "" or notes ~= "" or counter ~= "") and
         string.sub(lastRaidText, -1) ~= " " then
         lastRaidText = raidText .. pugDelimeter
+        -- print(string.sub(lastRaidText, -5,-5))
+        if string.sub(lastRaidText, -5, -5) == "}" then
+            lastRaidText = raidText .. " "
+        end
     end
     -- :: Need
-    if (notes ~= "" or (pugShowCounter)) and string.sub(lastNeed, -1) ~= " " then
-        lastNeed = need .. pugDelimeter
-    end
-    counter = tostring(GetNumRaidMembers()) .. '/' .. pugRaidType
-    if notes ~= "" and string.sub(counter, -1) ~= " " then
-        lastCounter =  counter .. pugDelimeter
+    if (notes ~= "" or (pugShowCounter)) and string.sub(lastNeed or " ", -1) ~=
+        " " then lastNeed = need .. pugDelimeter end
+    counter = tostring((GetNumRaidMembers() or 0)) .. '/' ..
+                  tostring(pugRaidType)
+    if notes ~= "" and string.sub(counter or " ", -1) ~= " " then
+        lastCounter = counter .. pugDelimeter
     end
     --
     if pugShowCounter then
         if isAnnouncement and announceChannel and announceChannel ~= "" then
-            SendChatMessage(lastRaidText .. lastNeed .. lastCounter .. lastNotes,
-                            "channel", nil, announceChannel)
+            SendChatMessage(
+                lastRaidText .. lastNeed .. lastCounter .. lastNotes, "channel",
+                nil, announceChannel)
+            SELECTED_CHAT_FRAME:AddMessage(focus("Announcing: ") ..
+                lastRaidText .. (lastNeed or "") ..
+                    (tostring(lastCounter) or "") .. lastNotes)
         else
             SELECTED_CHAT_FRAME:AddMessage(
-                lastRaidText .. lastNeed .. lastCounter .. lastNotes)
+                lastRaidText .. (lastNeed or "") ..
+                    (tostring(lastCounter) or "") .. lastNotes)
         end
     else
         if isAnnouncement and announceChannel and announceChannel ~= "" then
             SendChatMessage(lastRaidText .. lastNeed .. lastNotes, "channel",
                             nil, announceChannel)
+            SELECTED_CHAT_FRAME:AddMessage(focus("Announcing: ") ..
+                lastRaidText .. (lastNeed or "") ..
+                    (tostring(lastCounter) or "") .. lastNotes)
         else
-            SELECTED_CHAT_FRAME:AddMessage(lastRaidText .. lastNeed .. lastNotes)
+            SELECTED_CHAT_FRAME:AddMessage(
+                lastRaidText .. (lastNeed or "") .. lastNotes)
         end
     end
 end
@@ -419,6 +406,12 @@ local function pugRaid_calcNeed()
     end
 end
 
+function Arch_gui_pugRaid_announce()
+    notes = notes or ""
+    pugRaid_calcNeed()
+    pugRaid_textChange(true)
+end
+
 local function pugRaidGUI()
     frame:SetWidth(280)
     frame:SetHeight(576)
@@ -433,35 +426,40 @@ local function pugRaidGUI()
     heading:SetRelativeWidth(1)
     frame:ReleaseChildren()
     frame:AddChild(heading)
-    -- :: Main Raid Note [required]
+    -- -- :: Main Raid Note [required]
     local raidType = AceGUI:Create('Dropdown')
     local rt = {["10"] = 10, ["25"] = 25, ["40"] = 40}
     raidType:SetList(rt)
-    raidType:SetText('Raid Type')
+    raidType:SetValue(A.global.pugRaid.raidType)
+    -- raidType:SetText('Raid Type')
     raidType:SetFullWidth(true)
     raidType:SetHeight(40)
-    raidType:SetLabel('Raid Type')
-    raidType:SetCallback("OnValueChanged",
-                         function(widget, event, text) pugRaidType = text end)
+    -- raidType:SetLabel('Raid Type')
+    raidType:SetCallback("OnValueChanged", function(widget, event, text)
+        pugRaidType = text
+        A.global.pugRaid.raidType = pugRaidType
+    end)
     frame:AddChild(raidType)
-    -- :: Main Raid Note [required]
+    -- -- :: Main Raid Note [required]
     local raidName = AceGUI:Create('EditBox')
     raidName:SetLabel('Main Raid Text')
     raidName:SetText(raidText or 'Set your main announce here')
     raidName:SetFullWidth(true)
     raidName:SetCallback("OnEnterPressed", function(widget, event, text)
         raidText = text
+        A.global.pugRaid.raidText = raidText
         pugRaid_VariableTest()
         pugRaid_textChange(false)
     end)
     frame:AddChild(raidName)
-    -- LFM EoE 25 - Need All | x/18 | no more balance please
-    -- [Raid Text] | [Need] | [Counter] | [Notes]
-    -- :: Needed Roles [required]
+    -- -- LFM EoE 25 - Need All | x/18 | no more balance please
+    -- -- [Raid Text] | [Need] | [Counter] | [Notes]
+    -- -- :: Needed Roles [required]
     for ii = 1, #structure do
         for key in pairs(structure[ii]) do
             local roleBox = AceGUI:Create('CheckBox')
             roleBox:SetLabel(key)
+            roleBox:SetValue(structure[ii][key])
             roleBox:SetCallback("OnValueChanged", function(self, value)
                 if structure[ii][key] ~= false then
                     structure[ii][key] = false
@@ -469,6 +467,7 @@ local function pugRaidGUI()
                     structure[ii][key] = true
                 end
                 pugRaid_calcNeed()
+                -- :: Check if all needed
                 local all = true
                 for ii = 1, #structure do
                     for key in pairs(structure[ii]) do
@@ -480,47 +479,66 @@ local function pugRaidGUI()
                 end
                 if all then need = 'Need All' end
                 pugRaid_textChange(false)
+                -- A.global.pugRaid.needData = structure
             end)
             frame:AddChild(roleBox)
             --
             local roleData = AceGUI:Create('EditBox')
-            roleData:SetText(structure[ii][key] or '')
+            if type(structure[ii][key]) == 'string' then
+                roleData:SetText(structure[ii][key] or '')
+            else
+                roleData:SetText('')
+            end
             roleData:SetFullWidth(true)
             roleData:SetCallback("OnEnterPressed", function(widget, event, text)
-                structure[ii][key] = tostring(key) .. ": " .. text
+                if text ~= '' then
+                    structure[ii][key] = tostring(key) .. ": " .. text
+                else
+                    structure[ii][key] = false
+                    roleBox:SetValue(structure[ii][key])
+                end
                 pugRaid_VariableTest()
                 pugRaid_calcNeed()
                 pugRaid_textChange(false)
+                -- A.global.pugRaid.needData = structure
             end)
             frame:AddChild(roleData)
         end
     end
-    -- :: Additional Notes
+    -- -- :: Additional Notes
     local additional = AceGUI:Create('EditBox')
     additional:SetLabel('Additional Notes')
-    additional:SetText(notes or 'Set additional notes here')
+    -- print(type(notes))
+    if type(notes) == 'string' then additional:SetText(notes) end
+    -- additional:SetText(notes)
     additional:SetFullWidth(true)
     additional:SetCallback("OnEnterPressed", function(widget, event, text)
         pugRaid_VariableTest()
-        if text and text ~= "" then notes = text end
+        if text then
+            notes = text
+            A.global.pugRaid.additionalNote = notes
+        end
         pugRaid_textChange(false)
     end)
     frame:AddChild(additional)
-    -- :: Delimeter key
+    -- -- :: Delimeter key
     local delimeter = AceGUI:Create('EditBox')
     delimeter:SetLabel('Raid Delimeter')
     delimeter:SetText(pugDelimeter or 'Set delimeter here')
     delimeter:SetFullWidth(true)
     delimeter:SetCallback("OnEnterPressed", function(widget, event, text)
         pugDelimeter = " " .. text .. " "
+        A.global.pugRaid.delimeter = pugDelimeter
         pugRaid_textChange(false)
     end)
     frame:AddChild(delimeter)
     -- :: Show Counter?
     local showCounter = AceGUI:Create('CheckBox')
     showCounter:SetLabel('Show people in raid')
+    showCounter:SetValue(A.global.pugRaid.showCounter)
     showCounter:SetCallback("OnValueChanged", function(self, value)
         pugShowCounter = not pugShowCounter
+        A.global.pugRaid.showCounter = pugShowCounter
     end)
     frame:AddChild(showCounter)
     -- :: Announce Channel key
@@ -529,6 +547,7 @@ local function pugRaidGUI()
     channel:SetFullWidth(true)
     channel:SetCallback("OnEnterPressed", function(widget, event, text)
         announceChannel = text
+        A.global.pugRaid.channelKey = announceChannel
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert ..
                                            "Announce Channel is now: " ..
                                            announceChannel)
@@ -539,9 +558,7 @@ local function pugRaidGUI()
     annButton:SetText('Announce')
     annButton:SetFullWidth(true)
     annButton:SetCallback("OnClick", function(widget, event, text)
-        notes = notes or ""
-        pugRaid_calcNeed()
-        pugRaid_textChange(true)
+        Arch_gui_pugRaid_announce()
     end)
     frame:AddChild(annButton)
 end
@@ -640,11 +657,20 @@ function module:Initialize()
         A.global.lootFrame = {"CENTER", "CENTER", 0, 0}
     end
     lootFramePos = A.global.lootFrame
+    diverseRaid = A.global.voaRaid
     --
     if not A.global.voaFrame then
         A.global.voaFrame = {"CENTER", "CENTER", 0, 0}
     end
     voaFramePos = A.global.voaFrame
+    -- :: Pug
+    -- !! testtest
+    raidText = A.global.pugRaid.raidText
+    pugRaidType = A.global.pugRaid.raidType
+    structure = A.global.pugRaid.needData
+    pugShowCounter = A.global.pugRaid.showCounter
+    pugDelimeter = A.global.pugRaid.delimeter
+    notes = A.global.pugRaid.additionalNote
     self:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
     self:RegisterEvent("CHAT_MSG_RAID_WARNING")
     -- "MAIL_INBOX_UPDATE"
@@ -676,22 +702,6 @@ end
 -- ==== Callback & Register [last arg]
 local function InitializeCallback() module:Initialize() end
 A:RegisterModule(module:GetName(), InitializeCallback)
-
--- Fill Layout - the TabGroup widget will fill the whole frame
--- frame:SetLayout("Fill")
-
--- local editbox = AceGUI:Create("EditBox")
--- editbox:SetLabel("Insert text:")
--- editbox:SetWidth(200)
--- editbox:SetCallback("OnEnterPressed",
---                     function(widget, event, text) textStore = text end)
--- frame:AddChild(editbox)
-
--- local button = AceGUI:Create("Button")
--- button:SetText("Click Me!")
--- button:SetWidth(200)
--- button:SetCallback("OnClick", function() print(textStore) end)
--- frame:AddChild(button)
 
 -- :: function that draws the widgets for the first tab
 local function DrawGroup1(container)
@@ -728,17 +738,3 @@ local function SelectGroup(container, event, group)
         DrawGroup2(container)
     end
 end
-
-----
-
--- local tab = AceGUI:Create("TabGroup")
--- tab:SetLayout("Flow")
--- -- Setup which tabs to show
--- tab:SetTabs({{text = "Tab 1", value = "tab1"}, {text = "Tab 2", value = "tab2"}})
--- -- Register callback
--- tab:SetCallback("OnGroupSelected", SelectGroup)
--- -- Set initial Tab (this will fire the OnGroupSelected callback)
--- tab:SelectTab("tab1")
-
--- -- add to the frame container
--- frame:AddChild(tab)

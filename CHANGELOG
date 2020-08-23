@@ -1,6 +1,9 @@
 # ChangeLog 
 `Started 29-Jul-2020`
 
+[0.9.7]
+23-Aug-2200 PuG, save values on database
+23-Aug-2020 VoA, reset, save values on database
 [0.9.6]
 23-Aug-2020 Tactics, string presentation fix
 22-Aug-2020 Discord, added vc commands

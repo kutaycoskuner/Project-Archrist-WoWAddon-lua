@@ -36,7 +36,7 @@ local diverseRaid = {
         }
     }
 }
-local announce = "LFM VoA18 [Koralon&Emalon] Need "
+local announce = "{triangle} LFM VoA18 [Koralon&Emalon] {triangle} Need "
 local roles = {["Tank"] = "", ["Heal"] = "", ["MDPS"] = "", ["RDPS"] = ""}
 
 local tank = ""
@@ -49,8 +49,19 @@ local count = " " .. tostring(GetNumRaidMembers()) .. "/18"
 -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
 
 -- ==== Methods
-function VoA_announce(inner)
+function VoA_announce(inner, msg)
     -- local raid = return_diverseRaid()
+    -- :: reset if msg is reset
+    if msg == "reset" then
+        for ii = 1, #A.global.voaRaid do
+            for key in pairs(A.global.voaRaid[ii]) do
+                for subkey in pairs(A.global.voaRaid[ii][key]) do
+                    A.global.voaRaid[ii][key][subkey] = false
+                end
+            end
+        end
+    end
+    -- :: do stuff
     if inner then Arch_setGUI('DiverseRaid', true) end
     for ii = 1, #diverseRaid do
         for key in pairs(diverseRaid[ii]) do
@@ -109,6 +120,37 @@ end
 
 -- ==== Start
 function module:Initialize()
+    if not A.global.voaRaid then
+        A.global.voaRaid = {
+            {["Tank"] = {["Tank I"] = false, ["Tank II"] = false}}, {
+                ["Heal"] = {
+                    ["Paladin"] = false,
+                    ["Druid"] = false,
+                    ["Priest"] = false,
+                    ["Shaman"] = false
+
+                }
+            }, {
+                ["MDPS"] = {
+                    ["Warrior"] = false,
+                    ["Paladin"] = false,
+                    ["Death Knight"] = false,
+                    ["Rogue"] = false,
+                    ["Enhancement"] = false,
+                    ["Feral"] = false
+                }
+            }, {
+                ["RDPS"] = {
+                    ["Mage"] = false,
+                    ["Warlock"] = false,
+                    ["Hunter"] = false,
+                    ["Elemental"] = false,
+                    ["Balance"] = false,
+                    ["Shadow"] = false
+                }
+            }
+        }
+    end
     self.initialized = true
     -- :: Database Connection
     -- :: Register some events
@@ -124,7 +166,7 @@ end
 
 -- ==== Slash Handlersd
 SLASH_voa1 = "/voa"
-SlashCmdList["voa"] = function(msg) VoA_announce(true) end
+SlashCmdList["voa"] = function(msg) VoA_announce(true, msg) end
 
 -- ==== End
 local function InitializeCallback() module:Initialize() end
