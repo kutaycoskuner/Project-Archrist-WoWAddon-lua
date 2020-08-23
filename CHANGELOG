@@ -2,6 +2,9 @@
 `Started 29-Jul-2020`
 
 [0.9.6]
+23-Aug-2020 Tactics, string presentation fix
+22-Aug-2020 Discord, added vc commands
+20-Aug-2020 LootDB, disabled
 18-Aug-2020 Attendance, manual adding
 17-Aug-2020 Discord, strings seperated to settings
 16-Aug-2020 CRIndicator, partial dead tracking mechanism
