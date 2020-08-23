@@ -365,8 +365,7 @@ local function pugRaid_textChange(isAnnouncement)
             SendChatMessage(lastRaidText .. lastNeed .. lastNotes, "channel",
                             nil, announceChannel)
             SELECTED_CHAT_FRAME:AddMessage(focus("Announcing: ") ..
-                lastRaidText .. (lastNeed or "") ..
-                    (tostring(lastCounter) or "") .. lastNotes)
+                lastRaidText .. (lastNeed or "") .. lastNotes)
         else
             SELECTED_CHAT_FRAME:AddMessage(
                 lastRaidText .. (lastNeed or "") .. lastNotes)
@@ -671,6 +670,8 @@ function module:Initialize()
     pugShowCounter = A.global.pugRaid.showCounter
     pugDelimeter = A.global.pugRaid.delimeter
     notes = A.global.pugRaid.additionalNote
+    announceChannel = A.global.pugRaid.channelKey
+    --
     self:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
     self:RegisterEvent("CHAT_MSG_RAID_WARNING")
     -- "MAIL_INBOX_UPDATE"
