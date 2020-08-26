@@ -34,7 +34,7 @@ local function handleShield(msg)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Your current shield is ' ..
                                        msg)
     shieldButton:SetAttribute("macrotext", --
-    "/equip " .. shield)
+    "/equipslot 17 " .. shield)
 end
 
 local function handleOnehand(msg)
@@ -46,7 +46,7 @@ local function handleOnehand(msg)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Your current onehand is ' ..
                                        msg)
     onehandButton:SetAttribute("macrotext", --
-    "/equip " .. onehand)
+    "/equipslot 16 " .. onehand)
 end
 
 local function handleTwohand(msg)
@@ -58,7 +58,7 @@ local function handleTwohand(msg)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Your current twohand is ' ..
                                        msg)
     twohandButton:SetAttribute("macrotext", --
-    "/equip " .. twohand)
+    "/equipslot 16 " .. twohand)
 end
 
 local function handleOffhand(msg)
@@ -70,7 +70,7 @@ local function handleOffhand(msg)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Your current offhand is ' ..
                                        msg)
     offhandButton:SetAttribute("macrotext", --
-    "/equip " .. offhand)
+    "/equipslot 17 " .. offhand)
 end
 
 -- ==== Start

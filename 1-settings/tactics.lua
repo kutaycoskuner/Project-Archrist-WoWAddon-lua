@@ -123,16 +123,18 @@ Arch_tactics = {
     ["beasts"] = {
         '1- Do not stand in fire',
         '2- If you got Snobold in your head get in melee range',
-        '3- DPS hardswitch on Snobold as soon as it in melee range',
+        '3- DPS hardswitch on Snobold if its on RDPS or Heal as soon as it in melee range',
         '4- [Shaman] Hero at worms [H] / Hero at first charge of Icehowl  [N]',
         '5- RDPS and Heal stay 20yard away from boss to be not silenced',
-        "= focus marked snobold", "= RDPS and Heals stack on stations"
+        "! Assign tanks for worms",
+        "=1 focus marked snobold", 
+        "=2 RDPS and Heals stack on stations"
     },
     ["jarraxus"] = {
         '1- [Interrupter] Interrupt Jarraxus\'s cast',
         '2- Hardswitch on adds as soon as they spawn',
         '3- [Mage] Steal Nether Power buff from Jarraxus with haste',
-        '! set interrupter', '! say hero at volcano, burst cd at gate'
+        '! set interrupter', '! say hero at volcano, burst cd at gate',
     },
     ["faction"] = {
         '! 1- [Warlock] Banish/Fear Druid Healer',
@@ -144,7 +146,8 @@ Arch_tactics = {
         '1- Everyone get dark except soakers and off tank',
         '2- Switch to dark/white when ability cast requires opposite color',
         '3- After ability change your color to dark again and attack to White Valkyr',
-        '4- Hero after first ability', "! set soakers"
+        '4- Hero after first ability', 
+        "! set soakers",
     },
     ["anub"] = {
         '1- [Hunter] Plant ice platforms N, SW, SE',

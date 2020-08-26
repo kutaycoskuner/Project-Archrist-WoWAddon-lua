@@ -13,8 +13,8 @@ Arch_raidAlerts = {
         ["guild"] = "If you like to be informed about further runs or join guild https://discord.gg/PGAZuj7 ",
     },
     ["vc"] = {
-        ["voluntary"] = "Voice Comms is not mandatory but easing stuff to join: https://discord.gg/PGAZuj7",
-        ["mandatory"] = "Please join: https://discord.gg/PGAZuj7",
+        ["voluntary"] = "Voice Comms is not mandatory but easing stuff to join: https://discord.gg/wQTEexv",
+        ["mandatory"] = "Please join: https://discord.gg/wQTEexv",
     },
     ["lootrules"] = {
         ["loot"] = "Loot Rules: Armor Prio & MS > OS ",

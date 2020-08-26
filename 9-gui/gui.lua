@@ -470,7 +470,7 @@ local function pugRaidGUI()
                 local all = true
                 for ii = 1, #structure do
                     for key in pairs(structure[ii]) do
-                        if not structure[ii][key] then
+                        if structure[ii][key] == false then
                             all = false
                             break
                         end
