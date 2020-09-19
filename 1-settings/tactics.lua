@@ -116,8 +116,20 @@ Arch_tactics = {
         "=3 KILL ASSAULT BOT",
         "=4 KILL ALL PIECES SAME TIME",
     },
-    -- ["vezax"] = {},
-    -- ["yogg"] = {},
+    ["vezax"] = {
+        '',
+        '',
+        '',
+    },
+    ["yogg"] = {
+        "1- P1 Pixel stack on first phase under sara",
+        "Do not ",
+        "2- P2 Stop on big tentacles when asked for it",
+        "2- P2 Kill constrictor tentacles fast",
+        "3- P2 Check your sanity if its low get under green light",
+        "4- P2 On brain phase marked groups will take portals to fight with brain",
+        "=4 Get close to portals",
+    },
     -- ["algalon"] = {},
     -- :: ToGC
     ["beasts"] = {
@@ -131,10 +143,11 @@ Arch_tactics = {
         "=2 RDPS and Heals stack on stations"
     },
     ["jarraxus"] = {
-        '1- [Interrupter] Interrupt Jarraxus\'s cast',
+        '1- [Interrupter] Interrupt Jarraxus cast',
         '2- Hardswitch on adds as soon as they spawn',
         '3- [Mage] Steal Nether Power buff from Jarraxus with haste',
-        '! set interrupter', '! say hero at volcano, burst cd at gate',
+        '! set interrupter', 
+        '! say hero at volcano, burst cd at gate',
     },
     ["faction"] = {
         '! 1- [Warlock] Banish/Fear Druid Healer',
@@ -154,7 +167,11 @@ Arch_tactics = {
         '2- Use Holy wrath by order on add casts',
         '3- [Paladin] Use HoP on Phase 2 with given order',
         '4- Platforms will be used as ordered N, SW, SE',
-        '5- Hero at start at Phase 3'
+        '5- Hero at start at Phase 3',
+        '=1 Platforms',
+        "=2 kill bugs first",
+        "=3 {circle} Hero Now {circle}",
+        "=4 ",
     },
     -- :: Onyxia
     ["onyxia"] = {
@@ -168,7 +185,7 @@ Arch_tactics = {
     },
     -- :: ICC
     ["marrowgar"] = {
-
+        
     },
     ["lady"] = {
 

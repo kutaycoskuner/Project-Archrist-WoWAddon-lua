@@ -63,6 +63,12 @@ end
 function Arch_callTactics()
     local warning = 1
     -- if bossName == "" or bossName == nil then bossName = "genel" end
+    -- :: Defensive: Eger o isimde bir taktik yoksa
+    if not tacticsDatabase[bossName] then
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "given boss not found")
+        return
+    end
+    -- 
     for ii = 1, (#tacticsDatabase[bossName] or 0) do
         if (tactics[ii] ~= '') then
             if string.sub(tactics[ii], 1, 1) == "!" then
@@ -102,6 +108,11 @@ local function selectBoss(boss)
         -- :: komut varsa
         if (command ~= nil) then command = string.lower(command); end
         bossName = command
+        -- :: Eger o isimde bir taktik yoksa
+        if not tacticsDatabase[bossName] then
+            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "given boss not found")
+            return
+        end
         -- :: Dungeons
         if (tacticsDatabase[command]) then
             for ii = 1, #tacticsDatabase[command] do
