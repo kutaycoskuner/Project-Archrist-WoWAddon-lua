@@ -36,7 +36,7 @@ local diverseRaid = {
         }
     }
 }
-local announce = "{triangle} LFM VoA18 [Koralon&Emalon] {triangle} Need "
+local announce = "{triangle} LFM VoA18 [Koralon & Toravon] {triangle} Need "
 local roles = {["Tank"] = "", ["Heal"] = "", ["MDPS"] = "", ["RDPS"] = ""}
 
 local tank = ""
