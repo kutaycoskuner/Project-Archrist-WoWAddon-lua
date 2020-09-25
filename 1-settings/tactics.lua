@@ -140,7 +140,7 @@ Arch_tactics = {
         '5- RDPS and Heal stay 20yard away from boss to be not silenced',
         "! Assign tanks for worms",
         "=1 focus marked snobold", 
-        "=2 RDPS and Heals stack on stations"
+        "=2 RDPS and Heals stack on stations",
     },
     ["jarraxus"] = {
         '1- [Interrupter] Interrupt Jarraxus cast',
@@ -185,12 +185,16 @@ Arch_tactics = {
     },
     -- :: ICC
     ["marrowgar"] = {
-        
+        "1- Do not stand on fire",
+        "2- Kill the bone spikes in priority",
     },
     ["lady"] = {
-
+        "1- P1: Kill the adds after tanks gather them in the middle",
+        "2- P2: Interrupt frostbolt casts of Deathwhisper",
+        "3- P2: Run away from ghosts before they catch you",
     },
     ["gunship"] = {
+        "! Say everyone to get rocket and equip",
 
     },
     ["saurfang"] = {

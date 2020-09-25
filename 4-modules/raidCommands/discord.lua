@@ -26,10 +26,11 @@ end
 local function announceVoiceCommunication(msg)
     if isEnabled then
         if msg == "" or msg == nil then
-            SendChatMessage(raidAlerts.vc.voluntary, "RAID_WARNING")
-        else
             SendChatMessage(raidAlerts.vc.mandatory, "RAID_WARNING")
+        else
+            SendChatMessage(raidAlerts.vc.voluntary, "RAID_WARNING")
         end
+        SendChatMessage(raidAlerts.vc.nickname, "RAID_WARNING")
     end
 end
 

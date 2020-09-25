@@ -8,7 +8,7 @@ local module = A:GetModule(moduleName);
 -- ==== Variables
 local boss = 'none';
 local comms = '/p ';
-local bossName 
+local bossName
 --
 local tacticDefault = {}
 tacticDefault[1] = "{skull} Focus on [%t] {skull}"
@@ -71,24 +71,32 @@ function Arch_callTactics()
     -- 
     for ii = 1, (#tacticsDatabase[bossName] or 0) do
         if (tactics[ii] ~= '') then
-            if string.sub(tactics[ii], 1, 1) == "!" then
-                -- :: self reminder
-                SELECTED_CHAT_FRAME:AddMessage(
-                    moduleAlert .. string.sub(tactics[ii], 3))
-                -- :: Warning
-            elseif string.sub(tactics[ii], 1, 1) == "=" then
-                SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focus("Warning " .. string.sub(tactics[ii],2,2)) .. string.sub(tactics[ii],3))
-                if type(tonumber(string.sub(tactics[ii],2,2))) == "number" then
-                    Arch_RaidWarnings[tonumber(string.sub(tactics[ii],2,2))] = string.sub(tactics[ii], 4)
-                else
-                    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "Please give 1-4 number after warning prefix")
-                --     Arch_RaidWarnings[warning] = string.sub(tactics[ii], 3)
-                --     if warning ~= 4 then warning = warning + 1 end
-                end
-                -- :: Tacttics
-            else
+            if string.sub(tactics[ii], 1, 1) ~= "!" and
+                string.sub(tactics[ii], 1, 1) ~= "=" then
+                -- :: Alerts
                 SendChatMessage(tactics[ii], "raid", nil, nil)
             end
+        end
+    end
+    --
+    for ii = 1, (#tacticsDatabase[bossName] or 0) do
+        if string.sub(tactics[ii], 1, 1) == "=" then
+            -- :: Warning
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert ..
+                    focus("Warning " .. string.sub(tactics[ii], 2, 2)) ..
+                    string.sub(tactics[ii], 3))
+            if type(tonumber(string.sub(tactics[ii], 2, 2))) == "number" then
+                Arch_RaidWarnings[tonumber(string.sub(tactics[ii], 2, 2))] =
+                    string.sub(tactics[ii], 4)
+            else
+                SELECTED_CHAT_FRAME:AddMessage(
+                    moduleAlert .. "Please give 1-4 number after warning prefix")
+            end
+        elseif string.sub(tactics[ii], 1, 1) == "!" then
+            -- :: Self Reminder
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. string.sub(tactics[ii], 3))
         end
     end
 end

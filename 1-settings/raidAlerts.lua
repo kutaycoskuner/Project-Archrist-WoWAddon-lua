@@ -15,6 +15,7 @@ Arch_raidAlerts = {
     ["vc"] = {
         ["voluntary"] = "Voice Comms is not mandatory but easing stuff to join: https://discord.gg/wQTEexv",
         ["mandatory"] = "Please join: https://discord.gg/wQTEexv",
+        ["nickname"] = "Set your discord nickname same as your character",
     },
     ["lootrules"] = {
         ["loot"] = "Loot Rules: Armor/Stat Prio & MS > OS ",
