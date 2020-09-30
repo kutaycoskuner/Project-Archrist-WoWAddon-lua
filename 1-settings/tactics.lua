@@ -187,27 +187,65 @@ Arch_tactics = {
     ["marrowgar"] = {
         "1- Do not stand on fire",
         "2- Kill the bone spikes in priority",
+        "3- P1: Everyone stack behind boss ",
+        "4- Hero at start",
     },
     ["lady"] = {
         "1- P1: Kill the adds after tanks gather them in the middle",
         "2- P2: Interrupt frostbolt casts of Deathwhisper",
         "3- P2: Run away from ghosts before they catch you",
+        "4- Hero at P2",
     },
     ["gunship"] = {
         "! Say everyone to get rocket and equip",
-
+        "! Select cannoneers",
+        "! Select jumping tank",
+        "1- [Cannoneers] stack energy till 90 with 1 then burst 2",
+        "2- DPS and assigned tank jump countership and kill mage when our cannons frozen",
+        "3- Wait for Tank to jump fist to take aggro and dont enter cleave range",
+        "4- We do not use heroism on this encounter",
     },
     ["saurfang"] = {
-
+        "1- RDPS and Heal /range 12 to avoid blood disease",
+        "2- MDPS & Tanks stop AoE when beasts spawn to avoid aggro",
+        "3- Kill blood beasts on priority when they spawn",
+        "4- Slow down adds if you can Hunter -> trap, Shaman -> totem etc.",
+        "5- Hero at 30%",
     },
     ["festergut"] = {
-
+        "! Remind hero at start",
+        "1- Boss will spawn 2 spores on people, one spore will stay melee station, other will go to range station",
+        "2- People stack with on either mdps or rdps spot to be inaculated",
+        "3- After spore explosion RDPS spread /range 12 to avoid epidemic damage",
+        "4- [Tank] use defensive cooldowns to survive Blight on 3 stack",
+        "5- [Tank switch aggro between 8 stacks of Gastric Bloat",
+        "6- Hero at start",
     },
     ["rotface"] = {
-
+        "! Assign kite and static tank",
+        "! Assign dispeller",
+        "1- Everyone will stack behind boss, if boss turn to you go behind the boss",
+        "2- Boss will be tanked in the middle tank wont move",
+        "3- If you got disease called Mutated infection, you ll go out and wait for dispel",
+        "4- When you got dispelled a small ooze will follow you this cannot be taunted need to be merged with other ooze",
+        "5- If there is Big ooze intersect your path with ooze to merge, otherwise kite it until an ooze spawns",
+        "6- On 5 stacks of ooze, Big Ooze will explode we will run towards perimeter of the room",
+        "7- Hero at start",
+        "=4 {circle} Run toward perimeters {circle}",
     },
     ["professor"] = {
-
+        "! Assign OT for green slug",
+        "1- Boss has 3 Phases will change at 80% and 35% hp",
+        "2- Boss will respectively spawn, Green and Orange ooze, always start with green",
+        "3- All DPS immediately turn to Ooze as they spawn",
+        "4- Both ooze will select a target and run towards them",
+        "5- Green ooze will freeze its target, if its about to collide stack with its target to split damage and avoid deaths",
+        "6- Orange ooze will not freeze its target but if it collides its wipe, target of the Orange needs to be kited while damaged by rest",
+        "7- Offtank will absorb slugs and use it to slow down oozes",
+        "8- P2: he will start to cast Malleable Goo and Gas avoid them",
+        "9- P3: This phase is about dps race, avoid green, goo, tank swap aggro at 4 stacks of Mutated Plague",
+        "10- P3: Group will rotate the room counter-clockwise, RDPS and Heal stay close to mid and avoid Goo",
+        "11- You can use your cds at start of the encounter otherwise save it for P3, Hero at P3",
     },
     ["council"] = {
 

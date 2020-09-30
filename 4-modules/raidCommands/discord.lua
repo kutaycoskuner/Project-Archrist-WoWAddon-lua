@@ -31,6 +31,7 @@ local function announceVoiceCommunication(msg)
             SendChatMessage(raidAlerts.vc.voluntary, "RAID_WARNING")
         end
         SendChatMessage(raidAlerts.vc.nickname, "RAID_WARNING")
+        SendChatMessage(raidAlerts.vc.auth, "RAID_WARNING")
     end
 end
 
