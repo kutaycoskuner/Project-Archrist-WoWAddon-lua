@@ -248,6 +248,7 @@ Arch_tactics = {
         "11- You can use your cds at start of the encounter otherwise save it for P3, Hero at P3",
     },
     ["council"] = {
+        "! Assign MT OT and RT",
 
     },
     ["lanathel"] = {

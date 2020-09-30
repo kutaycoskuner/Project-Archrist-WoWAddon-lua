@@ -457,11 +457,13 @@ local function pugRaidGUI()
     for ii = 1, #structure do
         for key in pairs(structure[ii]) do
             local roleBox = AceGUI:Create('CheckBox')
+            local roleData = AceGUI:Create('EditBox')
             roleBox:SetLabel(key)
             roleBox:SetValue(structure[ii][key])
             roleBox:SetCallback("OnValueChanged", function(self, value)
                 if structure[ii][key] ~= false then
                     structure[ii][key] = false
+                    roleData:SetText('')
                 else
                     structure[ii][key] = true
                 end
@@ -482,7 +484,6 @@ local function pugRaidGUI()
             end)
             frame:AddChild(roleBox)
             --
-            local roleData = AceGUI:Create('EditBox')
             if type(structure[ii][key]) == 'string' then
                 roleData:SetText(structure[ii][key] or '')
             else
