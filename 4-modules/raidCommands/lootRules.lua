@@ -25,7 +25,7 @@ local function announceLootRules(msg)
         SendChatMessage(raidAlerts.lootrules.warning, "RAID_WARNING")
 
         if msg == 'voa' then
-            SendChatMessage(raidAlerts.lootrules.twoboss, "RAID_WARNING")
+            -- SendChatMessage(raidAlerts.lootrules.twoboss, "RAID_WARNING")
         elseif msg == 'toc' then
             SendChatMessage(raidAlerts.lootrules.onetrophy, "RAID_WARNING")
         elseif msg == 'icc' then
