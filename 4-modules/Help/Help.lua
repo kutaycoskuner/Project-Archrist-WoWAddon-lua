@@ -16,9 +16,12 @@ local function handleCommand(msg)
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'please use ' .. Arch_commandColor('/arch help') .. ' command to see modules')
     elseif msg == 'help' then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'These are relatively different functional modules')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('TodoList: ') .. 'helps you to create todo list')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('PlayerDB: ') .. 'player database module for interactions')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('CRIndicator: ') .. 'raid combat res indicator for leading')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('PuG: ') .. 'For creating fast editable PuG announcements')
+        -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('RaidCommands: ') .. 'Work in progress not yet finished')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('TodoList: ') .. 'helps you to create todo list')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('VoA: ') .. 'For creating VoA18 Spec run announcements')
+        -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('CRIndicator: ') .. 'raid combat res indicator for leading')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'please use ' .. Arch_commandColor('/arch <modulename>') .. ' to get detailed information')
     elseif msg == 'todolist' then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('TodoList'))
@@ -37,12 +40,12 @@ local function handleCommand(msg)
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/rep <playername> <number>') .. ' non target variant')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/not <note>') .. ' taking not for target player')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/not <playername> <note>') .. ' non target variant')
-    elseif msg == 'crindicator' then
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('CRIndicator'))
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'simple frame module to inform raid leader how many rebirths are available in raid')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/cr') .. ' for toggle frame|r')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/cr lock') ..' for lock frame|r')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/cr move') ..' for move frame|r')
+    -- elseif msg == 'crindicator' then
+    --     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('CRIndicator'))
+    --     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'simple frame module to inform raid leader how many rebirths are available in raid')
+    --     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/cr') .. ' for toggle frame|r')
+    --     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/cr lock') ..' for lock frame|r')
+    --     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/cr move') ..' for move frame|r')
     end
 end
 

@@ -220,6 +220,8 @@ Arch_tactics = {
         "4- [Tank] use defensive cooldowns to survive Blight on 3 stack",
         "5- [Tank switch aggro between 8 stacks of Gastric Bloat",
         "6- Hero at start",
+        "=4 {triangle}Stack with spores{triangle}",
+        "=2 {triangle}Spread{triangle}",
     },
     ["rotface"] = {
         "! Assign kite and static tank",
@@ -248,14 +250,38 @@ Arch_tactics = {
         "11- You can use your cds at start of the encounter otherwise save it for P3, Hero at P3",
     },
     ["council"] = {
+        "=4 Kinetic bombs!",
         "! Assign MT OT and RT",
-
+        "1- Valanar casts Empowered Vortex when active you should /range 12 when you see it",
+        "2- [RDPS] Prevent kinetic bombs from touching ground by hitting them",
+        "3- Telderam casts Inferno flame, targeted player should kite until it exhausts and avoid from other people",
+        "4- [RT] Collects floating nucleus to increase resist",
     },
     ["lanathel"] = {
-
+        "1- If linked with Pact of Dark Fallen merge in melee",
+        "2- If you are marked with Swarming Shadows to go perimeter of room and move in arc",
+        "3- When she starts to come mid spread /range 12",
+        "4- If you are bitten you have to bite someone else in last 5 seconds of debuff",
+        "5- Get close to target you are going to bite",
+    },
+    ["valithria"] = {
+        "! Assign Portal Healers",
+        "=4 Focus on Skeleton",
+        "=1 Focus on supressers",
+        "1- Assigned healer take the portals and stack buff for healing valithria",
+        "2- DPS should kill adds by order skeleton > supresser > lich > zombie > pudge",
+        "3- Hero when healer reached 40 stack and no supresser exists",
     },
     ["sindragosa"] = {
-
+        "1- P1: Run away when Sindragosa cast Blistering cold",
+        "2- P1: [RDPS&Heal] Stop cast and wait when you have 5 stacks of Instability",
+        "3- P1: [MDPS] Stop cast and wait when you have 5 stacks of Chilling to the bone",
+        "4- Air Phase: 2 person will marked they will go to designated spots while rest of the raid fall back to stairs",
+        "5- Air Phase: Dodge Sindragosa's ice balls by aligning yourself behind the ice tombs keep their health at 20%",
+        "6- P3: Sindragosa will land and start and keep marking people with ice tombs",
+        "6- P3: Marked people, respectively will stand in designated spots on left and right",
+        "7- P3: [MDPS] Will stay opposite side of tomb spot until the marked person frozen",
+        "8- P3: People will hide behind and kill the tomb and repeat until the fight is end",
     },
     ["lichking"] = {
 

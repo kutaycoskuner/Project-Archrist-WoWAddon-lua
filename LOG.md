@@ -1,6 +1,15 @@
-# ChangeLog 
+# Log
 `Started 29-Jul-2020`
 
+# Todo
+17-Oct-2020 girilmeyen moduller icin help yaz
+
+# ChangeLog
+[0.9.8]
+17-Oct-2020 help, reworked with modules
+17-Oct-2020 tactics, RaidWarnings moved to Raidcommands
+17-Oct-2020 disabled commands moved to !disabled
+17-Oct-2020 tactics for icc10 until lk added
 [0.9.7]
 30-Sep-2020 pug, fixed text left when searchbox unticked
 30-Sep-2020 discord, giriste nickname ve auth uyarisi
