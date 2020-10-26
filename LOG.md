@@ -5,6 +5,8 @@
 17-Oct-2020 girilmeyen moduller icin help yaz
 
 # ChangeLog
+[0.9.9]
+26-Oct-2020 playerDB; raide biri girince negatif puani varsa alert veriyor
 [0.9.8]
 17-Oct-2020 help, reworked with modules
 17-Oct-2020 tactics, RaidWarnings moved to Raidcommands

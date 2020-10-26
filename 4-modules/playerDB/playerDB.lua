@@ -26,6 +26,7 @@ function module:Initialize()
     module:RegisterEvent("PLAYER_REGEN_ENABLED")
     module:RegisterEvent("PLAYER_REGEN_DISABLED")
     module:RegisterEvent("WHO_LIST_UPDATE")
+    module:RegisterEvent("RAID_ROSTER_UPDATE")
 end
 
 -- ==== Methods
@@ -411,6 +412,46 @@ function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()
     end
     mod = 'patates'
 
+end
+
+function module:RAID_ROSTER_UPDATE()
+    if UnitInRaid('player') then
+        local blacklist = {}
+        local whitelist = {}
+        for ii = 1, GetNumRaidMembers() do
+            local person = GetRaidRosterInfo(ii)
+            if A.people[realmName][person] == nil then
+                archAddPlayer(person)
+            else
+                for yy = 1, #quantitative do
+                    -- print(A.people[realmName][person][yy])
+                    if A.people[realmName][person][quantitative[yy]] < 0 then
+                        table.insert(blacklist, person)
+                        break
+                    end
+                end
+            end
+        end
+        --
+        local checkBlacklist = ''
+        if #blacklist > 0 then
+            for ii = 1, #blacklist do
+                checkBlacklist = checkBlacklist .. blacklist[ii]
+                if ii ~= #blacklist then
+                    checkBlacklist = checkBlacklist .. ', '
+                end
+            end
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. focusColor('Warning Blacklist: ') .. checkBlacklist)
+            -- return
+        else
+            SELECTED_CHAT_FRAME:AddMessage(
+                moduleAlert .. 'nobody in raid in your blacklist')
+        end
+        --
+    else
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'you are not in raid')
+    end
 end
 
 -- ==== Slash Handlers
