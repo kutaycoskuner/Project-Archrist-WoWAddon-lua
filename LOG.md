@@ -6,6 +6,8 @@
 
 # ChangeLog
 [0.9.9]
+28-Oct-2020 playerDB; no message if nobody in blacklist
+28-Oct-2020 discarded; warrior, attendance
 26-Oct-2020 playerDB; raide biri girince negatif puani varsa alert veriyor
 [0.9.8]
 17-Oct-2020 help, reworked with modules

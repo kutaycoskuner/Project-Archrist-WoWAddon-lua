@@ -424,7 +424,6 @@ function module:RAID_ROSTER_UPDATE()
                 archAddPlayer(person)
             else
                 for yy = 1, #quantitative do
-                    -- print(A.people[realmName][person][yy])
                     if A.people[realmName][person][quantitative[yy]] < 0 then
                         table.insert(blacklist, person)
                         break
@@ -444,9 +443,9 @@ function module:RAID_ROSTER_UPDATE()
             SELECTED_CHAT_FRAME:AddMessage(
                 moduleAlert .. focusColor('Warning Blacklist: ') .. checkBlacklist)
             -- return
-        else
-            SELECTED_CHAT_FRAME:AddMessage(
-                moduleAlert .. 'nobody in raid in your blacklist')
+        -- else
+        --     SELECTED_CHAT_FRAME:AddMessage(
+        --         moduleAlert .. 'nobody in raid in your blacklist')
         end
         --
     else
