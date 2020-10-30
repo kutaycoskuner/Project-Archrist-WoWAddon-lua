@@ -367,7 +367,7 @@ local function addPlayerStat(args, parameter)
             -- test
             if args[3] then
                 table.remove(args, 2)
-                SELECTED_CHAT_FRAME:AddMessage(args[1] .. ' '.. args[2])
+                -- SELECTED_CHAT_FRAME:AddMessage(args[1] .. ' '.. args[2])
                 local noteBlock = args
                 addNote(noteBlock)
             end
