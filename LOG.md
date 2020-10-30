@@ -6,6 +6,7 @@
 
 # ChangeLog
 [0.9.9]
+30-Oct-2020 playerDB; rep in yanina dogrudan not yazabilme
 28-Oct-2020 playerDB; no message if nobody in blacklist
 28-Oct-2020 discarded; warrior, attendance
 26-Oct-2020 playerDB; raide biri girince negatif puani varsa alert veriyor
