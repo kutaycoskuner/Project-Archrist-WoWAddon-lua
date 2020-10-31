@@ -29,10 +29,15 @@ local pugShowCounter = false
 local diverseRaid
 -- :: PuGRaid Variables
 local raidText, need, counter, notes
-local structure = {
-    {['Tank'] = false}, {['Heal'] = false}, {['MDPS'] = false},
-    {['RDPS'] = false}
-}
+local structure = {{
+    ['Tank'] = false
+}, {
+    ['Heal'] = false
+}, {
+    ['MDPS'] = false
+}, {
+    ['RDPS'] = false
+}}
 
 -- ==== Module GUI
 local function TodoListGUI()
@@ -100,8 +105,9 @@ local function TodoListGUI()
         local addTodo = AceGUI:Create("EditBox")
         addTodo:SetLabel("Todo")
         addTodo:SetWidth(480)
-        addTodo:SetCallback("OnEnterPressed",
-                            function(widget, event, text) newTodo = text end)
+        addTodo:SetCallback("OnEnterPressed", function(widget, event, text)
+            newTodo = text
+        end)
         frame:AddChild(addTodo)
         --
         local button = AceGUI:Create("Button")
@@ -109,7 +115,9 @@ local function TodoListGUI()
         button:SetWidth(80)
         button:SetCallback("OnClick", function(widget)
             list = A.global.todo
-            table.insert(list, {todo = newTodo})
+            table.insert(list, {
+                todo = newTodo
+            })
             A.global.todo = list
             -- :: Recursive
             recursive = true
@@ -123,8 +131,7 @@ local function setPoint(self)
     local scale = self:GetEffectiveScale()
     local x, y = GetCursorPosition()
     self:ClearAllPoints()
-    self:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", x / scale,
-                  (y + 10) / scale)
+    self:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", x / scale, (y + 10) / scale)
 end
 
 local function setGameTooltip(widget)
@@ -288,8 +295,7 @@ local function diverseRaidGUI()
                 specTick:SetCallback("OnValueChanged", function(self, value)
                     -- diverseRaid[ii][key][subkey] =
                     --     not diverseRaid[ii][key][subkey]
-                    A.global.voaRaid[ii][key][subkey] =
-                        not A.global.voaRaid[ii][key][subkey]
+                    A.global.voaRaid[ii][key][subkey] = not A.global.voaRaid[ii][key][subkey]
                     -- print(diverseRaid[ii][key][subkey])
                 end)
                 group:AddChild(specTick)
@@ -302,36 +308,45 @@ local function diverseRaidGUI()
     channel:SetFullWidth(true)
     channel:SetCallback("OnEnterPressed", function(widget, event, text)
         announceChannel = text
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert ..
-                                           "Announce Channel is now: " ..
-                                           announceChannel)
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "Announce Channel is now: " .. announceChannel)
     end)
     frame:AddChild(channel)
     -- :: AnnounceButton
     local annButton = AceGUI:Create('Button')
     annButton:SetText('Announce')
     annButton:SetFullWidth(true)
-    annButton:SetCallback("OnClick",
-                          function(widget, event, text) VoA_announce(false) end)
+    annButton:SetCallback("OnClick", function(widget, event, text)
+        VoA_announce(false)
+    end)
     frame:AddChild(annButton)
 end
 
 local function pugRaid_VariableTest()
-    if not raidText then raidText = "" end
-    if not need then need = "" end
-    if not notes then notes = "" end
-    if not counter then counter = "" end
-    if not pugRaidType then pugRaidType = 25 end
+    if not raidText then
+        raidText = ""
+    end
+    if not need then
+        need = ""
+    end
+    if not notes then
+        notes = ""
+    end
+    if not counter then
+        counter = ""
+    end
+    if not pugRaidType then
+        pugRaidType = 25
+    end
 end
 
 local function pugRaid_textChange(isAnnouncement)
     -- :: RaidText
     local lastRaidText = (raidText or "  ")
+    -- SELECTED_CHAT_FRAME:AddMessage(need)
     local lastNeed = need
     local lastNotes = notes
     local lastCounter = counter
-    if (need ~= "" or notes ~= "" or counter ~= "") and
-        string.sub(lastRaidText, -1) ~= " " then
+    if (need ~= "" or notes ~= "" or counter ~= "") and string.sub(lastRaidText, -1) ~= " " then
         lastRaidText = raidText .. pugDelimeter
         -- print(string.sub(lastRaidText, -5,-5))
         if string.sub(lastRaidText, -5, -5) == "}" then
@@ -339,66 +354,62 @@ local function pugRaid_textChange(isAnnouncement)
         end
     end
     -- :: Need
-    if (notes ~= "" or (pugShowCounter)) and string.sub(lastNeed or " ", -1) ~=
-        " " then lastNeed = need .. pugDelimeter end
-    counter = tostring((GetNumRaidMembers() or 0)) .. '/' ..
-                  tostring(pugRaidType)
+    if (notes ~= "" or (pugShowCounter)) and string.sub(lastNeed or " ", -1) ~= " " then
+        lastNeed = need .. pugDelimeter
+    end
+    counter = tostring((GetNumRaidMembers() or 0)) .. '/' .. tostring(pugRaidType)
     if notes ~= "" and string.sub(counter or " ", -1) ~= " " then
         lastCounter = counter .. pugDelimeter
     end
     --
     if pugShowCounter then
         if isAnnouncement and announceChannel and announceChannel ~= "" then
-            SendChatMessage(
-                lastRaidText .. lastNeed .. lastCounter .. lastNotes, "channel",
-                nil, announceChannel)
-            SELECTED_CHAT_FRAME:AddMessage(focus("Announcing: ") ..
-                lastRaidText .. (lastNeed or "") ..
-                    (tostring(lastCounter) or "") .. lastNotes)
+            SendChatMessage(lastRaidText .. lastNeed .. lastCounter .. lastNotes, "channel", nil, announceChannel)
+            SELECTED_CHAT_FRAME:AddMessage(focus("Announcing: ") .. lastRaidText .. (lastNeed or "") ..
+                                               (tostring(lastCounter) or "") .. lastNotes)
         else
-            SELECTED_CHAT_FRAME:AddMessage(
-                lastRaidText .. (lastNeed or "") ..
-                    (tostring(lastCounter) or "") .. lastNotes)
+            SELECTED_CHAT_FRAME:AddMessage(lastRaidText .. (lastNeed or "") .. (tostring(lastCounter) or "") ..
+                                               lastNotes)
         end
     else
         if isAnnouncement and announceChannel and announceChannel ~= "" then
-            SendChatMessage(lastRaidText .. lastNeed .. lastNotes, "channel",
-                            nil, announceChannel)
-            SELECTED_CHAT_FRAME:AddMessage(focus("Announcing: ") ..
-                lastRaidText .. (lastNeed or "") .. lastNotes)
+            SendChatMessage(lastRaidText .. lastNeed .. lastNotes, "channel", nil, announceChannel)
+            SELECTED_CHAT_FRAME:AddMessage(focus("Announcing: ") .. lastRaidText .. (lastNeed or "") .. lastNotes)
         else
-            SELECTED_CHAT_FRAME:AddMessage(
-                lastRaidText .. (lastNeed or "") .. lastNotes)
+            SELECTED_CHAT_FRAME:AddMessage(lastRaidText .. (lastNeed or "") .. lastNotes)
         end
     end
 end
 
 local function pugRaid_calcNeed()
     pugRaid_VariableTest()
-    need = "Need "
-    for ii = 1, #structure do
-        for key in pairs(structure[ii]) do
-            if structure[ii][key] then
-                if structure[ii][key] == true or structure[ii][key] == '' then
-                    need = need .. tostring(key)
-                else
-                    need = need .. structure[ii][key]
-                end
-            end
-            if structure[ii][key] then
-                local last = true
-                for yy = ii + 1, #structure do
-                    for subkey in pairs(structure[yy]) do
-                        if structure[yy][subkey] then
-                            last = false
-                            break
-                        end
+    -- SELECTED_CHAT_FRAME:AddMessage(need)
+    if need ~= 'Need All' then
+        need = "Need "
+        for ii = 1, #structure do
+            for key in pairs(structure[ii]) do
+                if structure[ii][key] then
+                    if structure[ii][key] == true or structure[ii][key] == '' then
+                        need = need .. tostring(key)
+                    else
+                        need = need .. structure[ii][key]
                     end
                 end
-                if last then
-                    need = need
-                else
-                    need = need .. ", "
+                if structure[ii][key] then
+                    local last = true
+                    for yy = ii + 1, #structure do
+                        for subkey in pairs(structure[yy]) do
+                            if structure[yy][subkey] then
+                                last = false
+                                break
+                            end
+                        end
+                    end
+                    if last then
+                        need = need
+                    else
+                        need = need .. ", "
+                    end
                 end
             end
         end
@@ -427,7 +438,11 @@ local function pugRaidGUI()
     frame:AddChild(heading)
     -- -- :: Main Raid Note [required]
     local raidType = AceGUI:Create('Dropdown')
-    local rt = {["10"] = 10, ["25"] = 25, ["40"] = 40}
+    local rt = {
+        ["10"] = 10,
+        ["25"] = 25,
+        ["40"] = 40
+    }
     raidType:SetList(rt)
     raidType:SetValue(A.global.pugRaid.raidType)
     -- raidType:SetText('Raid Type')
@@ -478,7 +493,11 @@ local function pugRaidGUI()
                         end
                     end
                 end
-                if all then need = 'Need All' end
+                if all then
+                    need = 'Need All'
+                else
+                    need = "Ne "
+                end
                 pugRaid_textChange(false)
                 -- A.global.pugRaid.needData = structure
             end)
@@ -509,7 +528,9 @@ local function pugRaidGUI()
     local additional = AceGUI:Create('EditBox')
     additional:SetLabel('Additional Notes')
     -- print(type(notes))
-    if type(notes) == 'string' then additional:SetText(notes) end
+    if type(notes) == 'string' then
+        additional:SetText(notes)
+    end
     -- additional:SetText(notes)
     additional:SetFullWidth(true)
     additional:SetCallback("OnEnterPressed", function(widget, event, text)
@@ -548,9 +569,7 @@ local function pugRaidGUI()
     channel:SetCallback("OnEnterPressed", function(widget, event, text)
         announceChannel = text
         A.global.pugRaid.channelKey = announceChannel
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert ..
-                                           "Announce Channel is now: " ..
-                                           announceChannel)
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "Announce Channel is now: " .. announceChannel)
     end)
     frame:AddChild(channel)
     -- :: AnnounceButton
@@ -584,14 +603,22 @@ function toggleGUI(key)
         end)
         frame:SetLayout("Flow")
         -- test
-        if key == 'TodoList' then TodoListGUI() end
-        if key == 'LootDatabase' then LootDatabaseGUI() end
+        if key == 'TodoList' then
+            TodoListGUI()
+        end
+        if key == 'LootDatabase' then
+            LootDatabaseGUI()
+        end
         if key == 'LootDatabasePrune' then
             currentLootList = {}
             toggleGUI('LootDatabase')
         end
-        if key == "DiverseRaid" then diverseRaidGUI() end
-        if key == "pugRaid" then pugRaidGUI() end
+        if key == "DiverseRaid" then
+            diverseRaidGUI()
+        end
+        if key == "pugRaid" then
+            pugRaidGUI()
+        end
         -- test
     elseif recursive then
         frame:Release()
@@ -605,7 +632,9 @@ end
 
 function Arch_setGUI(key, isRecursive)
     recursive = false
-    if isRecursive then recursive = true end
+    if isRecursive then
+        recursive = true
+    end
     toggleGUI(key)
 end
 
@@ -624,16 +653,22 @@ function GUI_insertPerson(target, reload)
     if not isPersonExists or reload ~= nil then
         local nominee = {}
         nominee[1] = target -- name
+        
         nominee[2] = (#player or 0) -- item count
+        -- item count
         for ii = 1, #player do
             if GetItemInfo(player[ii][3]) then -- [3] id ye bakiyor
                 local _, a = GetItemInfo(player[ii][3])
                 nominee[2 + ii] = {player[ii][1], a}
             end
-            if ii == 3 then break end
+            if ii == 3 then
+                break
+            end
         end
         for ii = 3, 5 do
-            if not nominee[ii] then nominee[ii] = {nil, nil} end
+            if not nominee[ii] then
+                nominee[ii] = {nil, nil}
+            end
         end
         local previous = #currentLootList or 0
         table.insert(currentLootList, 1, nominee)
@@ -649,7 +684,9 @@ function GUI_insertPerson(target, reload)
 
 end
 
-function return_diverseRaid() return {diverseRaid, announceChannel} end
+function return_diverseRaid()
+    return {diverseRaid, announceChannel}
+end
 
 function module:Initialize()
     self.Initialized = true
@@ -681,7 +718,9 @@ end
 -- ==== Events
 function module:CHAT_MSG_WHISPER_INFORM()
     if string.match(arg1, 'You are now being considered for') then
-        if not A.loot[realmName][arg2] then A.loot[realmName][arg2] = {} end
+        if not A.loot[realmName][arg2] then
+            A.loot[realmName][arg2] = {}
+        end
         GUI_insertPerson(arg2)
     end
 end
@@ -702,7 +741,9 @@ end
 -- SlashCmdList["arch"] = function() toggleGUI(false) end
 
 -- ==== Callback & Register [last arg]
-local function InitializeCallback() module:Initialize() end
+local function InitializeCallback()
+    module:Initialize()
+end
 A:RegisterModule(module:GetName(), InitializeCallback)
 
 -- :: function that draws the widgets for the first tab
