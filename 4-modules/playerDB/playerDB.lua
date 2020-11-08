@@ -16,6 +16,7 @@ local realmName = GetRealmName()
 local factionName = UnitFactionGroup('player')
 local focusColor = Arch_focusColor
 local quantitative = {'reputation', 'strategy', 'discipline', 'attendance', 'damage'}
+local lastBlacklist
 
 -- ==== Start
 function module:Initialize()
@@ -286,6 +287,34 @@ local function handlePlayerStat(msg, parameter, pass)
     end
 end
 
+-- :: add player stat [who da kullaniliyor]
+local function addPlayerStat(args, parameter)
+    if A.people[realmName][args[1]] == nil then
+        archAddPlayer(args[1])
+    end
+    if args[2] then
+        if type(tonumber(args[2])) == "number" then
+            A.people[realmName][args[1]][parameter] = tonumber(A.people[realmName][args[1]][parameter]) +
+                                                          tonumber(args[2])
+            checkStatLimit(args[1], parameter)
+            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. args[1] .. ' ' .. parameter .. ' is now ' ..
+                                               A.people[realmName][args[1]][parameter])
+            -- test
+            if args[3] then
+                table.remove(args, 2)
+                -- SELECTED_CHAT_FRAME:AddMessage(args[1] .. ' '.. args[2])
+                local noteBlock = args
+                addNote(noteBlock)
+            end
+            -- test
+        else
+            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'your entry is not valid')
+        end
+    else
+        archGetPlayer(args[1])
+    end
+end
+
 -- :: main function
 local function raidRepCheck(msg)
     if UnitInRaid('player') then
@@ -349,34 +378,6 @@ local function raidRepCheck(msg)
         end
     else
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'you are not in raid')
-    end
-end
-
--- :: add player stat [who da kullaniliyor]
-local function addPlayerStat(args, parameter)
-    if A.people[realmName][args[1]] == nil then
-        archAddPlayer(args[1])
-    end
-    if args[2] then
-        if type(tonumber(args[2])) == "number" then
-            A.people[realmName][args[1]][parameter] = tonumber(A.people[realmName][args[1]][parameter]) +
-                                                          tonumber(args[2])
-            checkStatLimit(args[1], parameter)
-            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. args[1] .. ' ' .. parameter .. ' is now ' ..
-                                               A.people[realmName][args[1]][parameter])
-            -- test
-            if args[3] then
-                table.remove(args, 2)
-                -- SELECTED_CHAT_FRAME:AddMessage(args[1] .. ' '.. args[2])
-                local noteBlock = args
-                addNote(noteBlock)
-            end
-            -- test
-        else
-            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'your entry is not valid')
-        end
-    else
-        archGetPlayer(args[1])
     end
 end
 
@@ -451,7 +452,10 @@ function module:RAID_ROSTER_UPDATE()
                     checkBlacklist = checkBlacklist .. ', '
                 end
             end
-            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor('Warning Blacklist: ') .. checkBlacklist)
+            if lastBlacklist ~= checkBlacklist then
+                SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor('Warning Blacklist: ') .. checkBlacklist)
+                lastBlacklist = checkBlacklist
+            end
             -- return
             -- else
             --     SELECTED_CHAT_FRAME:AddMessage(

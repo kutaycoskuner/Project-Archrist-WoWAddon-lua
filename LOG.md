@@ -5,7 +5,10 @@
 17-Oct-2020 girilmeyen moduller icin help yaz
 
 # ChangeLog
+[1.0.0]
+08-Nov-2020 playerDB; raidRepCheck bugfix
 [0.9.9]
+04-Nov-2020 playerDB; raidupdate spam fix
 30-Oct-2020 pug; fix: need all
 30-Oct-2020 playerDB; rep in yanina dogrudan not yazabilme
 28-Oct-2020 playerDB; no message if nobody in blacklist

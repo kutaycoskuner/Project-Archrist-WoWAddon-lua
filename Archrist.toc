@@ -2,7 +2,7 @@
 ## Interface: 30300
 ## Title: |cffedededArchrist|r
 ## Notes: Player database, todo list, raid assistant, external memory addon
-## Version: 0.9.7 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
+## Version: 1.0 # 0 - 0.9 alpha, 0.9 - 1 beta, 1++ release
 ## Author: Orthrin
 ## SavedVariables: ArchDB, ArchPrivateDB, ArchPeopleDB, ArchLootDB
 ## SavedVariablesPerCharacter: ArchCharacterDB
