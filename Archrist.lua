@@ -76,8 +76,7 @@ do
     -- :: Create Modules
     Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
     Addon.lootMsgFilter = Addon:NewModule("LootMsgFilter")
-    Addon.deleteAucMail = Addon:NewModule("DeleteAucMail", "AceHook-3.0",
-                                          "AceEvent-3.0")
+    Addon.deleteAucMail = Addon:NewModule("DeleteAucMail", "AceHook-3.0", "AceEvent-3.0")
     Addon.playerDB = Addon:NewModule("PlayerDB", "AceHook-3.0", "AceEvent-3.0")
     Addon.autoLoot = Addon:NewModule("AutoLoot", "AceHook-3.0", "AceEvent-3.0")
     Addon.archGUI = Addon:NewModule("ArchGUI", "AceHook-3.0", "AceEvent-3.0")
@@ -87,6 +86,7 @@ do
     Addon.lootDB = Addon:NewModule("LootDB", "AceHook-3.0", "AceEvent-3.0")
     Addon.voa = Addon:NewModule("VoA", "AceHook-3.0", "AceEvent-3.0")
     Addon.pug = Addon:NewModule("Pug", "AceHook-3.0", "AceEvent-3.0")
+    Addon.announcer = Addon:NewModule("Announcer", "AceHook-3.0", "AceEvent-3.0")
     -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
     -- :: Macros
     Addon.milling = Addon:NewModule("Milling", "AceEvent-3.0")

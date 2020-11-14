@@ -5,6 +5,8 @@
 17-Oct-2020 girilmeyen moduller icin help yaz
 
 # ChangeLog
+[1.0.1]
+14-Nov-2020 add: Announcer; hysteria, focus magic, power infusion announces
 [1.0.0]
 08-Nov-2020 playerDB; raidRepCheck bugfix
 [0.9.9]

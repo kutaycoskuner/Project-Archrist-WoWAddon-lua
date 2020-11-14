@@ -11,4 +11,5 @@
     <Include file="LootDB\-load.xml"/>
     <Include file="VoA\-load.xml"/>
     <Include file="Pug\-load.xml"/>
+    <Include file="Announcer\-load.xml"/>
 </Ui>
