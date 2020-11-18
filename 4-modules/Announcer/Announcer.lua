@@ -31,12 +31,19 @@ function module:COMBAT_LOG_EVENT(event, _, eventType, _, srcName, isDead, _, dst
 
     -- :: Mage Focus Apply
     if srcName == UnitName('player') and spellName == "Focus Magic" and eventType == "SPELL_AURA_APPLIED" then
-        SendChatMessage(GetSpellLink("Focus Magic") .. "is cast on you" ,"whisper", nil, dstName);
+        SendChatMessage(GetSpellLink("Focus Magic") .. " is cast on you" ,"whisper", nil, dstName);
     end
 
     -- :: Priest Power Infusion Apply
     if srcName == UnitName('player') and spellName == "Power Infusion" and eventType == "SPELL_AURA_APPLIED" then
-        SendChatMessage(GetSpellLink("Power Infusion") .. "is cast on you (+20% spell haste, -20% mana cost, 15 sec)" ,"whisper", nil, dstName);
+        SendChatMessage(GetSpellLink("Power Infusion") .. " is cast on you (+20% spell haste, -20% mana cost, 15 sec)" ,"whisper", nil, dstName);
+    end
+
+    -- :: Hunter Misdirection
+    if srcName == UnitName('player') and spellName == "Misdirection" and eventType == "SPELL_AURA_APPLIED" then
+        if UnitName('focus') and UnitCanAttack("player", "target") then
+            SendChatMessage(GetSpellLink("Misdirection") .. " is on >> " .. UnitName('focus') .. " <<" ,"say", nil, nil);
+        end
     end
 end
 
