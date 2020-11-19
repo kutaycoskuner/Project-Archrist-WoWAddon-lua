@@ -22,7 +22,7 @@ end
 -- ==== Event Handlers
 function module:COMBAT_LOG_EVENT(event, _, eventType, _, srcName, isDead, _, dstName, _, spellId, spellName, _, ...) -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
     -- -- :: Print event names [spell name target type ogrenmek icin - silme!]
-    -- SELECTED_CHAT_FRAME:AddMessage(event .. ' | ' .. eventType .. ' | ' .. isDead .. ' | ' .. dstName)
+    -- SELECTED_CHAT_FRAME:AddMessage(event .. ' | ' .. eventType .. ' | ' .. spellId .. ' | ' .. dstName)
 
     -- :: DK Hysteria Apply
     if srcName == UnitName('player') and spellName == "Hysteria" and eventType == "SPELL_AURA_APPLIED" then
@@ -30,7 +30,7 @@ function module:COMBAT_LOG_EVENT(event, _, eventType, _, srcName, isDead, _, dst
     end
 
     -- :: Mage Focus Apply
-    if srcName == UnitName('player') and spellName == "Focus Magic" and eventType == "SPELL_AURA_APPLIED" then
+    if srcName == UnitName('player') and spellName == "Focus Magic" and eventType == "SPELL_CAST_SUCCESS" then
         SendChatMessage(GetSpellLink("Focus Magic") .. " is cast on you" ,"whisper", nil, dstName);
     end
 
@@ -40,9 +40,9 @@ function module:COMBAT_LOG_EVENT(event, _, eventType, _, srcName, isDead, _, dst
     end
 
     -- :: Hunter Misdirection
-    if srcName == UnitName('player') and spellName == "Misdirection" and eventType == "SPELL_AURA_APPLIED" then
-        if UnitName('focus') and UnitCanAttack("player", "target") then
-            SendChatMessage(GetSpellLink("Misdirection") .. " is on >> " .. UnitName('focus') .. " <<" ,"say", nil, nil);
+    if srcName == UnitName('player') and spellId == 34477 and eventType == "SPELL_CAST_SUCCESS" then
+        if dstName then
+            SendChatMessage(GetSpellLink("Misdirection") .. " is on >> " .. dstName .. " <<" ,"say", nil, nil);
         end
     end
 end

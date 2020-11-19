@@ -6,6 +6,7 @@
 
 # ChangeLog
 [1.0.1]
+20-Nov-2020 fix: Announcer; misdirection, focus magic bugs
 14-Nov-2020 add: Announcer; hysteria, focus magic, power infusion announces
 [1.0.0]
 08-Nov-2020 playerDB; raidRepCheck bugfix
