@@ -9,14 +9,18 @@ local module = A:GetModule(moduleName);
 local announceChannel
 local AceGUI = LibStub("AceGUI-3.0")
 local list
-local frame
-local frameOpen = false
 local recursive = false
 local realmName = GetRealmName()
 local textStore
 local currentLootList = {}
 local focus = Arch_focusColor
 local fixArgs = Arch_fixArgs
+--
+local frame
+local frameOpen = false
+--
+local frame2
+local frameOpen2 = false
 --
 local lootFramePos
 local voaFramePos
@@ -86,8 +90,6 @@ local function TodoListGUI()
                 -- :: Recursive
                 recursive = true
                 toggleGUI('TodoList')
-                -- editbox = nil
-                -- label = nil
             end)
             frame:AddChild(button)
         end
@@ -142,125 +144,6 @@ local function setGameTooltip(widget)
     -- GameTooltip:ClearLines()
     -- print(frame)
 end
-
--- local function LootDatabaseGUI()
---     frame:SetWidth(280)
---     frame:ClearAllPoints()
---     if A.global.lootFrame == {} then
---         frame:SetPoint("CENTER", 0, 0)
---     else
---         frame:SetPoint(lootFramePos[1], lootFramePos[3], lootFramePos[4])
---     end
---     local heading = AceGUI:Create('Heading')
---     heading:SetText('Loot Database')
---     heading:SetRelativeWidth(1)
---     frame:ReleaseChildren()
---     frame:AddChild(heading)
---     -- 
---     if #currentLootList > 0 then
---         for ii = 1, #currentLootList do
---             local unit = AceGUI:Create("SimpleGroup")
---             unit:SetFullWidth(true)
---             unit:SetLayout('Flow')
---             frame:AddChild(unit)
---             --
---             local add = AceGUI:Create("Label")
---             add:SetText(focus(currentLootList[ii][1]) .. ' acquired total ' ..
---                             focus(currentLootList[ii][2]) ..
---                             ' items in guild\n\n')
---             add:SetWidth(200)
---             unit:AddChild(add)
-
---             for yy = 3, 5 do
---                 if currentLootList[ii][yy] ~= nil then
---                     local add1 = AceGUI:Create("Label")
---                     add1:SetText(currentLootList[ii][yy][1] or '')
---                     add1:SetWidth(240)
---                     unit:AddChild(add1)
---                     --
---                     if currentLootList[ii][yy][1] then
---                         local removeBtn = AceGUI:Create('Button')
---                         -- removeBtn:SetPoint('RIGHT')
---                         removeBtn:SetWidth(38)
---                         removeBtn:SetHeight(15)
---                         removeBtn:SetText('x')
---                         removeBtn:SetCallback("OnClick", function(widget)
---                             table.remove(
---                                 A.loot[realmName][currentLootList[ii][1]],
---                                 yy - 2)
---                             currentLootList[ii][yy] = {nil, nil}
---                             for jj = 1, #A.loot[realmName][currentLootList[ii][1]] do
---                                 if A.loot[realmName][currentLootList[ii][1]][jj] ~=
---                                     nil then
---                                     local _, link =
---                                         GetItemInfo(
---                                             A.loot[realmName][currentLootList[ii][1]][jj][3])
---                                     currentLootList[ii][jj + 2] =
---                                         {
---                                             A.loot[realmName][currentLootList[ii][1]][jj][1],
---                                             link
---                                         }
---                                 end
---                                 if jj == 3 then
---                                     break
---                                 end
---                             end
---                             if #A.loot[realmName][currentLootList[ii][1]] < 3 then
---                                 for kk = 3, #A.loot[realmName][currentLootList[ii][1]] +
---                                     1, -1 do
---                                     currentLootList[ii][kk + 2] = nil
---                                 end
---                             end
---                             if #A.loot[realmName][currentLootList[ii][1]] == nil then
---                                 currentLootList[ii] = nil
---                             end
---                             currentLootList[ii][2] =
---                                 #A.loot[realmName][currentLootList[ii][1]] or 0
---                             recursive = true
---                             toggleGUI('LootDatabase')
---                         end)
---                         unit:AddChild(removeBtn)
---                     end
---                     --
---                     add = AceGUI:Create("InteractiveLabel")
---                     add:SetText(currentLootList[ii][yy][2])
---                     add:SetWidth(160)
---                     --
---                     add:SetCallback("OnEnter", function(widget)
---                         if string.match(currentLootList[ii][yy][2] or '',
---                                         "item[%-?%d:]+") then
-
---                             -- >>
---                             -- hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
---                             --     tooltip:SetOwner(parent, "ANCHOR_CURSOR")
---                             --     setPoint(tooltip)
---                             --     tooltip.default = 1
---                             -- end)
---                             GameTooltip_SetDefaultAnchor(GameTooltip, UIParent)
---                             GameTooltip:ClearAllPoints();
---                             setPoint(GameTooltip)
---                             GameTooltip:ClearLines()
---                             -- >>
---                             GameTooltip:SetHyperlink(
---                                 string.match(currentLootList[ii][yy][2],
---                                              "item[%-?%d:]+"))
---                             GameTooltip:Show()
---                         end
---                     end)
---                     --
---                     add:SetCallback("OnLeave",
---                                     function(self)
---                         GameTooltip:Hide()
---                     end)
---                     unit:AddChild(add)
---                     --
---                 end
---             end
---         end
---         -- :: Set Variable for cache
-
---     end
--- end
 
 local function diverseRaidGUI()
     frame:SetWidth(280)
@@ -582,6 +465,56 @@ local function pugRaidGUI()
     frame:AddChild(annButton)
 end
 
+-- ==== raidCooldowns
+local function raidCooldowns_calcTime(time)
+    local cd = time - GetTime()
+    if cd > 0 then
+        local min = math.floor(cd / 60)
+        local sec = math.floor(cd % 60)
+        --
+        if 10 > sec then
+            sec = "0" .. sec
+        end
+        if 10 > min then
+            min = "0" .. min
+        end
+        --
+        return (min .. ":" .. sec)
+    else
+        return "|cff08cf3dReady|r"
+    end
+end
+
+local function raidCooldownsGUI()
+    -- SELECTED_CHAT_FRAME:AddMessage('TEST')
+    frame2:SetWidth(240)
+    frame2:SetHeight(576)
+    frame2:ClearAllPoints()
+    -- :: todo sonradan yer hatirlama ekleeneccek
+    frame2:SetPoint("CENTER", 0, 0)
+    -- :: varsa onceki frameleri temizle
+    frame2:ReleaseChildren()
+    -- Spellere Gore Sirala
+    for ii = 1, 1 do
+        local heading = AceGUI:Create('Heading')
+        heading:SetText(Arch_trackSpells[ii])
+        heading:SetRelativeWidth(1)
+        frame2:AddChild(heading)
+        --
+        local name = AceGUI:Create("Label")
+        name:SetText(Arch_raidPeople[ii].name)
+        name:SetWidth(160)
+        frame2:AddChild(name)
+        local cd = AceGUI:Create("Label")
+        cd:SetText(raidCooldowns_calcTime(Arch_raidPeople[ii].availableAt))
+        cd:SetWidth(40)
+        frame2:AddChild(cd)
+        raidCooldowns_calcTime(Arch_raidPeople[ii].availableAt)
+    end
+    -- -- :: Main Raid Note [required]
+
+end
+
 -- ==== Core
 -- :: Sadece Komutla aciliyor
 function toggleGUI(key)
@@ -590,17 +523,17 @@ function toggleGUI(key)
         frame = AceGUI:Create("Frame")
         frame:SetTitle(N)
         --
-        frame:SetCallback("OnClose", function(widget)
-            frameOpen = false
-            local a, b, c, d, e = frame:GetPoint()
-            -- print(a,b,c,d,e)
-            A.global.lootFrame = {a, c, d, e}
-            A.global.voaFrame = {a, c, d, e}
-            lootFramePos = A.global.lootFrame
-            voaFramePos = A.global.voaFrame
-            -- print(lootFramePos[1], lootFramePos[2], lootFramePos[3], lootFramePos[4])
-            -- print(A.global.lootFrame[1].. d)
-        end)
+        -- frame:SetCallback("OnClose", function(widget)
+        --     frameOpen = false
+        --     local a, b, c, d, e = frame:GetPoint()
+        --     -- print(a,b,c,d,e)
+        --     A.global.lootFrame = {a, c, d, e}
+        --     A.global.voaFrame = {a, c, d, e}
+        --     lootFramePos = A.global.lootFrame
+        --     voaFramePos = A.global.voaFrame
+        --     -- print(lootFramePos[1], lootFramePos[2], lootFramePos[3], lootFramePos[4])
+        --     -- print(A.global.lootFrame[1].. d)
+        -- end)
         frame:SetLayout("Flow")
         -- test
         if key == 'TodoList' then
@@ -630,12 +563,41 @@ function toggleGUI(key)
     end
 end
 
+function toggleGUI_2(key)
+    if not frameOpen2 then
+        frameOpen2 = true
+        frame2 = AceGUI:Create("Frame")
+        frame2:SetTitle(N)
+        --
+        -- frame2:SetCallback("OnClose", function(widget)
+        --     frameOpen2 = false
+        -- end)
+        frame2:SetLayout("Flow")
+        --
+        if key == 'raidCooldowns' then
+            raidCooldownsGUI()
+        end
+        --
+    elseif recursive then
+        frame2:Release()
+        frameOpen2 = false
+        toggleGUI_2(key)
+    else
+        frame2:Release()
+        frameOpen2 = false
+    end
+end
+
 function Arch_setGUI(key, isRecursive)
     recursive = false
     if isRecursive then
         recursive = true
     end
-    toggleGUI(key)
+    if not key == 'raidCooldowns' then
+        toggleGUI(key)
+    else
+        toggleGUI_2(key)
+    end
 end
 
 function GUI_insertPerson(target, reload)
@@ -655,6 +617,11 @@ function GUI_insertPerson(target, reload)
         nominee[1] = target -- name
         
         nominee[2] = (#player or 0) -- item count
+        -- item count
+        -- item count
+        -- item count
+        -- item count
+        -- item count
         -- item count
         for ii = 1, #player do
             if GetItemInfo(player[ii][3]) then -- [3] id ye bakiyor
@@ -710,30 +677,9 @@ function module:Initialize()
     notes = A.global.pugRaid.additionalNote
     announceChannel = A.global.pugRaid.channelKey
     --
-    self:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
-    self:RegisterEvent("CHAT_MSG_RAID_WARNING")
+    -- self:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
+    -- self:RegisterEvent("CHAT_MSG_RAID_WARNING")
     -- "MAIL_INBOX_UPDATE"
-end
-
--- ==== Events
-function module:CHAT_MSG_WHISPER_INFORM()
-    if string.match(arg1, 'You are now being considered for') then
-        if not A.loot[realmName][arg2] then
-            A.loot[realmName][arg2] = {}
-        end
-        GUI_insertPerson(arg2)
-    end
-end
-
-function module:CHAT_MSG_RAID_WARNING()
-    if arg2 == UnitName('player') then
-        if string.match(arg1, 'now under consideration') then
-            -- print(currentLootList[1])
-            currentLootList = {}
-            -- print(currentLootList[0])
-            Arch_setGUI('LootDatabase')
-        end
-    end
 end
 
 -- ==== Slash Handlers

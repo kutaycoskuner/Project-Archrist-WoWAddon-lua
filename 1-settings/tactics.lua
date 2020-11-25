@@ -187,7 +187,7 @@ Arch_tactics = {
     ["marrowgar"] = {
         "1- Do not stand on fire",
         "2- Kill the bone spikes in priority",
-        "3- P1: Everyone stack behind boss ",
+        "3- P1: Everyone stack behind boss except hunter",
         "4- Hero at start",
     },
     ["lady"] = {
