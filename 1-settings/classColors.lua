@@ -5,7 +5,7 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
     !! Used by CRIndicator
 ]]
 Arch_classColors = {
-    ["DeathKnight"] = '|cffC41F3B',    
+    ["Death Knight"] = '|cffC41F3B',    
     ["Druid"] = '|cffFF7D0A',
     ["Hunter"] = '|cffA9D271',
     ["Mage"] = '|cff40C7EB',

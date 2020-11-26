@@ -12,12 +12,14 @@ Arch_spells = {
     ["Rebirth"] = {48447, 600},
     ["Innervate"] = {29166, 180},
     -- ==== Priest
-    ["Hymn of Hope"] = {64901, 360},
+    -- ["Hymn of Hope"] = {64901, 360},
+    -- ["Flash Heal"] = {48071, 4},
     -- ==== Warlocck
-    ["Soulstone Resurrection"] = {},
+    -- ["Soulstone Resurrection"] = {},
     -- ==== Hunter
-    ["Misdirection"] = {},
+    ["Misdirection"] = {34477,30},
     -- ==== Shaman
-    ["Earthbind Totem"] = {2484, 15},
+    -- ["Earthbind Totem"] = {2484, 15},
+    ["Reincarnation"] = {20608, 1800},
     ["Lesser Healing Wave"] = {49276, 5}
 }

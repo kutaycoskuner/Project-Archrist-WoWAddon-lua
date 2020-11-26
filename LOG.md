@@ -6,6 +6,7 @@
 
 # ChangeLog
 [1.0.1]
+26-Nov-2020 test: CRIndicator WIP
 25-Nov-2020 test: CRIndicator WIP
 20-Nov-2020 fix: Announcer; misdirection, focus magic bugs
 14-Nov-2020 add: Announcer; hysteria, focus magic, power infusion announces

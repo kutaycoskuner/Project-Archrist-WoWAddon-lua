@@ -8,16 +8,24 @@ local module = A:GetModule(moduleName);
 -- ==== Variables
 local inquiryCD = true
 local closestAvailable = 0
-local isFrameVisible = false
 local spells = Arch_spells
 local classColors = Arch_classColors
 --
-local frameOpen = false
+local isFrameOpen = false
 local frameRecursive = false
 --
+local subFrame = {}
+local subFrameName = {}
+local subFrameCD = {}
+--
 local raidPeople
-Arch_raidPeople = {}
-Arch_trackSpells = {"Rebirth","Innervate","Misdirection"}
+local trackClass = { --- ClassName, Count, Trackspells
+{"Druid", 0, {"Rebirth", "Innervate"}}, {"Hunter", 0, {"Misdirection"}},
+{"Shaman", 0, {"Reincarnation", "Lesser Healing Wave"}}}
+local trackSpells = {"Rebirth", "Innervate", "Flash Heal"}
+--
+local UpdateInterval = 1.0;
+local timeSinceLastUpdate = 0;
 
 -- ==== GUI
 local frame = CreateFrame("frame", "MyAddonFrame")
@@ -56,30 +64,98 @@ frameTextName:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
 frameTextName:SetPoint("CENTER", 0, 0)
 frameTextName:SetText("|cff464646Combat Res Frame|r")
 
--- -- :: subframe ekleme
--- local tab = 0
--- for ii = 1, 1 do
---     local subFrame = CreateFrame("frame", "subFrame", frame)
---     subFrame:ClearAllPoints()
---     subFrame:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
---     subFrame:SetSize(180, 50)
---     subFrame:SetFrameStrata("FULLSCREEN_DIALOG")
---     --
---     local frameTextName = subFrame:CreateFontString(nil, "ARTWORK")
---     frameTextName:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
---     frameTextName:SetPoint("LEFT")
---     frameTextName:SetText("Combat Res Frame")
---     --
---     local frameTextCD = subFrame:CreateFontString(nil, "ARTWORK")
---     frameTextCD:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
---     frameTextCD:SetPoint("RIGHT")
---     frameTextCD:SetText("Ready\n")
---     --
---     tab = tab - 16
---     frameHeight = frameHeight + 12
+local function raidCooldowns_calcTime(time)
+    local cd = time - GetTime()
+    if cd > 1 then
+        local min = math.floor(cd / 60)
+        local sec = math.floor(cd % 60)
+        --
+        if 10 > sec then
+            sec = "0" .. sec
+        end
+        if 10 > min then
+            min = "0" .. min
+        end
+        --
+        return (min .. ":" .. sec)
+    else
+        return "|cff08cf3dReady|r"
+    end
+end
 
--- end
--- --
+-- -- :: subframe ekleme
+local function updateGUI()
+    local tab = 0
+    local fH = frameHeight
+    local lastSub = 0
+    --
+    for kk = 1, #trackClass do
+        if trackClass[kk][2] > 0 then
+            for yy = 1, #trackClass[kk][3] do
+                lastSub = lastSub + 1
+                -- SELECTED_CHAT_FRAME:AddMessage(lastSub)
+                if not subFrame[lastSub] then
+                    subFrame[lastSub] = CreateFrame("frame", "subFrame", frame)
+                end
+                subFrame[lastSub]:ClearAllPoints()
+                subFrame[lastSub]:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
+                subFrame[lastSub]:SetSize(150, 50)
+                subFrame[lastSub]:SetFrameStrata("FULLSCREEN_DIALOG")
+                --
+                if not subFrameName[lastSub] then
+                    subFrameName[lastSub] = subFrame[lastSub]:CreateFontString(nil, "ARTWORK")
+                    subFrameName[lastSub]:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
+                end
+                subFrameName[lastSub]:SetPoint("CENTER")
+                subFrameName[lastSub]:SetText(" - " .. trackClass[kk][3][yy] .. " - ")
+                --
+                if not subFrameCD[lastSub] then
+                    subFrameCD[lastSub] = subFrame[lastSub]:CreateFontString(nil, "ARTWORK")
+                    subFrameCD[lastSub]:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
+                    subFrameCD[lastSub]:SetPoint("RIGHT")
+                end
+                subFrameCD[lastSub]:SetText("")
+                --
+                tab = tab - 16
+                fH = fH + 16
+                --
+                for ii = 1, #raidPeople do
+                    if raidPeople[ii].trackSpell == trackClass[kk][3][yy] then
+                        lastSub = lastSub + 1
+                        -- SELECTED_CHAT_FRAME:AddMessage(lastSub)
+                        if not subFrame[lastSub] then
+                            subFrame[lastSub] = CreateFrame("frame", "subFrame", frame)
+                        end
+                        subFrame[lastSub]:ClearAllPoints()
+                        subFrame[lastSub]:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
+                        subFrame[lastSub]:SetSize(150, 50)
+                        subFrame[lastSub]:SetFrameStrata("FULLSCREEN_DIALOG")
+                        --
+                        if not subFrameName[lastSub] then
+                            subFrameName[lastSub] = subFrame[lastSub]:CreateFontString(nil, "ARTWORK")
+                            subFrameName[lastSub]:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
+                        end
+                        subFrameName[lastSub]:SetPoint("LEFT")
+                        subFrameName[lastSub]:SetText(classColors[raidPeople[ii].class] .. raidPeople[ii].name .. "|r")
+                        --
+                        if not subFrameCD[lastSub] then
+                            subFrameCD[lastSub] = subFrame[lastSub]:CreateFontString(nil, "ARTWORK")
+                            subFrameCD[lastSub]:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
+                            subFrameCD[lastSub]:SetPoint("RIGHT")
+                        end
+                        subFrameCD[lastSub]:SetText(raidCooldowns_calcTime(raidPeople[ii].availableAt))
+                        --
+                        tab = tab - 16
+                        fH = fH + 16
+                    end
+                end
+            end
+        end
+    end
+    frameTextName:SetText("")
+    frame:SetSize(150, fH) -- 180 50
+end
+
 -- :: Frame i yerlestir ve sakla
 frame:SetSize(174, frameHeight)
 frame:SetPoint("CENTER", 536, 200)
@@ -93,7 +169,6 @@ local function getSpellCooldown(spellName)
 end
 
 local function getIndicator()
-    Arch_raidPeople = raidPeople
     local players = ''
     local color = '|cffFF7D0A'
     local cooldown = '|cff464646'
@@ -115,7 +190,7 @@ local function getIndicator()
         end
     end
     -- :: GUIye gonder
-    Arch_setGUI('raidCooldowns', true)
+    -- Arch_setGUI('raidCooldowns', true)
     -- if UnitInRaid('player') then
     --     frame:Show()
     -- else
@@ -140,61 +215,80 @@ local function scanGroup()
     end
     -- test 
     if not UnitInRaid('player') and #raidPeople < 1 then
-        table.insert(raidPeople, {
-            name = UnitName('player'),
-            class = UnitClass('player'),
-            availableAt = GetTime(),
-            spell = true,
-            alive = true
-        })
+        for kk = 1, #trackClass do
+            if UnitClass('player') == trackClass[kk][1] then
+                trackClass[kk][2] = trackClass[kk][2] + 1
+                for ii = 1, #trackClass[kk][3] do
+                    table.insert(raidPeople, {
+                        name = UnitName('player'),
+                        class = UnitClass('player'),
+                        availableAt = GetTime(),
+                        spell = true,
+                        alive = true,
+                        trackSpell = tostring(trackClass[kk][3][ii])
+                    })
+                end
+            end
+        end
     end
-    --
+    -- test end
     if UnitInRaid('player') or GetNumPartyMembers() >= 1 then
         for ii = 1, #raidPeople do
-            if raidPeople[ii].name == UnitName('player') and UnitClass('player') ~= 'Druid' then
+            if raidPeople[ii].name == UnitName('player') then
                 table.remove(raidPeople, ii)
                 break
             end
         end
     end
-    -- test end
     --
     if UnitInRaid('player') then
         local isExists = false
         for ii = 1, GetNumRaidMembers() do
             local druidName, rank, subgroup, level, vclass = GetRaidRosterInfo(ii)
-            if vclass == 'Druid' then
-                for yy = 1, #raidPeople do
-                    if raidPeople[yy].name == druidName then
-                        isExists = true
-                        break
+            for jj = 1, #trackClass do
+                if vclass == trackClass[jj][1] then
+                    -- :: check if already exists to avoid duplicate
+                    for kk = 1, #raidPeople do
+                        if raidPeople[kk].name == druidName then
+                            isExists = true
+                            break
+                        end
                     end
+                    -- :: if not exists add
+                    if isExists == false then
+                        trackClass[jj][2] = trackClass[jj][2] + 1
+                        for kk = 1, #trackClass[jj][3] do
+                            table.insert(raidPeople, {
+                                name = druidName,
+                                class = vclass,
+                                availableAt = GetTime(),
+                                spell = true,
+                                alive = true,
+                                trackSpell = tostring(trackClass[jj][3][kk])
+                            })
+                            SELECTED_CHAT_FRAME:AddMessage(#raidPeople)
+                        end
+                    end
+                    isExists = false
                 end
-                --
-                if isExists == false then
-                    table.insert(raidPeople, {
-                        name = druidName,
-                        class = vclass,
-                        availableAt = GetTime(),
-                        spell = true,
-                        alive = true
-                    })
-                end
-                isExists = false
             end
+            -- for class, parameters in pairs(trackClass) do
+            -- end
         end
+
         -- :: Artik raidde olmayanlari cikar
         for ii = 1, #raidPeople do
             local stillIn = false
             for yy = 1, GetNumRaidMembers() do
                 local druidName = GetRaidRosterInfo(yy)
-                if raidPeople[ii].name then
+                if raidPeople[ii].name ~= nil then
                     if druidName == raidPeople[ii].name then
                         stillIn = true
                     end
                 end
             end
             if not stillIn then
+                trackClass[raidPeople[ii].class][1] = trackClass[raidPeople[ii].class][1] - 1
                 table.remove(raidPeople, ii)
             end
         end
@@ -210,9 +304,8 @@ local function handleCommand(msg)
         if msg ~= '' then
             if raidPeople[tonumber(msg)] then
                 if raidPeople[tonumber(msg)].spell and raidPeople[ii].alive then
-                    SendChatMessage(
-                        '{triangle} ' .. raidPeople[tonumber(msg)].name .. ' combat res ' .. UnitName('target') ..
-                            ' {triangle}', "raid_warning", nil, nil)
+                    SendChatMessage('{triangle} ' .. raidPeople[tonumber(msg)].name .. ' combat res ' ..
+                                        UnitName('target') .. ' {triangle}', "raid_warning", nil, nil)
                     -- SELECTED_CHAT_FRAME:AddMessage(
                     --     '{triangle} ' .. raidPeople[tonumber(msg)].name ..
                     --         ' combat res ' .. UnitName('target') ..
@@ -232,12 +325,12 @@ local function handleCommand(msg)
         --
     else
         if msg == '' then
-            if isFrameVisible then
+            if isFrameOpen then
                 frame:Hide()
             else
                 frame:Show()
             end
-            isFrameVisible = not isFrameVisible
+            isFrameOpen = not isFrameOpen
         elseif msg == 'lock' then
             frame:SetMovable(false)
             frame:EnableMouse(false)
@@ -275,33 +368,28 @@ end
 
 -- :: This function activates rebirth cooldown and turns rebirth availability false for given druid
 local function startCooldown(srcName, spellID, spellName)
-    -- local start, duration, enabled = GetSpellCooldown(spell)
-    -- print(srcName .. ' ' .. spell)
-    -- start, duration, enabled = GetSpellCooldown(30823)
-    -- print(start .. ' ' .. duration ..' ' .. enabled )
     for ii = 1, #raidPeople do
-        if raidPeople[ii].name == srcName then
+        if raidPeople[ii].name == srcName and raidPeople[ii].trackSpell == spellName then
             raidPeople[ii].spell = false
             raidPeople[ii].availableAt = (GetTime() + getSpellCooldown(spellName)) -- saniye olarak ekle
             -- saniye olarak ekle
             -- saniye olarak ekle
             -- saniye olarak ekle
-            -- saniye olarak ekle
-            -- saniye olarak ekle
+
             setClosestAvailable()
         end
     end
     getIndicator()
 end
 
-local function removeBear(srcName)
-    for ii = 1, #raidPeople do
-        if srcName == raidPeople[ii].name then
-            table.remove(raidPeople, ii)
-        end
-    end
-    getIndicator()
-end
+-- local function removeBear(srcName)
+--     for ii = 1, #raidPeople do
+--         if srcName == raidPeople[ii].name then
+--             table.remove(raidPeople, ii)
+--         end
+--     end
+--     getIndicator()
+-- end
 
 -- :: controls with random combat logs if rebirth is available
 local function endCooldown()
@@ -404,6 +492,21 @@ end
 function module:PLAYER_DIFFICULTY_CHANGED()
     scanGroup()
 end
+
+-- ==== GUI Update
+frame:SetScript("OnUpdate", function(_, elapsed)
+    if isFrameOpen then
+        timeSinceLastUpdate = timeSinceLastUpdate + elapsed;
+        if (timeSinceLastUpdate > UpdateInterval) then
+            -- Arch_setGUI("raidCooldowns", true)
+            -- Insert here
+            -- frameTextName:SetText(math.floor(GetTime()))
+            updateGUI()
+            --
+            timeSinceLastUpdate = 0;
+        end
+    end
+end)
 
 -- ==== Slash Handlersd
 SLASH_cr1 = "/cr"
