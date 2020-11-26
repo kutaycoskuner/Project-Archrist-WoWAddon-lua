@@ -2,9 +2,15 @@
 `Started 29-Jul-2020`
 
 # Todo
+27-Nov-2020 ingame interface
+27-Nov-2020 crindicator combat komutlari
+26-Nov-2020 crindicator ikonlari goster
 17-Oct-2020 girilmeyen moduller icin help yaz
 
+
 # ChangeLog
+[1.1.0]
+27-Nov-2020 CRIndicator alpha
 [1.0.1]
 26-Nov-2020 test: CRIndicator WIP
 25-Nov-2020 test: CRIndicator WIP

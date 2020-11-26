@@ -15,7 +15,7 @@ Arch_spells = {
     -- ["Hymn of Hope"] = {64901, 360},
     -- ["Flash Heal"] = {48071, 4},
     -- ==== Warlocck
-    -- ["Soulstone Resurrection"] = {},
+    ["Soulstone Resurrection"] = {47883, 300},
     -- ==== Hunter
     ["Misdirection"] = {34477,30},
     -- ==== Shaman

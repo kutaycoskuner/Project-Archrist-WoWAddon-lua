@@ -13,6 +13,7 @@ local classColors = Arch_classColors
 --
 local isFrameOpen = false
 local frameRecursive = false
+local firstTimeOpen = 0
 --
 local subFrame = {}
 local subFrameName = {}
@@ -20,8 +21,11 @@ local subFrameCD = {}
 --
 local raidPeople
 local trackClass = { --- ClassName, Count, Trackspells
-{"Druid", 0, {"Rebirth", "Innervate"}}, {"Hunter", 0, {"Misdirection"}},
-{"Shaman", 0, {"Reincarnation", "Lesser Healing Wave"}}}
+{"Druid", false, {"Rebirth", "Innervate"}}, 
+{"Hunter", false, {"Misdirection"}},
+{"Shaman", false, {"Reincarnation"}}, 
+{"Warlock", false, {"Soulstone Resurrection"}}, 
+}
 local trackSpells = {"Rebirth", "Innervate", "Flash Heal"}
 --
 local UpdateInterval = 1.0;
@@ -62,7 +66,7 @@ frame:SetFrameStrata("FULLSCREEN")
 local frameTextName = frame:CreateFontString(nil, "ARTWORK")
 frameTextName:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
 frameTextName:SetPoint("CENTER", 0, 0)
-frameTextName:SetText("|cff464646Combat Res Frame|r")
+frameTextName:SetText("|cff464646Cooldown Tracker|r")
 
 local function raidCooldowns_calcTime(time)
     local cd = time - GetTime()
@@ -77,6 +81,15 @@ local function raidCooldowns_calcTime(time)
             min = "0" .. min
         end
         --
+        if tonumber(min) > 0 then
+            return ("|cff999999" .. min .. ":" .. sec .. "|r")
+        end
+        if tonumber(sec) < 30 then
+            return ("|cffe3d005" .. min .. ":" .. sec .. "|r")
+        end
+        if tonumber(min) < 1 then
+            return ("|cff999999" .. min .. ":" .. sec .. "|r")
+        end
         return (min .. ":" .. sec)
     else
         return "|cff08cf3dReady|r"
@@ -90,10 +103,9 @@ local function updateGUI()
     local lastSub = 0
     --
     for kk = 1, #trackClass do
-        if trackClass[kk][2] > 0 then
+        if trackClass[kk][2] ~= nil and trackClass[kk][2] then
             for yy = 1, #trackClass[kk][3] do
                 lastSub = lastSub + 1
-                -- SELECTED_CHAT_FRAME:AddMessage(lastSub)
                 if not subFrame[lastSub] then
                     subFrame[lastSub] = CreateFrame("frame", "subFrame", frame)
                 end
@@ -107,22 +119,25 @@ local function updateGUI()
                     subFrameName[lastSub]:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
                 end
                 subFrameName[lastSub]:SetPoint("CENTER")
-                subFrameName[lastSub]:SetText(" - " .. trackClass[kk][3][yy] .. " - ")
+                subFrameName[lastSub]:SetText(trackClass[kk][3][yy])
                 --
                 if not subFrameCD[lastSub] then
                     subFrameCD[lastSub] = subFrame[lastSub]:CreateFontString(nil, "ARTWORK")
+                    -- "Interface\\Icons\\INV_Misc_Rune_01"
                     subFrameCD[lastSub]:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
                     subFrameCD[lastSub]:SetPoint("RIGHT")
                 end
+                -- subFrameCD[lastSub]:SetTexture("Interface\\ICONS\\Spell_Nature_Reincarnation")
                 subFrameCD[lastSub]:SetText("")
                 --
                 tab = tab - 16
                 fH = fH + 16
                 --
+                -- print(#raidPeople)
                 for ii = 1, #raidPeople do
-                    if raidPeople[ii].trackSpell == trackClass[kk][3][yy] then
+                    -- print(tostring(raidPeople[ii].trackSpell) .. " " .. tostring(trackClass[kk][3][yy]))
+                    if tostring(raidPeople[ii].trackSpell) == tostring(trackClass[kk][3][yy]) then
                         lastSub = lastSub + 1
-                        -- SELECTED_CHAT_FRAME:AddMessage(lastSub)
                         if not subFrame[lastSub] then
                             subFrame[lastSub] = CreateFrame("frame", "subFrame", frame)
                         end
@@ -152,7 +167,11 @@ local function updateGUI()
             end
         end
     end
-    frameTextName:SetText("")
+    if fH == 50 then
+        frameTextName:SetText("|cff464646Cooldown Tracker|r")
+    else
+        frameTextName:SetText("")
+    end
     frame:SetSize(150, fH) -- 180 50
 end
 
@@ -205,7 +224,7 @@ local function getIndicator()
 end
 
 local function scanGroup()
-    if raidPeople == nil then
+    if raidPeople == nil or raidPeople == {} then
         raidPeople = A.global.raidCds
     end
     --
@@ -215,38 +234,35 @@ local function scanGroup()
     end
     -- test 
     if not UnitInRaid('player') and #raidPeople < 1 then
-        for kk = 1, #trackClass do
-            if UnitClass('player') == trackClass[kk][1] then
-                trackClass[kk][2] = trackClass[kk][2] + 1
-                for ii = 1, #trackClass[kk][3] do
-                    table.insert(raidPeople, {
-                        name = UnitName('player'),
-                        class = UnitClass('player'),
-                        availableAt = GetTime(),
-                        spell = true,
-                        alive = true,
-                        trackSpell = tostring(trackClass[kk][3][ii])
-                    })
+        if raidPeople[1] == nil then
+            for kk = 1, #trackClass do
+                if UnitClass('player') == trackClass[kk][1] then
+                    trackClass[kk][2] = true
+                    -- SELECTED_CHAT_FRAME:AddMessage('test')
+                    for ii = 1, #trackClass[kk][3] do
+                        table.insert(raidPeople, {
+                            name = UnitName('player'),
+                            class = UnitClass('player'),
+                            availableAt = GetTime(),
+                            spell = true,
+                            alive = true,
+                            trackSpell = tostring(trackClass[kk][3][ii])
+                        })
+                    end
                 end
             end
         end
     end
     -- test end
-    if UnitInRaid('player') or GetNumPartyMembers() >= 1 then
-        for ii = 1, #raidPeople do
-            if raidPeople[ii].name == UnitName('player') then
-                table.remove(raidPeople, ii)
-                break
-            end
-        end
-    end
-    --
+
     if UnitInRaid('player') then
         local isExists = false
         for ii = 1, GetNumRaidMembers() do
             local druidName, rank, subgroup, level, vclass = GetRaidRosterInfo(ii)
+            -- SELECTED_CHAT_FRAME:AddMessage(vclass)
             for jj = 1, #trackClass do
-                if vclass == trackClass[jj][1] then
+                if tostring(vclass) == tostring(trackClass[jj][1]) then
+                    trackClass[jj][2] = true
                     -- :: check if already exists to avoid duplicate
                     for kk = 1, #raidPeople do
                         if raidPeople[kk].name == druidName then
@@ -256,7 +272,6 @@ local function scanGroup()
                     end
                     -- :: if not exists add
                     if isExists == false then
-                        trackClass[jj][2] = trackClass[jj][2] + 1
                         for kk = 1, #trackClass[jj][3] do
                             table.insert(raidPeople, {
                                 name = druidName,
@@ -266,7 +281,7 @@ local function scanGroup()
                                 alive = true,
                                 trackSpell = tostring(trackClass[jj][3][kk])
                             })
-                            SELECTED_CHAT_FRAME:AddMessage(#raidPeople)
+                            -- SELECTED_CHAT_FRAME:AddMessage(#raidPeople)
                         end
                     end
                     isExists = false
@@ -278,18 +293,30 @@ local function scanGroup()
 
         -- :: Artik raidde olmayanlari cikar
         for ii = 1, #raidPeople do
-            local stillIn = false
-            for yy = 1, GetNumRaidMembers() do
-                local druidName = GetRaidRosterInfo(yy)
-                if raidPeople[ii].name ~= nil then
-                    if druidName == raidPeople[ii].name then
-                        stillIn = true
+            if UnitInRaid("player") then
+                local stillIn = false
+                for yy = 1, GetNumRaidMembers() do
+                    local druidName = GetRaidRosterInfo(yy)
+                    if raidPeople[ii].name ~= nil then
+                        if druidName == raidPeople[ii].name then
+                            stillIn = true
+                        end
                     end
                 end
-            end
-            if not stillIn then
-                trackClass[raidPeople[ii].class][1] = trackClass[raidPeople[ii].class][1] - 1
-                table.remove(raidPeople, ii)
+                if not stillIn then
+                    if raidPeople[ii].class ~= nil then
+                        local class = raidPeople[ii].class
+                        local isAny = 0
+                        table.remove(raidPeople, ii)
+                        for yy=1, #raidPeople do
+                            if raidPeople[yy].class == class then
+                                isAny = 1
+                                break
+                            end
+                        end
+                        if isAny == 0 then trackClass[class][2] = false end
+                    end
+                end
             end
         end
     end
@@ -299,17 +326,21 @@ local function scanGroup()
 end
 
 local function handleCommand(msg)
+    if firstTimeOpen == 0 then
+        firstTimeOpen = 1
+    else
+        firstTimeOpen = -1
+    end
+    -- SELECTED_CHAT_FRAME:AddMessage(#raidPeople)
+    scanGroup()
+    updateGUI()
     if UnitName('target') and (UnitAffectingCombat("player") or UnitIsDeadOrGhost('player')) then
-        --
+
         if msg ~= '' then
             if raidPeople[tonumber(msg)] then
                 if raidPeople[tonumber(msg)].spell and raidPeople[ii].alive then
                     SendChatMessage('{triangle} ' .. raidPeople[tonumber(msg)].name .. ' combat res ' ..
                                         UnitName('target') .. ' {triangle}', "raid_warning", nil, nil)
-                    -- SELECTED_CHAT_FRAME:AddMessage(
-                    --     '{triangle} ' .. raidPeople[tonumber(msg)].name ..
-                    --         ' combat res ' .. UnitName('target') ..
-                    --         ' {triangle}')
                     return
                 end
             end
@@ -375,6 +406,10 @@ local function startCooldown(srcName, spellID, spellName)
             -- saniye olarak ekle
             -- saniye olarak ekle
             -- saniye olarak ekle
+            -- saniye olarak ekle
+            -- saniye olarak ekle
+            -- saniye olarak ekle
+            -- saniye olarak ekle
 
             setClosestAvailable()
         end
@@ -410,17 +445,18 @@ end
 function module:Initialize()
     self.initialized = true
     if A.global.raidCds == nil then
-        raidPeople, A.global.raidCds = {}, {}
+        raidPeople = {}
+        A.global.raidCds = {}
     end
     if not UnitInRaid('player') then
-        raidPeople, A.global.raidCds = {}, {}
+        raidPeople = {}
+        A.global.raidCds = {}
     end
-    -- toggleGUI()
     scanGroup()
 
     -- :: Register some events
-    -- module:RegisterEvent("PLAYER_REGEN_DISABLED")
-    -- module:RegisterEvent("PLAYER_REGEN_ENABLED")
+    module:RegisterEvent("PLAYER_REGEN_DISABLED")
+    module:RegisterEvent("PLAYER_REGEN_ENABLED")
     module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     --
     module:RegisterEvent("PARTY_MEMBERS_CHANGED")
@@ -458,14 +494,45 @@ function module:COMBAT_LOG_EVENT_UNFILTERED(event, _, eventType, _, srcName, isD
         end
         startCooldown(srcName, spellId, spellName)
     end
+    -- :: Innervate
+    if spellId == 29166 and eventType == "SPELL_CAST_SUCCESS" then
+        for ii = 1, #raidPeople do
+            if dstName == raidPeople[ii].name then
+                raidPeople[ii].alive = true
+                break
+            end
+        end
+        startCooldown(srcName, spellId, spellName)
+    end
+    -- :: Hunter Misdirection
+    if spellId == 34477 and eventType == "SPELL_CAST_SUCCESS" then
+        for ii = 1, #raidPeople do
+            if dstName == raidPeople[ii].name then
+                raidPeople[ii].alive = true
+                break
+            end
+        end
+        startCooldown(srcName, spellId, spellName)
+    end
+    -- :: Hunter Misdirection
+    if spellName == "Soulstone Resurrection" and eventType == "SPELL_AURA_APPLIED" then
+        for ii = 1, #raidPeople do
+            if dstName == raidPeople[ii].name then
+                raidPeople[ii].alive = true
+                break
+            end
+        end
+        startCooldown(srcName, spellId, spellName)
+    end
+
     -- :: remove bear when you see mangle spell
     -- if spellName == "Mangle (Bear)" and eventType == "SPELL_AURA_APPLIED" then
     --     removeBear(srcName)
     -- end
     -- test shaman
-    if spellName == "Lesser Healing Wave" and eventType == "SPELL_HEAL" then -- shaman lesser healing wave
-        startCooldown(srcName, spellId, spellName)
-    end
+    -- if spellName == "Lesser Healing Wave" and eventType == "SPELL_HEAL" then -- shaman lesser healing wave
+    --     startCooldown(srcName, spellId, spellName)
+    -- end
     -- test
     -- :: Checktime if some cd exists
     if inquiryCD then
@@ -477,6 +544,12 @@ function module:COMBAT_LOG_EVENT_UNFILTERED(event, _, eventType, _, srcName, isD
 end
 
 -- ==== Scan on group changes
+function module:PLAYER_REGEN_ENABLED()
+    scanGroup()
+end
+function module:PLAYER_REGEN_DISABLED()
+    scanGroup()
+end
 function module:PARTY_MEMBERS_CHANGED()
     scanGroup()
 end
@@ -498,12 +571,15 @@ frame:SetScript("OnUpdate", function(_, elapsed)
     if isFrameOpen then
         timeSinceLastUpdate = timeSinceLastUpdate + elapsed;
         if (timeSinceLastUpdate > UpdateInterval) then
-            -- Arch_setGUI("raidCooldowns", true)
-            -- Insert here
-            -- frameTextName:SetText(math.floor(GetTime()))
-            updateGUI()
-            --
+
             timeSinceLastUpdate = 0;
+            -- for ii = 1, #raidPeople do
+            --     if not raidPeople[ii].spell then
+            updateGUI()
+            --         break
+            --     end
+            -- end
+
         end
     end
 end)
