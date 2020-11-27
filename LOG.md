@@ -10,6 +10,7 @@
 
 # ChangeLog
 [1.1.0]
+27-Nov-2020 fix: CRIndicator; alone prune bug
 27-Nov-2020 CRIndicator alpha
 [1.0.1]
 26-Nov-2020 test: CRIndicator WIP

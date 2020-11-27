@@ -21,11 +21,8 @@ local subFrameCD = {}
 --
 local raidPeople
 local trackClass = { --- ClassName, Count, Trackspells
-{"Druid", false, {"Rebirth", "Innervate"}}, 
-{"Hunter", false, {"Misdirection"}},
-{"Shaman", false, {"Reincarnation"}}, 
-{"Warlock", false, {"Soulstone Resurrection"}}, 
-}
+{"Druid", false, {"Rebirth", "Innervate"}}, {"Hunter", false, {"Misdirection"}}, {"Shaman", false, {"Reincarnation"}},
+{"Warlock", false, {"Soulstone Resurrection"}}}
 local trackSpells = {"Rebirth", "Innervate", "Flash Heal"}
 --
 local UpdateInterval = 1.0;
@@ -33,7 +30,9 @@ local timeSinceLastUpdate = 0;
 
 -- ==== GUI
 local frame = CreateFrame("frame", "MyAddonFrame")
-local frameHeight = 50
+local frameWidth = 120
+local frameHeight = 40
+---
 frame:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
     --   edgeFile="Interface\\DialogFrame\\UI-DialogBox-Border", 
@@ -47,7 +46,7 @@ frame:SetBackdrop({
         bottom = 12
     }
 })
-frame:SetSize(150, frameHeight) -- 180 50
+frame:SetSize(frameWidth, frameHeight) -- 180 50
 frame:SetMovable(true)
 frame:EnableMouse(true)
 frame:RegisterForDrag("LeftButton")
@@ -60,7 +59,7 @@ end)
 frame:SetScript("OnDragStop", function(self)
     self:StopMovingOrSizing()
 end)
-frame:SetFrameStrata("FULLSCREEN")
+frame:SetFrameStrata("BACKGROUND")
 --
 -- :: Acilis ekrani koy
 local frameTextName = frame:CreateFontString(nil, "ARTWORK")
@@ -111,13 +110,14 @@ local function updateGUI()
                 end
                 subFrame[lastSub]:ClearAllPoints()
                 subFrame[lastSub]:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
-                subFrame[lastSub]:SetSize(150, 50)
-                subFrame[lastSub]:SetFrameStrata("FULLSCREEN_DIALOG")
+                subFrame[lastSub]:SetSize(frameWidth, 50)
+                subFrame[lastSub]:SetFrameStrata("BACKGROUND")
                 --
                 if not subFrameName[lastSub] then
                     subFrameName[lastSub] = subFrame[lastSub]:CreateFontString(nil, "ARTWORK")
                     subFrameName[lastSub]:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
                 end
+                subFrameName[lastSub]:ClearAllPoints()
                 subFrameName[lastSub]:SetPoint("CENTER")
                 subFrameName[lastSub]:SetText(trackClass[kk][3][yy])
                 --
@@ -143,13 +143,14 @@ local function updateGUI()
                         end
                         subFrame[lastSub]:ClearAllPoints()
                         subFrame[lastSub]:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
-                        subFrame[lastSub]:SetSize(150, 50)
-                        subFrame[lastSub]:SetFrameStrata("FULLSCREEN_DIALOG")
+                        subFrame[lastSub]:SetSize(frameWidth, 50)
+                        subFrame[lastSub]:SetFrameStrata("BACKGROUND")
                         --
                         if not subFrameName[lastSub] then
                             subFrameName[lastSub] = subFrame[lastSub]:CreateFontString(nil, "ARTWORK")
                             subFrameName[lastSub]:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
                         end
+                        subFrameName[lastSub]:ClearAllPoints()
                         subFrameName[lastSub]:SetPoint("LEFT")
                         subFrameName[lastSub]:SetText(classColors[raidPeople[ii].class] .. raidPeople[ii].name .. "|r")
                         --
@@ -167,12 +168,12 @@ local function updateGUI()
             end
         end
     end
-    if fH == 50 then
+    if fH == frameHeight then
         frameTextName:SetText("|cff464646Cooldown Tracker|r")
     else
         frameTextName:SetText("")
     end
-    frame:SetSize(150, fH) -- 180 50
+    frame:SetSize(frameWidth, fH) -- 180 50
 end
 
 -- :: Frame i yerlestir ve sakla
@@ -229,6 +230,11 @@ local function scanGroup()
     end
     --
     if not UnitInRaid('player') then
+        for ii = 1, #trackClass do
+            if trackClass[ii][1] ~= UnitClass('player') then
+                trackClass[ii][2] = false
+            end
+        end
         raidPeople = {}
         -- return
     end
@@ -308,13 +314,15 @@ local function scanGroup()
                         local class = raidPeople[ii].class
                         local isAny = 0
                         table.remove(raidPeople, ii)
-                        for yy=1, #raidPeople do
+                        for yy = 1, #raidPeople do
                             if raidPeople[yy].class == class then
                                 isAny = 1
                                 break
                             end
                         end
-                        if isAny == 0 then trackClass[class][2] = false end
+                        if isAny == 0 then
+                            trackClass[class][2] = false
+                        end
                     end
                 end
             end
@@ -410,6 +418,7 @@ local function startCooldown(srcName, spellID, spellName)
             -- saniye olarak ekle
             -- saniye olarak ekle
             -- saniye olarak ekle
+            -- saniye olarak ekle
 
             setClosestAvailable()
         end
@@ -455,8 +464,8 @@ function module:Initialize()
     scanGroup()
 
     -- :: Register some events
-    module:RegisterEvent("PLAYER_REGEN_DISABLED")
-    module:RegisterEvent("PLAYER_REGEN_ENABLED")
+    -- module:RegisterEvent("PLAYER_REGEN_DISABLED")
+    -- module:RegisterEvent("PLAYER_REGEN_ENABLED")
     module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     --
     module:RegisterEvent("PARTY_MEMBERS_CHANGED")
