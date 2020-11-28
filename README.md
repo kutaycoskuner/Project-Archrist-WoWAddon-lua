@@ -20,15 +20,13 @@ Display tactics of selected raid boss
 Display screen for available combat res in party max 3 at a time  
 `Help`  
 Basic text interface for addon guidance  
-`Loot Database`  
-Lootdatabase module for guild runs  
 `Loot Message Filter`  
 Filter out greed and disenchanting rolls  
 `Player Database`   
 Take notes and grade player on their performance  
 `PUG Raid Organizer`    
 Dynamic PUG Raid announcement module    
-`To Do List`    
+`Todo List`    
 Basic To do list    
 `VoA`    
 Vault of Archavon spec run announcement module  

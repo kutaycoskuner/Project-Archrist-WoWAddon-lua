@@ -13,24 +13,43 @@ local classColors = Arch_classColors
 --
 local isFrameOpen = false
 local frameRecursive = false
-local firstTimeOpen = 0
 --
 local subFrame = {}
+local subIconFrame = {}
 local subFrameName = {}
 local subFrameCD = {}
 --
-local raidPeople
-local trackClass = { --- ClassName, Count, Trackspells
-{"Druid", false, {"Rebirth", "Innervate"}}, {"Hunter", false, {"Misdirection"}}, {"Shaman", false, {"Reincarnation"}},
-{"Warlock", false, {"Soulstone Resurrection"}}}
-local trackSpells = {"Rebirth", "Innervate", "Flash Heal"}
+local raidPeople = {}
+local trackClass = {
+    ["Druid"] = {false, {"Rebirth", "Innervate"}},
+    ["Hunter"] = {false, {"Misdirection"}},
+    ["Shaman"] = {false, {"Reincarnation"}},
+    ["Warlock"] = {false, {"Soulstone Resurrection"}}
+}
 --
-local UpdateInterval = 1.0;
+local showIcons = false
+local headerPosition = "CENTER"
+local iconPaths = {
+    -- :: Druid
+    ["Innervate"] = "Spell_Nature_Innervate",
+    ["Rebirth"] = "Spell_Nature_Rebirth",
+    -- :: Hunter
+    ["Misdirection"] = "ability_hunter_misdirection",
+    -- :: Shaman
+    ["Reincarnation"] = "Spell_Nature_Reincarnation",
+    -- :: Warlock
+    ["Soulstone Resurrection"] = "spell_shadow_soulgem"
+}
+--
+local UpdateInterval = 0.8;
 local timeSinceLastUpdate = 0;
 
 -- ==== GUI
+--
+if showIcons then headerPosition = "LEFT" end
+--
 local frame = CreateFrame("frame", "MyAddonFrame")
-local frameWidth = 120
+local frameWidth = 130
 local frameHeight = 40
 ---
 frame:SetBackdrop({
@@ -101,9 +120,9 @@ local function updateGUI()
     local fH = frameHeight
     local lastSub = 0
     --
-    for kk = 1, #trackClass do
-        if trackClass[kk][2] ~= nil and trackClass[kk][2] then
-            for yy = 1, #trackClass[kk][3] do
+    for class, param in pairs(trackClass) do
+        if param[1] ~= nil and param[1] then
+            for yy = 1, #param[2] do
                 lastSub = lastSub + 1
                 if not subFrame[lastSub] then
                     subFrame[lastSub] = CreateFrame("frame", "subFrame", frame)
@@ -113,13 +132,37 @@ local function updateGUI()
                 subFrame[lastSub]:SetSize(frameWidth, 50)
                 subFrame[lastSub]:SetFrameStrata("BACKGROUND")
                 --
+                if not subIconFrame[lastSub] and showIcons then
+                    subIconFrame[lastSub] = CreateFrame("Frame", "potato", subFrame[lastSub])
+                    -- :: Set Position
+                    subIconFrame[lastSub]:ClearAllPoints()
+                    subIconFrame[lastSub]:SetPoint("RIGHT", 0, 0)
+                    -- :: Frame strata ("Background", "Low", "Medium", "High", "Dialog", "Fullscreen", "Fullscreen_Dialog", "Tooltip")
+                    subIconFrame[lastSub]:SetFrameStrata("Medium")
+                    -- :: Frame strata level (0 - 20)
+                    subIconFrame[lastSub]:SetFrameLevel(0)
+                    local texture = subIconFrame[lastSub]:CreateTexture("Texture", "Background")
+                    texture:SetTexture("Interface\\ICONS\\" .. iconPaths[param[2][yy]])
+                    texture:SetWidth(10)
+                    texture:SetHeight(10)
+                    texture:SetBlendMode("Disable")
+                    texture:SetDrawLayer("Border", 0)
+                    local ULx, ULy, LLx, LLy, URx, URy, LRx, LRy = texture:GetTexCoord()
+                    subIconFrame[lastSub]:SetWidth(sqrt(2) * texture:GetWidth())
+                    subIconFrame[lastSub]:SetHeight(sqrt(2) * texture:GetHeight())
+                    texture:SetTexCoord(ULx, ULy, LLx, LLy, URx, URy, LRx, LRy) -- Normal
+                    -- Put the texture on the frame
+                    texture:SetAllPoints(subIconFrame[lastSub])
+                    subIconFrame[lastSub]:Show()
+                end
+                --
                 if not subFrameName[lastSub] then
                     subFrameName[lastSub] = subFrame[lastSub]:CreateFontString(nil, "ARTWORK")
                     subFrameName[lastSub]:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
                 end
                 subFrameName[lastSub]:ClearAllPoints()
-                subFrameName[lastSub]:SetPoint("CENTER")
-                subFrameName[lastSub]:SetText(trackClass[kk][3][yy])
+                subFrameName[lastSub]:SetPoint(headerPosition)
+                subFrameName[lastSub]:SetText(param[2][yy])
                 --
                 if not subFrameCD[lastSub] then
                     subFrameCD[lastSub] = subFrame[lastSub]:CreateFontString(nil, "ARTWORK")
@@ -136,15 +179,20 @@ local function updateGUI()
                 -- print(#raidPeople)
                 for ii = 1, #raidPeople do
                     -- print(tostring(raidPeople[ii].trackSpell) .. " " .. tostring(trackClass[kk][3][yy]))
-                    if tostring(raidPeople[ii].trackSpell) == tostring(trackClass[kk][3][yy]) then
+                    if tostring(raidPeople[ii].trackSpell) == tostring(param[2][yy]) then
                         lastSub = lastSub + 1
                         if not subFrame[lastSub] then
                             subFrame[lastSub] = CreateFrame("frame", "subFrame", frame)
                         end
+                        -- TextureBasics_CreateTexture(subIconFrame[lastSub], false)
                         subFrame[lastSub]:ClearAllPoints()
                         subFrame[lastSub]:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
                         subFrame[lastSub]:SetSize(frameWidth, 50)
                         subFrame[lastSub]:SetFrameStrata("BACKGROUND")
+                        --
+                        if subIconFrame[lastSub] then
+                            subIconFrame[lastSub]:Hide()
+                        end
                         --
                         if not subFrameName[lastSub] then
                             subFrameName[lastSub] = subFrame[lastSub]:CreateFontString(nil, "ARTWORK")
@@ -174,6 +222,12 @@ local function updateGUI()
         frameTextName:SetText("")
     end
     frame:SetSize(frameWidth, fH) -- 180 50
+end
+
+-- :: Artik varolmayan isimleri temizle
+for ii = #raidPeople + 1 or 1, #subFrame do
+    subFrameName[ii]:SetText("")
+    subFrameCD[ii]:SetText("")
 end
 
 -- :: Frame i yerlestir ve sakla
@@ -230,9 +284,9 @@ local function scanGroup()
     end
     --
     if not UnitInRaid('player') then
-        for ii = 1, #trackClass do
-            if trackClass[ii][1] ~= UnitClass('player') then
-                trackClass[ii][2] = false
+        for class, param in pairs(trackClass) do
+            if class ~= UnitClass('player') then
+                param[1] = false
             end
         end
         raidPeople = {}
@@ -241,18 +295,18 @@ local function scanGroup()
     -- test 
     if not UnitInRaid('player') and #raidPeople < 1 then
         if raidPeople[1] == nil then
-            for kk = 1, #trackClass do
-                if UnitClass('player') == trackClass[kk][1] then
-                    trackClass[kk][2] = true
+            for class, param in pairs(trackClass) do
+                if UnitClass('player') == class then
+                    param[1] = true
                     -- SELECTED_CHAT_FRAME:AddMessage('test')
-                    for ii = 1, #trackClass[kk][3] do
+                    for ii = 1, #param[2] do
                         table.insert(raidPeople, {
                             name = UnitName('player'),
                             class = UnitClass('player'),
                             availableAt = GetTime(),
                             spell = true,
                             alive = true,
-                            trackSpell = tostring(trackClass[kk][3][ii])
+                            trackSpell = tostring(param[2][ii])
                         })
                     end
                 end
@@ -266,9 +320,9 @@ local function scanGroup()
         for ii = 1, GetNumRaidMembers() do
             local druidName, rank, subgroup, level, vclass = GetRaidRosterInfo(ii)
             -- SELECTED_CHAT_FRAME:AddMessage(vclass)
-            for jj = 1, #trackClass do
-                if tostring(vclass) == tostring(trackClass[jj][1]) then
-                    trackClass[jj][2] = true
+            for class, param in pairs(trackClass) do
+                if tostring(vclass) == tostring(class) then
+                    param[1] = true
                     -- :: check if already exists to avoid duplicate
                     for kk = 1, #raidPeople do
                         if raidPeople[kk].name == druidName then
@@ -278,14 +332,14 @@ local function scanGroup()
                     end
                     -- :: if not exists add
                     if isExists == false then
-                        for kk = 1, #trackClass[jj][3] do
+                        for kk = 1, #param[2] do
                             table.insert(raidPeople, {
                                 name = druidName,
                                 class = vclass,
                                 availableAt = GetTime(),
                                 spell = true,
                                 alive = true,
-                                trackSpell = tostring(trackClass[jj][3][kk])
+                                trackSpell = tostring(param[2][kk])
                             })
                             -- SELECTED_CHAT_FRAME:AddMessage(#raidPeople)
                         end
@@ -303,14 +357,14 @@ local function scanGroup()
                 local stillIn = false
                 for yy = 1, GetNumRaidMembers() do
                     local druidName = GetRaidRosterInfo(yy)
-                    if raidPeople[ii].name ~= nil then
+                    if raidPeople[ii] then
                         if druidName == raidPeople[ii].name then
                             stillIn = true
                         end
                     end
                 end
                 if not stillIn then
-                    if raidPeople[ii].class ~= nil then
+                    if raidPeople[ii] then
                         local class = raidPeople[ii].class
                         local isAny = 0
                         table.remove(raidPeople, ii)
@@ -321,7 +375,8 @@ local function scanGroup()
                             end
                         end
                         if isAny == 0 then
-                            trackClass[class][2] = false
+                            -- trackClass[class][2] = false
+                            trackClass[class][1] = false
                         end
                     end
                 end
@@ -334,34 +389,39 @@ local function scanGroup()
 end
 
 local function handleCommand(msg)
-    if firstTimeOpen == 0 then
-        firstTimeOpen = 1
-    else
-        firstTimeOpen = -1
-    end
-    -- SELECTED_CHAT_FRAME:AddMessage(#raidPeople)
+    -- if firstTimeOpen == 0 then
+    --     firstTimeOpen = 1
+    -- else
+    --     firstTimeOpen = -1
+    -- end
+    -- :: Indikatoru ayarla
     scanGroup()
     updateGUI()
+
+    -- :: Announce
     if UnitName('target') and (UnitAffectingCombat("player") or UnitIsDeadOrGhost('player')) then
 
         if msg ~= '' then
-            if raidPeople[tonumber(msg)] then
-                if raidPeople[tonumber(msg)].spell and raidPeople[ii].alive then
-                    SendChatMessage('{triangle} ' .. raidPeople[tonumber(msg)].name .. ' combat res ' ..
-                                        UnitName('target') .. ' {triangle}', "raid_warning", nil, nil)
-                    return
+            local que = tonumber(msg)
+            local queCounter = 1
+            for ii = 1, #raidPeople do
+                if raidPeople[ii] then
+                    if raidPeople[ii].spell and raidPeople[ii].alive and raidPeople[ii].trackSpell == "Rebirth" then
+                        if queCounter == que then
+                            if UnitName('target') then
+                                SendChatMessage('{triangle} ' .. raidPeople[ii].name .. ' combat res ' ..
+                                                    UnitName('target') .. ' {triangle}', "raid_warning", nil, nil)
+                            else
+                                SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "you don't have a target")
+                            end
+                            return
+                        end
+                        queCounter = queCounter + 1
+                    end
                 end
             end
         end
-        --
-        for ii = 1, #raidPeople do
-            if raidPeople[ii].spell and raidPeople[ii].alive then
-                SendChatMessage('{triangle} ' .. raidPeople[ii].name .. ' combat res ' .. UnitName('target') ..
-                                    ' {triangle}', "raid_warning", nil, nil)
-                break
-            end
-        end
-        --
+
     else
         if msg == '' then
             if isFrameOpen then
@@ -410,16 +470,7 @@ local function startCooldown(srcName, spellID, spellName)
     for ii = 1, #raidPeople do
         if raidPeople[ii].name == srcName and raidPeople[ii].trackSpell == spellName then
             raidPeople[ii].spell = false
-            raidPeople[ii].availableAt = (GetTime() + getSpellCooldown(spellName)) -- saniye olarak ekle
-            -- saniye olarak ekle
-            -- saniye olarak ekle
-            -- saniye olarak ekle
-            -- saniye olarak ekle
-            -- saniye olarak ekle
-            -- saniye olarak ekle
-            -- saniye olarak ekle
-            -- saniye olarak ekle
-
+            raidPeople[ii].availableAt = (GetTime() + getSpellCooldown(spellName)) 
             setClosestAvailable()
         end
     end
@@ -448,6 +499,15 @@ local function endCooldown()
     end
     setClosestAvailable()
     getIndicator()
+end
+
+local function TextureBasics_CreateTexture(iconFrame, show)
+
+    if show == true then
+        iconFrame:Show()
+    else
+        iconFrame:Hide()
+    end
 end
 
 -- ==== Start
@@ -560,7 +620,7 @@ function module:PLAYER_REGEN_DISABLED()
     scanGroup()
 end
 function module:PARTY_MEMBERS_CHANGED()
-    scanGroup()
+    -- scanGroup()
 end
 function module:RAID_ROSTER_UPDATE()
     scanGroup()

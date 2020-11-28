@@ -2,13 +2,15 @@
 `Started 29-Jul-2020`
 
 # Todo
+28-Nov-2020 CRIndicator biraktigin yeri hatirlama / position resset
 27-Nov-2020 ingame interface
-27-Nov-2020 crindicator combat komutlari
-26-Nov-2020 crindicator ikonlari goster
-17-Oct-2020 girilmeyen moduller icin help yaz
 
 
 # ChangeLog
+[1.11]
+29-Nov-2020 todo: 17-Oct-2020 girilmeyen moduller icin help yaz
+29-Nov-2020 todo: 27-Nov-2020 crindicator combat komutlari
+29-Nov-2020 todo: 26-Nov-2020 crindicator ikonlari goster
 [1.1.0]
 27-Nov-2020 fix: CRIndicator; alone prune bug
 27-Nov-2020 CRIndicator alpha
