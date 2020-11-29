@@ -81,7 +81,8 @@ local function setRaidWarnings(msg)
     local pass = false
     local args = fixArgs(msg)
     local mod = tonumber(table.remove(args, 1))
-    local entry = string.upper(table.concat(args, ' '))
+    local entry = string.gsub(" "..table.concat(args, ' '), "%W%l", string.upper):sub(2)
+    if entry ~= '' then entry = "{triangle} " .. entry .. " {triangle}" end
     local rw = 'rw' .. tostring(mod)
     local default = 'rwDefault' .. tostring(mod)
     -- :: Defensive

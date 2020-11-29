@@ -2,12 +2,15 @@
 `Started 29-Jul-2020`
 
 # Todo
-28-Nov-2020 CRIndicator biraktigin yeri hatirlama / position resset
 27-Nov-2020 ingame interface
 
 
 # ChangeLog
 [1.11]
+29-Nov-2020 todo: 29-Nov-2020 crindicator lock save
+29-Nov-2020 todo: 28-Nov-2020 CRIndicator biraktigin yeri hatirlama / position resset
+29-Nov-2020 alter: raidwarnings adding triangles bottom ends of warning and proper case
+29-Nov-2020 fix: crindicator combatta da acilip kapatilabiliyor
 29-Nov-2020 todo: 17-Oct-2020 girilmeyen moduller icin help yaz
 29-Nov-2020 todo: 27-Nov-2020 crindicator combat komutlari
 29-Nov-2020 todo: 26-Nov-2020 crindicator ikonlari goster

@@ -287,7 +287,20 @@ Arch_tactics = {
 
     },
     -- :: RS
-
+    ["halion"] = {
+        "Fight is consist of 3 phase transitions at 75% and 50%",
+        "P1- run away from group if you get Fiery Combustion debuff",
+        "P1- Change to other side of Halion if meteor mark in on your side",
+        "P2- Enter portal",
+        "P2- run away from group if you get Soul Consumption debuff",
+        "P2- Tank will rotate the boss periodically to avoid from link",
+        "P3- Raid will split into 2 groups half will stay in shadow dimension while others go physical",
+        "P3- Fight will continue in two dimensions but Halion health should be decreased equally",
+        "=1 {square} Swap to other side {square}",
+        "=2 {triangle} Slow inside! {triangle}",
+        "=3 {triangle} Slow outside! {triangle}",
+        "=4 {circle} Debuff run away! {circle}",
+    },
     -- ==== Battlegrounds
     ["strand"] = {
         '1- Protect Demos', '2- RDPS get in turret slot', '3- Get Bombs'

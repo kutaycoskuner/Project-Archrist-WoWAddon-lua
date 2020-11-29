@@ -15,10 +15,6 @@ tacticDefault[1] = "{skull} Focus on [%t] {skull}"
 tacticDefault[2] = '{square} Combat Res [%t] {square}'
 tacticDefault[3] = '{circle} Heroism Now! {circle}'
 tacticDefault[4] = '{triangle} Innervate Please {triangle}'
-tacticDefault[5] = '{triangle} Innervate Please {triangle}'
-tacticDefault[6] = '{triangle} Innervate Please {triangle}'
-tacticDefault[8] = '{triangle} Innervate Please {triangle}'
-tacticDefault[9] = '{triangle} Innervate Please {triangle}'
 --
 local tactics = {}
 tactics[1] = ''

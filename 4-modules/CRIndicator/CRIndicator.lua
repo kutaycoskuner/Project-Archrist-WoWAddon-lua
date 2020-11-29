@@ -20,12 +20,15 @@ local subFrameName = {}
 local subFrameCD = {}
 --
 local raidPeople = {}
+local rcFramePos
+local rcFrameLock
 local trackClass = {
     ["Druid"] = {false, {"Rebirth", "Innervate"}},
     ["Hunter"] = {false, {"Misdirection"}},
     ["Shaman"] = {false, {"Reincarnation"}},
     ["Warlock"] = {false, {"Soulstone Resurrection"}}
 }
+
 --
 local showIcons = false
 local headerPosition = "CENTER"
@@ -46,12 +49,14 @@ local timeSinceLastUpdate = 0;
 
 -- ==== GUI
 --
-if showIcons then headerPosition = "LEFT" end
+if showIcons then
+    headerPosition = "LEFT"
+end
 --
 local frame = CreateFrame("frame", "MyAddonFrame")
 local frameWidth = 130
 local frameHeight = 40
----
+--
 frame:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
     --   edgeFile="Interface\\DialogFrame\\UI-DialogBox-Border", 
@@ -66,8 +71,6 @@ frame:SetBackdrop({
     }
 })
 frame:SetSize(frameWidth, frameHeight) -- 180 50
-frame:SetMovable(true)
-frame:EnableMouse(true)
 frame:RegisterForDrag("LeftButton")
 frame:SetScript("OnDragStart", function(self)
     self:StartMoving()
@@ -77,13 +80,16 @@ frame:SetScript("OnDragStart", function(self)
 end)
 frame:SetScript("OnDragStop", function(self)
     self:StopMovingOrSizing()
+    local a,_,c,x,y = frame:GetPoint();
+    rcFramePos = {a, c, x, y}
+    A.global.rcFramePos = rcFramePos
 end)
-frame:SetFrameStrata("BACKGROUND")
+frame:SetFrameStrata("MEDIUM")
 --
 -- :: Acilis ekrani koy
 local frameTextName = frame:CreateFontString(nil, "ARTWORK")
 frameTextName:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
-frameTextName:SetPoint("CENTER", 0, 0)
+frameTextName:SetPoint("CENTER")
 frameTextName:SetText("|cff464646Cooldown Tracker|r")
 
 local function raidCooldowns_calcTime(time)
@@ -119,10 +125,12 @@ local function updateGUI()
     local tab = 0
     local fH = frameHeight
     local lastSub = 0
+    local headerCount = 0
     --
     for class, param in pairs(trackClass) do
         if param[1] ~= nil and param[1] then
             for yy = 1, #param[2] do
+                headerCount = headerCount + 1
                 lastSub = lastSub + 1
                 if not subFrame[lastSub] then
                     subFrame[lastSub] = CreateFrame("frame", "subFrame", frame)
@@ -130,7 +138,7 @@ local function updateGUI()
                 subFrame[lastSub]:ClearAllPoints()
                 subFrame[lastSub]:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
                 subFrame[lastSub]:SetSize(frameWidth, 50)
-                subFrame[lastSub]:SetFrameStrata("BACKGROUND")
+                -- subFrame[lastSub]:SetFrameStrata("BACKGROUND")
                 --
                 if not subIconFrame[lastSub] and showIcons then
                     subIconFrame[lastSub] = CreateFrame("Frame", "potato", subFrame[lastSub])
@@ -138,7 +146,7 @@ local function updateGUI()
                     subIconFrame[lastSub]:ClearAllPoints()
                     subIconFrame[lastSub]:SetPoint("RIGHT", 0, 0)
                     -- :: Frame strata ("Background", "Low", "Medium", "High", "Dialog", "Fullscreen", "Fullscreen_Dialog", "Tooltip")
-                    subIconFrame[lastSub]:SetFrameStrata("Medium")
+                    -- subIconFrame[lastSub]:SetFrameStrata("Medium")
                     -- :: Frame strata level (0 - 20)
                     subIconFrame[lastSub]:SetFrameLevel(0)
                     local texture = subIconFrame[lastSub]:CreateTexture("Texture", "Background")
@@ -188,7 +196,7 @@ local function updateGUI()
                         subFrame[lastSub]:ClearAllPoints()
                         subFrame[lastSub]:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
                         subFrame[lastSub]:SetSize(frameWidth, 50)
-                        subFrame[lastSub]:SetFrameStrata("BACKGROUND")
+                        -- subFrame[lastSub]:SetFrameStrata("BACKGROUND")
                         --
                         if subIconFrame[lastSub] then
                             subIconFrame[lastSub]:Hide()
@@ -216,23 +224,25 @@ local function updateGUI()
             end
         end
     end
+
+    -- :: yeni frame icin yukseklik ayarla
     if fH == frameHeight then
         frameTextName:SetText("|cff464646Cooldown Tracker|r")
     else
         frameTextName:SetText("")
     end
-    frame:SetSize(frameWidth, fH) -- 180 50
-end
 
--- :: Artik varolmayan isimleri temizle
-for ii = #raidPeople + 1 or 1, #subFrame do
-    subFrameName[ii]:SetText("")
-    subFrameCD[ii]:SetText("")
+    frame:SetSize(frameWidth, fH) -- 180 50
+
+    -- :: Artik varolmayan isimleri temizle
+    for ii = #raidPeople + headerCount + 1 or 1, #subFrame do
+        subFrameName[ii]:SetText("")
+        subFrameCD[ii]:SetText("")
+    end
 end
 
 -- :: Frame i yerlestir ve sakla
-frame:SetSize(174, frameHeight)
-frame:SetPoint("CENTER", 536, 200)
+frame:SetSize(frameWidth, frameHeight)
 frame:Hide()
 
 -- ==== Methods
@@ -421,24 +431,35 @@ local function handleCommand(msg)
                 end
             end
         end
+    end
 
-    else
-        if msg == '' then
-            if isFrameOpen then
-                frame:Hide()
-            else
-                frame:Show()
-            end
-            isFrameOpen = not isFrameOpen
-        elseif msg == 'lock' then
-            frame:SetMovable(false)
-            frame:EnableMouse(false)
-        elseif msg == 'move' then
-            frame:SetMovable(true)
-            frame:EnableMouse(true)
-        elseif msg == 'scan' then
-            scanGroup()
+    -- :: gui interactions
+    if msg == '' then
+        if isFrameOpen then
+            frame:Hide()
+        else
+            frame:Show()
         end
+        isFrameOpen = not isFrameOpen
+    elseif msg == 'lock' then
+        frame:SetMovable(not A.global.rcFrameLock)
+        frame:EnableMouse(not A.global.rcFrameLock)
+        A.global.rcFrameLock = not A.global.rcFrameLock
+        --
+        if not A.global.rcFrameLock then
+
+        end
+    elseif msg == 'move' then
+        frame:SetMovable(true)
+        frame:EnableMouse(true)
+        A.global.rcFrameLock = true
+    elseif msg == 'reset' then
+        A.global.rcFramePos = {0, 0}
+        rcFramePos = {0, 0}
+        frame:ClearAllPoints()
+        frame:SetPoint("CENTER", rcFramePos[1], rcFramePos[2])
+    elseif msg == 'scan' then
+        scanGroup()
     end
 end
 
@@ -470,7 +491,7 @@ local function startCooldown(srcName, spellID, spellName)
     for ii = 1, #raidPeople do
         if raidPeople[ii].name == srcName and raidPeople[ii].trackSpell == spellName then
             raidPeople[ii].spell = false
-            raidPeople[ii].availableAt = (GetTime() + getSpellCooldown(spellName)) 
+            raidPeople[ii].availableAt = (GetTime() + getSpellCooldown(spellName))
             setClosestAvailable()
         end
     end
@@ -513,10 +534,30 @@ end
 -- ==== Start
 function module:Initialize()
     self.initialized = true
+    --
     if A.global.raidCds == nil then
         raidPeople = {}
         A.global.raidCds = {}
     end
+    if A.global.rcFrameLock == nil then
+        A.global.rcFrameLock = true
+    else
+        rcFrameLock = A.global.rcFrameLock
+    end
+    if A.global.rcFramePos == nil then
+        A.global.rcFramePos = {"CENTER","CENTER", 0, 0}
+    end
+    --
+    rcFramePos = A.global.rcFramePos
+    frame:ClearAllPoints()
+    frame:SetPoint(rcFramePos[1], nil, rcFramePos[2], rcFramePos[3], rcFramePos[4])
+    frame:SetMovable(rcFrameLock)
+    frame:EnableMouse(rcFrameLock)
+    --
+    -- if rcFramePos[1] == 0 and rcFramePos[2] == 0 then
+    --     frame:SetPoint("CENTER", rcFramePos[1], rcFramePos[2])
+    -- end
+    --
     if not UnitInRaid('player') then
         raidPeople = {}
         A.global.raidCds = {}
