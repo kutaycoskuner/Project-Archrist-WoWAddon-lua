@@ -1,14 +1,14 @@
 # Metadata
 ## Interface: 30300
 ## Title: |cffedededArchrist|r
-## Notes: Player database, todo list, raid assistant, external memory addon
+## Notes: Multi-functional external memory addon: Todolist, Player Database, Raid Assistant, etc.
 ## Version: 1.11
 ## Author: Orthrin
 ## SavedVariables: ArchDB, ArchPrivateDB, ArchPeopleDB, ArchLootDB
 ## SavedVariablesPerCharacter: ArchCharacterDB
 ## OptionalDeps: Blizzard_DebugTools, Ace3, GearScoreLite
 ## X-Embeds: Ace3
-## X-Discord: https://discord.gg/XCGTYtp
+## X-Discord: Orthrin#6056
 
 # Pre-Load
 !pre-load\libraries\-load-libraries.xml
