@@ -2,6 +2,8 @@
 `Started 29-Jul-2020`
 
 # Todo
+30-Nov-2020 inquiry update
+29-Nov-2020 migrate databases
 27-Nov-2020 ingame interface
 
 
@@ -65,3 +67,28 @@ Fixed PlayerDB esc disabling
 Added PlayerDB offline player entry with prefix `/`
 [0.9.4] 
 Added tactics adjustability, raid warnings, silent reminders
+[Older]
+kimin cani azsa ona atma
+eat macro
+butun moduller tarafindan kullanilan fonksiyonlari ayirip global yap
+help command
+update guilds raidscores
+table copy yi developerdan alip diger tarafa koy
+hangi druidin cs atacagini goster
+limit for parameter
+get player not on tooltip
+core profile da yapilan degisikligi gormuyor
+boyle bir fonksiyon yok attempt to call method 'UpdateCooldownSettings' (a nil value)
+player reputation system
+ufak bi gui
+calculate Raidscore
+not alma addonu gui icin uygun olur
+su ana kadar ki modullerin database etkilesimleri: lootfilter, rollfilter
+player reputation system: database etkilesimleri
+uniform alerts
+playerDB yeni bir database yaratildi
+test if settings importing same table name as main `eger degisim olmazsa evet`
+database communication
+tcopy, twipe komutlarini ogren
+SavedVariables: ElvDB, ElvPrivateDB
+SavedVariablesPerCharacter: ElvCharacterDB

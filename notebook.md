@@ -1,50 +1,5 @@
 # Where I left
-- deletemailauc module
-- import default settings for database
-- local i pre-load dan cikar altyapi moduulu degil spesifik
-https://www.youtube.com/watch?v=0Z3b0SJuvI0&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmoA2G&index=7
-
-------------------------------------------------------------------------------------------------------------------------
--- -- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
--- local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
--- local moduleName = 'raidWarnings';
--- local moduleAlert = M .. moduleName .. ": |r";
--- local module = A:GetModule(moduleName);
-------------------------------------------------------------------------------------------------------------------------
-
-# Todo
-- migrate databases
-- raidwarnings i degistirilebilir yap
-- arena cc caller
-- database default folder
-
-# Problems
-
-# Completed
-- kimin cani azsa ona atma
-- eat macro
-- butun moduller tarafindan kullanilan fonksiyonlari ayirip global yap
-- help command
-- update guilds raidscores
-- table copy yi developerdan alip diger tarafa koy
-- hangi druidin cs atacagini goster
-- limit for parameter
-- get player not on tooltip
-- core profile da yapilan degisikligi gormuyor
-`boyle bir fonksiyon yok` attempt to call method 'UpdateCooldownSettings' (a nil value)
-- player reputation system
-- ufak bi gui
-- calculate Raidscore
-- not alma addonu gui icin uygun olur
-- su ana kadar ki modullerin database etkilesimleri: lootfilter, rollfilter
-- player reputation system: database etkilesimleri
-- uniform alerts
-- playerDB yeni bir database yaratildi
-- test if settings importing same table name as main `eger degisim olmazsa evet`
-- database communication
-- tcopy, twipe komutlarini ogren
-- SavedVariables: ElvDB, ElvPrivateDB
-- SavedVariablesPerCharacter: ElvCharacterDB
+- find a tolerance space between unfinished work commit and overstructured one because there is always a risk of messing 
 
 # Comment Discipline
 comment discipline {
@@ -163,20 +118,12 @@ exportInterfaceFiles art
 +-- Archrist.lua
 +-- Archrist.toc
 
-# WoW Console
-/console scriptProfile 0
-
-# Notes
-- find a tolerance space between unfinished work commit and overstructured one because there is always a risk of messing 
 
 # Release
 - delete git
 - git.ignore
 - notebook
 - readme
-
-# UseCase
-- Raidscore addon, bir framede insanlari reputation a gore siraya diziyor. Gearscore, reputation, disiplin, strateji, damage, attendance bilgileriyle bir raidscore formulu olusturup burada oncelikli olarak davet ediyorsun ayrica playerlar icin not tutabiliyor. 
 
 # All Slash Commands
 SLASH_RELOADUI1 = "/rl"; -- for quicker reload
