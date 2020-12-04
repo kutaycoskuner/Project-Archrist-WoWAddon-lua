@@ -8,6 +8,9 @@
 
 
 # ChangeLog
+[1.12]
+04-Dec-2020 fix: CRIndicator; soulstone cd correction
+02-Dec-2020 add: CRIndicator; deadcheck mechanism
 [1.11]
 29-Nov-2020 todo: 29-Nov-2020 crindicator lock save
 29-Nov-2020 todo: 28-Nov-2020 CRIndicator biraktigin yeri hatirlama / position resset

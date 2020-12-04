@@ -80,7 +80,7 @@ frame:SetScript("OnDragStart", function(self)
 end)
 frame:SetScript("OnDragStop", function(self)
     self:StopMovingOrSizing()
-    local a,_,c,x,y = frame:GetPoint();
+    local a, _, c, x, y = frame:GetPoint();
     rcFramePos = {a, c, x, y}
     A.global.rcFramePos = rcFramePos
 end)
@@ -215,7 +215,11 @@ local function updateGUI()
                             subFrameCD[lastSub]:SetFont("Fonts\\FRIZQT__.ttf", 9, "OUTLINE")
                             subFrameCD[lastSub]:SetPoint("RIGHT")
                         end
-                        subFrameCD[lastSub]:SetText(raidCooldowns_calcTime(raidPeople[ii].availableAt))
+                        if raidPeople[ii].alive then
+                            subFrameCD[lastSub]:SetText(raidCooldowns_calcTime(raidPeople[ii].availableAt))
+                        else
+                            subFrameCD[lastSub]:SetText("|cffE32B04Dead|r")
+                        end
                         --
                         tab = tab - 16
                         fH = fH + 16
@@ -252,40 +256,14 @@ local function getSpellCooldown(spellName)
     end
 end
 
-local function getIndicator()
-    local players = ''
-    local color = '|cffFF7D0A'
-    local cooldown = '|cff464646'
-    local endtext = '|r'
-    --
+local function deadCheck()
     for ii = 1, #raidPeople do
-        color = classColors[raidPeople[ii].class] or '|cff464646'
-        local add = ''
-        if not raidPeople[ii].spell or not raidPeople[ii].alive then
-            add = '' -- cooldown .. raidPeople[ii].name .. endtext .. ' '
-        else
-            add = color .. raidPeople[ii].name .. endtext .. ' '
-        end
-        players = players .. add
-        -- combatResser = players
-        --
-        if ii == 3 then
-            break
+        if raidPeople[ii].alive == false then
+            if not UnitIsDeadOrGhost(raidPeople[ii].name) then
+                raidPeople[ii].alive = true
+            end
         end
     end
-    -- :: GUIye gonder
-    -- Arch_setGUI('raidCooldowns', true)
-    -- if UnitInRaid('player') then
-    --     frame:Show()
-    -- else
-    --     frame:Hide()
-    -- end
-    -- --
-    -- if players == '' then
-    --     frameTextName:SetText("|cff464646Combat Res Frame|r")
-    -- elseif players ~= nil then
-    --     frameTextName:SetText(players)
-    -- end
 end
 
 local function scanGroup()
@@ -299,7 +277,9 @@ local function scanGroup()
                 param[1] = false
             end
         end
+        if #raidPeople > 1 and raidPeople[1].name ~= UnitName('player') then
         raidPeople = {}
+        end
         -- return
     end
     -- test 
@@ -308,7 +288,6 @@ local function scanGroup()
             for class, param in pairs(trackClass) do
                 if UnitClass('player') == class then
                     param[1] = true
-                    -- SELECTED_CHAT_FRAME:AddMessage('test')
                     for ii = 1, #param[2] do
                         table.insert(raidPeople, {
                             name = UnitName('player'),
@@ -395,7 +374,8 @@ local function scanGroup()
     end
     --
     A.global.raidCds = raidPeople
-    getIndicator()
+    deadCheck()
+    updateGUI()
 end
 
 local function handleCommand(msg)
@@ -406,7 +386,6 @@ local function handleCommand(msg)
     -- end
     -- :: Indikatoru ayarla
     scanGroup()
-    updateGUI()
 
     -- :: Announce
     if UnitName('target') and (UnitAffectingCombat("player") or UnitIsDeadOrGhost('player')) then
@@ -495,7 +474,7 @@ local function startCooldown(srcName, spellID, spellName)
             setClosestAvailable()
         end
     end
-    getIndicator()
+    deadCheck()
 end
 
 -- local function removeBear(srcName)
@@ -504,7 +483,7 @@ end
 --             table.remove(raidPeople, ii)
 --         end
 --     end
---     getIndicator()
+--     deadCheck()
 -- end
 
 -- :: controls with random combat logs if rebirth is available
@@ -519,7 +498,6 @@ local function endCooldown()
         end
     end
     setClosestAvailable()
-    getIndicator()
 end
 
 local function TextureBasics_CreateTexture(iconFrame, show)
@@ -545,7 +523,7 @@ function module:Initialize()
         rcFrameLock = A.global.rcFrameLock
     end
     if A.global.rcFramePos == nil then
-        A.global.rcFramePos = {"CENTER","CENTER", 0, 0}
+        A.global.rcFramePos = {"CENTER", "CENTER", 0, 0}
     end
     --
     rcFramePos = A.global.rcFramePos
@@ -565,11 +543,11 @@ function module:Initialize()
     scanGroup()
 
     -- :: Register some events
-    -- module:RegisterEvent("PLAYER_REGEN_DISABLED")
-    -- module:RegisterEvent("PLAYER_REGEN_ENABLED")
+    module:RegisterEvent("PLAYER_REGEN_DISABLED")
+    module:RegisterEvent("PLAYER_REGEN_ENABLED")
     module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     --
-    module:RegisterEvent("PARTY_MEMBERS_CHANGED")
+    -- module:RegisterEvent("PARTY_MEMBERS_CHANGED")
     module:RegisterEvent("RAID_ROSTER_UPDATE")
     module:RegisterEvent("PLAYER_ENTERING_BATTLEGROUND")
     module:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -583,14 +561,13 @@ function module:COMBAT_LOG_EVENT_UNFILTERED(event, _, eventType, _, srcName, isD
     -- SELECTED_CHAT_FRAME:AddMessage(
     --     event .. ' | ' .. eventType .. ' | ' .. isDead .. ' | ' .. dstName)
     -- :: Raidde degilse rebirth listesini sifirliyor
-    -- if not UnitInRaid('player') then raidPeople = {} getIndicator() return end
+    -- if not UnitInRaid('player') then raidPeople = {} deadCheck() return end
     -- :: Dead
     if eventType == "UNIT_DIED" then
         for ii = 1, #raidPeople do
             if dstName == raidPeople[ii].name then
                 raidPeople[ii].alive = false
-                getIndicator()
-                break
+                -- deadCheck()
             end
         end
     end
@@ -624,8 +601,8 @@ function module:COMBAT_LOG_EVENT_UNFILTERED(event, _, eventType, _, srcName, isD
         end
         startCooldown(srcName, spellId, spellName)
     end
-    -- :: Hunter Misdirection
-    if spellName == "Soulstone Resurrection" and eventType == "SPELL_AURA_APPLIED" then
+    -- :: Soulstone Resurrection
+    if spellId == 47883 then
         for ii = 1, #raidPeople do
             if dstName == raidPeople[ii].name then
                 raidPeople[ii].alive = true
@@ -635,22 +612,20 @@ function module:COMBAT_LOG_EVENT_UNFILTERED(event, _, eventType, _, srcName, isD
         startCooldown(srcName, spellId, spellName)
     end
 
-    -- :: remove bear when you see mangle spell
-    -- if spellName == "Mangle (Bear)" and eventType == "SPELL_AURA_APPLIED" then
-    --     removeBear(srcName)
-    -- end
     -- test shaman
     -- if spellName == "Lesser Healing Wave" and eventType == "SPELL_HEAL" then -- shaman lesser healing wave
     --     startCooldown(srcName, spellId, spellName)
     -- end
     -- test
+
     -- :: Checktime if some cd exists
     if inquiryCD then
         if closestAvailable <= GetTime() then
             endCooldown()
+            deadCheck()
         end
     end
-    -- getIndicator()
+    -- deadCheck()
 end
 
 -- ==== Scan on group changes

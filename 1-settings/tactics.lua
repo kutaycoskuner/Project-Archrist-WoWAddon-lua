@@ -45,6 +45,7 @@ Arch_tactics = {
         "3- [Healers] Stay away from frozen orbs",
         "4- [RDPS] Focus Frozen Orbs as they spawn",
         "5- [MDPS] Cleave if Frozen Orb is close to you",
+        "6- Heroism/Bloodlust at start",
         "! Remind frost aura or frost resist totem",
         "=4 {triangle} Kill Frozen Orbs! {triangle}",
     },
