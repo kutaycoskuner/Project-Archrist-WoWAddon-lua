@@ -9,6 +9,8 @@
 
 # ChangeLog
 [1.12]
+05-Dec-2020 readme update
+05-Dec-2020 disable: LootMsgFilter
 04-Dec-2020 fix: CRIndicator; soulstone cd correction
 02-Dec-2020 add: CRIndicator; deadcheck mechanism
 [1.11]
