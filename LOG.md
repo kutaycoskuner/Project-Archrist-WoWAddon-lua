@@ -1,13 +1,47 @@
 # Log
 `Started 29-Jul-2020`
 
+# Keys - Discretized Actions 1.5
+- org: organization, decisions, notebook changes
+- arch: architectural, framework change, tryout
+
+- add: add, insert, data content
+    - con: content
+    - sty: style/render
+    - fun: function
+
+- del: deleted
+- fix: fix a bug or problem | compatibility
+- upg: update, upgraded, progressed
+- chg: stylistic change
+
+- std: study, learn, test
+- wip: work in progress
+- mix: multiple additions
+
 # Todo
-30-Nov-2020 inquiry update
-29-Nov-2020 migrate databases
-27-Nov-2020 ingame interface
+- o: outdated; c: cancelled; x: completed
+- [o] 11-Oct-2022 30-Nov-2020 inquiry update
+- [o] 11-Oct-2022 29-Nov-2020 migrate databases
+- [o] 11-Oct-2022 27-Nov-2020 ingame interface
+- [x] 11-Oct-2022 11-Oct-2022 add: Player database kendi frame ini yaratip kullansin
+- 11-Oct-2022 add: help verisini ancak modul aktifse yuklesin ve modul icinden ceksin
+- 11-Oct-2022 fix: todo gui scale ettiginde numara kayiyor
+- 11-Oct-2022 add: macro usage icin help yaz
+- 11-Oct-2022 add: eat drink macro item link
 
+# Procedures
+- check todo
+- enter log
+- enter time log
+- update toc version
 
-# ChangeLog
+# LOG
+- 11-Oct-2022 1.2   
+    - org: Upgrade base to version 3.4.0 original; 
+    - fix: PlayerDB Gearscorelite Dependency is broken. Showing own values.
+    - fix: CRIndicator SetBackdrop apisi degistigi icin frame renderlayamiyordu. Yeni apiye uyarladim. 60-72
+
 [1.12]
 05-Dec-2020 readme update
 05-Dec-2020 disable: LootMsgFilter

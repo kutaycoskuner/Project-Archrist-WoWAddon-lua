@@ -2,11 +2,18 @@
 -- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
 local moduleName = 'EatDrink';
-local moduleAlert = M .. moduleName .. ": |r";
+local moduleAlert = M .. ": |r";
 local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
-local drinks = {"Conjured Mana Strudel","Pungent Seal Whey","Honeymint Tea"}
+local drinks = {"Conjured Mana Strudel","Pungent Seal Whey","Honeymint Tea", "Morning Glory Dew", "Moonberry Juice", "Sweet Nectar","Melon Juice","Ice Cold Milk"}
+-- drinks[5] = "Ice Cold Milk"
+-- drinks[15] = "Melon Juice"
+-- drinks[25] = "Sweet Nectar"
+-- drinks[35] = "Moonberry Juice"
+-- drinks[45] = "Morning Glory Dew"
+-- drinks[60] = "Filtered Draenic Water"
+
 local foods = {"Conjured Mana Strudel","Honey-Spiced Lichen", "Sour Goat Cheese","Salted Venison", "Succulent Orca Stew", "Mead Basted Caribou"}
 local foodClass = {"Warrior", 'Rogue', 'Death Knight', 'Hunter'}
 
@@ -38,7 +45,7 @@ local function findConsumableInBag()
         --
         for ii = 1, #search do
             if consumable == search[ii] then
-                -- print(drinks[ii])d
+                print(moduleAlert .. "Consuming " .. drinks[ii])
                 return select(1, consumable)
             end
         end

@@ -1,14 +1,16 @@
 # Metadata
-## Interface: 30300
+## Interface: 30400
 ## Title: |cffedededArchrist|r
 ## Notes: Multi-functional external memory addon: Todolist, Player Database, Raid Assistant, etc.
-## Version: 1.12
+## Version: 1.20
 ## Author: Orthrin
 ## SavedVariables: ArchDB, ArchPrivateDB, ArchPeopleDB, ArchLootDB
 ## SavedVariablesPerCharacter: ArchCharacterDB
-## OptionalDeps: Blizzard_DebugTools, Ace3, GearScoreLite
+## OptionalDeps: Blizzard_DebugTools, Ace3
 ## X-Embeds: Ace3
 ## X-Discord: Orthrin#6056
+## Interface: 30400
+## X-Interface: 30400
 
 # Pre-Load
 !pre-load\libraries\-load-libraries.xml
@@ -27,4 +29,5 @@ Archrist.lua
 
 # Development
 9-gui\-load-gui.xml
+
 

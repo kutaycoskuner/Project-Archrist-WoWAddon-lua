@@ -1,10 +1,49 @@
 ------------------------------------------------------------------------------------------------------------------------
--- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+--------- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+------------------------------------------------------------------------------------------------------------------------
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
 local moduleName = 'PlayerDB';
 local moduleAlert = M .. moduleName .. ": |r";
 local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
+--------- Notes
+------------------------------------------------------------------------------------------------------------------------
+-- todo ----------------------------------------------------------------------------------------------------------------
+--[[
+    - create command [x]
+    - understand command arguments
+]]
+
+-- use case ------------------------------------------------------------------------------------------------------------
+--[[
+this component works with a command and requires name parameter
+- -> presents /rep help
+- /rep <playerName> -> presents reputation of given player if there is not creates 0
+- /rep <playerName> [d | s | c] <number> g->  changes discipline, strategy or core points of character if empty plain reputation
+- /rep <playerName> [n] <args> gives an opportunity to leave comment about player
+
+data structure = 
+[playerName] = {
+    reputation: [max 5 : min -5]
+    discipline: [max 3 : min -2]
+    strategy: [max 3 : min -2]
+    core [dps | heal | tank]: [max 3 : min -2]
+    note: <commentAboutPlayer>
+}
+
+Further additions
+- get and set info about players from ingame gui
+- sync different player databases
+
+- rep, dmg, dsc, str, att
+
+yazilmis isim target'a oncelikli
+/rep <isim> 1 :: bu ismi aliyor
+/rep 1 :: bu targeti aliyor
+
+]]
+------------------------------------------------------------------------------------------------------------------------
+
 -- ==== Variables
 -- !! IMPORTANT GLOBAL
 local Raidscore
@@ -133,6 +172,21 @@ local function Archrist_PlayerDB_getRaidScore()
     end
 end
 
+local function Archrist_PlayerDB_getPlayerData()
+    if not isInCombat then
+        local Name = GameTooltip:GetUnit();
+        if Name ~= UnitName('player') then
+            if A.people[realmName][Name] then
+                for ii = 1, #quantitative do
+                    local data = A.people[realmName][Name][quantitative[ii]]
+                    if data ~= 0 then
+                        GameTooltip:AddLine(quantitative[ii] .. ' ' .. data, 0.5, 0.5, 0.5, true)
+                    end
+                end
+            end
+        end
+    end
+end
 -- :: Get Player Stats
 local function archGetPlayer(player)
     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor(player))
@@ -253,8 +307,8 @@ local function handlePlayerStat(msg, parameter, pass)
                 end
 
                 if type(tonumber(args[1])) == "number" then
-                    A.people[realmName][UnitName('target')][parameter] =
-                        tonumber(A.people[realmName][UnitName('target')][parameter]) + tonumber(args[1])
+                    A.people[realmName][UnitName('target')][parameter] = tonumber(
+                        A.people[realmName][UnitName('target')][parameter]) + tonumber(args[1])
                     checkStatLimit(UnitName('target'), parameter)
                     SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor(UnitName('target')) .. ' ' .. parameter ..
                                                        ' is now ' .. A.people[realmName][UnitName('target')][parameter])
@@ -498,7 +552,7 @@ SlashCmdList["not"] = function(msg)
 end
 
 -- ==== GUI
-GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
+GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getPlayerData)
 GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getNote)
 
 -- ==== Callback & Register [last arg]
@@ -506,38 +560,3 @@ local function InitializeCallback()
     module:Initialize()
 end
 A:RegisterModule(module:GetName(), InitializeCallback)
-
--- ==== Todo
---[[
-    - create command [x]
-    - understand command arguments
-]]
-
--- ==== UseCase
---[[
-this component works with a command and requires name parameter
-- -> presents /rep help
-- /rep <playerName> -> presents reputation of given player if there is not creates 0
-- /rep <playerName> [d | s | c] <number> g->  changes discipline, strategy or core points of character if empty plain reputation
-- /rep <playerName> [n] <args> gives an opportunity to leave comment about player
-
-data structure = 
-[playerName] = {
-    reputation: [max 5 : min -5]
-    discipline: [max 3 : min -2]
-    strategy: [max 3 : min -2]
-    core [dps | heal | tank]: [max 3 : min -2]
-    note: <commentAboutPlayer>
-}
-
-Further additions
-- get and set info about players from ingame gui
-- sync different player databases
-
-- rep, dmg, dsc, str, att
-
-yazilmis isim target'a oncelikli
-/rep <isim> 1 :: bu ismi aliyor
-/rep 1 :: bu targeti aliyor
-
-]]

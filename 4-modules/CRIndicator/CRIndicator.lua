@@ -53,23 +53,37 @@ if showIcons then
     headerPosition = "LEFT"
 end
 --
-local frame = CreateFrame("frame", "MyAddonFrame")
+local frame = CreateFrame("frame", nil, nil, 'BackdropTemplate')
 local frameWidth = 130
 local frameHeight = 40
 --
-frame:SetBackdrop({
-    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-    --   edgeFile="Interface\\DialogFrame\\UI-DialogBox-Border", 
-    tile = 1,
-    tileSize = 20,
-    edgeSize = 0,
-    insets = {
-        left = -6,
-        right = -6,
-        top = 12,
-        bottom = 12
-    }
-})
+local backdropInfo =
+{
+	bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+ 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+ 	tile = true,
+ 	tileEdge = true,
+ 	tileSize = 8,
+ 	edgeSize = 8,
+ 	insets = { left = 1, right = 1, top = 1, bottom = 1 },
+}
+frame:SetBackdrop(backdropInfo)
+frame:SetBackdropColor(0, 0, 0, 0.8)
+frame:SetBackdropBorderColor(0, 0, 0, 0)
+-- frame:SetTexture()
+-- frame:SetBackdrop({
+--     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+--     --   edgeFile="Interface\\DialogFrame\\UI-DialogBox-Border", 
+--     tile = 1,
+--     tileSize = 20,
+--     edgeSize = 0,
+--     insets = {
+--         left = -6,
+--         right = -6,
+--         top = 12,
+--         bottom = 12
+--     }
+-- })
 frame:SetSize(frameWidth, frameHeight) -- 180 50
 frame:RegisterForDrag("LeftButton")
 frame:SetScript("OnDragStart", function(self)
@@ -278,7 +292,7 @@ local function scanGroup()
             end
         end
         if #raidPeople > 1 and raidPeople[1].name ~= UnitName('player') then
-        raidPeople = {}
+            raidPeople = {}
         end
         -- return
     end
@@ -385,6 +399,7 @@ local function handleCommand(msg)
     --     firstTimeOpen = -1
     -- end
     -- :: Indikatoru ayarla
+    -- print('jaaja')
     scanGroup()
 
     -- :: Announce
@@ -636,7 +651,7 @@ function module:PLAYER_REGEN_DISABLED()
     scanGroup()
 end
 function module:PARTY_MEMBERS_CHANGED()
-    -- scanGroup()
+    scanGroup()
 end
 function module:RAID_ROSTER_UPDATE()
     scanGroup()
@@ -674,6 +689,11 @@ SLASH_cr1 = "/cr"
 SlashCmdList["cr"] = function(msg)
     handleCommand(msg)
 end
+
+-- SLASH_app1 = "/app"
+-- SlashCmdList["app"] = function(msg)
+--     print('asdf')
+-- end
 
 -- -- ==== End
 local function InitializeCallback()

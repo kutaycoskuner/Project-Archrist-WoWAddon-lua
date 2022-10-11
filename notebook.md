@@ -1,29 +1,16 @@
+# Notebook
+- recreated 11-Oct-2022
+
+
 # Where I left
 - find a tolerance space between unfinished work commit and overstructured one because there is always a risk of messing 
 
 # Comment Discipline
-comment discipline {
-    title               :   ==== | "#00c8ff" 
-    problem             :   !!   | "#ff6633"
-    query               :   ??   | "#33ffff"
-    todo                :   >>   | "#99ff33"
-    test                :   test | "#ffa100"
-    highlight           :   **   | "#8fab21"
-    description         :   ::   | "#128EC4"  
-    separator line      :   --   | "#001d26"  
-    disabledProperty    :  none
-}
-#0d6991
-#128EC4
-#262626
-#ededed
-#ff33ff
 
-# Sources
+# Links
 [1] mayron wow addon creation
 https://www.youtube.com/watch?v=nfaE7NQhMlc&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmoA2G
 
-# Links
 https://wowwiki.fandom.com/wiki/Portal:Interface_customization
 https://wowwiki.fandom.com/wiki/FrameXML
 https://wowwiki.fandom.com/wiki/Viewing_Blizzard%27s_WoW_user_interface_code
@@ -61,104 +48,129 @@ https://wow.gamepedia.com/Creating_a_slash_command
 http://lua-users.org/wiki/OptimisingUsingLocalVariables
 - lua characters
 https://www.lua.org/pil/20.2.html
+- interact target
+    - https://wowwiki-archive.fandom.com/wiki/API_CheckInteractDistance
 
-# Reminders
-Identify What You Want To Do
-Research on some events or methods in which to do what you wish
-Do it
+# Keywords
+- tooltip: mouse u bir seye tuttugunda metadata bilgisini cikaran pop up frame
 
->> test procedure
-- print('test')
-- print(object)
-
-# Lua
--- `comment`
-`#` `length of table`
-{...} `table decleration`
-#table = `table.length`
-self `self referential`
-nil `removes the value`
---[[]] `multiline comment`
-for startValue, endValue, stepValue do 
-end
-numeric and generic loops
-
-for local i = 1, 10, 1 do
-    --code goes here
-end
-
-for key, value in pairs, tbl do
-    --code goes here
-end
-
-repeat
-until (condition)
-
-while (condition) do
-end
-
->> Layers
-background, border, artwork, overlay, highlight
-
->> ExportArtwork
-- create shortcut
-- add -console to name
-- open shortcut press ~
-exportInterfaceFiles code
-exportInterfaceFiles art
-
-# File Structure
-
+# Structure
 +-- developer
 +-- domain
 +-- libraries
-|   +-- 
+    +-- * 
 +-- modules
 +-- settings
 +-- Archrist.lua
 +-- Archrist.toc
 
+# Blackboard
 
-# Release
-- delete git
-- git.ignore
-- notebook
-- readme
+- feature list template
+    - name, description, how to use, example
 
-# All Slash Commands
-SLASH_RELOADUI1 = "/rl"; -- for quicker reload
-SLASH_RELOADUI2 = "/reloadui";
-SLASH_RELOADUI3 = "/re";
+- Colors
+    #0d6991
+    #128EC4
+    #262626
+    #ededed
+    #ff33ff
+- Methods
+    Identify What You Want To Do
+    Research on some events or methods in which to do what you wish
+    Do it
 
-SLASH_RaidWarning1 = "/war"
-SLASH_SelectLeadChannel1 = "/comms"
+- Lua
+    -- `comment`
+    `#` `length of table`
+    {...} `table decleration`
+    #table = `table.length`
+    self `self referential`
+    nil `removes the value`
+    --[[]] `multiline comment`
+    for startValue, endValue, stepValue do 
+    end
+    numeric and generic loops
 
-SLASH_lootFilter1 = "/lootfilter"
-SLASH_rollFilter1 = "/rollfilter"
+    for local i = 1, 10, 1 do
+        --code goes here
+    end
 
-SLASH_reputation1 = "/rep"
+    for key, value in pairs, tbl do
+        --code goes here
+    end
 
-SLASH_DISCORD1 = "/discord"
-SLASH_LOOTRULES1 = "/loot"
-SLASH_GBOS1 = "/gbos"
-SLASH_GBOM1 = "/gbom"
-SLASH_GBOW1 = "/gbow"
-SLASH_GBOK1 = "/gbok"
-SLASH_PALADIN1 = "/pala"
-SLASH_SPREAD1 = "/sp"
-SLASH_SPREAD2 = "/spread"
-SLASH_STACK1 = "/st"
-SLASH_STACK2 = "/stack"
-SLASH_TANK1 = "/tank"
+    repeat
+    until (condition)
 
-SLASH_reputation1 = "/rep"
-SLASH_discipline1 = "/dsc"
-SLASH_strategy1 = "/str"
-SLASH_damage1 = "/dmg"
-SLASH_attendance1 = "/att"
-SLASH_note1 = "/not"
+    while (condition) do
+    end
 
-## CC list
+- Procedures
+    - release
+        - delete git
+        - git.ignore
+        - notebook
+        - readme
 
->> Warrior
-5246 - Intimidating shout
+- slash commands
+    SLASH_RELOADUI1 = "/rl"; -- for quicker reload
+    SLASH_RELOADUI2 = "/reloadui";
+    SLASH_RELOADUI3 = "/re";
+
+    SLASH_RaidWarning1 = "/war"
+    SLASH_SelectLeadChannel1 = "/comms"
+
+    SLASH_lootFilter1 = "/lootfilter"
+    SLASH_rollFilter1 = "/rollfilter"
+
+    SLASH_reputation1 = "/rep"
+
+    SLASH_DISCORD1 = "/discord"
+    SLASH_LOOTRULES1 = "/loot"
+    SLASH_GBOS1 = "/gbos"
+    SLASH_GBOM1 = "/gbom"
+    SLASH_GBOW1 = "/gbow"
+    SLASH_GBOK1 = "/gbok"
+    SLASH_PALADIN1 = "/pala"
+    SLASH_SPREAD1 = "/sp"
+    SLASH_SPREAD2 = "/spread"
+    SLASH_STACK1 = "/st"
+    SLASH_STACK2 = "/stack"
+    SLASH_TANK1 = "/tank"
+
+    SLASH_reputation1 = "/rep"
+    SLASH_discipline1 = "/dsc"
+    SLASH_strategy1 = "/str"
+    SLASH_damage1 = "/dmg"
+    SLASH_attendance1 = "/att"
+    SLASH_note1 = "/not"
+
+- skill lsit
+    -  Warrior
+        5246 - Intimidating shout
+
+# How to
+- <how to print debug lua>
+    - SendChatMessage("Hello Bob!", "WHISPER", "Common", UnitName("Player"));
+
+- <disabling and activating modules>
+    - comment out ex. ~/3-modules/-load-modules.xml
+
+- <wow layer order Layers>
+background, border, artwork, overlay, highlight
+
+- <ExportArtwork>
+    - create shortcut
+    - add -console to name
+    - open shortcut press ~
+    exportInterfaceFiles code
+    exportInterfaceFiles art
+
+- <accessing and using certain window>
+    - learn the name of unit
+    - check how to access unit (ex. tooltip)
+    - check how to manipulate it
+
+- <activate lua errors>
+    - /console scriptErrors 1
