@@ -3,33 +3,47 @@
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
 local moduleName = 'Help';
 local moduleAlert = M .. moduleName .. ": |r";
-local module = A:GetModule(moduleName);
+local module = A:GetModule(moduleName, true);
+if module == nil then return end
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
 local Arch_focusColor = Arch_focusColor
 local Arch_commandColor = Arch_commandColor
+
+local Arch_modules = {
+    ["TodoList"] = 'Helps you to create todo list',
+    ["PlayerDB"] = 'Player database module for interactions',
+    ["PuG"] = 'For creating fast and editable PuG announces',
+    ["VoA"] = 'For Creating specific VoA18 spec run announcements',
+    ["CRIndicator"] = 'Raid combat res indicator for leading',
+    ["RaidCommands"] = 'Work in progress not yet finished',
+}
 -- ==== GUI
 
 -- ==== Methods
+local function shouldRender(par)
+    return A:GetModule(par, true) ~= nil
+end
+
+
 local function handleCommand(msg)
+    -- shouldRender('VoA')
+    -- do return end
     if msg == '' then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Archrist is general purpose assistant addon for 3.3.5a patch')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'please use ' .. Arch_commandColor('/arch help') .. ' command to see modules')
     elseif msg == 'help' then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'These are relatively different functional modules')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('TodoList: ') .. 'helps you to create todo list')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('PlayerDB: ') .. 'player database module for interactions')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('PuG: ') .. 'For creating fast editable PuG announcements')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('VoA: ') .. 'For creating VoA18 Spec run announcements')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('CRIndicator [WIP]: ') .. 'raid combat res indicator for leading')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('RaidCommands [WIP]: ') .. 'Work in progress not yet finished')
+        for k, v in pairs(Arch_modules) do
+            if(shouldRender(k)) then SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor(k .. ': ') .. v) end 
+        end
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'please use ' .. Arch_commandColor('/arch <modulename>') .. ' to get detailed information')
-    elseif msg == 'todolist' then
+    elseif msg == 'todolist' and shouldRender(Arch_modules('TodoList')) then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('TodoList'))
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'note taking and todo list module')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/todo') .. ' to see your current todo list')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/todo <note>') .. ' for creating new todo on console')
-    elseif msg == 'playerdb' then
+    elseif msg == 'playerdb' and shouldRender(Arch_modules('PlayerDB')) then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('PlayerDB'))
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'playerscoring and note taking module for your interactions')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'calculates Raidscore for player by given attributes if you have ' .. Arch_addonColor('GearScoreLite'))
@@ -41,7 +55,7 @@ local function handleCommand(msg)
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/rep <playername> <number>') .. ' non target variant')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/not <note>') .. ' taking not for target player')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/not <playername> <note>') .. ' non target variant')
-    elseif msg == 'crindicator' then
+    elseif msg == 'crindicator' and shouldRender(Arch_modules('CRIndicator')) then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('CRIndicator'))
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'simple frame module to inform raid leader how many crucial raid cooldowns are available in raid')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/cr') .. ' for toggle frame|r')

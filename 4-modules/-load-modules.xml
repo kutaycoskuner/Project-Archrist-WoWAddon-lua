@@ -1,14 +1,10 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
-    <!-- <Include file="lootMsgFilter\-load.xml"/> -->
-    <!-- <Include file="DeleteAucMail\-load.xml"/> -->
     <Include file="PlayerDB\-load.xml"/>
-    <!-- <Include file="AutoLoot\-load.xml"/> -->
-    <!-- <Include file="RaidCommands\-load.xml"/> -->
+    <Include file="RaidCommands\-load.xml"/>
     <Include file="TodoList\-load.xml"/>
     <Include file="CRIndicator\-load.xml"/>
     <Include file="Help\-load.xml"/>
-    <!-- <Include file="LootDB\-load.xml"/> -->
     <Include file="VoA\-load.xml"/>
     <Include file="Pug\-load.xml"/>
     <Include file="Announcer\-load.xml"/>

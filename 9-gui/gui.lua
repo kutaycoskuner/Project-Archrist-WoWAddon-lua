@@ -57,17 +57,17 @@ local function TodoListGUI()
         -- :: Labels
         local labelIssuer = AceGUI:Create("Label")
         labelIssuer:SetText("")
-        labelIssuer:SetWidth(60)
+        labelIssuer:SetRelativeWidth(0.1)
         frame:AddChild(labelIssuer)
         --
         local labelTodo = AceGUI:Create("Label")
         labelTodo:SetText("Todo")
-        labelTodo:SetWidth(480)
+        labelTodo:SetRelativeWidth(0.7)
         frame:AddChild(labelTodo)
         --
         local labelButton = AceGUI:Create("Label")
         labelButton:SetText("Complete")
-        labelButton:SetWidth(80)
+        labelButton:SetRelativeWidth(0.2)
         frame:AddChild(labelButton)
         --
         -- :: Set Variable for cache
@@ -76,17 +76,17 @@ local function TodoListGUI()
             -- :: her bir todo icin
             local label = AceGUI:Create("Label")
             label:SetText(ii .. "# ")
-            label:SetWidth(60)
+            label:SetRelativeWidth(0.1)
             frame:AddChild(label)
             --
             local editbox = AceGUI:Create("Label")
             editbox:SetText(list[ii].todo)
-            editbox:SetWidth(480)
+            editbox:SetRelativeWidth(0.7)
             frame:AddChild(editbox)
             --
             local button = AceGUI:Create("Button")
             button:SetText("Done!")
-            button:SetWidth(80)
+            button:SetRelativeWidth(0.2)
             button:SetCallback("OnClick", function(widget)
                 table.remove(list, ii)
                 A.global.todo = list
@@ -101,7 +101,7 @@ local function TodoListGUI()
         --
         local addIssuer = AceGUI:Create("Label")
         addIssuer:SetText(#A.global.todo + 1 .. "# ")
-        addIssuer:SetWidth(60)
+        addIssuer:SetRelativeWidth(0.1)
         frame:AddChild(addIssuer)
         -- addIssuer:SetCallback("OnEnterPressed", function(widget, event, text)
         --     newIssuer = text
@@ -109,7 +109,7 @@ local function TodoListGUI()
         --
         local addTodo = AceGUI:Create("EditBox")
         addTodo:SetLabel("Todo")
-        addTodo:SetWidth(480)
+        addTodo:SetRelativeWidth(0.7)
         addTodo:SetCallback("OnEnterPressed", function(widget, event, text)
             newTodo = text
         end)
@@ -117,7 +117,7 @@ local function TodoListGUI()
         --
         local button = AceGUI:Create("Button")
         button:SetText("Add")
-        button:SetWidth(80)
+        button:SetRelativeWidth(0.2)
         button:SetCallback("OnClick", function(widget)
             list = A.global.todo
             table.insert(list, {

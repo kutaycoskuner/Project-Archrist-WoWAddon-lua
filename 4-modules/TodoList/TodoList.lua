@@ -4,6 +4,9 @@ local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
 local moduleName = 'TodoList';
 local moduleAlert = M .. moduleName .. ": |r";
 local module = A:GetModule(moduleName);
+module.loaded = true
+if module == nil then return end
+
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
 local list = {}

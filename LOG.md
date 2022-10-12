@@ -25,10 +25,11 @@
 - [o] 11-Oct-2022 29-Nov-2020 migrate databases
 - [o] 11-Oct-2022 27-Nov-2020 ingame interface
 - [x] 11-Oct-2022 11-Oct-2022 add: Player database kendi frame ini yaratip kullansin
-- 11-Oct-2022 add: help verisini ancak modul aktifse yuklesin ve modul icinden ceksin
-- 11-Oct-2022 fix: todo gui scale ettiginde numara kayiyor
+- [x] 12-Oct-2022 11-Oct-2022 add: eat drink macro item link
+- [x] 12-Oct-2022 11-Oct-2022 fix: todo gui scale ettiginde numara kayiyor
+- [x] 13-Oct-2022 11-Oct-2022 add: help verisini ancak modul aktifse yuklesin ve modul icinden ceksin
 - 11-Oct-2022 add: macro usage icin help yaz
-- 11-Oct-2022 add: eat drink macro item link
+- 13-Oct-2022 fix: help raidwarnings i main ayir kendi icinde distribute et
 
 # Procedures
 - check todo
@@ -37,6 +38,11 @@
 - update toc version
 
 # LOG
+- 12-Oct-2022 1.21
+    - add: item link to eat macro
+    - fix: todo list gui stick problem. Relative widths with expand/shrinking window
+    - arch: help redistribution | disabling from archrist.lua
+
 - 11-Oct-2022 1.2   
     - org: Upgrade base to version 3.4.0 original; 
     - fix: PlayerDB Gearscorelite Dependency is broken. Showing own values.

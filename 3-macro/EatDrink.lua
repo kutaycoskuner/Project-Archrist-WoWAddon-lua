@@ -45,7 +45,6 @@ local function findConsumableInBag()
         --
         for ii = 1, #search do
             if consumable == search[ii] then
-                print(moduleAlert .. "Consuming " .. drinks[ii])
                 return select(1, consumable)
             end
         end
@@ -53,7 +52,11 @@ local function findConsumableInBag()
     --
     for ii = 4, 0, -1 do
         for jj = GetContainerNumSlots(ii), 1, -1 do
-            if findItem(ii, jj) then return ii, jj end
+            if findItem(ii, jj) then 
+                local item = GetContainerItemLink(ii, jj)
+                print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
+                return ii, jj 
+            end
         end
     end
 end

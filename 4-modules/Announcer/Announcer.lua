@@ -3,7 +3,8 @@
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
 local moduleName = 'Announcer';
 local moduleAlert = M .. moduleName .. ": |r";
-local module = A:GetModule(moduleName);
+local module = A:GetModule(moduleName, true);
+if module ~= nil then return end
 ----------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
 

@@ -3,7 +3,9 @@
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
 local moduleName = 'RaidWarnings';
 local moduleAlert = M .. moduleName .. ": |r";
-local module = A:GetModule(moduleName);
+local module = A:GetModule(moduleName, true);
+if module == nil then return end
+
 ------------------------------------------------------------------------------------------------------------------------
 --:: Former  : /click WarnButton2
 --:: Current : /run SendChatMessage(Arch_RaidWarnings[1], Arch_comms,nil,Arch_forthKey)

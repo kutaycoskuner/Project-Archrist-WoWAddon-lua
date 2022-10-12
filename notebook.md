@@ -155,7 +155,7 @@ https://www.lua.org/pil/20.2.html
     - SendChatMessage("Hello Bob!", "WHISPER", "Common", UnitName("Player"));
 
 - <disabling and activating modules>
-    - comment out ex. ~/3-modules/-load-modules.xml
+    - comment out archrist.lua module
 
 - <wow layer order Layers>
 background, border, artwork, overlay, highlight
@@ -174,3 +174,9 @@ background, border, artwork, overlay, highlight
 
 - <activate lua errors>
     - /console scriptErrors 1
+
+- <gui setting up grid expanding and shrinking window>
+    - https://www.wowace.com/projects/ace3/pages/ace-gui-3-0-widgets
+
+- <lua tinker break inner function>
+    - do return end
