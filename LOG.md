@@ -28,8 +28,10 @@
 - [x] 12-Oct-2022 11-Oct-2022 add: eat drink macro item link
 - [x] 12-Oct-2022 11-Oct-2022 fix: todo gui scale ettiginde numara kayiyor
 - [x] 13-Oct-2022 11-Oct-2022 add: help verisini ancak modul aktifse yuklesin ve modul icinden ceksin
+- [x] 15-Oct-2022 15-Oct-2022 add: playerdb help
 - 11-Oct-2022 add: macro usage icin help yaz
 - 13-Oct-2022 fix: help raidwarnings i main ayir kendi icinde distribute et
+- 15-Oct-2022 add: new version alert
 
 # Procedures
 - check todo
@@ -38,6 +40,10 @@
 - update toc version
 
 # LOG
+- 12-Oct-2022 1.22
+    - fix: playerdb adding reputation to name problem
+    - fun: party function along with raid
+
 - 12-Oct-2022 1.21
     - add: item link to eat macro
     - fix: todo list gui stick problem. Relative widths with expand/shrinking window

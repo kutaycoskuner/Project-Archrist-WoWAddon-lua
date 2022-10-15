@@ -5,7 +5,9 @@ local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
 local moduleName = 'PlayerDB';
 local moduleAlert = M .. moduleName .. ": |r";
 local module = A:GetModule(moduleName, true);
-if module == nil then return end
+if module == nil then
+    return
+end
 
 ------------------------------------------------------------------------------------------------------------------------
 --------- Notes
@@ -42,6 +44,12 @@ Further additions
 yazilmis isim target'a oncelikli
 /rep <isim> 1 :: bu ismi aliyor
 /rep 1 :: bu targeti aliyor
+
+player oyunda degilse /who isim kontrolu yapilamiyor bu durumda playeri yazarak da olsa eklemek icin
+/rep /<playerName> [n]
+
+/rrep        grubu reputation check yapiyor. Dusuk reputationlu olan varsa haber veriyor
+/rrep [n]    butun gruba reputation veriyor 
 
 ]]
 ------------------------------------------------------------------------------------------------------------------------
@@ -265,8 +273,8 @@ local function handleNote(msg)
         args = fixArgs(msg)
         mod = 'not'
         if args[1] then
-            SetWhoToUI(1)
-            SendWho('n-"' .. args[1] .. '"')
+            C_FriendList.SetWhoToUi(1)
+            C_FriendList.SendWho('n-"' .. args[1] .. '"')
         end
     end
 
@@ -298,8 +306,8 @@ local function handlePlayerStat(msg, parameter, pass)
     if args[1] then
         -- :: Isim oncelikli entry
         if type(tonumber(args[1])) ~= "number" then
-            SetWhoToUI(1)
-            SendWho('n-"' .. args[1] .. '"')
+            C_FriendList.SetWhoToUi(1)
+            C_FriendList.SendWho('n-"' .. args[1] .. '"')
         else
             -- :: Target varsa
             if UnitExists('target') and UnitName('target') ~= UnitName('player') and UnitIsPlayer('target') then
@@ -343,7 +351,7 @@ local function handlePlayerStat(msg, parameter, pass)
     end
 end
 
--- :: add player stat [who da kullaniliyor]
+-- :: add player stat [who da kullaniliyor] args[1] = player name args[]
 local function addPlayerStat(args, parameter)
     if A.people[realmName][args[1]] == nil then
         archAddPlayer(args[1])
@@ -372,24 +380,70 @@ local function addPlayerStat(args, parameter)
 end
 
 -- :: main function
-local function raidRepCheck(msg)
+local function groupRepCheck(msg)
+    -- do return end
+    local groupMembers = 0
+    groupRoster = {'party1', 'party2', 'party3', 'party4'}
+    local groupType = nil
     if UnitInRaid('player') then
+        groupType = "raid"
+        groupMembers = GetNumRaidMembers()
+    elseif UnitInParty('player') then
+        groupType = "party"
+        groupMembers = GetNumGroupMembers()
+    else
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'you are not in group')
+    end
+    if groupType ~= nil then
         local blacklist = {}
         local whitelist = {}
-        for ii = 1, GetNumRaidMembers() do
-            local person = GetRaidRosterInfo(ii)
-            if A.people[realmName][person] == nil then
-                archAddPlayer(person)
-            else
-                for yy = 1, #quantitative do
-                    -- print(A.people[realmName][person][yy])
-                    if A.people[realmName][person][quantitative[yy]] < 0 then
-                        table.insert(blacklist, person)
-                        break
-                    elseif A.people[realmName][person][quantitative[yy]] > 0 then
-                        if Archrist_PlayerDB_calcRaidScore(person) > 0 then
-                            table.insert(whitelist, person)
+        local person
+        -- :: add raidwise reputation
+        if msg ~= nil and msg ~= '' then
+            if type(tonumber(msg)) == "number" then
+                for ii = 1, groupMembers do
+                    -- local person = GetRaidRosterInfo(ii)
+                    if groupType == "raid" then
+                        args[1] = GetRaidRosterInfo(ii)
+                    elseif groupType == "party" then
+                        args[1] = UnitName(groupRoster[ii])
+                    end
+                    -- :: control break
+                    if args[1] == nil then
+                        do
+                            return
+                        end
+                    end
+                    args[2] = msg
+                    addPlayerStat(args, 'reputation')
+                    -- handlePlayerStat(person .. ' ' .. msg, 'reputation') 
+                end
+            end
+        end
+        --
+        -- :: check if blacklisted
+        --
+        for ii = 1, groupMembers do
+            -- :: check if party or group
+            if groupType == "raid" then
+                person = GetRaidRosterInfo(ii)
+            elseif groupType == "party" then
+                person = UnitName(groupRoster[ii])
+            end
+            -- :: control break
+            if person ~= nil then
+                if A.people[realmName][person] == nil then
+                    archAddPlayer(person)
+                else
+                    for yy = 1, #quantitative do
+                        if A.people[realmName][person][quantitative[yy]] < 0 then
+                            table.insert(blacklist, person)
                             break
+                        elseif A.people[realmName][person][quantitative[yy]] > 0 then
+                            if Archrist_PlayerDB_calcRaidScore(person) > 0 then
+                                table.insert(whitelist, person)
+                                break
+                            end
                         end
                     end
                 end
@@ -408,6 +462,7 @@ local function raidRepCheck(msg)
         end
         --
         local checkBlacklist = ''
+        -- print(#blacklist)
         if #blacklist > 0 then
             for ii = 1, #blacklist do
                 checkBlacklist = checkBlacklist .. blacklist[ii]
@@ -420,20 +475,6 @@ local function raidRepCheck(msg)
         else
             SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'nobody in raid in your blacklist')
         end
-        --
-        -- :: add raidwise reputation
-        -- print(args[1])
-        if msg ~= nil and msg ~= '' then
-            for ii = 1, GetNumRaidMembers() do
-                -- local person = GetRaidRosterInfo(ii)
-                args[1] = GetRaidRosterInfo(ii)
-                args[2] = msg
-                addPlayerStat(args, 'reputation')
-                -- handlePlayerStat(person .. ' ' .. msg, 'reputation') 
-            end
-        end
-    else
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'you are not in raid')
     end
 end
 
@@ -447,23 +488,33 @@ function module:PLAYER_REGEN_DISABLED()
     isInCombat = true
 end
 
-function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()
-
+function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()whitelist
     if mod ~= 'patates' and mod ~= 'lootEntry' then
         -- print(args[1] .. " " .. type(args[1]) .. " " .. #args[1])
-        for ii = 1, GetNumWhoResults() do
-            if GetWhoInfo(ii) == args[1] then
+        for ii = 1, C_FriendList.GetNumWhoResults() do
+            local char = C_FriendList.GetWhoInfo(ii)
+            if char.fullName == args[1] then
                 isPlayerExists = true
                 break
             end
         end
+        -- table.remove(args, 1)
+        -- args = table.concat(args, " ")
+        -- args = fixArgs(args)
+        -- for ii=1, #args do
+        --     print(args[ii])
+        -- end
         ToggleFriendsFrame(2)
         -- FriendsFrame:Hide()
-        --
+        -- :: playeri adinin basina / yazildiysa who kontrolu olmadan ekle kontrolsuz ekle
         if not isPlayerExists and string.sub(args[1], 1, 1) == '/' then
-            table.remove(args, 1)
+            args[1] = string.sub(args[1], 2)
             args = table.concat(args, " ")
             args = fixArgs(args)
+            -- :: eski kod
+            -- table.remove(args, 1)
+            -- args = table.concat(args, " ")
+            -- args = fixArgs(args)
             isPlayerExists = true
         end
         --
@@ -544,9 +595,9 @@ SLASH_attendance1 = "/att"
 SlashCmdList["attendance"] = function(msg)
     handlePlayerStat(msg, 'attendance')
 end
-SLASH_raidRepCheck1 = "/rrep"
-SlashCmdList["raidRepCheck"] = function(msg)
-    raidRepCheck(msg)
+SLASH_groupRepCheck1 = "/rrep"
+SlashCmdList["groupRepCheck"] = function(msg)
+    groupRepCheck(msg)
 end
 SLASH_not1 = "/not"
 SlashCmdList["not"] = function(msg)

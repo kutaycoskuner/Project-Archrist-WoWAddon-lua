@@ -38,12 +38,12 @@ local function handleCommand(msg)
             if(shouldRender(k)) then SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor(k .. ': ') .. v) end 
         end
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'please use ' .. Arch_commandColor('/arch <modulename>') .. ' to get detailed information')
-    elseif msg == 'todolist' and shouldRender(Arch_modules('TodoList')) then
+    elseif msg == 'todolist' and shouldRender('TodoList') then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('TodoList'))
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'note taking and todo list module')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/todo') .. ' to see your current todo list')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/todo <note>') .. ' for creating new todo on console')
-    elseif msg == 'playerdb' and shouldRender(Arch_modules('PlayerDB')) then
+    elseif msg == 'playerdb' and shouldRender('PlayerDB') then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('PlayerDB'))
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'playerscoring and note taking module for your interactions')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'calculates Raidscore for player by given attributes if you have ' .. Arch_addonColor('GearScoreLite'))
@@ -55,7 +55,10 @@ local function handleCommand(msg)
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/rep <playername> <number>') .. ' non target variant')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/not <note>') .. ' taking not for target player')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/not <playername> <note>') .. ' non target variant')
-    elseif msg == 'crindicator' and shouldRender(Arch_modules('CRIndicator')) then
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/rrep') .. ' without parameter checks if anyone has negative reputation in your group')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/rrep <number>') .. ' gives everyone a given reputation in the group')
+
+    elseif msg == 'crindicator' and shouldRender('CRIndicator') then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('CRIndicator'))
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'simple frame module to inform raid leader how many crucial raid cooldowns are available in raid')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/cr') .. ' for toggle frame|r')

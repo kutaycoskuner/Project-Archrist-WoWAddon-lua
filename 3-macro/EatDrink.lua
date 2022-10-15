@@ -6,7 +6,7 @@ local moduleAlert = M .. ": |r";
 local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
-local drinks = {"Conjured Mana Strudel","Pungent Seal Whey","Honeymint Tea", "Morning Glory Dew", "Moonberry Juice", "Sweet Nectar","Melon Juice","Ice Cold Milk"}
+local drinks = {"Conjured Purified Water","Conjured Mana Strudel","Pungent Seal Whey","Honeymint Tea", "Morning Glory Dew", "Moonberry Juice", "Sweet Nectar","Melon Juice","Ice Cold Milk"}
 -- drinks[5] = "Ice Cold Milk"
 -- drinks[15] = "Melon Juice"
 -- drinks[25] = "Sweet Nectar"

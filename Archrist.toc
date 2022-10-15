@@ -2,7 +2,7 @@
 ## Interface: 30400
 ## Title: |cffedededArchrist|r
 ## Notes: Multi-functional external memory addon: Todolist, Player Database, Raid Assistant, etc.
-## Version: 1.21
+## Version: 1.22
 ## Author: Orthrin
 ## SavedVariables: ArchDB, ArchPrivateDB, ArchPeopleDB, ArchLootDB
 ## SavedVariablesPerCharacter: ArchCharacterDB
