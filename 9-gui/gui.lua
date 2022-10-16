@@ -243,7 +243,19 @@ local function pugRaid_textChange(isAnnouncement)
     if (notes ~= "" or (pugShowCounter)) and string.sub(lastNeed or " ", -1) ~= " " then
         lastNeed = need .. pugDelimeter
     end
-    counter = tostring((GetNumRaidMembers() or 0)) .. '/' .. tostring(pugRaidType)
+    if UnitInRaid('player') then
+        counter = tostring((GetNumRaidMembers() or 0)) .. '/' .. tostring(pugRaidType)
+    elseif UnitInParty('player') then
+
+        counter = tostring((GetNumGroupMembers() or 0)) .. '/' .. tostring(pugRaidType)
+    else
+        -- SELECTED_CHAT_FRAME:AddMessage(focus("Announcing: ") .. lastRaidText .. (lastNeed or "") .. lastNotes)
+        print(moduleAlert .. 'You are not in group')
+        do
+            return
+        end
+    end
+
     if notes ~= "" and string.sub(counter or " ", -1) ~= " " then
         lastCounter = counter .. pugDelimeter
     end
@@ -276,11 +288,19 @@ local function pugRaid_calcNeed()
             for key in pairs(structure[ii]) do
                 if structure[ii][key] then
                     if structure[ii][key] == true or structure[ii][key] == '' then
+                        -- :: ekliyor
                         need = need .. tostring(key)
                     else
                         need = need .. structure[ii][key]
                     end
+                    -- :: mdps, rdps ikisi birden varsa dps olarak kisaltiyor
+                    if structure[3]["MDPS"] and structure[4]["RDPS"] then
+                        need = string.gsub(need, "MDPS, RDPS", "Damage")
+                    end
+                    need = string.gsub(need, "MDPS", "Melee")
+                    need = string.gsub(need, "RDPS", "Range")
                 end
+                -- :: virgul ekleme
                 if structure[ii][key] then
                     local last = true
                     for yy = ii + 1, #structure do
@@ -325,6 +345,7 @@ local function pugRaidGUI()
     -- -- :: Main Raid Note [required]
     local raidType = AceGUI:Create('Dropdown')
     local rt = {
+        ["5"] = 5,
         ["10"] = 10,
         ["20"] = 20,
         ["25"] = 25,
@@ -451,7 +472,7 @@ local function pugRaidGUI()
     frame:AddChild(showCounter)
     -- :: Announce Channel key
     local channel = AceGUI:Create('EditBox')
-    channel:SetText(announceChannel or 'Set announce channel key here')
+    channel:SetLabel('Set announce channel key here')
     channel:SetFullWidth(true)
     channel:SetCallback("OnEnterPressed", function(widget, event, text)
         announceChannel = text
@@ -532,7 +553,7 @@ function toggleGUI(key)
         frameOpen = true
         frame = AceGUI:Create("Frame")
         frame:SetTitle(N)
-        
+
         frame:SetCallback("OnClose", function(widget)
             frameOpen = false
             local a, b, c, d, e = frame:GetPoint()
@@ -634,7 +655,7 @@ end
 --     if not isPersonExists or reload ~= nil then
 --         local nominee = {}
 --         nominee[1] = target -- name
-        
+
 --         nominee[2] = (#player or 0) -- item count
 --         -- item count
 --         -- item count

@@ -16,7 +16,7 @@ local channelKey -- channel key is for giving number of announcechannel
 -- ==== Methods
 local function handleCommand(msg)
     if msg == "1" then
-        Arch_gui_pugRaid_announce()
+        -- Arch_gui_pugRaid_announce()
     else
         Arch_setGUI('pugRaid')
     end

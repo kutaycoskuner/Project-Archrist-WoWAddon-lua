@@ -383,7 +383,7 @@ end
 local function groupRepCheck(msg)
     -- do return end
     local groupMembers = 0
-    groupRoster = {'party1', 'party2', 'party3', 'party4'}
+    groupRoster = {'player','party1', 'party2', 'party3', 'party4'}
     local groupType = nil
     if UnitInRaid('player') then
         groupType = "raid"
@@ -398,29 +398,6 @@ local function groupRepCheck(msg)
         local blacklist = {}
         local whitelist = {}
         local person
-        -- :: add raidwise reputation
-        if msg ~= nil and msg ~= '' then
-            if type(tonumber(msg)) == "number" then
-                for ii = 1, groupMembers do
-                    -- local person = GetRaidRosterInfo(ii)
-                    if groupType == "raid" then
-                        args[1] = GetRaidRosterInfo(ii)
-                    elseif groupType == "party" then
-                        args[1] = UnitName(groupRoster[ii])
-                    end
-                    -- :: control break
-                    if args[1] == nil then
-                        do
-                            return
-                        end
-                    end
-                    args[2] = msg
-                    addPlayerStat(args, 'reputation')
-                    -- handlePlayerStat(person .. ' ' .. msg, 'reputation') 
-                end
-            end
-        end
-        --
         -- :: check if blacklisted
         --
         for ii = 1, groupMembers do
@@ -467,7 +444,7 @@ local function groupRepCheck(msg)
             for ii = 1, #blacklist do
                 checkBlacklist = checkBlacklist .. blacklist[ii]
                 if ii ~= #blacklist then
-                    checkBlacklist = checkBlacklist .. ', '
+                    checkBlacklist = checkBlacwaklist .. ', '
                 end
             end
             SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor('Blacklist: ') .. checkBlacklist)
@@ -475,6 +452,29 @@ local function groupRepCheck(msg)
         else
             SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'nobody in raid in your blacklist')
         end
+         -- :: add raidwise reputation
+         if msg ~= nil and msg ~= '' then
+            if type(tonumber(msg)) == "number" then
+                for ii = 1, groupMembers do
+                    -- local person = GetRaidRosterInfo(ii)
+                    if groupType == "raid" then
+                        args[1] = GetRaidRosterInfo(ii)
+                    elseif groupType == "party" then
+                        args[1] = UnitName(groupRoster[ii])
+                    end
+                    -- :: control break
+                    if args[1] == nil then
+                        do
+                            return
+                        end
+                    end
+                    args[2] = msg
+                    addPlayerStat(args, 'reputation')
+                    -- handlePlayerStat(person .. ' ' .. msg, 'reputation') 
+                end
+            end
+        end
+        --
     end
 end
 

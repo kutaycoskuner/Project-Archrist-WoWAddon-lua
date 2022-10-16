@@ -1,7 +1,7 @@
 # Log
 `Started 29-Jul-2020`
 
-# Keys - Discretized Actions 1.5
+# Keys - Discretized Actions 1.6
 - org: organization, decisions, notebook changes
 - arch: architectural, framework change, tryout
 
@@ -9,6 +9,7 @@
     - con: content
     - sty: style/render
     - fun: function
+    - ins: instructional
 
 - del: deleted
 - fix: fix a bug or problem | compatibility
@@ -29,7 +30,8 @@
 - [x] 12-Oct-2022 11-Oct-2022 fix: todo gui scale ettiginde numara kayiyor
 - [x] 13-Oct-2022 11-Oct-2022 add: help verisini ancak modul aktifse yuklesin ve modul icinden ceksin
 - [x] 15-Oct-2022 15-Oct-2022 add: playerdb help
-- 11-Oct-2022 add: macro usage icin help yaz
+- [x] 16-Oct-2022 11-Oct-2022 add: macro usage icin help yaz
+- 16-Oct-2022 add: CRIndicator display
 - 13-Oct-2022 fix: help raidwarnings i main ayir kendi icinde distribute et
 - 15-Oct-2022 add: new version alert
 
@@ -40,7 +42,14 @@
 - update toc version
 
 # LOG
-- 12-Oct-2022 1.22
+- 15-Oct-2022 1.23
+    - upg: Readme
+    - ins: help for Macro
+    - fun: Empty modules for Raidcommands and Macro
+    - fix: PUG raid organizer lua errors
+    - fix: playerdb 5 man party problem
+
+- 15-Oct-2022 1.22
     - fix: playerdb adding reputation to name problem
     - fun: party function along with raid
 

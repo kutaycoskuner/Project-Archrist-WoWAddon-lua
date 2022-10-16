@@ -13,10 +13,11 @@ local Arch_commandColor = Arch_commandColor
 local Arch_modules = {
     ["TodoList"] = 'Helps you to create todo list',
     ["PlayerDB"] = 'Player database module for interactions',
-    ["PuG"] = 'For creating fast and editable PuG announces',
+    ["Pug"] = 'For creating fast and editable PuG announces',
     ["VoA"] = 'For Creating specific VoA18 spec run announcements',
     ["CRIndicator"] = 'Raid combat res indicator for leading',
     ["RaidCommands"] = 'Work in progress not yet finished',
+    ["Macro"] = 'Allows you to create your own macros more than 255 characters with lua'
 }
 -- ==== GUI
 
@@ -46,7 +47,7 @@ local function handleCommand(msg)
     elseif msg == 'playerdb' and shouldRender('PlayerDB') then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('PlayerDB'))
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'playerscoring and note taking module for your interactions')
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'calculates Raidscore for player by given attributes if you have ' .. Arch_addonColor('GearScoreLite'))
+        -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'calculates Raidscore for player by given attributes if you have ' .. Arch_addonColor('GearScoreLite'))
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'quantitative parameters: [dmg], [str], [rep], [att], [dsc]')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'qualitative parameters: note[not]')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/rep') .. ' adds target person to your database')
@@ -65,6 +66,17 @@ local function handleCommand(msg)
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/cr lock') ..' for lock frame|r')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/cr move') ..' for move frame|r')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_commandColor('/cr <number>') ..' In combat this command announces <n>th available Rebirth for combat res|r')
+    elseif msg == 'pug' and shouldRender('Pug') then
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('Pug'))
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Helps to creates adaptive raid forming announcements through web interface')
+    elseif msg == 'macro' and shouldRender('Macro') then
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('Macro'))
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '1. Create your own macro in 3-macro folder in addon')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '2. Give it a unique button name ex. feedButton')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. '3. Create an ingame macro as "/run setFeedButton() /click feedButton"')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Limitations: Due to prevent combat abuse: You cannot dynamically change macros in combat')
+    elseif msg == 'raidcommands' and shouldRender('RaidCommands') then
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('RaidCommands'))
     end
 end
 
