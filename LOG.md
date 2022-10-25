@@ -31,9 +31,9 @@
 - [x] 13-Oct-2022 11-Oct-2022 add: help verisini ancak modul aktifse yuklesin ve modul icinden ceksin
 - [x] 15-Oct-2022 15-Oct-2022 add: playerdb help
 - [x] 16-Oct-2022 11-Oct-2022 add: macro usage icin help yaz
+- [c] 19-Oct-2022 15-Oct-2022 add: new version alert
 - 16-Oct-2022 add: CRIndicator display
 - 13-Oct-2022 fix: help raidwarnings i main ayir kendi icinde distribute et
-- 15-Oct-2022 add: new version alert
 
 # Procedures
 - check todo
@@ -42,6 +42,12 @@
 - update toc version
 
 # LOG
+- 25-Oct-2022 1.25
+    - fun: FeedPet Macro
+
+- 19-Oct-2022 1.24
+    - upg: Eat&Drink Macro 
+
 - 15-Oct-2022 1.23
     - upg: Readme
     - ins: help for Macro

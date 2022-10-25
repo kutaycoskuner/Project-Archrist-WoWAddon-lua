@@ -5,5 +5,6 @@
     <Script file="Disenchanting.lua"/>
     <!-- <Script file="Warrior.lua"/> -->
     <Script file="EatDrink.lua"/>
+    <Script file="FeedPet.lua"/>
     <!-- <Script file="Shaman.lua"/> -->
 </Ui>

@@ -250,10 +250,8 @@ local function pugRaid_textChange(isAnnouncement)
         counter = tostring((GetNumGroupMembers() or 0)) .. '/' .. tostring(pugRaidType)
     else
         -- SELECTED_CHAT_FRAME:AddMessage(focus("Announcing: ") .. lastRaidText .. (lastNeed or "") .. lastNotes)
-        print(moduleAlert .. 'You are not in group')
-        do
-            return
-        end
+        -- print(moduleAlert .. 'You are not in group')
+        counter = tostring(0) .. '/' .. tostring(pugRaidType)
     end
 
     if notes ~= "" and string.sub(counter or " ", -1) ~= " " then
@@ -297,8 +295,8 @@ local function pugRaid_calcNeed()
                     if structure[3]["MDPS"] and structure[4]["RDPS"] then
                         need = string.gsub(need, "MDPS, RDPS", "Damage")
                     end
-                    need = string.gsub(need, "MDPS", "Melee")
-                    need = string.gsub(need, "RDPS", "Range")
+                    -- need = string.gsub(need, "MDPS", "MDPS")
+                    -- need = string.gsub(need, "RDPS", "Range")
                 end
                 -- :: virgul ekleme
                 if structure[ii][key] then
@@ -404,7 +402,7 @@ local function pugRaidGUI()
                 if all then
                     need = 'Need All'
                 else
-                    need = "Ne "
+                    need = ""
                 end
                 pugRaid_textChange(false)
                 -- A.global.pugRaid.needData = structure

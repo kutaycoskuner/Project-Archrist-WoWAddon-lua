@@ -150,6 +150,10 @@ https://www.lua.org/pil/20.2.html
     -  Warrior
         5246 - Intimidating shout
 
+- messenger pattern
+- serialize | deserialize
+    - dosyaya yazarken memoryden alip disariya yazmaya serialize | yeniden okuyup memory de kendi dtasini cekmeye deserialize deniyor
+
 # How to
 - <how to print debug lua>
     - SendChatMessage("Hello Bob!", "WHISPER", "Common", UnitName("Player"));

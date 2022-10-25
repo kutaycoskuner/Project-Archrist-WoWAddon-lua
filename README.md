@@ -4,7 +4,7 @@ Multi-functional external memory addon: Todolist, Player Database, Raid Assistan
 
 # Intallation and Use
 1. Download folder
-2. Rename folder `Archrists`
+2. Rename folder `Archrist`
 3. `optional` Remove following files as they have no relation to addon functionality
     - `-display`, `!disabled`, `.gitignore`, `LOG.md`, `NOTEBOOK.md`, `README.md`, `TIMELOG.md`
 
@@ -18,14 +18,14 @@ Multi-functional external memory addon: Todolist, Player Database, Raid Assistan
     - [ ] `CRIndicator` Raid cooldown tracker  
     - [ ] `Raid Commands` Dynamic command interface for repetitive and distinctive warning messages   
     - [ ] `VoA` Vault of Archavon spec run announcement module 
-    
+    - [ ] `Tactics` Display tactics of selected raid boss   
+
 - Macros
     - [x] `Eat & Drink` Use consumables by order  
     - [ ] `Disenchanting` Single click disenchanting  
     - [ ] `Milling` Single click herb milling  
     - [ ] `Prospecting` Single click prospecting  
     - [ ] `Shaman` Enhancement weapons module  
-    - [ ] `Tactics` Display tactics of selected raid boss   
 
 - Disabled
     - [ ] `Loot Message Filter` Filter out greed and disenchanting rolls  

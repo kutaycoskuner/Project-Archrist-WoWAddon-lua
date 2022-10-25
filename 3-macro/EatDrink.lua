@@ -6,67 +6,134 @@ local moduleAlert = M .. ": |r";
 local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
-local drinks = {"Conjured Purified Water","Conjured Mana Strudel","Pungent Seal Whey","Honeymint Tea", "Morning Glory Dew", "Moonberry Juice", "Sweet Nectar","Melon Juice","Ice Cold Milk"}
--- drinks[5] = "Ice Cold Milk"
--- drinks[15] = "Melon Juice"
--- drinks[25] = "Sweet Nectar"
--- drinks[35] = "Moonberry Juice"
--- drinks[45] = "Morning Glory Dew"
--- drinks[60] = "Filtered Draenic Water"
+local drinks = {
+    "Conjured Mana Strudel",            --80 conjured all
+    "Pungent Seal Whey",                --80
+    "Honeymint Tea",                    --80
+    "Morning Glory Dew",                --45
+    "Moonberry Juice",                  --35
+    "Conjured Spring Water",            --25 conjured
+    "Sweet Nectar",                     --25
+    "Conjured Purified Water",          --15 conjured
+    "Melon Juice",                      --15
+    "Conjured Fresh Water",             --5 conjured
+    "Conjured Water",                   --5 conjured
+    "Refreshing Spring Water",          --5 
+    "Ice Cold Milk",                    --5
+}
 
-local foods = {"Conjured Mana Strudel","Honey-Spiced Lichen", "Sour Goat Cheese","Salted Venison", "Succulent Orca Stew", "Mead Basted Caribou"}
-local foodClass = {"Warrior", 'Rogue', 'Death Knight', 'Hunter'}
+local foods = {
+    "Conjured Mana Strudel",            --90 conjured all
+    "Honey-Spiced Lichen",              --80
+    "Sour Goat Cheese",                 --80
+    "Salted Venison",                   --80
+    "Succulent Orca Stew",              --80
+    "Mead Basted Caribou",              --80
+    "Conjured Pumpernickel",            --25 conjured333333
+    "Conjured Rye",                     --15 conjured
+    "Conjured Bread",                   --5 conjured
+    "Tough Jerky",                      --5
+    "Shiny Red Apple",                  --5
+    "Dalaran Sharp",                    --5
+    "Westfall Stew",                    --5
+    "Goretusk Liver Pie",               --5
+    "Cookie's Jumbo Gumbo",
+    "Candy Corn",
+    "Leg Meat",
+    "Freshly Baked Bread",
+    "Ripe Watermelon",
+    "Bobbing Apple",
+}
+--
+local foodClass = {
+    ["Warrior"] = 1, 
+    ['Rogue'] = 1, 
+    ['Death Knight'] = 1, 
+    ['Hunter'] = nil
+}
 
+local relateFoodType = {
+    ['drink'] = drinks,
+    ['food'] = foods
+}
 -- ==== Macro
 --[[
-/run setFeedButton() 
+/run setFeedButton('drink') 
 /click feedButton  
+/run setFeedButton('food') 
+/click feedButton
 ]]
 
 -- ==== Methods
 local feed = CreateFrame("CheckButton", "feedButton", UIParent,
                          "SecureActionButtonTemplate")
 feed:SetAttribute("type", "macro")
+--
+local level = UnitLevel('player')
+local class = UnitClass("player")
 
-local function findConsumableInBag()
+local function findConsumableInBag(foodType)
+    local healthPercentage =  UnitHealth('player') / UnitHealthMax('player')
+    local powerPercentage = UnitPower('player') / UnitPowerMax('player')
+    -- print(healthPercentage .. ' ' .. powerPercentage)
+    -- do return end
+    -- Find item
+    local isFound = false
     local function findItem(bag, slot)
         local consumable = GetItemInfo(GetContainerItemLink(bag, slot) or 0)
-        local class = UnitClass("player")
         local search 
-        --
-        for ii=1, #foodClass do
-            if class == foodClass[ii] then
-                search = foods
-                break
-            else
-                search = drinks
-            end
+        if relateFoodType[foodType] then
+            search = relateFoodType[foodType]
+        else
+            do return end
         end
-        --
         for ii = 1, #search do
             if consumable == search[ii] then
                 return select(1, consumable)
             end
         end
     end
-    --
+    -- :: eger hp ve can full ise otur bir sey yemeden otur
+    if healthPercentage == 1 and powerPercentage == 1 then
+        return nil, nil, nil, true
+    end
+    -- :: Return items' bag coordinates
     for ii = 4, 0, -1 do
         for jj = GetContainerNumSlots(ii), 1, -1 do
             if findItem(ii, jj) then 
                 local item = GetContainerItemLink(ii, jj)
-                print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
-                return ii, jj 
+                -- :: class / hp conditionals
+                if foodType=='food' and foodClass[class] and (healthPercentage~=1) then
+                    print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
+                    return ii, jj, true
+                elseif foodType=='food' and foodClass[class]==nil and (healthPercentage~=1) then
+                    print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
+                    return ii, jj, true
+                elseif foodType=='drink' and foodClass[class]==nil and (powerPercentage~=1) then
+                    print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
+                    return ii, jj, true
+                else    
+                    isFound = true
+                    break
+                end
             end
         end
     end
+    --
+    return nil, nil, isFound
 end
 
-function setFeedButton()
-    local bag, slot = findConsumableInBag()
-    if (not bag or not slot) then
-        -- do nothing if no herb, if looting or casting
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "Could not find any food")
-    else
+function setFeedButton(foodType)
+    local bag, slot, noPrint, full = findConsumableInBag(foodType)
+    if full then
+        feedButton:SetAttribute("macrotext", --
+        "/sit")
+        -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "You are already full " .. foodType)
+    elseif not noPrint then
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "Could not find any " .. foodType)
+    elseif bag==nil and noPrint then
+        do return end
+    elseif bag and slot then
         feedButton:SetAttribute("macrotext", --
         "#showtooltip \n/use " .. bag .. " " .. slot)
     end

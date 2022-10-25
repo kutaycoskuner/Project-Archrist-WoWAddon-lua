@@ -135,7 +135,7 @@ function Archrist_PlayerDB_calcRaidScore(player)
     if GameTooltip:GetUnit() then
         local Name = GameTooltip:GetUnit();
         if GearScore_GetScore(Name, "mouseover") then
-            gsr = GearScore_GetScore(Name, "mouseover")
+            gsr = 0 --GearScore_GetScore(Name, "mouseover")
             -- print(gsr)
             -- print(raidScore + gsr)
             return (raidScore + gsr)
