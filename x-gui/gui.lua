@@ -244,7 +244,7 @@ local function pugRaid_textChange(isAnnouncement)
         lastNeed = need .. pugDelimeter
     end
     if UnitInRaid('player') then
-        counter = tostring((GetNumRaidMembers() or 0)) .. '/' .. tostring(pugRaidType)
+        counter = tostring((GetNumGroupMembers() or 0)) .. '/' .. tostring(pugRaidType)
     elseif UnitInParty('player') then
 
         counter = tostring((GetNumGroupMembers() or 0)) .. '/' .. tostring(pugRaidType)

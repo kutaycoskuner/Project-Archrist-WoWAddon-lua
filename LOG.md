@@ -32,8 +32,12 @@
 - [x] 15-Oct-2022 15-Oct-2022 add: playerdb help
 - [x] 16-Oct-2022 11-Oct-2022 add: macro usage icin help yaz
 - [c] 19-Oct-2022 15-Oct-2022 add: new version alert
+- [x] 28-Oct-2022 25-Oct-2022 add: readme: petfeed macro
+- [x] 28-Oct-2022 28-Oct-2022 arch: oyundaki item, skill tutan databaseleri logic govdelerinden ayir foods. settingsten dataya al
 - 16-Oct-2022 add: CRIndicator display
 - 13-Oct-2022 fix: help raidwarnings i main ayir kendi icinde distribute et
+- 25-Oct-2022 add: petfeed macro help
+- 28-Oct-2022 fun: raidwarnings: if not in group then send printout message / party
 
 # Procedures
 - check todo
@@ -42,6 +46,9 @@
 - update toc version
 
 # LOG
+- 28-Oct-2022 1.26
+    - arch: data/settings split
+
 - 25-Oct-2022 1.25
     - fun: FeedPet Macro
 

@@ -155,6 +155,11 @@ https://www.lua.org/pil/20.2.html
     - dosyaya yazarken memoryden alip disariya yazmaya serialize | yeniden okuyup memory de kendi dtasini cekmeye deserialize deniyor
 
 # How to
+- <add new folder>
+    - create folder
+    - create xml for load
+    - add load file to .toc
+
 - <how to print debug lua>
     - SendChatMessage("Hello Bob!", "WHISPER", "Common", UnitName("Player"));
 

@@ -22,6 +22,7 @@ Multi-functional external memory addon: Todolist, Player Database, Raid Assistan
 
 - Macros
     - [x] `Eat & Drink` Use consumables by order  
+    - [x] `Pet Feed` Allows you to feed your pet as their happiness is decreased. Could be combined with `Eat & Drink`
     - [ ] `Disenchanting` Single click disenchanting  
     - [ ] `Milling` Single click herb milling  
     - [ ] `Prospecting` Single click prospecting  

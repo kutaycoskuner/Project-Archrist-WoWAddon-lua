@@ -321,8 +321,8 @@ local function scanGroup()
     -- test end
 
     if UnitInRaid('player') then
-        local isExists = false
-        for ii = 1, GetNumRaidMembers() do
+        local isExists = falsesd
+        for ii = 1, GetNumGroupMembers() do
             local druidName, rank, subgroup, level, vclass = GetRaidRosterInfo(ii)
             -- SELECTED_CHAT_FRAME:AddMessage(vclass)
             for class, param in pairs(trackClass) do
@@ -360,7 +360,7 @@ local function scanGroup()
         for ii = 1, #raidPeople do
             if UnitInRaid("player") then
                 local stillIn = false
-                for yy = 1, GetNumRaidMembers() do
+                for yy = 1, GetNumGroupMembers() do
                     local druidName = GetRaidRosterInfo(yy)
                     if raidPeople[ii] then
                         if druidName == raidPeople[ii].name then

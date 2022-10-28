@@ -6,44 +6,9 @@ local moduleAlert = M .. ": |r";
 local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
-local drinks = {
-    "Conjured Mana Strudel",            --80 conjured all
-    "Pungent Seal Whey",                --80
-    "Honeymint Tea",                    --80
-    "Morning Glory Dew",                --45
-    "Moonberry Juice",                  --35
-    "Conjured Spring Water",            --25 conjured
-    "Sweet Nectar",                     --25
-    "Conjured Purified Water",          --15 conjured
-    "Melon Juice",                      --15
-    "Conjured Fresh Water",             --5 conjured
-    "Conjured Water",                   --5 conjured
-    "Refreshing Spring Water",          --5 
-    "Ice Cold Milk",                    --5
-}
+local foods = Arch_consumables["foods"]
+local drinks = Arch_consumables["drinks"]
 
-local foods = {
-    "Conjured Mana Strudel",            --90 conjured all
-    "Honey-Spiced Lichen",              --80
-    "Sour Goat Cheese",                 --80
-    "Salted Venison",                   --80
-    "Succulent Orca Stew",              --80
-    "Mead Basted Caribou",              --80
-    "Conjured Pumpernickel",            --25 conjured333333
-    "Conjured Rye",                     --15 conjured
-    "Conjured Bread",                   --5 conjured
-    "Tough Jerky",                      --5
-    "Shiny Red Apple",                  --5
-    "Dalaran Sharp",                    --5
-    "Westfall Stew",                    --5
-    "Goretusk Liver Pie",               --5
-    "Cookie's Jumbo Gumbo",
-    "Candy Corn",
-    "Leg Meat",
-    "Freshly Baked Bread",
-    "Ripe Watermelon",
-    "Bobbing Apple",
-}
 --
 local foodClass = {
     ["Warrior"] = 1, 
@@ -80,7 +45,7 @@ local function findConsumableInBag(foodType)
     -- Find item
     local isFound = false
     local function findItem(bag, slot)
-        local consumable = GetItemInfo(GetContainerItemLink(bag, slot) or 0)
+        local consumable = GetContainerItemID(bag, slot)--GetItemInfo(GetContainerItemLink(bag, slot) or 0)
         local search 
         if relateFoodType[foodType] then
             search = relateFoodType[foodType]
@@ -89,6 +54,7 @@ local function findConsumableInBag(foodType)
         end
         for ii = 1, #search do
             if consumable == search[ii] then
+                print(consumable, setID, expacID, classID, subclassID)
                 return select(1, consumable)
             end
         end
