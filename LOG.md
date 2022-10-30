@@ -38,6 +38,9 @@
 - 13-Oct-2022 fix: help raidwarnings i main ayir kendi icinde distribute et
 - 25-Oct-2022 add: petfeed macro help
 - 28-Oct-2022 fun: raidwarnings: if not in group then send printout message / party
+- 30-Oct-2022 add: profession grinding guide
+- 30-Oct-2022 arch: guileri alt dosyalar olarak ayir
+- 30-Oct-2022 add: frame saved position problemi dogdu guide onu duzelt
 
 # Procedures
 - check todo
@@ -46,6 +49,11 @@
 - update toc version
 
 # LOG
+- 30-Oct-2022 1.27
+    - arch: GUI / logic split
+    - wip: CraftGuides 
+    - sty: renaming data files
+
 - 28-Oct-2022 1.26
     - arch: data/settings split
 

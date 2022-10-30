@@ -19,12 +19,15 @@ Arch_consumables = {
         1487,           -- 25 conjured pumpernickel
         1114,           -- 15 conjured rye
         4593,           -- 15 bristle whisker catfish
+        4606,           -- 15 spongy morel
+        3663,           -- 15 murloc fin soup
         1113,           -- 5 conjured bread
         422,            -- 5 dwarven mild
         414,            -- 5 dalaran sharp
         733,            -- 5 westfall stew
         724,            -- 5 goretusk liver pie
         24072,          -- 5 sand pear pie
+        2287,           -- 5 haunch of meat
         4541,           -- 5 freshly baked bread
         4542,           -- 0 most cornbread
         117,            -- 0 tough jerky
@@ -45,10 +48,11 @@ Arch_consumables = {
         3772,           -- 25 conjured spring water
         1708,           -- 25 sweet nectar
         2136,           -- 15 conjured purified water
+        1205,           -- 15 melon juice
         2288,           -- 5 conjured fresh water
+        4605,           -- 5 red-speckled mushroom
         1179,           -- 5 ice cold milk
         5350,           -- 0 conjured water
-        1205,           -- 0 melon juice
         159,            -- 0 refreshing spring water
     },
     -- ==== Pet Food

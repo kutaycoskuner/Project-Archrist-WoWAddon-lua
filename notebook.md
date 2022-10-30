@@ -21,7 +21,8 @@ https://www.townlong-yak.com/framexml/live/UI.xsd
 - blizzard api
 https://www.townlong-yak.com/framexml/live/Blizzard_APIDocumentation
 - wow event aapi
-https://wowwiki.fandom.com/wiki/Events/Mail
+    https://wowwiki.fandom.com/wiki/Events/Mail
+    https://wowpedia.fandom.com/wiki/API_GetNumRaidMembers
 - reddit masterpost
 https://old.reddit.com/r/classicwow/comments/bvbqo1//epokyf1/
 - ace3 gui
@@ -65,6 +66,11 @@ https://www.lua.org/pil/20.2.html
 +-- Archrist.toc
 
 # Blackboard
+- customizability levels
+    1. give your data within the logic
+    2. split your data from logic in the code
+    3. split your data from the logic file
+    4. allow user to manipulate data within uiwwa
 
 - feature list template
     - name, description, how to use, example

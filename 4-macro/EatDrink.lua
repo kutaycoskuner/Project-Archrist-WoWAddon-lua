@@ -40,7 +40,7 @@ local class = UnitClass("player")
 local function findConsumableInBag(foodType)
     local healthPercentage =  UnitHealth('player') / UnitHealthMax('player')
     local powerPercentage = UnitPower('player') / UnitPowerMax('player')
-    -- print(healthPercentage .. ' ' .. powerPercentage)
+    -- www(healthPercentage .. ' ' .. powerPercentage)
     -- do return end
     -- Find item
     local isFound = false
@@ -54,7 +54,7 @@ local function findConsumableInBag(foodType)
         end
         for ii = 1, #search do
             if consumable == search[ii] then
-                print(consumable, setID, expacID, classID, subclassID)
+                -- print(consumable, setID, expacID, classID, subclassID)
                 return select(1, consumable)
             end
         end

@@ -1,8 +1,9 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
-    <Script file="foods.lua"/>
-    <Script file="tactics.lua"/>
-    <Script file="spells.lua"/>
-    <Script file="classColors.lua"/>
-    <Script file="raidAlerts.lua"/>
+    <Script file="add_raidAlerts.lua"/>
+    <Script file="add_tactics.lua"/>
+    <Script file="base_classColors.lua"/>
+    <Script file="data_foods.lua"/>
+    <Script file="data_spells.lua"/>
+    <Script file="guide_tailor.lua"/>
 </Ui>

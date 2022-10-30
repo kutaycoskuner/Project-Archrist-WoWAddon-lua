@@ -1,16 +1,32 @@
 ------------------------------------------------------------------------------------------------------------------------
--- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+--------- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+------------------------------------------------------------------------------------------------------------------------
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
 local moduleName = 'TodoList';
 local moduleAlert = M .. moduleName .. ": |r";
 local module = A:GetModule(moduleName);
 module.loaded = true
-if module == nil then return end
+if module == nil then
+    return
+end
+------------------------------------------------------------------------------------------------------------------------
+--------- Notes
+------------------------------------------------------------------------------------------------------------------------
+-- todo ----------------------------------------------------------------------------------------------------------------
+--[[
+
+]]
+
+-- ==== use case ------------------------------------------------------------------------------------------------------------
+--[[
+
+]]
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
 local list = {}
 
+------------------------------------------------------------------------------------------------------------------------
 -- ==== Start
 function module:Initialize()
     self.initialized = true
@@ -18,7 +34,8 @@ function module:Initialize()
     -- module:RegisterEvent("CHAT_MSG_SAY");
 end
 
--- ==== Methods
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Local Methods
 -- :: Argumanlari ayirip bas harflerini buyutuyor
 local function fixArgs(msg)
     -- :: this is separating the given arguments after command
@@ -62,23 +79,114 @@ local function handleTodo(msg)
     end
 end
 
--- ==== Slash Handlersd
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Global Method
+function Arch_TodoListGUI()
+    if A.global.todo then
+        local heading = AceGUI:Create('Heading')
+        heading:SetText('Todo List')
+        heading:SetRelativeWidth(1)
+        Arch_guiFrame:ReleaseChildren()
+        Arch_guiFrame:AddChild(heading)
+        -- :: Labels
+        local labelIssuer = AceGUI:Create("Label")
+        labelIssuer:SetText("")
+        labelIssuer:SetRelativeWidth(0.1)
+        Arch_guiFrame:AddChild(labelIssuer)
+        --
+        local labelTodo = AceGUI:Create("Label")
+        labelTodo:SetText("Todo")
+        labelTodo:SetRelativeWidth(0.7)
+        Arch_guiFrame:AddChild(labelTodo)
+        --
+        local labelButton = AceGUI:Create("Label")
+        labelButton:SetText("Complete")
+        labelButton:SetRelativeWidth(0.2)
+        Arch_guiFrame:AddChild(labelButton)
+        --
+        -- :: Set Variable for cache
+        local list = A.global.todo
+        for ii = 1, #list do
+            -- :: her bir todo icin
+            local label = AceGUI:Create("Label")
+            label:SetText(ii .. "# ")
+            label:SetRelativeWidth(0.1)
+            Arch_guiFrame:AddChild(label)
+            --
+            local editbox = AceGUI:Create("Label")
+            editbox:SetText(list[ii].todo)
+            editbox:SetRelativeWidth(0.7)
+            Arch_guiFrame:AddChild(editbox)
+            --
+            local button = AceGUI:Create("Button")
+            button:SetText("Done!")
+            button:SetRelativeWidth(0.2)
+            button:SetCallback("OnClick", function(widget)
+                table.remove(list, ii)
+                A.global.todo = list
+                -- :: Recursive
+                recursive = true
+                toggleGUI('TodoList')
+            end)
+            Arch_guiFrame:AddChild(button)
+        end
+        -- :: gui Add Todo
+        local newIssuer, newTodo
+        --
+        local addIssuer = AceGUI:Create("Label")
+        addIssuer:SetText(#A.global.todo + 1 .. "# ")
+        addIssuer:SetRelativeWidth(0.1)
+        Arch_guiFrame:AddChild(addIssuer)
+        -- addIssuer:SetCallback("OnEnterPressed", function(widget, event, text)
+        --     newIssuer = text
+        -- end)
+        --
+        local addTodo = AceGUI:Create("EditBox")
+        addTodo:SetLabel("Todo")
+        addTodo:SetRelativeWidth(0.7)
+        addTodo:SetCallback("OnEnterPressed", function(widget, event, text)
+            newTodo = text
+        end)
+        Arch_guiFrame:AddChild(addTodo)
+        --
+        local button = AceGUI:Create("Button")
+        button:SetText("Add")
+        button:SetRelativeWidth(0.2)
+        button:SetCallback("OnClick", function(widget)
+            list = A.global.todo
+            table.insert(list, {
+                todo = newTodo
+            })
+            A.global.todo = list
+            -- :: Recursive
+            recursive = true
+            toggleGUI('TodoList')
+        end)
+        Arch_guiFrame:AddChild(button)
+    end
+end
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Main
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Event Handlers
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== CLI (Slash Commands)
 SLASH_todo1 = "/todo"
 SlashCmdList["todo"] = function(msg) handleTodo(msg) end
 -- SLASH_test1 = "/trade"
 -- SlashCmdList["trade"] = function(msg) handleTrade(msg) end
 
--- -- ==== End
+------------------------------------------------------------------------------------------------------------------------
+-- ==== GUI
+-- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getPlayerData)
+-- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getNote)
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Callback & Register [last arg]
 local function InitializeCallback() module:Initialize() end
 A:RegisterModule(module:GetName(), InitializeCallback)
-
--- ==== Todo
-
--- ==== UseCase
--- Todolist
--- >> take notes for what todo
--- >> Mainly for glyphs
---[[
- simdilik sadece ilk girilen entry issuer ve not olarak alsin.
-
-]]

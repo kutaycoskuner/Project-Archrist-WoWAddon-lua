@@ -134,12 +134,12 @@ function Archrist_PlayerDB_calcRaidScore(player)
 
     if GameTooltip:GetUnit() then
         local Name = GameTooltip:GetUnit();
-        if GearScore_GetScore(Name, "mouseover") then
-            gsr = 0 --GearScore_GetScore(Name, "mouseover")
+        -- if GearScore_GetScore(Name, "mouseover") then
+            -- gsr = 0 --GearScore_GetScore(Name, "mouseover")
             -- print(gsr)
             -- print(raidScore + gsr)
-            return (raidScore + gsr)
-        end
+            -- return (raidScore + gsr)
+        -- end
     end
 
     return raidScore
@@ -162,23 +162,23 @@ end
 
 local function Archrist_PlayerDB_getRaidScore()
     if GameTooltip:GetUnit() then
-        local Name = GameTooltip:GetUnit();
-        if not GearScore_GetScore then
-            return
-        end
-        if GearScore_GetScore(Name, "mouseover") then
-            if A.people[realmName][Name] then
-                local gearScore = GearScore_GetScore(Name, "mouseover")
-                if gearScore and gearScore > 0 then
-                    local personalData = Archrist_PlayerDB_calcRaidScore(Name)
-                    -- local note = Archrist_PlayerDB_getNote(Name)
-                    local raidScore = personalData
-                    if gearScore ~= raidScore then
-                        GameTooltip:AddLine('RaidScore: ' .. raidScore, 0, 78, 100)
-                    end
-                end
-            end
-        end
+        -- local Name = GameTooltip:GetUnit();
+        -- if not GearScore_GetScore then
+        --     return
+        -- end
+        -- if GearScore_GetScore(Name, "mouseover") then
+        --     if A.people[realmName][Name] then
+        --         local gearScore = GearScore_GetScore(Name, "mouseover")
+        --         if gearScore and gearScore > 0 then
+        --             local personalData = Archrist_PlayerDB_calcRaidScore(Name)
+        --             -- local note = Archrist_PlayerDB_getNote(Name)
+        --             local raidScore = personalData
+        --             if gearScore ~= raidScore then
+        --                 GameTooltip:AddLine('RaidScore: ' .. raidScore, 0, 78, 100)
+        --             end
+        --         end
+        --     end
+        -- end
     end
 end
 

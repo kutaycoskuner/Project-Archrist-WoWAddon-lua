@@ -87,6 +87,9 @@ do
     -- Addon.voa = Addon:NewModule("VoA", "AceHook-3.0", "AceEvent-3.0")
     Addon.pug = Addon:NewModule("Pug", "AceHook-3.0", "AceEvent-3.0")
     Addon.announcer = Addon:NewModule("Announcer", "AceHook-3.0", "AceEvent-3.0")
+    -- test 
+    Addon.craftGuides = Addon:NewModule("CraftGuides", "AceHook-3.0", "AceEvent-3.0")
+    -- test end
     -- Addon.Distributor = Addon:NewModule("Distributor", "AceEvent-3.0", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0")
     -- :: Empty Modules
     Addon.macro = Addon:NewModule("Macro")
