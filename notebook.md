@@ -161,6 +161,12 @@ https://www.lua.org/pil/20.2.html
     - dosyaya yazarken memoryden alip disariya yazmaya serialize | yeniden okuyup memory de kendi dtasini cekmeye deserialize deniyor
 
 # How to
+- <frame position>
+    - frame pos isimli degisken belirle
+    - init icine eger yoksa global position holder tutan degisken koy
+    - gui draw icine frame pos belirleyen blok koy
+    - gui icindeki callback icine kapatma tusuyla kaydeden eklenti koy
+
 - <add new folder>
     - create folder
     - create xml for load

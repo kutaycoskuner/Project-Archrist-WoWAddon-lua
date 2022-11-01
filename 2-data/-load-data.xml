@@ -5,5 +5,7 @@
     <Script file="base_classColors.lua"/>
     <Script file="data_foods.lua"/>
     <Script file="data_spells.lua"/>
+    <Script file="guide_engineer.lua"/>
     <Script file="guide_tailor.lua"/>
+
 </Ui>

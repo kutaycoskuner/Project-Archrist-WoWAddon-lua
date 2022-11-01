@@ -25,6 +25,7 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
+local pugFramePos
 local UpdateInterval = 1.0; -- How often the OnUpdate code will run (in seconds)
 local announceChannel
 local channelKey -- channel key is for giving number of announcechannel
@@ -67,6 +68,10 @@ function module:Initialize()
             ["channelKey"] = {}
         }
     end
+    if not A.global.pugFrame then
+        A.global.pugFrame = {"CENTER", "CENTER", 0, 0}
+    end
+    --
     self.initialized = true
     -- :: Database Connection
     -- :: Register some events
@@ -205,14 +210,23 @@ end
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Global Methods
 function Arch_pugRaidGUI()
+    pugFramePos = A.global.pugFrame
+    raidText = A.global.pugRaid.raidText
+    pugRaidType = A.global.pugRaid.raidType
+    structure = A.global.pugRaid.needData
+    pugShowCounter = A.global.pugRaid.showCounter
+    pugDelimeter = A.global.pugRaid.delimeter
+    notes = A.global.pugRaid.additionalNote
+    announceChannel = A.global.pugRaid.channelKey
+    
     Arch_guiFrame:SetWidth(280)
     Arch_guiFrame:SetHeight(576)
-    -- Arch_guiFrame:ClearAllPoints()
-    -- if A.global.voaFrame == {} then
-    --     Arch_guiFrame:SetPoint("CENTER", 0, 0)
-    -- else
-    --     Arch_guiFrame:SetPoint(voaFramePos[1], voaFramePos[3], voaFramePos[4])
-    -- end
+    Arch_guiFrame:ClearAllPoints()
+    if A.global.pugFrame == {} then
+        Arch_guiFrame:SetPoint("CENTER", 0, 0)
+    else
+        Arch_guiFrame:SetPoint(pugFramePos[1], pugFramePos[3], pugFramePos[4])
+    end
     local heading = AceGUI:Create('Heading')
     heading:SetText('PuG Raid Organizer')
     heading:SetRelativeWidth(1)
@@ -394,14 +408,6 @@ end
 -- ==== Callback & Register [last arg]
 local function InitializeCallback()
     module:Initialize()
-    -- :: Pug
-    -- !! testtest
-    raidText = A.global.pugRaid.raidText
-    pugRaidType = A.global.pugRaid.raidType
-    structure = A.global.pugRaid.needData
-    pugShowCounter = A.global.pugRaid.showCounter
-    pugDelimeter = A.global.pugRaid.delimeter
-    notes = A.global.pugRaid.additionalNote
-    announceChannel = A.global.pugRaid.channelKey
+
 end
 A:RegisterModule(module:GetName(), InitializeCallback)

@@ -34,13 +34,13 @@
 - [c] 19-Oct-2022 15-Oct-2022 add: new version alert
 - [x] 28-Oct-2022 25-Oct-2022 add: readme: petfeed macro
 - [x] 28-Oct-2022 28-Oct-2022 arch: oyundaki item, skill tutan databaseleri logic govdelerinden ayir foods. settingsten dataya al
+- [x] 01-Nov-2022 30-Oct-2022 add: frame saved position problemi dogdu guide onu duzelt
+- [x] 01-Nov-2022 30-Oct-2022 arch: guileri alt dosyalar olarak ayir
 - 16-Oct-2022 add: CRIndicator display
 - 13-Oct-2022 fix: help raidwarnings i main ayir kendi icinde distribute et
 - 25-Oct-2022 add: petfeed macro help
 - 28-Oct-2022 fun: raidwarnings: if not in group then send printout message / party
 - 30-Oct-2022 add: profession grinding guide
-- 30-Oct-2022 arch: guileri alt dosyalar olarak ayir
-- 30-Oct-2022 add: frame saved position problemi dogdu guide onu duzelt
 
 # Procedures
 - check todo
@@ -49,6 +49,11 @@
 - update toc version
 
 # LOG
+- 01-Nov-2022 1.28
+    - wip: CraftGuides
+    - arch: gui frames
+    - pug: frame position save
+
 - 30-Oct-2022 1.27
     - arch: GUI / logic split
     - wip: CraftGuides 

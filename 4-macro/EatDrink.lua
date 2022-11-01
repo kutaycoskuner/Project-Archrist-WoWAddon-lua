@@ -11,10 +11,10 @@ local drinks = Arch_consumables["drinks"]
 
 --
 local foodClass = {
-    ["Warrior"] = 1, 
-    ['Rogue'] = 1, 
-    ['Death Knight'] = 1, 
-    ['Hunter'] = nil
+    ["Warrior"] = true, 
+    ['Rogue'] = true, 
+    ['Death Knight'] = true, 
+    ['Hunter'] = false
 }
 
 local relateFoodType = {
@@ -69,13 +69,13 @@ local function findConsumableInBag(foodType)
             if findItem(ii, jj) then 
                 local item = GetContainerItemLink(ii, jj)
                 -- :: class / hp conditionals
-                if foodType=='food' and foodClass[class] and (healthPercentage~=1) then
+                if foodType=='drink' and foodClass[class]==nil and (powerPercentage~=1) then
+                    print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
+                    return ii, jj, true
+                elseif foodType=='food' and foodClass[class] and (healthPercentage~=1) then
                     print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
                     return ii, jj, true
                 elseif foodType=='food' and foodClass[class]==nil and (healthPercentage~=1) then
-                    print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
-                    return ii, jj, true
-                elseif foodType=='drink' and foodClass[class]==nil and (powerPercentage~=1) then
                     print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
                     return ii, jj, true
                 else    

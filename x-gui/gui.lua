@@ -175,10 +175,13 @@ function toggleGUI(key)
             Arch_isFrameOpen = false
             local a, b, c, d, e = Arch_guiFrame:GetPoint()
             -- print(a,b,c,d,e)
-            A.global.lootFrame = {a, c, d, e}
-            A.global.voaFrame = {a, c, d, e}
-            lootFramePos = A.global.lootFrame
-            voaFramePos = A.global.voaFrame
+            -- A.global.lootFrame = {a, c, d, e}
+            -- A.global.voaFrame = {a, c, d, e}
+            if key == "pugRaid" then
+                A.global.pugFrame = {a, c, d, e}
+            elseif key == "CraftGuides" then
+                A.global.guideFrame = {a, c, d, e}
+            end
             -- print(lootFramePos[1], lootFramePos[2], lootFramePos[3], lootFramePos[4])
             -- print(A.global.lootFrame[1].. d)
         end)
