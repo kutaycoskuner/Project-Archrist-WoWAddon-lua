@@ -14,72 +14,78 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
 
 -- https://www.warcrafttavern.com/wotlk/guides/tailoring-guide-1-450/
 
-Arch_guide_tailor_resources = {
-    -- ==== [itemID] = {amount required, minus/plus, how to acqure}
-    [300] = {
-        -- :: cloths 300
-        -- linen cloth
-        [2589] = {184, 54, "drop"},
-        -- wool cloth
-        [2592] = {90, 0, "drop"},
-        -- silk cloth
-        [4306] = {796, 8, "drop"},
-        -- mageweave cloth
-        [4338] = {340, 4, "drop"},
-        -- runecloth
-        [14047] = {704, 64, "drop"},
-        -- :: vendor items 300
-        -- coarse thread
-        [2320] = {49, 9, "vendor"},
-        -- fine thread
-        [2321] = {123, 3, "vendor"},
-        -- silken thread
-        [4291] = {20, 0, "vendor"},
-        -- heavy silken thread
-        [8343] = {65, 2, "vendor"},
-        -- rune thread
-        [14341] = {66, 6, "vendor"},
-        -- blue dye
-        [6260] = {32, 2, "vendor"},
-        -- bleach
-        [2324] = {10, 0, "vendor"},
-        -- red dye
-        [2604] = {60, 0, "vendor"},
-        -- orange dye
-        [6261] = {5, 0, "vendor"},
-        -- :: other professions 300
-        -- rugged leather
-        [8170] = {40, 4, "skinner"}
-    },
-    [350] = {
-        -- :: cloths 350
-        -- netherweave cloth
-        [21877] = {925, 0, "drop"},
-        -- :: vendor items 350
-        -- rune thread
-        [14341] = {35, 0, "vendor"},
-        -- netherweave robe
-        [21896] = {1, 0, "vendor"},
-        -- :: other profession 350
-        -- arcane dust
-        [22445] = {10, 0, "enchanter"},
-        -- :: knothide leather 350
-        [21887] = {10, 0, "skinner"}
-    },
-    [440] = {
-        -- :: cloths
-        -- frostweave cloth
-        [33470] = {2340, 240, "drop"},
-        -- :: vendor items
-        -- netherweave robe
-        [38426] = {130, 10, "vendor"},
-        -- :: other profesions
-        -- infinite dust
-        [34054] = {40, 0, "enchanter"},
-    }
-}
+-- Arch_guide_tailor_resources = {
+--     -- ==== [itemID] = {amount required, minus/plus, how to acqure}
+--     [300] = {
+--         -- :: cloths 300
+--         -- linen cloth
+--         [2589] = {184, 54, "drop"},
+--         -- wool cloth
+--         [2592] = {90, 0, "drop"},
+--         -- silk cloth
+--         [4306] = {796, 8, "drop"},
+--         -- mageweave cloth
+--         [4338] = {340, 4, "drop"},
+--         -- runecloth
+--         [14047] = {704, 64, "drop"},
+--         -- :: vendor items 300
+--         -- coarse thread
+--         [2320] = {49, 9, "vendor"},
+--         -- fine thread
+--         [2321] = {123, 3, "vendor"},
+--         -- silken thread
+--         [4291] = {20, 0, "vendor"},
+--         -- heavy silken thread
+--         [8343] = {65, 2, "vendor"},
+--         -- blue dye
+--         -- rune thread
+--         [14341] = {66, 6, "vendor"},
+--         [6260] = {32, 2, "vendor"},
+--         -- bleach
+--         [2324] = {10, 0, "vendor"},
+--         -- red dye
+--         [2604] = {60, 0, "vendor"},
+--         -- orange dye
+--         [6261] = {5, 0, "vendor"},
+--         -- :: other professions 300
+--         -- rugged leather
+--         [8170] = {40, 4, "skinner"}
+--     },
+--     [350] = {
+--         -- :: cloths 350
+--         -- netherweave cloth
+--         [21877] = {925, 0, "drop"},
+--         -- :: vendor items 350
+--         -- rune thread
+--         [14341] = {35, 0, "vendor"},
+--         -- netherweave robe
+--         [21896] = {1, 0, "vendor"},
+--         -- :: other profession 350
+--         -- arcane dust
+--         [22445] = {10, 0, "enchanter"},
+--         -- :: knothide leather 350
+--         [21887] = {10, 0, "skinner"}
+--     },
+--     [440] = {
+--         -- :: cloths
+--         -- frostweave cloth
+--         [33470] = {2340, 240, "drop"},
+--         -- :: vendor items
+--         -- netherweave robe
+--         [38426] = {130, 10, "vendor"},
+--         -- :: other profesions
+--         -- infinite dust
+--         [34054] = {40, 0, "enchanter"},
+--     }
+-- }
 
-Arch_guide_tailor_raw = {}
+-- Arch_guide_tailor_conversions = {
+--     -- [t2 material] = {t1 material, amount}
+--     -- bolt of linen cloth
+--     [2996] = {2589, 2},
+--     -- bolt of silk cloth
+--     [4305] = {4306, 4}
+-- }
 
 Arch_guide_tailor = {
     -- tailor to 45
@@ -265,8 +271,8 @@ Arch_guide_tailor = {
         ['mats'] = {
             -- bolt of silk cloth
             [4339] = {2, "tailor craft"},
-            -- silken thread
-            [4291] = {2, "tailor vendor"}
+            -- heavy silken thread
+            [8343] = {2, "tailor vendor"}
         }
     },
     [250] = {
@@ -277,8 +283,8 @@ Arch_guide_tailor = {
         ['mats'] = {
             -- bolt of silk cloth
             [4339] = {3, "tailor craft"},
-            -- silken thread
-            [4291] = {2, "tailor vendor"}
+            -- heavy silken thread
+            [8343] = {2, "tailor vendor"}
         }
     },
     [260] = {
@@ -337,6 +343,102 @@ Arch_guide_tailor = {
             [21840] = {3, "tailor craft"},
             -- bolt of netherweave
             [22445] = {2, "disenchanting"}
+        }
+    },
+    [335] = {
+        -- netherweave pants
+        ['item'] = 21852,
+        ['howtolearn'] = "trainer",
+        ["levels"] = {325, 335, 340, 345},
+        ['mats'] = {
+            -- bolt of netherweave
+            [21840] = {6, "tailor craft"},
+            -- rune thread
+            [14341] = {1, "vendor"},
+        }
+    },
+    [340] = {
+        -- netherweave boots
+        ['item'] = 26772,
+        ['howtolearn'] = "trainer",
+        ["levels"] = {335, 345, 350, 355},
+        ['mats'] = {
+            -- bolt of netherweave
+            [21840] = {6, "tailor craft"},
+            -- knothide leather
+            [21887] = {2, "skinning"},            
+            -- rune thread
+            [14341] = {1, "vendor"},
+        }
+    },
+    [350] = {
+        -- netherweave robe
+        ['item'] = 21854,
+        ['howtolearn'] = "trainer",
+        ["levels"] = {340, 350, 355, 360},
+        ['mats'] = {
+            -- bolt of netherweave
+            [21840] = {8, "tailor craft"},
+            -- rune thread
+            [14341] = {2, "vendor"},
+        }
+    },
+    [375] = {
+        -- bolt of frostweave
+        ['item'] = 45510,
+        ['howtolearn'] = "trainer",
+        ["levels"] = {350, 370, 372, 375},
+        ['mats'] = {
+            -- frostweave cloth
+            [33470] = {5, "drop"},
+        }
+    },
+    [380] = {
+        -- frostwoven belt
+        ['item'] = 41522,
+        ['howtolearn'] = "trainer",
+        ["levels"] = {370, 380, 390, 400},
+        ['mats'] = {
+            -- bolt of frostweave
+            [41510] = {3, "tailor"},
+            -- eternium thread
+            [38426] = {1, "vendor"},
+        }
+    },
+    [385] = {
+        -- frostwoven belt
+        ['item'] = 55906,
+        ['howtolearn'] = "trainer",
+        ["levels"] = {375, 385, 395, 405},
+        ['mats'] = {
+            -- bolt of frostweave
+            [41510] = {4, "tailor"},
+            -- eternium thread
+            [38426] = {1, "vendor"},
+        }
+    },
+    [395] = {
+        -- frostwoven cowl
+        ['item'] = 41521,
+        ['howtolearn'] = "trainer",
+        ["levels"] = {380, 390, 400, 410},
+        ['mats'] = {
+            -- bolt of frostweave
+            [41510] = {5, "tailor"},
+            -- eternium thread
+            [38426] = {1, "vendor"},
+        }
+    },
+    [400] = {
+        -- duskweave belt
+        ['item'] = 41543,
+        ['howtolearn'] = "trainer",
+        ["levels"] = {395, 400, 405, 410},
+        ['mats'] = {
+            -- bolt of frostweave
+            [41510] = {7, "tailor"},
+            -- eternium thread
+            [38426] = {1, "vendor"},
         }
     }
 }

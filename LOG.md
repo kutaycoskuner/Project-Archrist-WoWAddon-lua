@@ -36,11 +36,11 @@
 - [x] 28-Oct-2022 28-Oct-2022 arch: oyundaki item, skill tutan databaseleri logic govdelerinden ayir foods. settingsten dataya al
 - [x] 01-Nov-2022 30-Oct-2022 add: frame saved position problemi dogdu guide onu duzelt
 - [x] 01-Nov-2022 30-Oct-2022 arch: guileri alt dosyalar olarak ayir
+- [x] 02-Nov-2022 30-Oct-2022 add: profession grinding guide
 - 16-Oct-2022 add: CRIndicator display
 - 13-Oct-2022 fix: help raidwarnings i main ayir kendi icinde distribute et
 - 25-Oct-2022 add: petfeed macro help
 - 28-Oct-2022 fun: raidwarnings: if not in group then send printout message / party
-- 30-Oct-2022 add: profession grinding guide
 
 # Procedures
 - check todo
@@ -49,6 +49,10 @@
 - update toc version
 
 # LOG
+- 02-Nov-2022 1.29
+    - add: Craftguides
+    - add: data: guide tailor, guide engineering untill 400
+
 - 01-Nov-2022 1.28
     - wip: CraftGuides
     - arch: gui frames

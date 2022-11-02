@@ -245,7 +245,7 @@ function Arch_pugRaidGUI()
     raidType:SetValue(A.global.pugRaid.raidType)
     -- raidType:SetText('Raid Type')
     raidType:SetFullWidth(true)
-    raidType:SetHeight(40)
+    raidType:SetHeight(25)
     -- raidType:SetLabel('Raid Type')
     raidType:SetCallback("OnValueChanged", function(widget, event, text)
         pugRaidType = text

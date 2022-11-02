@@ -17,6 +17,9 @@ Arch_consumables = {
         33443,          -- 65 sour goat cheese
         33454,          -- 65 salted venison
         1487,           -- 25 conjured pumpernickel
+        3729,           -- 25 soothing turtle bisque
+        4539,           -- 25 goldenbark apple
+        3771,           -- 25 wild hog shank
         1114,           -- 15 conjured rye
         4593,           -- 15 bristle whisker catfish
         4606,           -- 15 spongy morel
@@ -29,6 +32,7 @@ Arch_consumables = {
         24072,          -- 5 sand pear pie
         2287,           -- 5 haunch of meat
         4541,           -- 5 freshly baked bread
+        5525,           -- 5 boiled clam meat
         4542,           -- 0 most cornbread
         117,            -- 0 tough jerky
         4536,           -- 0 shiny red apple

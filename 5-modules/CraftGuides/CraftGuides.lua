@@ -22,29 +22,35 @@ end
     - [x] 31.10.2022 buy resource list
     - [x] 31.10.2022 buy list yap
     - [c] 31.10.2022 tab ile guide/list change
+    - [x] 31.10.2022 widgetlari fonksiyon yapip tek satirda yerlestir
+    - [x] 31.10.2022 adding tab to gui
     - [x] 01.11.2022 resource list profession levela gore calculator
-    - resource list player levela gore calculator
-    - raw material converters -> bolt to cloth
-    - widgetlari fonksiyon yapip tek satirda yerlestir
-    - adding tab to gui
-    - database i zorluk seviyelerine gore multiplerlarla duzenle
-    - buy listi levela gore ayarla
-    - farkli professionlar icin duzenle
-    - alisveris listesi ekle 
+    - [x] 01.11.2022 resource list player levela gore calculator
+    - [x] 01.11.2022 database i zorluk seviyelerine gore multiplerlarla duzenle
+    - [x] 01.11.2022 alisveris listesi ekle 
+    - [c] 02.11.2022 raw material conversions -> bolt to cloth
+    - [x] 02.11.2022 farkli professionlar icin duzenle
+    - [x] 02.11.2022 craft section calculator duzenle
     ]]
 
 -- ==== use case ------------------------------------------------------------------------------------------------------------
 --[[
-        
+        - Guide addon and material calculator for efficient profession grinding.
+            - Calculates adaptive material requirements for your level
+            - Suggests item to create to progress on crafting profession        
         ]]
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
 local guideFramePos
-local guide = Arch_guide_tailor
-local resources = Arch_guide_tailor_resources
--- local profession =  "Engineering"
-local profession = "Tailoring"
+-- :: edit
+local profession = nil
+local guide_Assoc = {
+    ["Tailoring"] = Arch_guide_tailor,
+    ["Engineering"] = Arch_guide_engineer
+}
+local guide = nil
+-- :: edit
 local currentLevel = 0
 local targetLevel = nil
 local targetItem = nil
@@ -56,10 +62,12 @@ local drawSectionResourceList = nil
 local drawSectionGuide = nil
 local drawBtn = nil
 local drawLbl = nil
+local drawRepeat = nil
+local adaptResourceList = nil
 
+local profLimitByLevel = 0
 -- :: orange, yellow, green profession contribution multipliers 1, 1, 1.35, 4
 local multipliers = {1, 1, 1.35, 4}
-
 
 -- :: calculated resource list
 local adaptedList = {}
@@ -103,6 +111,24 @@ local function spairs(t, order)
     end
 end
 
+local function calcProfLimitByLevel()
+    local playerLevel = UnitLevel('player')
+    local maxProfession = {
+        [5] = 75,
+        [10] = 150,
+        [20] = 225,
+        [35] = 300,
+        [65] = 375,
+        [75] = 450
+    }
+    -- 
+    for level, profLimit in spairs(maxProfession) do
+        if playerLevel > level then
+            profLimitByLevel = profLimit
+        end
+    end
+end
+
 local function learnCurrentLevel()
     for ii = 1, GetNumSkillLines() do
         local skillName, isHeader, isExpanded, skillRank, numTempPoints, skillModifier, skillMaxRank, isAbandonable,
@@ -138,7 +164,6 @@ local function round(number)
 end
 
 local function calcTotalMaterial(matId, amount, prev, next, levels)
-    -- learnCurrentLevel()
     local stepLimit = 0
     local calcUpLimit
     local calcDownLimit = prev
@@ -158,20 +183,21 @@ local function calcTotalMaterial(matId, amount, prev, next, levels)
             if size > 0 then
                 total = total + (round(amount * (size * multipliers[stepLimit])))
             end
-                calcDownLimit = calcUpLimit
+            calcDownLimit = calcUpLimit
         end
     end
     return total
 end
 
 local function calcTotalDiffMaterial(matId, amount, prev, next, levels)
-    -- learnCurrentLevel()
+    learnCurrentLevel()
     local stepLimit = 0
     local calcUpLimit
     local calcDownLimit = prev
-    local size
+    local size = 0
     local total = 0
-    for ii, level in ipairs(levels) do
+    for ii, level in pairs(levels) do
+        -- print("level ".. level)
         stepLimit = stepLimit + 1
         if calcDownLimit < next and calcDownLimit < level then -- calcDownLimit < currentLevel and
             -- :: find which level range to calculate
@@ -179,50 +205,71 @@ local function calcTotalDiffMaterial(matId, amount, prev, next, levels)
             if calcUpLimit > next then
                 calcUpLimit = next
             end
+            if calcUpLimit > currentLevel then
+                calcUpLimit = currentLevel
+            end
             -- :: calculate size of craft ex. 45 to 50 = 5
             size = calcUpLimit - calcDownLimit
+            -- print("downlimit ", calcDownLimit, " uplimit ", calcUpLimit, "size ", size)
             -- :: add to total with multiplier
+            -- print(size, " ", type(size), (size > 0))
             if size > 0 then
                 total = total + (round(amount * (size * multipliers[stepLimit])))
             end
-                calcDownLimit = calcUpLimit
+            calcDownLimit = calcUpLimit
         end
     end
     return total
 end
 
 local function createResourceList()
+    calcProfLimitByLevel()
     resourceList = {}
     prevItemTargetLevel = 0
     for level, dataItem in spairs(guide) do
-        for mat, matData in spairs(dataItem['mats']) do
-            if resourceList[mat] == nil then
-                resourceList[mat] = {0, 0}
+        if profLimitByLevel > level then
+            for mat, matData in spairs(dataItem['mats']) do
+                if resourceList[mat] == nil then
+                    resourceList[mat] = {0, 0}
+                end
+                if resourceList[mat] ~= nil then
+                    resourceList[mat][1] = resourceList[mat][1] +
+                                               calcTotalMaterial(mat, matData[1], prevItemTargetLevel, level,
+                            dataItem['levels'])
+                end
             end
-            if resourceList[mat] ~= nil then
-                resourceList[mat][1] = resourceList[mat][1] +
-                                           calcTotalMaterial(mat, matData[1], prevItemTargetLevel, level, dataItem['levels'])
-            end
+            prevItemTargetLevel = level
         end
-        prevItemTargetLevel = level
     end
 end
 
 local function calcMatAmount(amount)
-    local difference = targetLevel - currentLevel
+    local difference = 1 -- targetLevel - currentLevel
     local multiplier = 1
     return difference * multiplier * amount
 end
 
 -- :: ace one line arguments
+local function drawHead(name, parent)
+    local heading = AceGUI:Create('Heading')
+    heading:SetText(name)
+    heading:SetRelativeWidth(1)
+    parent:AddChild(heading)
+end
+
+local function setFramePos()
+    local a, b, c, d, e = Arch_guiFrame:GetPoint()
+    A.global.guideFrame = {a, c, d, e}
+end
+
 local function drawBtn(name, width, parent)
     local btn = AceGUI:Create("Button")
     btn:SetText(name)
     -- btn:SetValue(name)
     btn:SetRelativeWidth(width)
     btn:SetCallback("OnClick", function(self, value)
-        local a, b, c, d, e = Arch_guiFrame:GetPoint()
-        A.global.guideFrame = {a, c, d, e}
+        setFramePos()
+        adaptResourceList()
         if name == "Material List" then
             tabMode = "resource"
             drawMainFrame()
@@ -251,7 +298,7 @@ local function deepcopy(orig)
     return copy
 end
 
-local function adaptResourceList()
+adaptResourceList = function()
     -- :: itemlari listeye cek
     -- for step, item in spairs(Arch_guide_tailor_resources) do
     --     if step > currentLevel then
@@ -260,38 +307,41 @@ local function adaptResourceList()
     --     end
     -- end
     -- for k, v in pairs(resourceList) do
-        --     for j,h in pairs(v)    do
-            --     print(j, " ", h)
-            --     end
-            -- end
-            -- do return end
+    --     for j,h in pairs(v)    do
+    --     print(j, " ", h)
+    --     end
+    -- end
+    -- do return end
     -- :: adapted resource list
     createResourceList()
     adaptedList = deepcopy(resourceList)
-    -- for k, v in pairs(adaptedList) do
-    --     print(k)
-    -- end
-    -- do return end
     -- :: select profession level 300, 350, 440
+    prevItemTargetLevel = 0
     for itemTargetLevel, dataItem in spairs(guide) do
         -- :: select item to create
-        if itemTargetLevel < currentLevel then
-            -- :: for each item
-            for mat, dataMat in spairs(dataItem['mats']) do
-                if adaptedList[mat] then
-                    -- todo calculate material
-                    local removed = calcTotalDiffMaterial(mat, dataMat[1], prevItemTargetLevel, itemTargetLevel,
-                        dataItem['levels'])
-                    -- adaptedList[mat][1] = adaptedList[mat][1] - removed 
-                    if mat == 2320 then
-                        print(adaptedList[mat][1])
-                    end
-                end
+        -- if itemTargetLevel < currentLevel then
+        -- :: for each material
+        for mat, dataMat in spairs(dataItem['mats']) do
+            if adaptedList[mat] then
+                local removed = calcTotalDiffMaterial(mat, dataMat[1], prevItemTargetLevel, itemTargetLevel,
+                    dataItem['levels'])
+                adaptedList[mat][1] = adaptedList[mat][1] - removed
             end
         end
+        -- end
         prevItemTargetLevel = itemTargetLevel
     end
-
+    -- prevItemTargetLevel = 0
+    -- -- :: conversions
+    -- for mat, matData in spairs(adaptedList) do
+    --     if conversion[mat] then
+    --         local amount = conversion[mat][2]
+    --         local t1Material = conversion[mat][1]
+    --         local t2Material = mat
+    --         adaptedList[t1Material][1] = adaptedList[t1Material][1] + (adaptedList[t2Material][1] * amount)
+    --         adaptedList[t2Material][1] = 0
+    --     end
+    -- end
 end
 
 drawLbl = function(content, width, parent)
@@ -311,28 +361,26 @@ drawSectionResourceList = function()
     -- :: adding target text
     drawLbl(Arch_trivialColor("Have"), 0.15, Arch_guiFrame)
     -- :: adding target text
-    drawLbl(Arch_trivialColor("Sum (±)"), 0.15, Arch_guiFrame)
+    drawLbl(Arch_trivialColor("Need (±)"), 0.15, Arch_guiFrame)
     -- :: adding target text
-    drawLbl(Arch_trivialColor("Need"), 0.15, Arch_guiFrame)
+    drawLbl(Arch_trivialColor("Diff"), 0.15, Arch_guiFrame)
     -- :: adding target text
     drawLbl(Arch_trivialColor("Material"), 0.5, Arch_guiFrame)
     -- :: material
-    --  for k, v in spairs(Arch_guide_tailor_resources) do
-    -- if k > currentLevel then
     for item, data in spairs(adaptedList) do
         local countBags = GetItemCount(item)
         local countTotal = GetItemCount(item, true)
+        local have = countBags .. " (" .. countTotal .. ")"
         local miss = data[1] + data[2] - countTotal
-        if miss > 0 or true then
+        local need = data[1] -- .. " ± " .. data[2]
+        if need > 0 then
             -- :: how many items have
-            local have = countBags .. " (" .. countTotal .. ")"
             drawLbl(have, 0.15, Arch_guiFrame)
             -- :: adding target text
-            local need = data[1] --.. " ± " .. data[2]
             drawLbl(need, 0.15, Arch_guiFrame)
             -- :: adding target text
             if miss <= 0 then
-                miss = Arch_trivialColor("None")
+                miss = Arch_trivialColor(0)
             else
                 miss = Arch_focusColor(miss)
             end
@@ -357,10 +405,6 @@ drawSectionResourceList = function()
             -- drawLbl(Arch_trivialColor(GetItemInfo(item)), 0.5, Arch_guiFrame)
         end
     end
-    -- sonrakilere yapmasin diye
-    -- break
-    -- end
-    -- end 
 end
 
 drawSectionGuide = function()
@@ -379,7 +423,11 @@ drawSectionGuide = function()
     Arch_guiFrame:AddChild(heading)
     -- :: adding target text
     local editbox = AceGUI:Create("Label")
-    editbox:SetText(Arch_trivialColor("| Craft \n") .. targetItem .. "\n\n")
+    if targetItem then
+        editbox:SetText(Arch_trivialColor("| Craft \n") .. targetItem .. "\n\n")
+    else
+        editbox:SetText(Arch_trivialColor("| Craft \n") .. "Skip to next item" .. "\n\n")
+    end
     editbox:SetRelativeWidth(0.7)
     Arch_guiFrame:AddChild(editbox)
     -- :: adding target text
@@ -390,18 +438,18 @@ drawSectionGuide = function()
     -- :: adding target text
     local editbox = AceGUI:Create("Label")
     editbox:SetText(Arch_trivialColor("Have"))
-    editbox:SetRelativeWidth(0.15)
+    editbox:SetRelativeWidth(0.22)
     Arch_guiFrame:AddChild(editbox)
     -- :: adding target text
     local editbox = AceGUI:Create("Label")
-    editbox:SetText(Arch_trivialColor("Need"))
-    editbox:SetRelativeWidth(0.15)
+    editbox:SetText(Arch_trivialColor("Need (1)"))
+    editbox:SetRelativeWidth(0.22)
     Arch_guiFrame:AddChild(editbox)
-    -- :: adding target text
-    local editbox = AceGUI:Create("Label")
-    editbox:SetText(Arch_trivialColor("Miss"))
-    editbox:SetRelativeWidth(0.15)
-    Arch_guiFrame:AddChild(editbox)
+    -- -- :: adding target text
+    -- local editbox = AceGUI:Create("Label")
+    -- editbox:SetText(Arch_trivialColor("Miss"))
+    -- editbox:SetRelativeWidth(0.15)
+    -- Arch_guiFrame:AddChild(editbox)
     -- :: adding target text
     local editbox = AceGUI:Create("Label")
     editbox:SetText(Arch_trivialColor("Material"))
@@ -415,13 +463,13 @@ drawSectionGuide = function()
         local have = countBags .. " (" .. countTotal .. ")"
         local labelbox = AceGUI:Create("Label")
         labelbox:SetText(have)
-        labelbox:SetRelativeWidth(0.15)
+        labelbox:SetRelativeWidth(0.22)
         Arch_guiFrame:AddChild(labelbox)
-        -- :: adding target text
+        -- :: parametric need text
         local need = calcMatAmount(v[1])
         local labelbox = AceGUI:Create("Label")
         labelbox:SetText(need)
-        labelbox:SetRelativeWidth(0.15)
+        labelbox:SetRelativeWidth(0.22)
         Arch_guiFrame:AddChild(labelbox)
         -- :: adding target text
         local miss = calcMatAmount(v[1]) - countTotal
@@ -430,10 +478,10 @@ drawSectionGuide = function()
         else
             miss = Arch_focusColor(miss)
         end
-        local labelbox = AceGUI:Create("Label")
-        labelbox:SetText(miss)
-        labelbox:SetRelativeWidth(0.15)
-        Arch_guiFrame:AddChild(labelbox)
+        -- local labelbox = AceGUI:Create("Label")
+        -- labelbox:SetText(miss)
+        -- labelbox:SetRelativeWidth(0.15)
+        -- Arch_guiFrame:AddChild(labelbox)
         -- :: adding target text
         local editbox = AceGUI:Create("Label")
         editbox:SetText(select(2, GetItemInfo(k)))
@@ -455,11 +503,42 @@ drawMainFrame = function()
         Arch_guiFrame:SetPoint(guideFramePos[1], guideFramePos[3], guideFramePos[4])
     end
     Arch_guiFrame:ReleaseChildren()
+    -- :: heading 
+    drawHead("Crafting Assistant", Arch_guiFrame)
+    -- :: guide selector
+    local dd = AceGUI:Create('Dropdown')
+    local guideType = {
+        ["Tailoring"] = "Tailoring",
+        ["Engineering"] = "Engineering",
+    }
+    dd:SetList(guideType)
+    dd:SetValue(A.global.selectedGuide)
+    dd:SetFullWidth(true)
+    dd:SetCallback("OnValueChanged", function(widget, event, selection)
+        setFramePos()
+        if guide_Assoc[selection] then
+            guide = guide_Assoc[selection]
+            A.global.selectedGuide = selection
+            profession = selection
+            selectTargetLevel()
+            adaptResourceList()
+            drawRepeat()
+        end
+    end)
+    Arch_guiFrame:AddChild(dd)
     -- :: draw tabs
     drawBtn("Material List", 0.5, Arch_guiFrame)
     drawBtn("Craft Guide", 0.5, Arch_guiFrame)
 end
 
+drawRepeat = function()
+    drawMainFrame()
+    if tabMode == "resource" then
+        drawSectionResourceList()
+    else
+        drawSectionGuide()
+    end
+end
 local function DrawGroup1(container)
     local desc = AceGUI:Create("Label")
     desc:SetText("This is Tab 1")
@@ -492,6 +571,16 @@ function module:Initialize()
     if not A.global.guideFrame then
         A.global.guideFrame = {"CENTER", "CENTER", 0, 0}
     end
+    if not A.global.selectedGuide then
+        A.global.selectedGuide = "Tailoring"
+    end
+    if not profession then
+        profession = A.global.selectedGuide
+    end
+    -- :: apply guide
+    if guide_Assoc[A.global.selectedGuide] then
+        guide = guide_Assoc[A.global.selectedGuide]
+    end
     -- :: simdiki leveli belirle
     selectTargetLevel()
     -- module:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -516,10 +605,14 @@ function module:TRADE_SKILL_UPDATE()
         Arch_setGUI(moduleName, true)
         if tabMode == "resource" then
             drawSectionResourceList()
-        else 
+        else
             drawSectionGuide()
         end
     end
+end
+
+function module:BAG_UPDATE()
+    module:TRADE_SKILL_UPDATE()
 end
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -539,5 +632,6 @@ end
 local function InitializeCallback()
     module:Initialize()
     module:RegisterEvent("TRADE_SKILL_UPDATE")
+    -- module:RegisterEvent("BAG_UPDATE")
 end
 A:RegisterModule(module:GetName(), InitializeCallback)
