@@ -1,11 +1,16 @@
 ------------------------------------------------------------------------------------------------------------------------
--- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+--------- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+------------------------------------------------------------------------------------------------------------------------
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
 local moduleName = 'CRIndicator';
 local moduleAlert = M .. moduleName .. ": |r";
 local module = A:GetModule(moduleName, true);
-if module == nil then return end
+if module == nil then
+    return
+end
 
+------------------------------------------------------------------------------------------------------------------------
+--------- Notes
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
 local inquiryCD = true
@@ -28,22 +33,28 @@ local trackClass = {
     ["Druid"] = {false, {"Rebirth", "Innervate"}},
     ["Hunter"] = {false, {"Misdirection"}},
     ["Shaman"] = {false, {"Reincarnation"}},
-    ["Warlock"] = {false, {"Soulstone Resurrection"}}
+    ["Warlock"] = {false, {"Soulstone Resurrection"}},
+    -- --test
+    -- ["Mage"] = {false, {"Cone of Cold"}},
+    -- --test
 }
 
 --
-local showIcons = false
+local showIcons = true
+local iconDimension = 8
 local headerPosition = "CENTER"
 local iconPaths = {
     -- :: Druid
-    ["Innervate"] = "Spell_Nature_Innervate",
-    ["Rebirth"] = "Spell_Nature_Rebirth",
+    ["Innervate"] = "spell_nature_lightning",
+    ["Rebirth"] = "spell_nature_reincarnation",
     -- :: Hunter
     ["Misdirection"] = "ability_hunter_misdirection",
     -- :: Shaman
-    ["Reincarnation"] = "Spell_Nature_Reincarnation",
+    ["Reincarnation"] = "spell_nature_reincarnation",
     -- :: Warlock
-    ["Soulstone Resurrection"] = "spell_shadow_soulgem"
+    ["Soulstone Resurrection"] = "spell_shadow_soulgem",
+    -- :: Mage
+    ["Cone of Cold"] = "spell_frost_glacier",
 }
 --
 local UpdateInterval = 0.8;
@@ -56,18 +67,23 @@ if showIcons then
 end
 --
 local frame = CreateFrame("frame", nil, nil, 'BackdropTemplate')
-local frameWidth = 130
-local frameHeight = 40
+local frameWidth = 120
+local frameHeight = 12
+local rowHeight = frameHeight
 --
-local backdropInfo =
-{
-	bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
- 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
- 	tile = true,
- 	tileEdge = true,
- 	tileSize = 8,
- 	edgeSize = 8,
- 	insets = { left = 1, right = 1, top = 1, bottom = 1 },
+local backdropInfo = {
+    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = true,
+    tileEdge = true,
+    tileSize = 1,
+    edgeSize = 1,
+    insets = {
+        left = -4,
+        right = -4,
+        top = -4,
+        bottom = -4
+    }
 }
 frame:SetBackdrop(backdropInfo)
 frame:SetBackdropColor(0, 0, 0, 0.8)
@@ -153,7 +169,7 @@ local function updateGUI()
                 end
                 subFrame[lastSub]:ClearAllPoints()
                 subFrame[lastSub]:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
-                subFrame[lastSub]:SetSize(frameWidth, 50)
+                subFrame[lastSub]:SetSize(frameWidth, rowHeight)
                 -- subFrame[lastSub]:SetFrameStrata("BACKGROUND")
                 --
                 if not subIconFrame[lastSub] and showIcons then
@@ -162,13 +178,13 @@ local function updateGUI()
                     subIconFrame[lastSub]:ClearAllPoints()
                     subIconFrame[lastSub]:SetPoint("RIGHT", 0, 0)
                     -- :: Frame strata ("Background", "Low", "Medium", "High", "Dialog", "Fullscreen", "Fullscreen_Dialog", "Tooltip")
-                    -- subIconFrame[lastSub]:SetFrameStrata("Medium")
+                    subIconFrame[lastSub]:SetFrameStrata("Medium")
                     -- :: Frame strata level (0 - 20)
                     subIconFrame[lastSub]:SetFrameLevel(0)
                     local texture = subIconFrame[lastSub]:CreateTexture("Texture", "Background")
-                    texture:SetTexture("Interface\\ICONS\\" .. iconPaths[param[2][yy]])
-                    texture:SetWidth(10)
-                    texture:SetHeight(10)
+                    texture:SetTexture('Interface\\ICONS\\' .. iconPaths[param[2][yy]])
+                    texture:SetWidth(iconDimension)
+                    texture:SetHeight(iconDimension)
                     texture:SetBlendMode("Disable")
                     texture:SetDrawLayer("Border", 0)
                     local ULx, ULy, LLx, LLy, URx, URy, LRx, LRy = texture:GetTexCoord()
@@ -197,8 +213,8 @@ local function updateGUI()
                 -- subFrameCD[lastSub]:SetTexture("Interface\\ICONS\\Spell_Nature_Reincarnation")
                 subFrameCD[lastSub]:SetText("")
                 --
-                tab = tab - 16
-                fH = fH + 16
+                tab = tab - (rowHeight)
+                fH = fH + (rowHeight)
                 --
                 -- print(#raidPeople)
                 for ii = 1, #raidPeople do
@@ -211,7 +227,7 @@ local function updateGUI()
                         -- TextureBasics_CreateTexture(subIconFrame[lastSub], false)
                         subFrame[lastSub]:ClearAllPoints()
                         subFrame[lastSub]:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
-                        subFrame[lastSub]:SetSize(frameWidth, 50)
+                        subFrame[lastSub]:SetSize(frameWidth, rowHeight)
                         -- subFrame[lastSub]:SetFrameStrata("BACKGROUND")
                         --
                         if subIconFrame[lastSub] then
@@ -286,8 +302,8 @@ local function scanGroup()
     if raidPeople == nil or raidPeople == {} then
         raidPeople = A.global.raidCds
     end
-    --
-    if not UnitInRaid('player') then
+    -- :: not in raid
+    if not (UnitInRaid('player') or UnitInParty('player')) then
         for class, param in pairs(trackClass) do
             if class ~= UnitClass('player') then
                 param[1] = false
@@ -299,31 +315,44 @@ local function scanGroup()
         -- return
     end
     -- test 
-    if not UnitInRaid('player') and #raidPeople < 1 then
-        if raidPeople[1] == nil then
-            for class, param in pairs(trackClass) do
-                if UnitClass('player') == class then
-                    param[1] = true
-                    for ii = 1, #param[2] do
-                        table.insert(raidPeople, {
-                            name = UnitName('player'),
-                            class = UnitClass('player'),
-                            availableAt = GetTime(),
-                            spell = true,
-                            alive = true,
-                            trackSpell = tostring(param[2][ii])
-                        })
-                    end
-                end
-            end
-        end
-    end
+    -- if not (UnitInRaid('player') or UnitInParty('player')) and #raidPeople < 1 then
+    --     if raidPeople[1] == nil then
+    --         for class, param in pairs(trackClass) do
+    --             if UnitClass('player') == class then
+    --                 param[1] = true
+    --                 for ii = 1, #param[2] do
+    --                     table.insert(raidPeople, {
+    --                         name = UnitName('player'),
+    --                         class = UnitClass('player'),
+    --                         availableAt = GetTime(),
+    --                         spell = true,
+    --                         alive = true,
+    --                         trackSpell = tostring(param[2][ii])
+    --                     })
+    --                 end
+    --             end
+    --         end
+    --     end
+    -- end
     -- test end
 
-    if UnitInRaid('player') then
-        local isExists = falsesd
+    if UnitInParty('player') or UnitInRaid('player') then
+        local isExists = false
         for ii = 1, GetNumGroupMembers() do
-            local druidName, rank, subgroup, level, vclass = GetRaidRosterInfo(ii)
+
+            local druidName, rank, subgroup, level, vclass
+            if UnitInRaid('party') then
+                druidName, _, _, level, vclass = GetRaidRosterInfo(ii)
+            else
+                druidName = UnitName('party' .. ii)
+                level = UnitLevel('party' .. ii)
+                vclass = UnitClass('party' .. ii)
+                if druidName == nil then
+                    druidName = UnitName('player')
+                    level = UnitLevel('player')
+                    vclass = UnitClass('player')
+                end
+            end
             -- SELECTED_CHAT_FRAME:AddMessage(vclass)
             for class, param in pairs(trackClass) do
                 if tostring(vclass) == tostring(class) then
@@ -358,10 +387,18 @@ local function scanGroup()
 
         -- :: Artik raidde olmayanlari cikar
         for ii = 1, #raidPeople do
-            if UnitInRaid("player") then
+            if UnitInRaid("player") or UnitInParty('player') then
                 local stillIn = false
                 for yy = 1, GetNumGroupMembers() do
-                    local druidName = GetRaidRosterInfo(yy)
+                    local druidName
+                    if UnitInRaid('player') then
+                        druidName = GetRaidRosterInfo(yy)
+                    else
+                        do
+                            return
+                        end
+                    end
+
                     if raidPeople[ii] then
                         if druidName == raidPeople[ii].name then
                             stillIn = true
@@ -558,25 +595,23 @@ function module:Initialize()
         A.global.raidCds = {}
     end
     scanGroup()
-
-    -- :: Register some events
-    module:RegisterEvent("PLAYER_REGEN_DISABLED")
-    module:RegisterEvent("PLAYER_REGEN_ENABLED")
-    module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-    --
-    -- module:RegisterEvent("PARTY_MEMBERS_CHANGED")
-    module:RegisterEvent("RAID_ROSTER_UPDATE")
-    module:RegisterEvent("PLAYER_ENTERING_BATTLEGROUND")
-    module:RegisterEvent("PLAYER_ENTERING_WORLD")
-    module:RegisterEvent("PLAYER_DIFFICULTY_CHANGED")
 end
 
 -- ==== Event Handlers
-function module:COMBAT_LOG_EVENT_UNFILTERED(event, _, eventType, _, srcName, isDead, _, dstName, _, spellId, spellName,
-    _, ...) -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
+-- function module:COMBAT_LOG_EVENT_UNFILTERED(timestamp, eventType, _, _, srcName, isDead, _, _, dstName, _, _, spellId, spellName,
+--     _, ...) -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
+function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
+    local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14 = CombatLogGetCurrentEventInfo()
+    local timestamp, eventType, srcName, dstName, spellId, spellName = arg1, arg2, arg5, arg9, arg12, arg13
     -- :: Print event names
-    -- SELECTED_CHAT_FRAME:AddMessage(
-    --     event .. ' | ' .. eventType .. ' | ' .. isDead .. ' | ' .. dstName)
+    -- print(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)
+    -- print(timestamp, eventType, srcName, dstName, spellId, spellName)
+    -- if eventType == nil then
+    -- :: stop macro
+        -- do
+        --     return
+        -- end
+    -- end
     -- :: Raidde degilse rebirth listesini sifirliyor
     -- if not UnitInRaid('player') then raidPeople = {} deadCheck() return end
     -- :: Dead
@@ -633,7 +668,14 @@ function module:COMBAT_LOG_EVENT_UNFILTERED(event, _, eventType, _, srcName, isD
     -- if spellName == "Lesser Healing Wave" and eventType == "SPELL_HEAL" then -- shaman lesser healing wave
     --     startCooldown(srcName, spellId, spellName)
     -- end
-    -- test
+    -- test shaman end
+
+    -- test mage
+    if spellName == "Cone of Cold" then -- shaman lesser healing wave
+        -- print('stuff')
+        startCooldown(srcName, spellId, spellName)
+    end
+    -- test mage end
 
     -- :: Checktime if some cd exists
     if inquiryCD then
@@ -700,6 +742,16 @@ end
 -- -- ==== End
 local function InitializeCallback()
     module:Initialize()
+    -- :: Register some events
+    module:RegisterEvent("PLAYER_REGEN_DISABLED")
+    module:RegisterEvent("PLAYER_REGEN_ENABLED")
+    module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    --
+    -- module:RegisterEvent("PARTY_MEMBERS_CHANGED")
+    module:RegisterEvent("RAID_ROSTER_UPDATE")
+    module:RegisterEvent("PLAYER_ENTERING_BATTLEGROUND")
+    module:RegisterEvent("PLAYER_ENTERING_WORLD")
+    module:RegisterEvent("PLAYER_DIFFICULTY_CHANGED")
 end
 A:RegisterModule(module:GetName(), InitializeCallback)
 

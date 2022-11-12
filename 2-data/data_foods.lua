@@ -16,6 +16,7 @@ Arch_consumables = {
         33452,          -- 65 Honey-Spiced Lichen
         33443,          -- 65 sour goat cheese
         33454,          -- 65 salted venison
+        8075,           -- 35 conjured sourdough
         1487,           -- 25 conjured pumpernickel
         3729,           -- 25 soothing turtle bisque
         4539,           -- 25 goldenbark apple
@@ -47,7 +48,8 @@ Arch_consumables = {
         43523,          -- 80 Conjured Mana Strudel
         33445,          -- 75 honeymint tea
         33444,          -- 70 pungent seal whey
-        8766,           -- 45 morning glory dew
+        8766,           -- 45 morning glory dewBCBCB
+        8077,           -- 35 conjured mineral water
         1645,           -- 35 moonberry juice
         3772,           -- 25 conjured spring water
         1708,           -- 25 sweet nectar
@@ -62,6 +64,18 @@ Arch_consumables = {
     -- ==== Pet Food
 
 }
+
+Arch_futter = {
+    ["meats"] = {
+    },
+    ["fishes"] = {
+        12202,          -- meat tiger meat
+        6308,           -- fish raw bristle catfish
+        3667,           -- meat zartes krokoliskenfleisch
+        
+    }
+}
+
 -- local foods = {
 --     "Ripe Watermelon",
 --     "Bobbing Apple",

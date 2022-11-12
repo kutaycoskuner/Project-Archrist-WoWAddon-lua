@@ -125,8 +125,10 @@ function Arch_TodoListGUI()
                 table.remove(list, ii)
                 A.global.todo = list
                 -- :: Recursive
-                recursive = true
-                toggleGUI('TodoList')
+                -- recursive = true
+            Arch_setGUI(moduleName, true)
+
+                -- toggleGUI('TodoList')
             end)
             Arch_guiFrame:AddChild(button)
         end

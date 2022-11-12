@@ -14,7 +14,7 @@ local foodClass = {
     ["Warrior"] = true, 
     ['Rogue'] = true, 
     ['Death Knight'] = true, 
-    ['Hunter'] = false
+    -- ['Hunter'] = false
 }
 
 local relateFoodType = {
@@ -61,7 +61,7 @@ local function findConsumableInBag(foodType)
     end
     -- :: eger hp ve can full ise otur bir sey yemeden otur
     if healthPercentage == 1 and powerPercentage == 1 then
-        return nil, nil, nil, true
+        return nil, nil, nil, nil, true
     end
     -- :: Return items' bag coordinates
     for ii = 4, 0, -1 do
@@ -70,14 +70,11 @@ local function findConsumableInBag(foodType)
                 local item = GetContainerItemLink(ii, jj)
                 -- :: class / hp conditionals
                 if foodType=='drink' and foodClass[class]==nil and (powerPercentage~=1) then
-                    print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
-                    return ii, jj, true
+                    return item, ii, jj, true
                 elseif foodType=='food' and foodClass[class] and (healthPercentage~=1) then
-                    print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
-                    return ii, jj, true
+                    return item, ii, jj, true
                 elseif foodType=='food' and foodClass[class]==nil and (healthPercentage~=1) then
-                    print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
-                    return ii, jj, true
+                    return item, ii, jj, true
                 else    
                     isFound = true
                     break
@@ -86,11 +83,11 @@ local function findConsumableInBag(foodType)
         end
     end
     --
-    return nil, nil, isFound
+    return nil, nil, nil, isFound
 end
 
 function setFeedButton(foodType)
-    local bag, slot, noPrint, full = findConsumableInBag(foodType)
+    local item, bag, slot, noPrint, full = findConsumableInBag(foodType)
     if full then
         feedButton:SetAttribute("macrotext", --
         "/sit")
@@ -102,6 +99,7 @@ function setFeedButton(foodType)
     elseif bag and slot then
         feedButton:SetAttribute("macrotext", --
         "#showtooltip \n/use " .. bag .. " " .. slot)
+        print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
     end
 end
 

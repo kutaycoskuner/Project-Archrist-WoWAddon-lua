@@ -8,6 +8,7 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
 ]]
 
 Arch_spells = {
+    -- ["NameOfSpell"] = {spellId, cdInSeconds, minimumLevel, iconPath}
     -- ==== Druid    
     ["Rebirth"] = {48447, 600},
     ["Innervate"] = {29166, 180},
@@ -21,5 +22,9 @@ Arch_spells = {
     -- ==== Shaman
     -- ["Earthbind Totem"] = {2484, 15},
     ["Reincarnation"] = {20608, 1800},
-    ["Lesser Healing Wave"] = {49276, 5}
+    ["Lesser Healing Wave"] = {49276, 5},
+    -- ==== mage
+    -- test
+    ["Cone of Cold"] = {10159, 10},
+    -- test
 }

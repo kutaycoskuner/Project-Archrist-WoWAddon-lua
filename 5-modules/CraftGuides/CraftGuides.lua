@@ -42,12 +42,24 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
+-- :: professions
+local tai = "Tailoring"
+local eng = "Engineering"
+
+-- :: localization (language) --
+local locale = GetLocale()
+if locale == "deDE" then
+    tai = "Schneiderei"
+    eng = "Ingenieuerskunst"
+end
+
+-- :: frame position variable
 local guideFramePos
 -- :: edit
 local profession = nil
 local guide_Assoc = {
-    ["Tailoring"] = Arch_guide_tailor,
-    ["Engineering"] = Arch_guide_engineer
+    [tai] = Arch_guide_tailor,
+    [eng] = Arch_guide_engineer
 }
 local guide = nil
 -- :: edit
@@ -190,6 +202,7 @@ local function calcTotalMaterial(matId, amount, prev, next, levels)
 end
 
 local function calcTotalDiffMaterial(matId, amount, prev, next, levels)
+    -- print(profession)
     learnCurrentLevel()
     local stepLimit = 0
     local calcUpLimit
@@ -323,6 +336,7 @@ adaptResourceList = function()
         -- :: for each material
         for mat, dataMat in spairs(dataItem['mats']) do
             if adaptedList[mat] then
+                -- print(profession)
                 local removed = calcTotalDiffMaterial(mat, dataMat[1], prevItemTargetLevel, itemTargetLevel,
                     dataItem['levels'])
                 adaptedList[mat][1] = adaptedList[mat][1] - removed
@@ -367,42 +381,46 @@ drawSectionResourceList = function()
     -- :: adding target text
     drawLbl(Arch_trivialColor("Material"), 0.5, Arch_guiFrame)
     -- :: material
+    local artikel = 0
     for item, data in spairs(adaptedList) do
+        artikel = artikel + 1
         local countBags = GetItemCount(item)
         local countTotal = GetItemCount(item, true)
         local have = countBags .. " (" .. countTotal .. ")"
         local miss = data[1] + data[2] - countTotal
         local need = data[1] -- .. " ± " .. data[2]
-        if need > 0 then
-            -- :: how many items have
-            drawLbl(have, 0.15, Arch_guiFrame)
-            -- :: adding target text
-            drawLbl(need, 0.15, Arch_guiFrame)
-            -- :: adding target text
-            if miss <= 0 then
-                miss = Arch_trivialColor(0)
+        if artikel <= 16 then
+            if need > 0 then
+                -- :: how many items have
+                drawLbl(have, 0.15, Arch_guiFrame)
+                -- :: adding target text
+                drawLbl(need, 0.15, Arch_guiFrame)
+                -- :: adding target text
+                if miss <= 0 then
+                    miss = Arch_trivialColor(0)
+                else
+                    miss = Arch_focusColor(miss)
+                end
+                drawLbl(miss, 0.15, Arch_guiFrame)
+                -- :: adding target text
+                drawLbl(select(2, GetItemInfo(item)), 0.5, Arch_guiFrame)
             else
-                miss = Arch_focusColor(miss)
+                -- -- :: how many items have
+                -- local have = countBags .. " (" .. countTotal .. ")"
+                -- drawLbl(Arch_trivialColor(have), 0.15, Arch_guiFrame)
+                -- -- :: adding target text
+                -- local need = data[1] --.. " ± " .. data[2]
+                -- drawLbl(Arch_trivialColor(need), 0.15, Arch_guiFrame)
+                -- -- :: adding target text
+                -- if miss <= 0 then
+                --     miss = Arch_trivialColor("None")
+                -- else
+                --     miss = Arch_focusColor(Arch_trivialColor(miss))
+                -- end
+                -- drawLbl(Arch_trivialColor(miss), 0.15, Arch_guiFrame)
+                -- -- :: adding target text
+                -- drawLbl(Arch_trivialColor(GetItemInfo(item)), 0.5, Arch_guiFrame)
             end
-            drawLbl(miss, 0.15, Arch_guiFrame)
-            -- :: adding target text
-            drawLbl(select(2, GetItemInfo(item)), 0.5, Arch_guiFrame)
-        else
-            -- -- :: how many items have
-            -- local have = countBags .. " (" .. countTotal .. ")"
-            -- drawLbl(Arch_trivialColor(have), 0.15, Arch_guiFrame)
-            -- -- :: adding target text
-            -- local need = data[1] --.. " ± " .. data[2]
-            -- drawLbl(Arch_trivialColor(need), 0.15, Arch_guiFrame)
-            -- -- :: adding target text
-            -- if miss <= 0 then
-            --     miss = Arch_trivialColor("None")
-            -- else
-            --     miss = Arch_focusColor(Arch_trivialColor(miss))
-            -- end
-            -- drawLbl(Arch_trivialColor(miss), 0.15, Arch_guiFrame)
-            -- -- :: adding target text
-            -- drawLbl(Arch_trivialColor(GetItemInfo(item)), 0.5, Arch_guiFrame)
         end
     end
 end
@@ -508,8 +526,8 @@ drawMainFrame = function()
     -- :: guide selector
     local dd = AceGUI:Create('Dropdown')
     local guideType = {
-        ["Tailoring"] = "Tailoring",
-        ["Engineering"] = "Engineering",
+        [tai] = tai,
+        [eng] = eng
     }
     dd:SetList(guideType)
     dd:SetValue(A.global.selectedGuide)
@@ -517,9 +535,9 @@ drawMainFrame = function()
     dd:SetCallback("OnValueChanged", function(widget, event, selection)
         setFramePos()
         if guide_Assoc[selection] then
-            guide = guide_Assoc[selection]
             A.global.selectedGuide = selection
             profession = selection
+            guide = guide_Assoc[selection]
             selectTargetLevel()
             adaptResourceList()
             drawRepeat()
@@ -572,11 +590,12 @@ function module:Initialize()
         A.global.guideFrame = {"CENTER", "CENTER", 0, 0}
     end
     if not A.global.selectedGuide then
-        A.global.selectedGuide = "Tailoring"
+        A.global.selectedGuide = tai
     end
     if not profession then
         profession = A.global.selectedGuide
     end
+    A.global.selectedGuide = tai
     -- :: apply guide
     if guide_Assoc[A.global.selectedGuide] then
         guide = guide_Assoc[A.global.selectedGuide]

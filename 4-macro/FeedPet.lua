@@ -6,13 +6,25 @@ local moduleAlert = M .. ": |r";
 local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
-local meats = {
-    "Moongraze Stag Tenderloin",                --meat
-    "Slitherskin Mackarel",                     --fish
-    "Brilliant Smallfish",                      --fish
-}
+-- :: professions
+local feedPet = "feed pet"
 
-local fishes = {}
+-- :: localization (language) --
+local locale = GetLocale()
+if locale == "deDE" then
+    feedPet = "tier füttern"
+end
+
+local meats = Arch_futter["fishes"]
+
+
+-- local meats = {
+--     "Moongraze Stag Tenderloin",                --meat
+--     "Slitherskin Mackarel",                     --fish
+--     "Brilliant Smallfish",                      --fish
+-- }
+
+-- local fishes = {}
 --
 local foodClass = {
     ["Warrior"] = 1, 
@@ -46,7 +58,7 @@ local function findConsumableInBag()
     -- :: Find item
     local isFound = false
     local function findItem(bag, slot)
-        local consumable = GetItemInfo(GetContainerItemLink(bag, slot) or 0)
+        local consumable = GetContainerItemID(bag, slot)        
         local search = meats 
         -- if relateFoodType[foodType] then
         --     search = relateFoodType[foodType]
@@ -86,7 +98,7 @@ function setFeedPetButton()
         feedPetButton:SetAttribute("macrotext")
     elseif bag and slot then
         feedPetButton:SetAttribute("macrotext", --
-        "#showtooltip \n/cast feed pet \n/use " .. bag .. " " .. slot)
+        "#showtooltip \n/cast ".. feedPet .. "\n/use " .. bag .. " " .. slot)
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "Feeding pet with " .. item .. " (" .. GetItemCount(item) .. ")")
     else
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "Could not find any futter")

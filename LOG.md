@@ -37,10 +37,14 @@
 - [x] 01-Nov-2022 30-Oct-2022 add: frame saved position problemi dogdu guide onu duzelt
 - [x] 01-Nov-2022 30-Oct-2022 arch: guileri alt dosyalar olarak ayir
 - [x] 02-Nov-2022 30-Oct-2022 add: profession grinding guide
-- 16-Oct-2022 add: CRIndicator display
+- [x] 12-Nov-2022 16-Oct-2022 add: CRIndicator display
+- 09-Nov-2022 add: todo resting event api ekle : now its good time to check todo list
 - 13-Oct-2022 fix: help raidwarnings i main ayir kendi icinde distribute et
+- 10-Nov-2022 add: navigation arrow
 - 25-Oct-2022 add: petfeed macro help
 - 28-Oct-2022 fun: raidwarnings: if not in group then send printout message / party
+- 02-Nov-2022 add: github release yap
+- 12-Nov-2022 arch: data_spells: min level, iconpath add
 
 # Procedures
 - check todo
@@ -49,6 +53,15 @@
 - update toc version
 
 # LOG
+- [1.30] fix: CRIndicator combatlog ...
+    - 12-Nov-2022 add: draft_leveling prototyping
+    - 12-Nov-2022 sty: crIndicator: frame adjustments
+    - 12-Nov-2022 fix: crIndicator: combatlog game update fix
+    - 12-Nov-2022 add: crIndicator: also works for party
+    - 08-Nov-2022 fix: todoList: on click done button closing window
+    - 08-Nov-2022 add: display limit on resource list on CraftGuides
+    - 08-Nov-2022 add: prototype language localization on CraftGuides
+
 - 02-Nov-2022 1.29
     - add: Craftguides
     - add: data: guide tailor, guide engineering untill 400
