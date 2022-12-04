@@ -18,7 +18,8 @@ local closestAvailable = 0
 local spells = Arch_spells
 local classColors = Arch_classColors
 --
-local isFrameOpen = false
+local isFrameOpen
+local isInit = true
 local frameRecursive = false
 --
 local subFrame = {}
@@ -39,8 +40,9 @@ local trackClass = {
     -- --test
 }
 
+
 --
-local showIcons = true
+local showIcons = false
 local iconDimension = 8
 local headerPosition = "CENTER"
 local iconPaths = {
@@ -88,6 +90,7 @@ local backdropInfo = {
 frame:SetBackdrop(backdropInfo)
 frame:SetBackdropColor(0, 0, 0, 0.8)
 frame:SetBackdropBorderColor(0, 0, 0, 0)
+-- :: old version
 -- frame:SetTexture()
 -- frame:SetBackdrop({
 --     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
@@ -102,6 +105,7 @@ frame:SetBackdropBorderColor(0, 0, 0, 0)
 --         bottom = 12
 --     }
 -- })
+-- old end
 frame:SetSize(frameWidth, frameHeight) -- 180 50
 frame:RegisterForDrag("LeftButton")
 frame:SetScript("OnDragStart", function(self)
@@ -114,7 +118,7 @@ frame:SetScript("OnDragStop", function(self)
     self:StopMovingOrSizing()
     local a, _, c, x, y = frame:GetPoint();
     rcFramePos = {a, c, x, y}
-    A.global.rcFramePos = rcFramePos
+    A.global.gui.raidCooldown.position = rcFramePos
 end)
 frame:SetFrameStrata("MEDIUM")
 --
@@ -393,7 +397,9 @@ local function scanGroup()
                     local druidName
                     if UnitInRaid('player') then
                         druidName = GetRaidRosterInfo(yy)
-                    else
+                    elseif UnitInParty('player') then
+                        druidName = UnitName('party' .. yy)
+                    else    
                         do
                             return
                         end
@@ -438,7 +444,6 @@ local function handleCommand(msg)
     --     firstTimeOpen = -1
     -- end
     -- :: Indikatoru ayarla
-    -- print('jaaja')
     scanGroup()
 
     -- :: Announce
@@ -468,26 +473,31 @@ local function handleCommand(msg)
 
     -- :: gui interactions
     if msg == '' then
-        if isFrameOpen then
+        if not isInit and isFrameOpen then
             frame:Hide()
         else
             frame:Show()
         end
-        isFrameOpen = not isFrameOpen
+        if not isInit then
+            isFrameOpen = not isFrameOpen
+        else
+            isInit = false
+        end
+        A.global.gui.raidCooldown.isOpen = isFrameOpen
     elseif msg == 'lock' then
-        frame:SetMovable(not A.global.rcFrameLock)
-        frame:EnableMouse(not A.global.rcFrameLock)
-        A.global.rcFrameLock = not A.global.rcFrameLock
+        frame:SetMovable(not A.global.gui.raidCooldown.frameLock)
+        frame:EnableMouse(not A.global.gui.raidCooldown.frameLock)
+        A.global.gui.raidCooldown.frameLock = not A.global.gui.raidCooldown.frameLock
         --
-        if not A.global.rcFrameLock then
+        if not A.global.gui.raidCooldown.frameLock then
 
         end
     elseif msg == 'move' then
         frame:SetMovable(true)
         frame:EnableMouse(true)
-        A.global.rcFrameLock = true
+        A.global.gui.raidCooldown.frameLock = true
     elseif msg == 'reset' then
-        A.global.rcFramePos = {0, 0}
+        A.global.gui.raidCooldown.position = {0, 0}
         rcFramePos = {0, 0}
         frame:ClearAllPoints()
         frame:SetPoint("CENTER", rcFramePos[1], rcFramePos[2])
@@ -571,30 +581,40 @@ function module:Initialize()
         raidPeople = {}
         A.global.raidCds = {}
     end
-    if A.global.rcFrameLock == nil then
-        A.global.rcFrameLock = true
-    else
-        rcFrameLock = A.global.rcFrameLock
-    end
-    if A.global.rcFramePos == nil then
-        A.global.rcFramePos = {"CENTER", "CENTER", 0, 0}
-    end
     --
-    rcFramePos = A.global.rcFramePos
+    if A.global.gui == nil then A.global.gui = {} end
+    if A.global.gui.raidCooldown == nil then A.global.gui.raidCooldown = {} end
+
+    -- :: initialize frame lock
+    if A.global.gui.raidCooldown.frameLock == nil then
+        A.global.gui.raidCooldown.frameLock = true
+    else
+        rcFrameLock = A.global.gui.raidCooldown.frameLock
+    end
+    -- :: initialize gui position
+    if A.global.gui.raidCooldown.position == nil then
+        A.global.gui.raidCooldown.position = {"CENTER", "CENTER", 0, 0}
+    end
+    -- :: initialize gui isOpen
+    if A.global.gui.raidCooldown.isOpen == nil then
+        A.global.gui.raidCooldown.isOpen = false
+    end
+    isFrameOpen = A.global.gui.raidCooldown.isOpen
+    --
+    rcFramePos = A.global.gui.raidCooldown.position
     frame:ClearAllPoints()
     frame:SetPoint(rcFramePos[1], nil, rcFramePos[2], rcFramePos[3], rcFramePos[4])
     frame:SetMovable(rcFrameLock)
     frame:EnableMouse(rcFrameLock)
-    --
-    -- if rcFramePos[1] == 0 and rcFramePos[2] == 0 then
-    --     frame:SetPoint("CENTER", rcFramePos[1], rcFramePos[2])
-    -- end
-    --
-    if not UnitInRaid('player') then
+    if not UnitInRaid('player') or not UnitInParty('Party') then
         raidPeople = {}
         A.global.raidCds = {}
     end
-    scanGroup()
+    if isFrameOpen then 
+        handleCommand('') 
+    else
+        scanGroup()
+    end
 end
 
 -- ==== Event Handlers

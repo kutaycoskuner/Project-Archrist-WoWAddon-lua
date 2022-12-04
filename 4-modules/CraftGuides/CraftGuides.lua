@@ -135,7 +135,7 @@ local function calcProfLimitByLevel()
     }
     -- 
     for level, profLimit in spairs(maxProfession) do
-        if playerLevel > level then
+        if playerLevel > level or true then
             profLimitByLevel = profLimit
         end
     end
@@ -340,6 +340,9 @@ adaptResourceList = function()
                 local removed = calcTotalDiffMaterial(mat, dataMat[1], prevItemTargetLevel, itemTargetLevel,
                     dataItem['levels'])
                 adaptedList[mat][1] = adaptedList[mat][1] - removed
+                if adaptedList[mat][1] == 0 then
+                    table.remove(adaptedList, mat)
+                end
             end
         end
         -- end
@@ -383,14 +386,14 @@ drawSectionResourceList = function()
     -- :: material
     local artikel = 0
     for item, data in spairs(adaptedList) do
-        artikel = artikel + 1
         local countBags = GetItemCount(item)
         local countTotal = GetItemCount(item, true)
         local have = countBags .. " (" .. countTotal .. ")"
         local miss = data[1] + data[2] - countTotal
         local need = data[1] -- .. " ± " .. data[2]
-        if artikel <= 16 then
-            if need > 0 then
+        if need > 0 then
+            artikel = artikel + 1
+            if artikel <= 16 then
                 -- :: how many items have
                 drawLbl(have, 0.15, Arch_guiFrame)
                 -- :: adding target text
@@ -404,23 +407,23 @@ drawSectionResourceList = function()
                 drawLbl(miss, 0.15, Arch_guiFrame)
                 -- :: adding target text
                 drawLbl(select(2, GetItemInfo(item)), 0.5, Arch_guiFrame)
-            else
-                -- -- :: how many items have
-                -- local have = countBags .. " (" .. countTotal .. ")"
-                -- drawLbl(Arch_trivialColor(have), 0.15, Arch_guiFrame)
-                -- -- :: adding target text
-                -- local need = data[1] --.. " ± " .. data[2]
-                -- drawLbl(Arch_trivialColor(need), 0.15, Arch_guiFrame)
-                -- -- :: adding target text
-                -- if miss <= 0 then
-                --     miss = Arch_trivialColor("None")
-                -- else
-                --     miss = Arch_focusColor(Arch_trivialColor(miss))
-                -- end
-                -- drawLbl(Arch_trivialColor(miss), 0.15, Arch_guiFrame)
-                -- -- :: adding target text
-                -- drawLbl(Arch_trivialColor(GetItemInfo(item)), 0.5, Arch_guiFrame)
             end
+        else
+            -- -- :: how many items have
+            -- local have = countBags .. " (" .. countTotal .. ")"
+            -- drawLbl(Arch_trivialColor(have), 0.15, Arch_guiFrame)
+            -- -- :: adding target text
+            -- local need = data[1] --.. " ± " .. data[2]
+            -- drawLbl(Arch_trivialColor(need), 0.15, Arch_guiFrame)
+            -- -- :: adding target text
+            -- if miss <= 0 then
+            --     miss = Arch_trivialColor("None")
+            -- else
+            --     miss = Arch_focusColor(Arch_trivialColor(miss))
+            -- end
+            -- drawLbl(Arch_trivialColor(miss), 0.15, Arch_guiFrame)
+            -- -- :: adding target text
+            -- drawLbl(Arch_trivialColor(GetItemInfo(item)), 0.5, Arch_guiFrame)
         end
     end
 end
@@ -620,12 +623,16 @@ end
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Event Handlers
 function module:TRADE_SKILL_UPDATE()
-    if targetData ~= nil then
-        Arch_setGUI(moduleName, true)
-        if tabMode == "resource" then
-            drawSectionResourceList()
-        else
-            drawSectionGuide()
+    local newSkill = currentLevel
+    learnCurrentLevel()
+    if currentLevel > newSkill then
+        if targetData ~= nil then
+            Arch_setGUI(moduleName, true)
+            if tabMode == "resource" then
+                drawSectionResourceList()
+            else
+                drawSectionGuide()
+            end
         end
     end
 end

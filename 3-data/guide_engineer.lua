@@ -89,7 +89,7 @@ Arch_guide_engineer = {
     },
     [105] = {
         -- silver contact
-        ['item'] = 3973,
+        ['item'] = 4404,
         ['howtolearn'] = "trainer",
         ["levels"] = {90, 110, 125, 140},
         ['mats'] = {
@@ -253,7 +253,7 @@ Arch_guide_engineer = {
     },
     [300] = {
         -- thorium shells
-        ['item'] = 19800,
+        ['item'] = 15997,
         ['howtolearn'] = "trainer",
         ["levels"] = {285, 295, 300, 305},
         ['mats'] = {

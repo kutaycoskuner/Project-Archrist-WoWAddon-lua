@@ -28,17 +28,21 @@ end
 
 
 local function handleCommand(msg)
-    -- shouldRender('VoA')
     -- do return end
     if msg == '' then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Archrist is general purpose assistant addon for 3.3.5a patch')
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'please use ' .. Arch_commandColor('/arch help') .. ' command to see modules')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'please use ' .. Arch_commandColor('/arch config') .. ' command to see interface options')
+    elseif msg == 'config' then
+        A.OpenInterfaceConfig()
     elseif msg == 'help' then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'These are relatively different functional modules')
         for k, v in pairs(Arch_modules) do
             if(shouldRender(k)) then SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor(k .. ': ') .. v) end 
         end
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'please use ' .. Arch_commandColor('/arch <modulename>') .. ' to get detailed information')
+    elseif msg == "v" or msg == "version" or msg == "ver" then
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "version: " .. Arch_focusColor( A.version ) .. " Release date: ".. Arch_focusColor(A.releaseDate) )
     elseif msg == 'todolist' and shouldRender('TodoList') then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. Arch_focusColor('TodoList'))
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'note taking and todo list module')

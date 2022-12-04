@@ -33,7 +33,8 @@ A.myLocalizedClass, A.myclass = UnitClass("player")
 A.myLocalizedRace, A.myrace = UnitRace("player")
 A.myname = UnitName("player")
 A.myrealm = GetRealmName()
-A.version = GetAddOnMetadata("ElvUI", "Version") -->> degisecek
+A.version = GetAddOnMetadata("Archrist", "Version") 
+A.releaseDate = GetAddOnMetadata("Archrist", "X-ReleaseDate") 
 A.wowpatch, A.wowbuild = GetBuildInfo()
 A.wowbuild = tonumber(A.wowbuild)
 A.resolution = GetCVar("gxResolution")
@@ -57,6 +58,7 @@ A.valueColorUpdateFuncs = {}
 A.TexCoords = {0, 1, 0, 1}
 A.VehicleLocks = {}
 A.CreditsList = {}
+A.optionsFrames = {}
 
 -- ==== Functions
 function A:CopyTable(currentTable, defaultTable)
@@ -75,19 +77,30 @@ function A:CopyTable(currentTable, defaultTable)
 	return currentTable
 end
 
--- test
--- print(P)
--- print('core not in func')
--- test end
+
+function A:SetupOptions()
+ 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Archrist", A.options)
+	-- LibStub("AceConfig-3.0"):RegisterOptionsTable("Spy Commands", Spy.optionsSlash, "spy")
+
+	local ACD3 = LibStub("AceConfigDialog-3.0")
+	-- AceConfigDialog:AddToBlizOptions(appName, name, parent, ...)
+	A.optionsFrames.Archrist = ACD3:AddToBlizOptions("Archrist", "Archrist", nil) 
+	-- A.optionsFrames.Macros = ACD3:AddToBlizOptions("Archrist", "Macros", "Archrist", "Macros")
+	-- self.optionsFrames.Modules = ACD3:AddToBlizOptions("Archrist", "Modules", "Archrist	", "Modules")
+
+	-- self:RegisterModuleOptions("Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db), "Profiles")
+	-- self.options.args.Profiles.order = -2
+end
+
+function A:OpenInterfaceConfig()
+	-- :: iki kere var ilki interface i aciyor, ikincisi addon ekranini
+	InterfaceOptionsFrame_OpenToCategory(A.optionsFrames.Archrist)
+	InterfaceOptionsFrame_OpenToCategory(A.optionsFrames.Archrist)
+end
+
 
 -- ==== Core Init [last arg]
 function A:Initialize()
-
-	-- test
-	-- print(P)
-	-- print('core')
-	-- test end
-
 	twipe(self.db)
 	twipe(self.global)
 	-- twipe(self.private)
@@ -120,7 +133,9 @@ function A:Initialize()
 
 	-- self.charSettings.playerName = UnitName("player")
 
-
+	-- test
+	self:SetupOptions()
+    -- test end
 
 	self:InitializeModules()
 	self.initialized = true

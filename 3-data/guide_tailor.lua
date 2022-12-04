@@ -347,7 +347,7 @@ Arch_guide_tailor = {
     },
     [335] = {
         -- netherweave pants
-        ['item'] = 21852,
+        ['item'] = 26772,
         ['howtolearn'] = "trainer",
         ["levels"] = {325, 335, 340, 345},
         ['mats'] = {
@@ -385,7 +385,7 @@ Arch_guide_tailor = {
     },
     [375] = {
         -- bolt of frostweave
-        ['item'] = 45510,
+        ['item'] = 41510,
         ['howtolearn'] = "trainer",
         ["levels"] = {350, 370, 372, 375},
         ['mats'] = {

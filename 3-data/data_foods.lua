@@ -3,23 +3,31 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
 ----------------------------------------------------------------------------------------------------------
 --[[
     --!! In use by Eat&Drink
-        Class {Spell{ID,cd}}
-
-]]
-----------------------------------------------------------------------------------------------------------
-Arch_consumables = {
-    -- ==== Edibles
-    ["foods"] = {
+    Class {Spell{ID,cd}}
+    
+    ]]
+    ----------------------------------------------------------------------------------------------------------
+    Arch_consumables = {
+        -- ==== Edibles
+        ["foods"] = {
         43523,          -- 80 Conjured Mana Strudel
         35953,          -- 75 mead basted caribou
         39691,          -- 70 succulent orca stew
+        34759,          -- 70 smoken rockfin
+        34125,          -- 70 showeltusk soup
         33452,          -- 65 Honey-Spiced Lichen
+        33449,          -- 65 crusty flatbread
         33443,          -- 65 sour goat cheese
         33454,          -- 65 salted venison
+        41751,          -- 55 black mushroom
+        27859,          -- 55 zangar caps
+        27854,          -- 55 smoken talbuk venison
+        8952,           -- 45 roasted quail
+        8076,           -- 45 conjured sweet roll
         8075,           -- 35 conjured sourdough
         1487,           -- 25 conjured pumpernickel
         3729,           -- 25 soothing turtle bisque
-        4539,           -- 25 goldenbark apple
+        4539,           -- 25 goldenbark appleF
         3771,           -- 25 wild hog shank
         1114,           -- 15 conjured rye
         4593,           -- 15 bristle whisker catfish
@@ -42,13 +50,22 @@ Arch_consumables = {
         7097,           -- 0 leg meat
         5057,           -- 0 ripe watermelon
         20516,          -- 0 bobbing apple
+        44837,          -- 0 spice bread stuffing
+        44836,          -- 0 pumpkin pie
+        44840,          -- 0 cranberry chutney
+        44838,          -- 0 slow-roasted turkey
     },    
     -- ==== Drinkables
     ["drinks"] = {
         43523,          -- 80 Conjured Mana Strudel
         33445,          -- 75 honeymint tea
+        34759,          -- 70 smoken rockfin
         33444,          -- 70 pungent seal whey
+        44750,          -- 65 mountain water
+        30703,          -- 60 conjured mountain spring water
+        28399,          -- 60 filtered draenic water
         8766,           -- 45 morning glory dewBCBCB
+        8078,           -- 45 conjured sparkling water
         8077,           -- 35 conjured mineral water
         1645,           -- 35 moonberry juice
         3772,           -- 25 conjured spring water
@@ -60,6 +77,10 @@ Arch_consumables = {
         1179,           -- 5 ice cold milk
         5350,           -- 0 conjured water
         159,            -- 0 refreshing spring water
+        44837,          -- 0 spice bread stuffing
+        44836,          -- 0 pumpkin pie
+        44840,          -- 0 cranberry chutney
+        44838,          -- 0 slow-roasted turkey
     },
     -- ==== Pet Food
 

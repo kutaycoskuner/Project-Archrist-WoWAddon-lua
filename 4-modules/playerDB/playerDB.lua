@@ -209,7 +209,7 @@ local function archGetPlayer(player)
     end
     --
     if A.people[realmName][player].note ~= '' then
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'note: ' .. A.people[realmName][player].note)
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. A.people[realmName][player].note)
     end
 end
 
@@ -444,7 +444,7 @@ local function groupRepCheck(msg)
             for ii = 1, #blacklist do
                 checkBlacklist = checkBlacklist .. blacklist[ii]
                 if ii ~= #blacklist then
-                    checkBlacklist = checkBlacwaklist .. ', '
+                    checkBlacklist = checkBlacklist .. ', '
                 end
             end
             SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor('Blacklist: ') .. checkBlacklist)

@@ -1,0 +1,59 @@
+# Leveling
+- created 10-Nov-2022
+
+# cont
+- Alliance
+    - 32 stv
+    - 34-34 [Dungeon] Scarlet Librry
+        - mythology of titans
+    - 40-41 stv
+    - 41-42 Tanaris 
+    - 42-43 [Dungeon]zul farrak
+        - scarab shells
+        - tran'nek
+        - troll temper
+        - tiara of the deep
+        - divine-matic rod
+        - gahz'rilla
+    - 44-45 hinterlands
+    - 45-56 feralas
+    - 47-48 [dg] sunken temple
+        - jammal an the prophet
+        - essence of eranikus
+    - 47-48 Searing Gorge
+    - 48-60 [dungeon] blackrock depths
+        - dark iron legacy ldead
+        - overmaster pyron
+        - the heart of the mountain
+    - 52-53 burning steppes
+    - 52-53 un goro
+    - 55-56 wintergrasp
+    - 58-60 hellfire peninsula
+        - give the legion reborn
+        - do the path of anguish
+        - do waste not, want not
+        - do fel orc scavengers
+        - give waste not, want not
+        - accept laying waste to the unwanted
+        - give fel orc scavengers
+        - accept ill omens
+        - give the path of anguish
+        - accept expedition point
+        - give expedition point
+        - accept disrupt their reinforcements
+        - accept zeth'gor must burn!
+        - do disrupt their reinformcements
+        - give disrupt their reinforcements
+        - get mission: the murketh and shaadraz gateways
+        - accept an old gift
+        - accept hellfire fortifications
+        - accept the path of glory
+        - accept weaken the ramparts
+    - 70-72 nexus
+        - have they no shame?
+        - postponing the inevitable
+        - prison of war
+        - quckening
+    - 70-72 utgarde keep
+        - disarmanent
+        - into utgarde

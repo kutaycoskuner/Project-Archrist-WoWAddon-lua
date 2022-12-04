@@ -8,6 +8,13 @@
 # Comment Discipline
 
 # Links
+- libs
+    - https://www.wowace.com/projects/herebedragons/pages/api/here-be-dragons-pins-2-0
+    - https://www.wowace.com/projects/libsharedmedia-3-0/pages/api-documentation
+
+- lua pattern matching
+    - https://www.lua.org/pil/20.1.html
+
 [1] mayron wow addon creation
 https://www.youtube.com/watch?v=nfaE7NQhMlc&list=PL3wt7cLYn4N-3D3PTTUZBM2t1exFmoA2G
 
@@ -65,6 +72,7 @@ https://www.lua.org/pil/20.2.html
 +-- Archrist.lua
 +-- Archrist.toc
 
+
 # Blackboard
 - customizability levels
     1. give your data within the logic
@@ -81,6 +89,7 @@ https://www.lua.org/pil/20.2.html
     #262626
     #ededed
     #ff33ff
+
 - Methods
     Identify What You Want To Do
     Research on some events or methods in which to do what you wish
@@ -157,6 +166,15 @@ https://www.lua.org/pil/20.2.html
         5246 - Intimidating shout
 
 - messenger pattern
+
+- ace gui modules
+    - header 
+    - group 
+    - toggle 
+    - slider 
+    - drop down
+    - description
+
 - serialize | deserialize
     - dosyaya yazarken memoryden alip disariya yazmaya serialize | yeniden okuyup memory de kendi dtasini cekmeye deserialize deniyor
 
@@ -201,3 +219,96 @@ background, border, artwork, overlay, highlight
 
 - <lua tinker break inner function>
     - do return end
+
+# Changed api | version fixes
+
+- GetMapContinents()
+    - change with {[1]="Kalimdor", [2]="Eastern Kingdoms", [3]="Outlands", [4]="Northrend"}
+- GetMapZones()
+    - replace
+    - local Zones = {
+	--Kalimdor ZoneNames
+	[1] = {
+		[1] = "Ashenvale",
+		[2] = "Azshara",
+		[3] = "Azuremyst lsle",
+		[4] = "Bloodmyst lsle",
+		[5] = "Darkshore",
+		[6] = "Darnassus",
+		[7] = "Desolace",
+		[8] = "Durotar",
+		[9] = "Dustwallow Marsh",
+		[10] = "Felwood",
+		[11] = "Feralas",
+		[12] = "Moonglade",
+		[13] = "Mulgore",
+		[14] = "Orgrimmar",
+		[15] = "Silithus",
+		[16] = "Stonetalon Mountains",
+		[17] = "Tanaris",
+		[18] = "Teldrassil",
+		[19] = "The Barrens",
+		[20] = "The Exodar",
+		[21] = "Thousand Needles",
+		[22] = "Thunder Bluff",
+		[23] = "Un'Goro Crater",
+		[24] = "Winterspring",
+		},
+	--Eastern KingdomsAzeroth
+	[2] = {
+		[1] = "Alterac Mountains",
+		[2] = "Arathi Highlands",
+		[3] = "Badlands",	--"Blackrock Mountain"
+		[4] = "Blasted Lands",
+		[5] = "Burning Steppes",
+		[6] = "Deadwind Pass",
+		[7] = "Dun Morogh",
+		[8] = "Duskwood",
+		[9] = "Eastern Plaguelands",
+		[10] = "Elwynn Forest",
+		[11] = "Eversong Woods",
+		[12] = "Ghostlands",
+		[13] = "Hilsbrad Foothills",
+		[14] = "Ironforge",
+		[15] = "Isle of Quel'Danas",
+		[16] = "Loch Modan",
+		[17] = "Redridge Mountains",
+		[18] = "Searing Gorge",
+		[19] = "Silvermoon City",
+		[20] = "Silverpine Forest",
+		[21] = "Stormwind City",
+		[22] = "Stranglethorn Vale",
+		[23] = "Swamp of Sorrows",
+		[24] = "The Hinterlands",
+		[25] = "Tirisfal Glades",
+		[26] = "Undercity",
+		[27] = "Western Plaguelands",
+		[28] = "Westfall",
+		[29] = "Wetlands",
+	},
+	--Outland
+	[3] = {
+		[1] = "Blades Edge Mountains",
+		[2] = "Hellfire Peninsula",
+		[3] = "Nagrand",
+		[4] = "Netherstorm",
+		[5] = "Shadowmoon Valley",
+		[6] = "Shattrath City",
+		[7] = "Terokkar Forest",
+		[8] = "Zangarmarsh",
+	},
+	--Northrend
+	[4] = {
+		[1] = "Borean Tundra",
+		[2] = "Crystalsong Forest",
+		[3] = "Dalaran",
+		[4] = "Dragonblight",
+		[5] = "Grizzly Hills",
+		[6] = "Howling Fjord",
+		[7] = "Icecrown",
+		[8] = "Sholazar Basin",
+		[9] = "Storm Peaks",
+		[10] = "Wintergrasp",
+		[11] = "Zul'Drak",
+	},
+}

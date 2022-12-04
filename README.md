@@ -54,4 +54,5 @@ Version 1.21 Todolist
 ---
 
 # References
-- To be filled
+- ElvUI
+- Spy

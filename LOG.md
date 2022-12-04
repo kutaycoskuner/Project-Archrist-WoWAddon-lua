@@ -38,21 +38,40 @@
 - [x] 01-Nov-2022 30-Oct-2022 arch: guileri alt dosyalar olarak ayir
 - [x] 02-Nov-2022 30-Oct-2022 add: profession grinding guide
 - [x] 12-Nov-2022 16-Oct-2022 add: CRIndicator display
+- [x] 14-Nov-2022 12-Nov-2022 arch: data_spells: min level, iconpath add
+- [x] 17-Nov-2022 17-Nov-2022 add: version information and release date
+- [x] 02-Dec-2022 02-Dec-2022 add: CRIndicator remember if frame is open or not
+- [x] 03-Dec-2022 04-Dec-2022 add: prototype interface configuration
+- 26-Nov-2022 ler: addon communication ayni addona sahip baska biriyle iletisim kurmayi ogren veri paylas
+- 26-Nov-2022 ler: minimap / map marking
 - 09-Nov-2022 add: todo resting event api ekle : now its good time to check todo list
 - 13-Oct-2022 fix: help raidwarnings i main ayir kendi icinde distribute et
 - 10-Nov-2022 add: navigation arrow
 - 25-Oct-2022 add: petfeed macro help
 - 28-Oct-2022 fun: raidwarnings: if not in group then send printout message / party
-- 02-Nov-2022 add: github release yap
-- 12-Nov-2022 arch: data_spells: min level, iconpath add
+- 02-Nov-2022 add: github release yaps
+- 22-Nov-2022 fix playerdb: rep atinca veri yazmiyor
+- 22-Nov-2022 add: playerdb ui
+- 24-Nov-2022 add: minimap icon
+- 02-Dec-2022 add: options frame with minimap icon
+
 
 # Procedures
 - check todo
 - enter log
 - enter time log
 - update toc version
+- push
 
 # LOG
+- [1.40] add: Interface options ...
+    - 04-Dec-2022 arch: reorganize modules order
+    - 03-Dec-2022 fun: Interface options prototype
+    - 02-Dec-2022 fun: CRIndicator remembers if the frame was open
+    - 02-Dec-2022 arch: new data structure A.global.rcframepos => A.global.gui.raidCooldown.position 
+    - 17-Nov-2022 add: help version and release date
+    - 14-Nov-2022 fix: CraftGuides resource list listing problem
+
 - [1.30] fix: CRIndicator combatlog ...
     - 12-Nov-2022 add: draft_leveling prototyping
     - 12-Nov-2022 sty: crIndicator: frame adjustments
