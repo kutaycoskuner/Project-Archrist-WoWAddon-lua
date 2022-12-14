@@ -107,62 +107,6 @@ local function diverseRaidGUI()
     Arch_guiFrame:AddChild(annButton)
 end
 
--- ==== raidCooldowns
--- local function raidCooldowns_calcTime(time)
---     local cd = time - GetTime()
---     if cd > 0 then
---         local min = math.floor(cd / 60)
---         local sec = math.floor(cd % 60)
---         --
---         if 10 > sec then
---             sec = "0" .. sec
---         end
---         if 10 > min then
---             min = "0" .. min
---         end
---         --
---         return (min .. ":" .. sec)
---     else
---         return "|cff08cf3dReady|r"
---     end
--- end
-
--- local function raidCooldownsGUI()
---     -- SELECTED_CHAT_FRAME:AddMessage('TEST')
---     frame2:SetWidth(240)
---     frame2:SetHeight(576)
---     frame2:ClearAllPoints()
---     -- :: todo sonradan yer hatirlama ekleeneccek
---     frame2:SetPoint("CENTER", 0, 0)
---     -- :: varsa onceki frameleri temizle
---     frame2:ReleaseChildren()
---     -- Spellere Gore Sirala
---     for ii = 1, 1 do
---         local heading = AceGUI:Create('Heading')
---         heading:SetText(Arch_trackSpells[ii])
---         heading:SetRelativeWidth(1)
---         frame2:AddChild(heading)
---         --
---         local name = AceGUI:Create("Label")
---         name:SetText(Arch_raidPeople[ii].name)
---         name:SetWidth(160)
---         frame2:AddChild(name)
---         local cd = AceGUI:Create("Label")
---         cd:SetText(raidCooldowns_calcTime(Arch_raidPeople[ii].availableAt))
---         cd:SetWidth(40)
---         frame2:AddChild(cd)
---         raidCooldowns_calcTime(Arch_raidPeople[ii].availableAt)
---     end
---     -- -- :: Main Raid Note [required]
---     for ii = 1, #Arch_raidPeople do
---         if not Arch_raidPeople[ii].spell then
---             frameStopTrack2 = false
---             break
---         end
---         frameStopTrack2 = true
---     end
--- end
-
 -- ==== Core
 -- :: Sadece Komutla aciliyor
 function toggleGUI(key)
@@ -193,6 +137,8 @@ function toggleGUI(key)
             Arch_pugRaidGUI()
         elseif key == "CraftGuides" then
             Arch_craftGuidesGUI()
+        elseif key == 'PlayerDB' then
+            Arch_playerDB_GUI()
             -- elseif key == 'LootDatabase' then
             --     LootDatabaseGUI()
             -- elseif key == 'LootDatabasePrune' then
@@ -211,40 +157,6 @@ function toggleGUI(key)
         frameOpen = false
     end
 end
-
--- function toggleGUI_2(key)
---     if not frameOpen2 then
---         frameOpen2 = true
---         frame2 = AceGUI:Create("Frame")
---         -- frame2:SetCallBack("OnUpdate", function(_, elapsed)
---         --     self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
-
---         --     if (self.TimeSinceLastUpdate > UpdateInterval) then
---         --         Arch_setGUI("raidCooldowns", true)
---         --         self.TimeSinceLastUpdate = 0;
---         --     end
-
---         -- end)
---         frame2:SetTitle(N)
---         --
---         -- frame2:SetCallback("OnClose", function(widget)
---         --     frameOpen2 = false
---         -- end)
---         frame2:SetLayout("Flow")
---         --
---         if key == 'raidCooldowns' then
---             raidCooldownsGUI()
---         end
---         --
---     elseif recursive then
---         frame2:Release()
---         frameOpen2 = false
---         toggleGUI_2(key)
---     else
---         frame2:Release()
---         frameOpen2 = false
---     end
--- end
 
 function Arch_setGUI(key, isRecursive)
     recursive = false

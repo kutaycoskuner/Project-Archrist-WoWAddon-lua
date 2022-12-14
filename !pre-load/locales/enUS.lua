@@ -7,6 +7,8 @@ end
 L["archrium"] = true
 L["ar"] = true
 
+L["archrist"] = "|cff00c8ff[Archrist]|r"
+
 L["Welcome Home!"] = true -- default message
 
 L["Message"] = true
@@ -70,3 +72,7 @@ L["archrist_about_info_version"] = [[
 
 L["archrist_about_info_releaseDate"] = [[
 |cffffd000 Release Date: |cffffffff]]
+
+L["util_postureCheck"] = [[
+|cffffd000 Posture Check |cffffffff
+]]

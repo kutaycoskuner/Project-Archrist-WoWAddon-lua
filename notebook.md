@@ -8,9 +8,18 @@
 # Comment Discipline
 
 # Links
+- leveling guides
+    - class
+        - mage
+            - https://www.warcrafttavern.com/wotlk/guides/mage-leveling-guide/
+    - profession
+
 - libs
     - https://www.wowace.com/projects/herebedragons/pages/api/here-be-dragons-pins-2-0
     - https://www.wowace.com/projects/libsharedmedia-3-0/pages/api-documentation
+
+- blizz interface code
+    - https://github.com/tomrus88/BlizzardInterfaceCode/blob/master/Interface/FrameXML/UIParent.lua
 
 - lua pattern matching
     - https://www.lua.org/pil/20.1.html
@@ -175,10 +184,28 @@ https://www.lua.org/pil/20.2.html
     - drop down
     - description
 
+- config ui tabs
+    - External Memory
+    - Guide
+    - Assistance
+    - Utility 
+    - Extended Macros
+    - About
+
+
 - serialize | deserialize
     - dosyaya yazarken memoryden alip disariya yazmaya serialize | yeniden okuyup memory de kendi dtasini cekmeye deserialize deniyor
 
 # How to
+- <new module>
+    - add module to archrist.lua 
+    - add any references if any
+    - create folder with proper name
+    - copy template folder
+    - add load to folder name in 4-modules/-load-modules.xml
+    - add inner load file xml
+    - edit document
+
 - <frame position>
     - frame pos isimli degisken belirle
     - init icine eger yoksa global position holder tutan degisken koy

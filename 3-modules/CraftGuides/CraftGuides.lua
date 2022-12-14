@@ -285,12 +285,10 @@ local function drawBtn(name, width, parent)
         adaptResourceList()
         if name == "Material List" then
             tabMode = "resource"
-            drawMainFrame()
-            drawSectionResourceList()
+            drawRepeat()
         elseif name == "Craft Guide" then
             tabMode = "craft"
-            drawMainFrame()
-            drawSectionGuide()
+            drawRepeat()
         end
     end)
     parent:AddChild(btn)

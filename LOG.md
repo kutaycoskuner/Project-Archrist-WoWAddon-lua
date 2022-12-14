@@ -42,6 +42,10 @@
 - [x] 17-Nov-2022 17-Nov-2022 add: version information and release date
 - [x] 02-Dec-2022 02-Dec-2022 add: CRIndicator remember if frame is open or not
 - [x] 03-Dec-2022 04-Dec-2022 add: prototype interface configuration
+- [x] 07-Dec-2022 06-Dec-2022 add: posture check | utility duzelt pushtan once
+- [x] 09-Dec-2022 09-Dec-2022 add: automount macro
+- [p] 10-Dec-2022 09-Dec-2022 add: milling, prospecting, disentchanting macrolari icin ui customizability ekle
+- [x] 14-Dec-2022 13-Dec-2022 add: CRIndicator: inteface options
 - 26-Nov-2022 ler: addon communication ayni addona sahip baska biriyle iletisim kurmayi ogren veri paylas
 - 26-Nov-2022 ler: minimap / map marking
 - 09-Nov-2022 add: todo resting event api ekle : now its good time to check todo list
@@ -49,21 +53,34 @@
 - 10-Nov-2022 add: navigation arrow
 - 25-Oct-2022 add: petfeed macro help
 - 28-Oct-2022 fun: raidwarnings: if not in group then send printout message / party
-- 02-Nov-2022 add: github release yaps
+- 02-Nov-2022 add: github release yaps 
 - 22-Nov-2022 fix playerdb: rep atinca veri yazmiyor
-- 22-Nov-2022 add: playerdb ui
+- 22-Nov-2022 add: playerdb ui | spy i inceleyerek yap
 - 24-Nov-2022 add: minimap icon
 - 02-Dec-2022 add: options frame with minimap icon
-
+- 13-Dec-2022 add: 5 metre yaricap icinde kac mob var?
 
 # Procedures
 - check todo
 - enter log
+- update toc version ve release date
+- varsa display ekle
 - enter time log
-- update toc version
 - push
 
 # LOG
+- [1.41] arch: CRIndicator remake ... 
+    - 14-Dec-2022 arch: options, modules location change to allow dynamic changes
+    - 14-Dec-2022 arch: Remake CRIndicator
+    - 14-Dec-2022 fix: CRIndicator spell title stuck bug 
+    - 10-Dec-2022 fix: CRIndicator ui hide problem | uiparent i parent yaparak cozdum
+    - 10-Dec-2022 fix: Interface config, macro enabling problem | ui i kapatip acarak cozuyor
+    - 09-Dec-2022 add: AutoMount macro
+    - 07-Dec-2022 fix: craftguides: frame not fully loading ui bug | fix: reloading page twice
+    - 07-Dec-2022 add: PostureCheck, interface options
+    - 06-Dec-2022 wip: interface options organization / tests
+    - 06-Dec-2022 add: posture check prototype
+
 - [1.40] add: Interface options ...
     - 04-Dec-2022 arch: reorganize modules order
     - 03-Dec-2022 fun: Interface options prototype

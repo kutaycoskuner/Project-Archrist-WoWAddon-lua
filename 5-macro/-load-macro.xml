@@ -3,7 +3,7 @@
     <Script file="Milling.lua"/>
     <Script file="Prospecting.lua"/>
     <Script file="Disenchanting.lua"/>
-    <!-- <Script file="Warrior.lua"/> -->
+    <Script file="AutoMount.lua"/>
     <Script file="EatDrink.lua"/>
     <Script file="FeedPet.lua"/>
     <!-- <Script file="Shaman.lua"/> -->

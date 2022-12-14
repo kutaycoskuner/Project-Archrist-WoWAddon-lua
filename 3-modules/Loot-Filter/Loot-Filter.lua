@@ -2,9 +2,9 @@
 --------- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
 ------------------------------------------------------------------------------------------------------------------------
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
-local moduleName = 'PlayerDB';
-local moduleAlert = M .. moduleName .. ": |r";
-local module = A:GetModule(moduleName, true);
+local moduleName1, moduleName2 = 'LootFilter', "Loot Filter";
+local moduleAlert = M .. moduleName2 .. ": |r";
+local module = A:GetModule(moduleName1, true);
 if module == nil then
     return
 end
@@ -14,30 +14,49 @@ end
 ------------------------------------------------------------------------------------------------------------------------
 -- todo ----------------------------------------------------------------------------------------------------------------
 --[[
-    - create command [x]
-    - understand command arguments
+    - variables - isenabled, time, announce type, custom text
+    - [x] 07.12.2022 discrete customizability in times 15,30,45,60
+    - [x] 07.12.2022 custom text
+    3. custom message type print / whisper / party etc.    
+        - print, none, raid frame, party, raid
 ]]
 
 -- ==== use case ------------------------------------------------------------------------------------------------------------
 --[[
-    posture check reminder with intervals
+
 ]]
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
-local length = 3600
-local t = length
-local f = CreateFrame("Frame")
+local isEnabled = false
+-- local f = CreateFrame("Frame")
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Start
 function module:Initialize()
     self.Initialized = true
     -- module:RegisterEvent("PLAYER_REGEN_ENABLED")
+    -- :: superset construct
+    if A.global.utility == nil then A.global.utility = {} end
+    if A.global.utility.lootFilter == nil then A.global.utility.lootFilter = {} end
+    -- :: set variable: is enabled
+    if A.global.utility.lootFilter.isEnabled == nil then
+        A.global.utility.lootFilter.isEnabled = isEnabled
+    else
+        isEnabled = A.global.utility.lootFilter.isEnabled
+    end
+
 end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Local Methods
+local function filterRoll(self, event, msg)
+	if (A.global.utility.lootFilter.isEnabled == true and (string.find(msg, "has selected Greed for:"))) then --or string.find(msg, "passed") or string.find(msg, "Disenchant")
+        return true
+    else
+        return false
+    end
+end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Global Methods
@@ -49,30 +68,14 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Event Handlers
-f:SetScript("OnUpdate", function(self, elapsed)
-    t = t - elapsed
-    if t <= 0 then
-        print("Check your posture!")
-        RaidNotice_AddMessage(RaidBossEmoteFrame, "Check your posture!", ChatTypeInfo["RAID_BOSS_EMOTE"])
-        -- PlaySound(SOUNDKIT.ALARM_CLOCK_WARNING_2)
-        t = length
-    end
-end)
-
-------------------------------------------------------------------------------------------------------------------------
--- ==== CLI (Slash Commands)
--- SLASH_reputation1 = "/rep"
--- SlashCmdList["reputation"] = function(msg)
---     handlePlayerStat(msg, 'reputation')
+ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", filterRoll)
+-- function module:PLAYER_REGEN_ENABLED()
+--     -- SELECTED_CHAT_FRAME:AddMessage('You are out of combat.')
+--     isInCombat = false
 -- end
 
-SLASH_POSTURECHECK1 = '/posture'
-
-function SlashCmdList.POSTURECHECK(msg, editbox)
-    print("PostureCheck timer set to " .. msg .. " minute(s).");
-    length = msg * 60
-    t = length
-end
+------------------------------------------------------------------------------------------------------------------------
+-- ==== CLI (Slash Commands)  
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== GUI
@@ -85,3 +88,4 @@ local function InitializeCallback()
     module:Initialize()
 end
 A:RegisterModule(module:GetName(), InitializeCallback)
+

@@ -285,7 +285,7 @@ Arch_guide_engineer = {
     },
     [330] = {
         -- fel iron bomb
-        ['item'] = 30310,
+        ['item'] = 23736,
         ['howtolearn'] = "trainer",
         ["levels"] = {300, 320, 330, 340},
         ['mats'] = {
@@ -298,8 +298,8 @@ Arch_guide_engineer = {
         }
     },
     [335] = {
-        -- fel iron bomb
-        ['item'] = 30310,
+        -- adamantite grenade
+        ['item'] = 23737,
         ['howtolearn'] = "trainer",
         ["levels"] = {300, 320, 330, 340},
         ['mats'] = {

@@ -406,8 +406,8 @@ Arch_guide_tailor = {
         }
     },
     [385] = {
-        -- frostwoven belt
-        ['item'] = 55906,
+        -- frostwoven boots
+        ['item'] = 41520,
         ['howtolearn'] = "trainer",
         ["levels"] = {375, 385, 395, 405},
         ['mats'] = {

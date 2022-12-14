@@ -67,6 +67,10 @@ local focusColor = Arch_focusColor
 local quantitative = {'reputation', 'strategy', 'discipline', 'attendance', 'damage'}
 local lastBlacklist
 
+local drawMainFrame = nil
+
+
+
 -- ==== Start
 function module:Initialize()
     self.Initialized = true
@@ -387,7 +391,7 @@ local function groupRepCheck(msg)
     local groupType = nil
     if UnitInRaid('player') then
         groupType = "raid"
-        groupMembers = GetNumRaidMembers()
+        groupMembers = GetNumGroupMembers()
     elseif UnitInParty('player') then
         groupType = "party"
         groupMembers = GetNumGroupMembers()
@@ -574,6 +578,56 @@ function module:RAID_ROSTER_UPDATE()
     end
 end
 
+-- ==== GuI Drawing util
+-- :: draw head
+local function drawHead(name, parent)
+    local heading = AceGUI:Create('Heading')
+    heading:SetText(name)
+    heading:SetRelativeWidth(1)
+    parent:AddChild(heading)
+end
+
+drawMainFrame = function()
+    -- :: create frame
+    -- Arch_guiFrame:SetWidth(440)
+    -- Arch_guiFrame:SetHeight(420)
+    Arch_guiFrame:ClearAllPoints()
+    -- :: remembering the position of frame
+    -- guideFramePos = A.global.guideFrame
+    -- if A.global.guideFrame == {} then
+    --     Arch_guiFrame:SetPoint("CENTER", 0, 0)
+    -- else
+    --     Arch_guiFrame:SetPoint(guideFramePos[1], guideFramePos[3], guideFramePos[4])
+    -- end
+    -- Arch_guiFrame:ReleaseChildren()
+    -- :: heading 
+    drawHead("Player Database", Arch_guiFrame)
+    -- :: Player entry log
+    -- name, level, class, rep, dsc, str, dmg, not, time
+    -- dd:SetList(guideType)
+    -- dd:SetValue(A.global.selectedGuide)
+    -- dd:SetFullWidth(true)
+    -- dd:SetCallback("OnValueChanged", function(widget, event, selection)
+    --     setFramePos()
+    --     if guide_Assoc[selection] then
+    --         A.global.selectedGuide = selection
+    --         profession = selection
+    --         guide = guide_Assoc[selection]
+    --         selectTargetLevel()
+    --         adaptResourceList()
+    --         drawRepeat()
+    --     end
+    -- end)
+    -- Arch_guiFrame:AddChild(dd)
+    -- :: draw tabs
+    -- drawBtn("Material List", 0.5, Arch_guiFrame)
+    -- drawBtn("Craft Guide", 0.5, Arch_guiFrame)
+end
+
+function Arch_playerDB_GUI()
+    drawMainFrame()
+end
+
 -- ==== Slash Handlers
 SLASH_reputation1 = "/rep"
 SlashCmdList["reputation"] = function(msg)
@@ -603,6 +657,11 @@ SLASH_not1 = "/not"
 SlashCmdList["not"] = function(msg)
     handleNote(msg)
 end
+SLASH_pdb1 = "/pdb"
+SlashCmdList["pdb"] = function(msg)
+    Arch_setGUI('PlayerDB')
+end
+
 
 -- ==== GUI
 GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getPlayerData)

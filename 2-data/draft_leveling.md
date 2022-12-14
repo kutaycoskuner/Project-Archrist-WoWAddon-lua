@@ -4,11 +4,12 @@
 # cont
 - Alliance
     - 32 stv
-    - 34-34 [Dungeon] Scarlet Librry
+    - 34-34 [dg] Scarlet Librry
         - mythology of titans
+    - 36-40 [dg] scarlet monastery
     - 40-41 stv
     - 41-42 Tanaris 
-    - 42-43 [Dungeon]zul farrak
+    - 42-43 [dg]zul farrak
         - scarab shells
         - tran'nek
         - troll temper
@@ -21,7 +22,7 @@
         - jammal an the prophet
         - essence of eranikus
     - 47-48 Searing Gorge
-    - 48-60 [dungeon] blackrock depths
+    - 48-60 [dg] blackrock depths
         - dark iron legacy ldead
         - overmaster pyron
         - the heart of the mountain
@@ -57,3 +58,15 @@
     - 70-72 utgarde keep
         - disarmanent
         - into utgarde
+    - 75-76 sholazar basin
+    - 78-80 storm peaks
+        - [q] luxurious getaway
+    - 78-80 wintergrasp
+        - a rare herbs
+        - victory in wintergrasp
+        - southern sabotage
+        - no mercy for the merciless
+    - 80+ 
+        - do quests to open all factions/reputations
+        - do heroics
+        

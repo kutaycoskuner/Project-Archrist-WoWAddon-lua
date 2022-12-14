@@ -2,9 +2,9 @@
 --------- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
 ------------------------------------------------------------------------------------------------------------------------
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
-local moduleName = 'PlayerDB';
-local moduleAlert = M .. moduleName .. ": |r";
-local module = A:GetModule(moduleName, true);
+local moduleName1, moduleName2  = 'PostureCheck', "Posture Check";
+local moduleAlert = M .. moduleName2 .. ": |r";
+local module = A:GetModule(moduleName1, true);
 if module == nil then
     return
 end
@@ -20,14 +20,12 @@ end
 
 -- ==== use case ------------------------------------------------------------------------------------------------------------
 --[[
-    posture check reminder with intervals
+
 ]]
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
-local length = 3600
-local t = length
-local f = CreateFrame("Frame")
+
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Start
@@ -39,8 +37,10 @@ end
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Local Methods
 
+
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Global Methods
+
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Main
@@ -49,15 +49,10 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Event Handlers
-f:SetScript("OnUpdate", function(self, elapsed)
-    t = t - elapsed
-    if t <= 0 then
-        print("Check your posture!")
-        RaidNotice_AddMessage(RaidBossEmoteFrame, "Check your posture!", ChatTypeInfo["RAID_BOSS_EMOTE"])
-        -- PlaySound(SOUNDKIT.ALARM_CLOCK_WARNING_2)
-        t = length
-    end
-end)
+-- function module:PLAYER_REGEN_ENABLED()
+--     -- SELECTED_CHAT_FRAME:AddMessage('You are out of combat.')
+--     isInCombat = false
+-- end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== CLI (Slash Commands)
@@ -66,13 +61,6 @@ end)
 --     handlePlayerStat(msg, 'reputation')
 -- end
 
-SLASH_POSTURECHECK1 = '/posture'
-
-function SlashCmdList.POSTURECHECK(msg, editbox)
-    print("PostureCheck timer set to " .. msg .. " minute(s).");
-    length = msg * 60
-    t = length
-end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== GUI

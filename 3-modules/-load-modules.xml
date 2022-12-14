@@ -9,4 +9,6 @@
     <Include file="Pug\-load.xml"/>
     <Include file="Announcer\-load.xml"/>
     <Include file="CraftGuides\-load.xml"/>
+    <Include file="Posture-Check\-load.xml"/>
+    <Include file="Loot-Filter\-load.xml"/>
 </Ui>

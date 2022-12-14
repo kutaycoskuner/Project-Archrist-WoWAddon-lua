@@ -10,7 +10,8 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
 Arch_spells = {
     -- ["NameOfSpell"] = {spellId, cdInSeconds, minimumLevel, iconPath}
     -- ==== Druid    
-    ["Rebirth"] = {48447, 600, 20, "spell_nature_reincarnation"},
+    -- ["Tranquility"] = {},
+    ["Rebirth"] = {26994, 600, 20, "spell_nature_reincarnation"},
     ["Innervate"] = {29166, 180, 40, "spell_nature_lightning"},
     -- ==== Priest
     -- ["Hymn of Hope"] = {64901, 360},

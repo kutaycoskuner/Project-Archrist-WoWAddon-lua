@@ -11,7 +11,9 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
         -- ==== Edibles
         ["foods"] = {
         43523,          -- 80 Conjured Mana Strudel
+        35947,          -- 75 sparkling frostcap
         35953,          -- 75 mead basted caribou
+        43518,          -- 74 conjured mana pie
         39691,          -- 70 succulent orca stew
         34759,          -- 70 smoken rockfin
         34125,          -- 70 showeltusk soup
@@ -58,7 +60,9 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
     -- ==== Drinkables
     ["drinks"] = {
         43523,          -- 80 Conjured Mana Strudel
+        41731,          -- 75 yeti milk
         33445,          -- 75 honeymint tea
+        43518,          -- 74 conjured mana pie
         34759,          -- 70 smoken rockfin
         33444,          -- 70 pungent seal whey
         44750,          -- 65 mountain water
