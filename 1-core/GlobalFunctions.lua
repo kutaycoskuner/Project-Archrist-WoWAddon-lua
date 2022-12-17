@@ -12,12 +12,26 @@ local commandColor = '|cfff7882f'
 local focusColor = '|cffbf4aa8'
 local trivialColor = '|cff767676'
 local colorEnd = '|r'
+local addonName = "[Archrist]: "
+
+
+local Arch_classColors = {
+    ["Death Knight"] = '|cffC41F3B',    
+    ["Druid"] = '|cffFF7D0A',
+    ["Hunter"] = '|cffA9D271',
+    ["Mage"] = '|cff40C7EB',
+    ["Paladin"] = '|cffF58CBA',
+    ["Priest"] = '|cffFFFFFF',
+    ["Rogue"] = '|cffFFF569',
+    ["Shaman"] = '|cff0070DE',
+    ["Warlock"] = '|cff8787ED',
+    ["Warrior"] = '|cffC79C6E',
+}
 
 -- -- ==== GUI
 -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
 
 -- ==== Functions
-
 -- :: Colors
 function Arch_addonColor(msg) return (addonColor .. tostring(msg) .. colorEnd) end
 
@@ -29,8 +43,15 @@ end
 
 function Arch_focusColor(msg) return (focusColor .. tostring(msg) .. colorEnd) end
 
+function Arch_classColor(class, msg) return (Arch_classColors[class] .. tostring(msg) .. colorEnd) end
+
 function Arch_trivialColor(msg)
     return (trivialColor .. tostring(msg) .. colorEnd)
+end
+
+-- :: addon special
+function Arch_print(msg)
+    print(Arch_addonColor(addonName) .. tostring(msg))
 end
 
 -- :: Time

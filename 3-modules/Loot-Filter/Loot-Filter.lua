@@ -51,7 +51,7 @@ end
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Local Methods
 local function filterRoll(self, event, msg)
-	if (A.global.utility.lootFilter.isEnabled == true and (string.find(msg, "has selected Greed for:"))) then --or string.find(msg, "passed") or string.find(msg, "Disenchant")
+	if (A.global.utility.lootFilter.isEnabled == true and ((string.find(msg, "selected Greed for")) or (string.find(msg, ": Greed Roll -")))) then --or string.find(msg, "passed") or string.find(msg, "Disenchant")
         return true
     else
         return false

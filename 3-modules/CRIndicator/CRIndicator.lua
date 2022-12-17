@@ -2,9 +2,13 @@
 --------- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
 ------------------------------------------------------------------------------------------------------------------------
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
-local moduleName = 'CRIndicator';
-local moduleAlert = M .. moduleName .. ": |r";
-local module = A:GetModule(moduleName, true);
+local moduleName1, moduleName2 = 'CRIndicator', "Cooldown Tracker";
+local moduleAlert = M .. moduleName2 .. ": |r";
+local module = A:GetModule(moduleName1, true);
+local aprint = Arch_print
+local mprint = function(msg)
+    print(moduleAlert .. msg)
+end
 if module == nil then
     return
 end
@@ -22,6 +26,16 @@ end
                     availableAt,        -- availability tracker
                     alive               -- if dead not available
 
+]]
+
+-- how to ---------------------------------------------------------------------------------------------------------------
+--[[
+    - to add new spells 
+        - add spell to 2-data/data_spells
+        - in here: add trackClass
+
+    - add new spell
+        - event icin yeni spell eklendiginde ayni spell in data_spells e de eklenmesi gerekiyor cooldowna erisemediginde buga giriyor
 ]]
 
 -- todo ---------------------------------------------------------------------------------------------------------------
@@ -50,6 +64,7 @@ local subFrame = {}
 local subIconFrame = {}
 local subFrameName = {}
 local subFrameCD = {}
+local guiFrames
 --
 local group = {}
 local rcFramePos
@@ -58,7 +73,7 @@ local trackClass = {
     ["Druid"] = {false, {"Innervate", "Rebirth"}},
     ["Hunter"] = {false, {"Misdirection"}},
     ["Shaman"] = {false, {"Reincarnation"}},
-    ["Warlock"] = {false, {"Soulstone Resurrection"}},
+    ["Warlock"] = {false, {"Soulstone Resurrection"}}
     -- --test
     -- ["Mage"] = {false, {"Cone of Cold"}}
     -- --test
@@ -128,7 +143,7 @@ frameTextName:SetText(baseFrameText)
 
 -- :: time color picker
 local function raidCooldowns_calcTime(time)
-    local cd = time - GetTime()
+    local cd = tonumber(time) - tonumber(GetTime())
     if cd > 1 then
         local min = math.floor(cd / 60)
         local sec = math.floor(cd % 60)
@@ -160,127 +175,138 @@ local function updateGUI()
     local tab = 0
     local fH = frameHeight
     local headerCount = 0
+    if guiFrames == nil then
+        guiFrames = group
+    end
     for spell in pairs(group) do
         headerCount = headerCount + 1
         --
-        if not subFrame[spell] then
-            subFrame[spell] = CreateFrame("frame", "subFrame", frame)
-        end
-        subFrame[spell]:ClearAllPoints()
-        subFrame[spell]:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
-        subFrame[spell]:SetSize(frameWidth, rowHeight)
-        subFrame[spell]:SetFrameStrata("Medium")
-        --
-        if not subIconFrame[spell] and showIcons then
-            subIconFrame[spell] = CreateFrame("Frame", "potato", subFrame[spell])
-            -- :: Set Position
-            subIconFrame[spell]:ClearAllPoints()
-            subIconFrame[spell]:SetPoint("RIGHT", 0, 0)
-            -- :: Frame strata ("Background", "Low", "Medium", "High", "Dialog", "Fullscreen", "Fullscreen_Dialog", "Tooltip")
-            subIconFrame[spell]:SetFrameStrata("Medium")
-            -- :: Frame strata level (0 - 20)
-            subIconFrame[spell]:SetFrameLevel(0)
-            local texture = subIconFrame[spell]:CreateTexture("Texture", "Background")
-            texture:SetTexture('Interface\\ICONS\\' .. spells[spell][4])
-            texture:SetWidth(iconDimension)
-            texture:SetHeight(iconDimension)
-            texture:SetBlendMode("Disable")
-            texture:SetDrawLayer("Border", 0)
-            local ULx, ULy, LLx, LLy, URx, URy, LRx, LRy = texture:GetTexCoord()
-            subIconFrame[spell]:SetWidth(sqrt(2) * texture:GetWidth())
-            subIconFrame[spell]:SetHeight(sqrt(2) * texture:GetHeight())
-            texture:SetTexCoord(ULx, ULy, LLx, LLy, URx, URy, LRx, LRy) -- Normal
-            -- Put the texture on the frame
-            texture:SetAllPoints(subIconFrame[spell])
-            subIconFrame[spell]:Show()
-        end
-        --
-        if not subFrameName[spell] then
-            subFrameName[spell] = subFrame[spell]:CreateFontString(nil, "ARTWORK")
-            subFrameName[spell]:SetFont("Fonts\\FRIZQT__.ttf", fontSize, "OUTLINE")
-        end
-        -- :: spell name header yerlestirme
-        subFrameName[spell]:ClearAllPoints()
-        subFrameName[spell]:SetPoint(headerPosition)
-        subFrameName[spell]:SetText(spell)
-        -- :: cd yerlestirme
-        if not subFrameCD[spell] then
-            subFrameCD[spell] = subFrame[spell]:CreateFontString(nil, "ARTWORK")
-            -- "Interface\\Icons\\INV_Misc_Rune_01"
-            subFrameCD[spell]:SetFont("Fonts\\FRIZQT__.ttf", fontSize, "OUTLINE")
-            subFrameCD[spell]:SetPoint("RIGHT")
-        end
-        --
-        tab = tab - (rowHeight * rowSizeMultiplier)
-        fH = fH + (rowHeight * rowSizeMultiplier)
-        --
-        -- :: spell e sahip kisileri yerlestirme
-        for name in pairs(group[spell]) do
-            local uniqueName = name .. spell
-            -- print(tostring(group[ii].trackSpell) .. " " .. tostring(trackClass[kk][3][yy]))
-            if not subFrame[uniqueName] then
-                subFrame[uniqueName] = CreateFrame("frame", "subFrame", subFrame[spell])
+        if group[spell] then
+            if not subFrame[spell] then
+                subFrame[spell] = CreateFrame("frame", spell .. "_subFrame", frame)
             end
-            -- TextureBasics_CreateTexture(subIconFrame[name], false)
-            subFrame[uniqueName]:ClearAllPoints()
-            subFrame[uniqueName]:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
-            subFrame[uniqueName]:SetSize(frameWidth, rowHeight)
-            -- subFrame[name]:SetFrameStrata("BACKGROUND")
+            subFrame[spell]:ClearAllPoints()
+            subFrame[spell]:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
+            subFrame[spell]:SetSize(frameWidth, rowHeight)
+            subFrame[spell]:SetFrameStrata("Medium")
             --
-            if subIconFrame[uniqueName] then
-                subIconFrame[uniqueName]:Hide()
+            if not subIconFrame[spell] and showIcons then
+                subIconFrame[spell] = CreateFrame("Frame", spell .. "_icon", subFrame[spell])
+                -- :: Set Position
+                subIconFrame[spell]:ClearAllPoints()
+                subIconFrame[spell]:SetPoint("RIGHT", 0, 0)
+                -- :: Frame strata ("Background", "Low", "Medium", "High", "Dialog", "Fullscreen", "Fullscreen_Dialog", "Tooltip")
+                subIconFrame[spell]:SetFrameStrata("Medium")
+                -- :: Frame strata level (0 - 20)
+                subIconFrame[spell]:SetFrameLevel(0)
+                local texture = subIconFrame[spell]:CreateTexture("Texture", "Background")
+                texture:SetTexture('Interface\\ICONS\\' .. spells[spell][4])
+                texture:SetWidth(iconDimension)
+                texture:SetHeight(iconDimension)
+                texture:SetBlendMode("Disable")
+                texture:SetDrawLayer("Border", 0)
+                local ULx, ULy, LLx, LLy, URx, URy, LRx, LRy = texture:GetTexCoord()
+                subIconFrame[spell]:SetWidth(sqrt(2) * texture:GetWidth())
+                subIconFrame[spell]:SetHeight(sqrt(2) * texture:GetHeight())
+                texture:SetTexCoord(ULx, ULy, LLx, LLy, URx, URy, LRx, LRy) -- Normal
+                -- Put the texture on the frame
+                texture:SetAllPoints(subIconFrame[spell])
+                subIconFrame[spell]:Show()
             end
             --
-            if not subFrameName[uniqueName] then
-                subFrameName[uniqueName] = subFrame[uniqueName]:CreateFontString(nil, "ARTWORK")
-                subFrameName[uniqueName]:SetFont("Fonts\\FRIZQT__.ttf", fontSize, "OUTLINE")
+            if not subFrameName[spell] then
+                subFrameName[spell] = subFrame[spell]:CreateFontString(nil, "ARTWORK")
+                subFrameName[spell]:SetFont("Fonts\\FRIZQT__.ttf", fontSize, "OUTLINE")
             end
-            subFrameName[uniqueName]:ClearAllPoints()
-            subFrameName[uniqueName]:SetPoint("LEFT")
-            subFrameName[uniqueName]:SetText(classColors[group[spell][name].class] .. name .. "|r") -- classColors[group[spell][name].class]
-            --
-            if not subFrameCD[uniqueName] then
-                subFrameCD[uniqueName] = subFrame[uniqueName]:CreateFontString(nil, "ARTWORK")
-                subFrameCD[uniqueName]:SetFont("Fonts\\FRIZQT__.ttf", fontSize, "OUTLINE")
-                subFrameCD[uniqueName]:SetPoint("RIGHT")
-            end
-            if group[spell][name].alive then
-                subFrameCD[uniqueName]:SetText(raidCooldowns_calcTime(group[spell][name].availableAt))
-            else
-                subFrameCD[uniqueName]:SetText("|cffE32B04 Dead |r")
+            -- :: spell name header yerlestirme
+            subFrameName[spell]:ClearAllPoints()
+            subFrameName[spell]:SetPoint(headerPosition)
+            subFrameName[spell]:SetText(spell)
+            -- :: cd yerlestirme
+            if not subFrameCD[spell] then
+                subFrameCD[spell] = subFrame[spell]:CreateFontString(nil, "ARTWORK")
+                -- "Interface\\Icons\\INV_Misc_Rune_01"
+                subFrameCD[spell]:SetFont("Fonts\\FRIZQT__.ttf", fontSize, "OUTLINE")
+                subFrameCD[spell]:SetPoint("RIGHT")
             end
             --
             tab = tab - (rowHeight * rowSizeMultiplier)
             fH = fH + (rowHeight * rowSizeMultiplier)
+            --
+            -- :: spell e sahip kisileri yerlestirme
+            for name in pairs(group[spell]) do
+                if group[spell][name] then
+                    local uniqueName = name .. spell
+                    -- print(tostring(group[ii].trackSpell) .. " " .. tostring(trackClass[kk][3][yy]))
+                    if not subFrame[uniqueName] then
+                        subFrame[uniqueName] = CreateFrame("frame", uniqueName .. "subFrame", subFrame[spell])
+                    end
+                    -- TextureBasics_CreateTexture(subIconFrame[name], false)
+                    subFrame[uniqueName]:ClearAllPoints()
+                    subFrame[uniqueName]:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, tab)
+                    subFrame[uniqueName]:SetSize(frameWidth, rowHeight)
+                    -- subFrame[name]:SetFrameStrata("BACKGROUND")
+                    --
+                    if subIconFrame[uniqueName] then
+                        subIconFrame[uniqueName]:Hide()
+                    end
+                    --
+                    if not subFrameName[uniqueName] then
+                        subFrameName[uniqueName] = subFrame[uniqueName]:CreateFontString(nil, "ARTWORK")
+                        subFrameName[uniqueName]:SetFont("Fonts\\FRIZQT__.ttf", fontSize, "OUTLINE")
+                    end
+                    subFrameName[uniqueName]:ClearAllPoints()
+                    subFrameName[uniqueName]:SetPoint("LEFT")
+                    subFrameName[uniqueName]:SetText(classColors[group[spell][name].class] .. name .. "|r") -- classColors[group[spell][name].class]
+                    --
+                    if not subFrameCD[uniqueName] then
+                        subFrameCD[uniqueName] = subFrame[uniqueName]:CreateFontString(nil, "ARTWORK")
+                        subFrameCD[uniqueName]:SetFont("Fonts\\FRIZQT__.ttf", fontSize, "OUTLINE")
+                        subFrameCD[uniqueName]:SetPoint("RIGHT")
+                    end
+                    if group[spell][name].alive then
+                        subFrameCD[uniqueName]:SetText(raidCooldowns_calcTime(group[spell][name].availableAt))
+                    else
+                        subFrameCD[uniqueName]:SetText("|cffE32B04 Dead |r")
+                    end
+                    --
+                    subFrameCD[uniqueName]:Show()
+                    tab = tab - (rowHeight * rowSizeMultiplier)
+                    fH = fH + (rowHeight * rowSizeMultiplier)
+                end
+            end
         end
     end
 
     -- :: Artik varolmayan isimleri temizle
-    for spell in pairs(group) do
+    for spell in pairs(guiFrames) do
         -- :: kisi ismi
-        if not A.global.assist.groupCooldown.spells[spell] then
-            subFrame[spell]:Hide()
-            group[spell] = nil
-        end
-        if group[spell] ~= nil then
-            subFrame[spell]:Show()
-            for name in pairs(group[spell]) do
+        for name in pairs(guiFrames[spell]) do
+            local uniqueName = name .. spell
+            if group[spell] == nil then
+                -- :: kisi cdsi
+                subFrameName[uniqueName]:SetText("")
+                subFrameCD[uniqueName]:SetText("")
+            else
                 if group[spell][name] == nil then
                     -- :: kisi cdsi
-                    local uniqueName = name .. spell
-                    subFrameCD[uniqueName]:Hide()
+                    subFrameName[uniqueName]:SetText("")
+                    subFrameCD[uniqueName]:SetText("")
                 end
             end
         end
+        if group[spell] == nil or (not A.global.assist.groupCooldown.spells[spell]) then
+            if subFrame[spell] then
+                subFrameName[spell]:SetText("")
+            end
+        end
+
     end
 
     -- :: grupta kac spell var?
     local size = 0
     for keys in pairs(group) do
         size = size + 1
-        -- for name in pairs(group[keys]) do
-        --     print(keys, name, size)
-        -- end
     end
 
     -- :: frame boyutu 1 den kucukse base e cek
@@ -292,8 +318,9 @@ local function updateGUI()
         fH = fH - (((rowHeight * rowSizeMultiplier) / 2) * (3 / 2))
     end
 
-    frame:SetSize(frameWidth, fH) -- 180 50
-
+    frame:SetSize(frameWidth, fH)
+    -- :: bu gruptan cikarilan itemlari gui uzerinden silmek icin lazim. gu
+    guiFrames = group
 end
 
 -- :: Frame i yerlestir ve sakla
@@ -329,7 +356,7 @@ local function addPerson(name, playerClass, spell)
         group[spell][name] = {
             class = playerClass, -- :: class color icin
             isAvailable = true, -- :: kullanim musait mi
-            availableAt = GetTime(), -- :: ne zaman musait olacak
+            availableAt = tonumber(GetTime()), -- :: ne zaman musait olacak
             alive = true
         }
         A.global.assist.groupCooldown.group = group
@@ -440,6 +467,13 @@ local function scanGroup()
             end
         end
     end
+    -- :: spell deaktivasyon
+    for spell in pairs(group) do
+        if not A.global.assist.groupCooldown.spells[spell] then
+            group[spell] = nil
+        end
+    end
+    -- group["Misdirection"]["Soyut"] = false
     --
     A.global.assist.groupCooldown.group = group
     updateGUI()
@@ -558,9 +592,12 @@ local function startCooldown(srcName, spellID, spellName)
                 if group[spell][name].isAvailable ~= nil then
                     group[spell][name].isAvailable = false
                 end
-                if group[spell][name].availableAt ~= nil then
-                    group[spell][name].availableAt = GetTime() + getSpellCooldown(spellName)
+                if group[spell][name].availableAt ~= nil and getSpellCooldown(spellName) then
+                    -- print(GetTime(), getSpellCooldown(spellName))
+                    group[spell][name].availableAt = tonumber(GetTime()) + tonumber(getSpellCooldown(spellName))
                     -- print(group[spell][name].availableAt)
+                else
+                    aprint("cannot update interface")
                 end
                 break2 = true
                 break
@@ -609,95 +646,8 @@ end
 
 -- ==== Start
 function module:scanGroup()
-    if group == nil or group == {} then
-        group = A.global.assist.groupCooldown.group
-    end
-    -- :: not in raid
-    if not (UnitInRaid('player') or UnitInParty('player')) then
-        addSelfOnly()
-        -- :: gruptaysa
-    else
-        for ii = 1, GetNumGroupMembers() do
-
-            local druidName, rank, subgroup, level, vclass
-            if UnitInRaid('player') then
-                druidName, _, _, level, vclass = GetRaidRosterInfo(ii)
-            else
-                druidName = UnitName('party' .. ii)
-                level = UnitLevel('party' .. ii)
-                vclass = UnitClass('party' .. ii)
-                if druidName == nil then
-                    druidName = UnitName('player')
-                    level = UnitLevel('player')
-                    vclass = UnitClass('player')
-                end
-            end
-            for class, param in pairs(trackClass) do
-                if tostring(vclass) == tostring(class) then
-                    -- :: check if already exists to avoid duplicate
-                    local isExists = false
-                    for spell in pairs(group) do
-                        for name in pairs(group[spell]) do
-                            if name == druidName then
-                                isExists = true
-                                break
-                            end
-                        end
-                        if isExists then
-                            break
-                        end
-                    end
-                    -- :: if not exists add
-                    if isExists == false then
-                        for kk = 1, #param[2] do
-                            local spell = param[2][kk]
-                            -- :: takip edilen spell mi
-                            if A.global.assist.groupCooldown.spells[spell] then
-                                addPerson(druidName, vclass, spell)
-                            end
-                        end
-                    end
-                    isExists = false
-                end
-            end
-        end
-    end
-
-    -- :: Artik raidde olmayanlari cikar
-    local stillIn = false
-    for yy = 1, GetNumGroupMembers() do
-        local druidName
-        if UnitInRaid('player') then
-            druidName = GetRaidRosterInfo(yy)
-        elseif UnitInParty('player') then
-            druidName = UnitName('party' .. yy)
-        else
-            druidName = UnitName('player')
-        end
-        -- :: var mi kontrol et
-        for spell in pairs(group) do
-            for name in pairs(group[spell]) do
-                if name == druidName then
-                    stillIn = true
-                end
-            end
-        end
-        -- :: yoksa adami bul cikar
-        if not stillIn then
-            for spell in pairs(group) do
-                for name in pairs(group[spell]) do
-                    if druidName == name then
-                        group[spell][name] = nil
-                    end
-                end
-            end
-        end
-    end
-    --
-    A.global.assist.groupCooldown.group = group
-    updateGUI()
+    scanGroup()
 end
-
 
 function module:Initialize()
     self.initialized = true
@@ -782,43 +732,47 @@ function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBA
     -- :: Raidde degilse rebirth listesini sifirliyor
     -- if not UnitInRaid('player') then group = {} deadCheck() return end
     -- :: Dead
-    if eventType == "UNIT_DIED" then
-        setAlive(dstName, false)
+    if eventType == "UNIT_RESURRECT" then
+        setAlive(dstName, true)
     end
+    -- print(arg2) --,arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)
+    -- if eventType == "UNIT_DIED" then
+    -- setAlive(dstName, false)
+    -- end
     -- :: Rebirth cast edilmis ise
     if spellName == "Rebirth" and eventType == "SPELL_RESURRECT" then -- 48477(rebirth)
         setAlive(dstName, true)
         startCooldown(srcName, spellId, spellName)
     end
     -- :: Innervate
-    if spellId == 29166 and eventType == "SPELL_CAST_SUCCESS" then
+    if spellName == "Innervate" and eventType == "SPELL_CAST_SUCCESS" then
         setAlive(dstName, true)
         startCooldown(srcName, spellId, spellName)
     end
     -- :: Hunter Misdirection
-    if spellId == 34477 and eventType == "SPELL_CAST_SUCCESS" then
+    if spellName == "Misdirection" and eventType == "SPELL_CAST_SUCCESS" then
         setAlive(dstName, true)
         startCooldown(srcName, spellId, spellName)
-    end
+    end 
     -- :: Soulstone Resurrection
-    if spellId == 47883 then
+    if spellName == "Soulstone Resurrection" then
         setAlive(dstName, true)
         startCooldown(srcName, spellId, spellName)
     end
 
     -- test shaman
-    if spellName == "Lesser Healing Wave" and eventType == "SPELL_HEAL" then -- shaman lesser healing wave
-        startCooldown(srcName, spellId, spellName)
-    end
+    -- if spellName == "Lesser Healing Wave" and eventType == "SPELL_HEAL" then -- shaman lesser healing wave
+    --     startCooldown(srcName, spellId, spellName)
+    -- end
     -- test shaman end
 
     -- test mage
-    if spellName == "Cone of Cold" then -- shaman lesser healing wave
-        -- todo: testten sonra scan group u cikar
-        scanGroup()
-        setAlive(srcName, true)
-        startCooldown(srcName, spellId, spellName)
-    end
+    -- if spellName == "Cone of Cold" then -- shaman lesser healing wave
+    --     -- todo: testten sonra scan group u cikar
+    --     scanGroup()
+    --     setAlive(srcName, true)
+    --     startCooldown(srcName, spellId, spellName)
+    -- end
     -- test mage end
 
     -- -- :: Checktime if some cd exists
@@ -831,6 +785,19 @@ function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBA
 end
 
 -- ==== Scan on group changes
+function module:CHAT_MSG_SYSTEM(_, arg1)
+    if string.find(arg1, "You leave the group") then
+        scanGroup()
+    elseif string.find(arg1, "leaves the") then
+        scanGroup()
+    elseif string.find(arg1, "joins the") then
+        scanGroup()
+    elseif string.find(arg1, "has been disbanded") then
+        scanGroup()
+    elseif string.find(arg1, "Party converted to Raid") then
+        scanGroup()
+    end
+end
 function module:PLAYER_REGEN_ENABLED()
     scanGroup()
 end
@@ -856,6 +823,9 @@ function module:GROUP_JOINED()
     scanGroup()
 end
 function module:GROUP_LEFT()
+    scanGroup()
+end
+function module:CHAT_MSG_BG_SYSTEM_NEUTRAL()
     scanGroup()
 end
 
@@ -886,8 +856,10 @@ end
 local function InitializeCallback()
     module:Initialize()
     -- :: Register some events
+    module:RegisterEvent("CHAT_MSG_BG_SYSTEM_NEUTRAL")
     module:RegisterEvent("PLAYER_REGEN_DISABLED")
     module:RegisterEvent("PLAYER_REGEN_ENABLED")
+    module:RegisterEvent("CHAT_MSG_SYSTEM")
     module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     --
     -- module:RegisterEvent("PARTY_MEMBERS_CHANGED")

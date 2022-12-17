@@ -193,6 +193,9 @@ https://www.lua.org/pil/20.2.html
     - About
 
 
+- concepts
+    - guid: globally unique identifier
+
 - serialize | deserialize
     - dosyaya yazarken memoryden alip disariya yazmaya serialize | yeniden okuyup memory de kendi dtasini cekmeye deserialize deniyor
 

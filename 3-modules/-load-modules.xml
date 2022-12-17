@@ -11,4 +11,6 @@
     <Include file="CraftGuides\-load.xml"/>
     <Include file="Posture-Check\-load.xml"/>
     <Include file="Loot-Filter\-load.xml"/>
+    <Include file="GroupOrganizer\-load.xml"/>
+    <Include file="DatabaseAdapter\-load.xml"/>
 </Ui>

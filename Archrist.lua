@@ -1,5 +1,5 @@
 -- ==== Credit
--- This Addon is created by inspecting ElvUI, Spy, PostureCheck by Sir_Onionknight
+-- This Addon is created by inspecting ElvUI, Spy, PostureCheck by Sir_Onionknight, tacotip
 -- ==== Create Addon
 local AceAddon, AceAddonMinor = LibStub("AceAddon-3.0")
 local CallbackHandler = LibStub("CallbackHandler-1.0")
@@ -21,7 +21,8 @@ Addon.privateVars = {profile = {}} -- Defaults
 Addon.options = {type = "group", name = AddonName, args = {}}
 Addon.peopleDF = {profile = {}}
 Addon.lootDF = {profile = {}, global = {}}
-ArchModuleInfo = "|cff00c8ff[Archrist]|r |cff00efff"
+Addon.ArchModuleInfo = "|cff00c8ff[Archrist]|r |cff00efff"
+
 
 -- :: Create global addon module
 System[1] = Addon;
@@ -31,17 +32,10 @@ System[4] = Addon.DF.profile or {}; -- :: character profile
 System[5] = Addon.DF.global; -- :: global profile 
 System[6] = Addon.peopleDF.global;
 System[7] = Addon.lootDF.global;
-System[8] = ArchModuleInfo;
+System[8] = Addon.ArchModuleInfo;
 System[9] = AddonName;
 _G[AddonName] = System;
 
-------------------------------------------------------------------------------------------------------------------------
--- -- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
--- local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
--- local moduleName = 'raidWarnings';
--- local moduleAlert = M .. moduleName .. ": |r";
--- local module = A:GetModule(moduleName);
-------------------------------------------------------------------------------------------------------------------------
 
 -- self.private = self.charSettings.profile
 -- self.db = self.data.profile
@@ -52,9 +46,13 @@ _G[AddonName] = System;
 
 -- test end
 
+-- :: expansion
+Addon.Wrath = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+
 -- ==== Instantiation
 -- :: Elaborate Libraries
 do
+    -- assert(LibStub:GetLibrary("LibClassicInspector", true), "Archrist requires LibClassicInspector")
     Addon.Libs = {}
     Addon.LibsMinor = {}
     function Addon:AddLib(name, major, minor)
@@ -70,26 +68,31 @@ do
 
     Addon:AddLib("AceAddon", AceAddon, AceAddonMinor)
     Addon:AddLib("AceDB", "AceDB-3.0")
+    Addon:AddLib("Detours", "LibDetours-1.0")
+    Addon:AddLib("LCI", "LibClassicInspector")
+    -- Addon:AddLib('LCS', 'LibClassicSpecs-ElvUI')
 end
+
 
 do
     -- :: Create Modules
     -- testing
     Addon.test = Addon:NewModule("test", "AceHook-3.0", "AceEvent-3.0")
     -- testing end
-    -- todo External Memory
+    -- :: External Memory
     Addon.todoList = Addon:NewModule("TodoList", "AceHook-3.0", "AceEvent-3.0")
     Addon.playerDB = Addon:NewModule("PlayerDB", "AceHook-3.0", "AceEvent-3.0")
-    -- todo Guide
+    -- :: Guide
     Addon.craftGuides = Addon:NewModule("CraftGuides", "AceHook-3.0", "AceEvent-3.0")
-    -- todo Assistance
+    -- :: Assistance
     Addon.cRIndicator = Addon:NewModule("CRIndicator", "AceHook-3.0", "AceEvent-3.0")
     Addon.pug = Addon:NewModule("Pug", "AceHook-3.0", "AceEvent-3.0")
     Addon.announcer = Addon:NewModule("Announcer", "AceHook-3.0", "AceEvent-3.0")
-    -- todo Utility
+    Addon.groupOrganizer = Addon:NewModule("GroupOrganizer", "AceHook-3.0", "AceEvent-3.0")
+    -- :: Utility
     Addon.lootMsgFilter = Addon:NewModule("LootFilter")
     Addon.postureCheck = Addon:NewModule("PostureCheck")
-    -- todo Extended Macros
+    -- :: Extended Macros
     Addon.macro = Addon:NewModule("Macro")
     Addon.milling = Addon:NewModule("Milling", "AceEvent-3.0")
     Addon.prospecting = Addon:NewModule("Prospecting", "AceEvent-3.0")
@@ -97,9 +100,11 @@ do
     Addon.eatDrink = Addon:NewModule("EatDrink", "AceEvent-3.0")
     Addon.feedPet = Addon:NewModule("FeedPet", "AceEvent-3.0")
     Addon.autoMount = Addon:NewModule("AutoMount")
-    -- todo architectural
+    -- :: architectural
     Addon.help = Addon:NewModule("Help", "AceHook-3.0", "AceEvent-3.0")
     Addon.archGUI = Addon:NewModule("ArchGUI", "AceHook-3.0", "AceEvent-3.0")
+    -- :: adapters
+    Addon.adapterDatabase = Addon:NewModule("DatabaseAdapter", "AceHook-3.0", "AceEvent-3.0")
     -- todo other
     --:: disabled
     -- Addon.deleteAucMail = Addon:NewModule("DeleteAucMail", "AceHook-3.0", "AceEvent-3.0")

@@ -2,9 +2,13 @@
 --------- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
 ------------------------------------------------------------------------------------------------------------------------
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
-local moduleName = 'PlayerDB';
-local moduleAlert = M .. moduleName .. ": |r";
-local module = A:GetModule(moduleName, true);
+local moduleName1, moduleName2 = 'PlayerDB', "Player Database";
+local moduleAlert = M .. moduleName2 .. ": |r";
+local module = A:GetModule(moduleName1, true);
+local aprint = Arch_print
+local mprint = function(msg)
+    print(moduleAlert .. msg)
+end
 if module == nil then
     return
 end
@@ -55,6 +59,10 @@ player oyunda degilse /who isim kontrolu yapilamiyor bu durumda playeri yazarak 
 ------------------------------------------------------------------------------------------------------------------------
 
 -- ==== Variables
+local cCol = Arch_commandColor
+local fCol = Arch_focusColor
+local classCol = Arch_classColor
+
 -- !! IMPORTANT GLOBAL
 local Raidscore
 local mod = 'patates' -- rep / not
@@ -63,14 +71,29 @@ local isPlayerExists = false
 local isInCombat = false
 local realmName = GetRealmName()
 local factionName = UnitFactionGroup('player')
-local focusColor = Arch_focusColor
 local quantitative = {'reputation', 'strategy', 'discipline', 'attendance', 'damage'}
 local lastBlacklist
 
 local drawMainFrame = nil
-
-
-
+--
+local impressions = {
+    ["reputation"] = 0,
+    ["strategy"] = 0,
+    ["attendance"] = 0,
+    ["discipline"] = 0,
+    ["damage"] = 0,
+    ["note"] = ""
+}
+local organization = {
+    ["role"] = "",
+    ["tasks"] = {}
+}
+local category = "impressions"
+local categories = {
+    ["impressions"] = impressions,
+    ["organization"] = organization
+}
+--
 -- ==== Start
 function module:Initialize()
     self.Initialized = true
@@ -108,46 +131,32 @@ local function fixArgs(msg)
 
 end
 
--- :: Create Player Entry
-local function archAddPlayer(player)
-    A.people[realmName][player] = {
-        reputation = 0,
-        discipline = 0,
-        strategy = 0,
-        damage = 0,
-        attendance = 0,
-        -- gearscore = 0,
-        note = ''
-    }
-    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. ' New player (' .. player .. ') added in your database')
-end
-
 -- :: Calculate raidscore
-function Archrist_PlayerDB_calcRaidScore(player)
+-- function Archrist_PlayerDB_calcRaidScore(player)
 
-    if not A.people[realmName][player] then
-        archAddPlayer(player)
-    end
-    local rep = (tonumber(A.people[realmName][player].reputation) * 250)
-    local dsc = (tonumber(A.people[realmName][player].discipline) * 300)
-    local str = (tonumber(A.people[realmName][player].strategy) * 300)
-    local dmg = (tonumber(A.people[realmName][player].damage) * 200)
-    local att = (tonumber(A.people[realmName][player].attendance) * 100)
-    local gsr
-    local raidScore = rep + dsc + str + dmg + att
+--     if not A.people[realmName][player][category] then
+--         archAddPlayer(player)
+--     end
+--     local rep = (tonumber(A.people[realmName][player][category].reputation) * 250)
+--     local dsc = (tonumber(A.people[realmName][player][category].discipline) * 300)
+--     local str = (tonumber(A.people[realmName][player][category].strategy) * 300)
+--     local dmg = (tonumber(A.people[realmName][player][category].damage) * 200)
+--     local att = (tonumber(A.people[realmName][player][category].attendance) * 100)
+--     local gsr
+--     local raidScore = rep + dsc + str + dmg + att
 
-    if GameTooltip:GetUnit() then
-        local Name = GameTooltip:GetUnit();
-        -- if GearScore_GetScore(Name, "mouseover") then
-            -- gsr = 0 --GearScore_GetScore(Name, "mouseover")
-            -- print(gsr)
-            -- print(raidScore + gsr)
-            -- return (raidScore + gsr)
-        -- end
-    end
+--     if GameTooltip:GetUnit() then
+--         local Name = GameTooltip:GetUnit();
+--         -- if GearScore_GetScore(Name, "mouseover") then
+--         -- gsr = 0 --GearScore_GetScore(Name, "mouseover")
+--         -- print(gsr)
+--         -- print(raidScore + gsr)
+--         -- return (raidScore + gsr)
+--         -- end
+--     end
 
-    return raidScore
-end
+--     return raidScore
+-- end
 
 -- :: present player note
 function Archrist_PlayerDB_getNote(player)
@@ -155,7 +164,7 @@ function Archrist_PlayerDB_getNote(player)
         local Name = GameTooltip:GetUnit();
         if Name ~= UnitName('player') then
             if A.people[realmName][Name] then
-                local note = A.people[realmName][Name].note
+                local note = A.people[realmName][Name][category].note
                 if note ~= '' then
                     GameTooltip:AddLine(note, 0.5, 0.5, 0.5, true)
                 end
@@ -192,9 +201,11 @@ local function Archrist_PlayerDB_getPlayerData()
         if Name ~= UnitName('player') then
             if A.people[realmName][Name] then
                 for ii = 1, #quantitative do
-                    local data = A.people[realmName][Name][quantitative[ii]]
-                    if data ~= 0 then
-                        GameTooltip:AddLine(quantitative[ii] .. ' ' .. data, 0.5, 0.5, 0.5, true)
+                    if A.people[realmName][Name][quantitative[ii]] ~= nil then
+                        local data = A.people[realmName][Name][category][quantitative[ii]]
+                        if data ~= 0 then
+                            GameTooltip:AddLine(quantitative[ii] .. ' ' .. data, 0.5, 0.5, 0.5, true)
+                        end
                     end
                 end
             end
@@ -203,26 +214,26 @@ local function Archrist_PlayerDB_getPlayerData()
 end
 -- :: Get Player Stats
 local function archGetPlayer(player)
-    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor(player))
+    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. fCol(player))
     factionName = UnitFactionGroup('player')
     for yy = 1, #quantitative do
-        if A.people[realmName][player][quantitative[yy]] ~= 0 then
+        if A.people[realmName][player][category][quantitative[yy]] ~= 0 then
             SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. quantitative[yy] .. ': ' ..
-                                               A.people[realmName][player][quantitative[yy]])
+                                               A.people[realmName][player][category][quantitative[yy]])
         end
     end
     --
-    if A.people[realmName][player].note ~= '' then
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. A.people[realmName][player].note)
+    if A.people[realmName][player][category].note ~= '' then
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. A.people[realmName][player][category].note)
     end
 end
 
 -- ==== Main 
 local function checkStatLimit(player, stat)
-    if A.people[realmName][player][stat] >= 5 then
-        A.people[realmName][player][stat] = 5
-    elseif A.people[realmName][player][stat] <= -5 then
-        A.people[realmName][player][stat] = -5
+    if A.people[realmName][player][category][stat] >= 5 then
+        A.people[realmName][player][category][stat] = 5
+    elseif A.people[realmName][player][category][stat] <= -5 then
+        A.people[realmName][player][category][stat] = -5
     end
 end
 
@@ -260,15 +271,15 @@ local function handleNote(msg)
     -- :: Burda target oncelikli
     if UnitExists('target') and UnitIsPlayer('target') and UnitName('target') ~= UnitName('player') then
         if A.people[realmName][UnitName('target')] == nil then
-            archAddPlayer(UnitName('target'))
+            local p_name, p_server, guid, p_class = identifyPlayer("target")
+            arch_addPersonToDatabase(p_name, p_server)
         end
-        A.people[realmName][UnitName('target')].note = msg
+        A.people[realmName][UnitName('target')][category].note = msg
         if msg ~= '' then
-            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor(UnitName('target')) .. ': ' ..
+            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. fCol(UnitName('target')) .. ': ' ..
                                                A.people[realmName][UnitName('target')].note)
         else
-            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Note for ' .. focusColor(UnitName('target')) ..
-                                               ' has been pruned.')
+            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Note for ' .. fCol(UnitName('target')) .. ' has been pruned.')
         end
     elseif UnitName('target') == UnitName('player') then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'You cannot add note for your own character')
@@ -290,15 +301,15 @@ local function addNote(args)
     local note = table.concat(args, ' ')
 
     if A.people[realmName][name] == nil then
-        archAddPlayer(name)
+        aprint("cannot find " .. fCol(args) .. " in your database.")
     end
     A.people[realmName][name].note = note
 
     if args[1] then
         -- print(note)
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor(name) .. ': ' .. A.people[realmName][name].note)
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. fCol(name) .. ': ' .. A.people[realmName][name][category].note)
     else
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Note for ' .. focusColor(name) .. ' has been pruned.')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Note for ' .. fCol(name) .. ' has been pruned.')
     end
 end
 
@@ -314,18 +325,24 @@ local function handlePlayerStat(msg, parameter, pass)
             C_FriendList.SendWho('n-"' .. args[1] .. '"')
         else
             -- :: Target varsa
-            if UnitExists('target') and UnitName('target') ~= UnitName('player') and UnitIsPlayer('target') then
-                -- factionName = UnitFactionGroup('target')
-                if A.people[realmName][UnitName('target')] == nil then
-                    archAddPlayer(UnitName('target'))
-                end
+            if UnitExists('target') then
+                local p_name, p_server, guid, p_class = identifyPlayer("target")
+                if UnitIsPlayer('target') then
+                    if UnitName('target') ~= UnitName('player') then
+                        if A.people[realmName][UnitName('target')] == nil then
+                            arch_addPersonToDatabase(p_name, p_server)
+                        end
 
-                if type(tonumber(args[1])) == "number" then
-                    A.people[realmName][UnitName('target')][parameter] = tonumber(
-                        A.people[realmName][UnitName('target')][parameter]) + tonumber(args[1])
-                    checkStatLimit(UnitName('target'), parameter)
-                    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor(UnitName('target')) .. ' ' .. parameter ..
-                                                       ' is now ' .. A.people[realmName][UnitName('target')][parameter])
+                        if type(tonumber(args[1])) == "number" then
+                            arch_addPersonToDatabase(p_name, p_server)
+                            A.people[realmName][UnitName('target')][category][parameter] = tonumber(
+                                A.people[realmName][UnitName('target')][category][parameter]) + tonumber(args[1])
+                            checkStatLimit(UnitName('target'), parameter)
+                            SELECTED_CHAT_FRAME:AddMessage(
+                                moduleAlert .. fCol(UnitName('target')) .. ' ' .. parameter .. ' is now ' ..
+                                    A.people[realmName][UnitName('target')][category][parameter])
+                        end
+                    end
                 end
             end
             -- :: not varsa   
@@ -347,7 +364,8 @@ local function handlePlayerStat(msg, parameter, pass)
             factionName = UnitFactionGroup('target')
             -- :: Create person if not already exists
             if A.people[realmName][UnitName('target')] == nil then
-                archAddPlayer(UnitName('target'))
+                local p_name, p_server, guid, p_class = identifyPlayer("target")
+                arch_addPersonToDatabase(p_name, p_server)
             else
                 archGetPlayer(UnitName('target'))
             end
@@ -358,15 +376,15 @@ end
 -- :: add player stat [who da kullaniliyor] args[1] = player name args[]
 local function addPlayerStat(args, parameter)
     if A.people[realmName][args[1]] == nil then
-        archAddPlayer(args[1])
+        aprint("cannot find " .. fCol(args) .. " in your database.")
     end
-    if args[2] then
+    if args[2] ~= nil then
         if type(tonumber(args[2])) == "number" then
-            A.people[realmName][args[1]][parameter] = tonumber(A.people[realmName][args[1]][parameter]) +
-                                                          tonumber(args[2])
+            A.people[realmName][args[1]][category][parameter] = tonumber(
+                A.people[realmName][args[1]][category][parameter]) + tonumber(args[2])
             checkStatLimit(args[1], parameter)
             SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. args[1] .. ' ' .. parameter .. ' is now ' ..
-                                               A.people[realmName][args[1]][parameter])
+                                               A.people[realmName][args[1]][category][parameter])
             -- test
             if args[3] then
                 table.remove(args, 2)
@@ -387,7 +405,7 @@ end
 local function groupRepCheck(msg)
     -- do return end
     local groupMembers = 0
-    groupRoster = {'player','party1', 'party2', 'party3', 'party4'}
+    groupRoster = {'player', 'party1', 'party2', 'party3', 'party4'}
     local groupType = nil
     if UnitInRaid('player') then
         groupType = "raid"
@@ -414,16 +432,26 @@ local function groupRepCheck(msg)
             -- :: control break
             if person ~= nil then
                 if A.people[realmName][person] == nil then
-                    archAddPlayer(person)
+                    local p_name, p_server, guid, p_class = identifyPlayer(ii)
+                    arch_addPersonToDatabase(p_name, p_server)
                 else
                     for yy = 1, #quantitative do
-                        if A.people[realmName][person][quantitative[yy]] < 0 then
-                            table.insert(blacklist, person)
-                            break
-                        elseif A.people[realmName][person][quantitative[yy]] > 0 then
-                            if Archrist_PlayerDB_calcRaidScore(person) > 0 then
-                                table.insert(whitelist, person)
-                                break
+                        if A.people[realmName][person] == nil then
+                            local p_name, p_server, guid, p_class = identifyPlayer(ii)
+                            arch_addPersonToDatabase(p_name, p_server)
+                        end
+                        local quantitativeP = A.people[realmName][person][category][quantitative[yy]]
+                        if quantitativeP ~= nil then
+                            if type(quantitative[yy]) == "number" then
+                                if A.people[realmName][person][category][quantitative[yy]] < 0 then
+                                    table.insert(blacklist, person)
+                                    break
+                                elseif A.people[realmName][person][category][quantitative[yy]] > 0 then
+                                    -- if Archrist_PlayerDB_calcRaidScore(person) > 0 then
+                                    --     table.insert(whitelist, person)
+                                    --     break
+                                    -- end
+                                end
                             end
                         end
                     end
@@ -439,7 +467,7 @@ local function groupRepCheck(msg)
                     checkWhitelist = checkWhitelist .. ', '
                 end
             end
-            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor('Whitelist: ') .. checkWhitelist)
+            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. fCol('Whitelist: ') .. checkWhitelist)
         end
         --
         local checkBlacklist = ''
@@ -451,13 +479,13 @@ local function groupRepCheck(msg)
                     checkBlacklist = checkBlacklist .. ', '
                 end
             end
-            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor('Blacklist: ') .. checkBlacklist)
+            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. fCol('Blacklist: ') .. checkBlacklist)
             -- return
         else
             SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'nobody in raid in your blacklist')
         end
-         -- :: add raidwise reputation
-         if msg ~= nil and msg ~= '' then
+        -- :: add raidwise reputation
+        if msg ~= nil and msg ~= '' then
             if type(tonumber(msg)) == "number" then
                 for ii = 1, groupMembers do
                     -- local person = GetRaidRosterInfo(ii)
@@ -543,11 +571,12 @@ function module:RAID_ROSTER_UPDATE()
         local whitelist = {}
         for ii = 1, GetNumRaidMembers() do
             local person = GetRaidRosterInfo(ii)
+            local p_name, p_server, guid, p_class = identifyPlayer(ii)
             if A.people[realmName][person] == nil then
-                archAddPlayer(person)
+                arch_addPersonToDatabase(p_name, p_server)
             else
                 for yy = 1, #quantitative do
-                    if A.people[realmName][person][quantitative[yy]] < 0 then
+                    if A.people[realmName][person][category][quantitative[yy]] < 0 then
                         table.insert(blacklist, person)
                         break
                     end
@@ -564,7 +593,7 @@ function module:RAID_ROSTER_UPDATE()
                 end
             end
             if lastBlacklist ~= checkBlacklist then
-                SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. focusColor('Warning Blacklist: ') .. checkBlacklist)
+                SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. fCol('Warning Blacklist: ') .. checkBlacklist)
                 lastBlacklist = checkBlacklist
             end
             -- return
@@ -661,7 +690,6 @@ SLASH_pdb1 = "/pdb"
 SlashCmdList["pdb"] = function(msg)
     Arch_setGUI('PlayerDB')
 end
-
 
 -- ==== GUI
 GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getPlayerData)

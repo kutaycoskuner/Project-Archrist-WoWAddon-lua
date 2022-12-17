@@ -19,12 +19,15 @@ Arch_spells = {
     -- ==== Warlocck
     ["Soulstone Resurrection"] = {47883, 900, 18, "spell_shadow_soulgem"},
     -- ==== Hunter
-    ["Misdirection"] = {34477,30, 70, "ability_hunter_misdirection"},
+    ["Misdirection"] = {34477, 30, 70, "ability_hunter_misdirection"},
     -- ==== Shaman
     -- ["Earthbind Totem"] = {2484, 15},
     ["Reincarnation"] = {20608, 1800, 30, "spell_nature_reincarnation"},
     -- ==== mage
     -- test
-    ["Cone of Cold"] = {10159, 10, 26, "spell_frost_glacier"},
+    -- ["Cone of Cold"] = {10159, 10, 26, "spell_frost_glacier"},
     -- test
+    -- ==== rogue
+    -- tricks of the trade
+    -- ["Cone of Cold"] = {10159, 10, 26, "spell_frost_glacier"},
 }

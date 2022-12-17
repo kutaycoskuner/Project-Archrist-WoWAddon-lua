@@ -46,6 +46,8 @@
 - [x] 09-Dec-2022 09-Dec-2022 add: automount macro
 - [p] 10-Dec-2022 09-Dec-2022 add: milling, prospecting, disentchanting macrolari icin ui customizability ekle
 - [x] 14-Dec-2022 13-Dec-2022 add: CRIndicator: inteface options
+- [x] 16-Dec-2022 14-Dec-2022 add: CRIndicator icin belli bosslarda raid inform "Taunt Shocket!"
+- [x] 16-Dec-2022 14-Dec-2022 add: raid role categorization | heal, tank, mdps, rdps, interrupt groups
 - 26-Nov-2022 ler: addon communication ayni addona sahip baska biriyle iletisim kurmayi ogren veri paylas
 - 26-Nov-2022 ler: minimap / map marking
 - 09-Nov-2022 add: todo resting event api ekle : now its good time to check todo list
@@ -59,6 +61,11 @@
 - 24-Nov-2022 add: minimap icon
 - 02-Dec-2022 add: options frame with minimap icon
 - 13-Dec-2022 add: 5 metre yaricap icinde kac mob var?
+- 14-Dec-2022 add: trinket tracker for arena
+- 14-Dec-2022 add: automount interface options
+- 14-Dec-2022 add: Procedural reminders | wear your tabard, repair, get water
+- 17-Dec-2022 add: Cleaning / refactoring / help functions / ui / accessibility
+
 
 # Procedures
 - check todo
@@ -69,6 +76,21 @@
 - push
 
 # LOG
+- [1.42] add: GroupOrganizer ...
+    - 17-Dec-2022 add: LibSharedMedia3-0
+    - 17-Dec-2022 upg: Ace3 updated from spy
+    - 16-Dec-2022 add: DatabaseAdapter
+    - 16-Dec-2022 arch: refactor GroupOranizer, PlayerDB
+    - 16-Dec-2022 add: GroupOrganizer guardians
+    - 16-Dec-2022 add: GroupOrganizer interrupt groups
+    - 16-Dec-2022 add: GroupOrganizer auto role assignments
+    - 15-Dec-2022 add: prototype GroupOrganizer
+    - 15-Dec-2022 add: lib: Detours, LibClassicInspector
+    - 15-Dec-2022 upg: PlayerDB: add person method upgraded since it will be used by 2 modules playerdb and organizer
+    - 15-Dec-2022 add: global function addon print
+    - 14-Dec-2022 fix: CRIndicator | late update event problem
+    - 14-Dec-2022 fix: CRIndicator | problem of standing text after leaving party
+
 - [1.41] arch: CRIndicator remake ... 
     - 14-Dec-2022 arch: options, modules location change to allow dynamic changes
     - 14-Dec-2022 arch: Remake CRIndicator

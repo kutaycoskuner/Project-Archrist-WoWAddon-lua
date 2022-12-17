@@ -67,6 +67,8 @@
         - southern sabotage
         - no mercy for the merciless
     - 80+ 
-        - do quests to open all factions/reputations
+        - craft
+        - buy
+        - do quests to open all factions/reputations | dailies
         - do heroics
         
