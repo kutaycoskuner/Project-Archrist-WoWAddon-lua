@@ -62,6 +62,9 @@ player oyunda degilse /who isim kontrolu yapilamiyor bu durumda playeri yazarak 
 local cCol = Arch_commandColor
 local fCol = Arch_focusColor
 local classCol = Arch_classColor
+local tCol = Arch_trivialColor
+local pCase = Arch_properCase
+local addPlayer = arch_addPersonToDatabase
 
 -- !! IMPORTANT GLOBAL
 local Raidscore
@@ -104,6 +107,7 @@ function module:Initialize()
     module:RegisterEvent("PLAYER_REGEN_DISABLED")
     module:RegisterEvent("WHO_LIST_UPDATE")
     module:RegisterEvent("RAID_ROSTER_UPDATE")
+    module:RegisterEvent("CHAT_MSG_SYSTEM")
 end
 
 -- ==== Methods
@@ -214,23 +218,31 @@ local function Archrist_PlayerDB_getPlayerData()
 end
 -- :: Get Player Stats
 local function archGetPlayer(player)
-    SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. fCol(player))
-    factionName = UnitFactionGroup('player')
-    for yy = 1, #quantitative do
-        if A.people[realmName][player][category][quantitative[yy]] ~= 0 then
-            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. quantitative[yy] .. ': ' ..
-                                               A.people[realmName][player][category][quantitative[yy]])
+    if A.people[realmName][player] then
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. fCol(player))
+        factionName = UnitFactionGroup('player')
+        for yy = 1, #quantitative do
+            if A.people[realmName][player][category][quantitative[yy]] ~= 0 then
+                aprint(tCol(quantitative[yy] .. ': ') ..
+                                                   A.people[realmName][player][category][quantitative[yy]])
+            end
         end
-    end
-    --
-    if A.people[realmName][player][category].note ~= '' then
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. A.people[realmName][player][category].note)
+        --
+        if A.people[realmName][player][category].note ~= '' then
+            aprint(tCol("Note:") .. A.people[realmName][player][category].note)
+        end
+    else
+        aprint(fCol(player) .. " not found in your database.")
+        -- C_FriendList.SetWhoToUi(1)
+        -- C_FriendList.SendWho('n-"' .. player .. '"')
     end
 end
 
 -- ==== Main 
 local function checkStatLimit(player, stat)
-    if A.people[realmName][player][category][stat] >= 5 then
+    if A.people[realmName][player][category][stat] == nil then
+        A.people[realmName][player][category][stat] = stat 
+    elseif A.people[realmName][player][category][stat] >= 5 then
         A.people[realmName][player][category][stat] = 5
     elseif A.people[realmName][player][category][stat] <= -5 then
         A.people[realmName][player][category][stat] = -5
@@ -272,12 +284,12 @@ local function handleNote(msg)
     if UnitExists('target') and UnitIsPlayer('target') and UnitName('target') ~= UnitName('player') then
         if A.people[realmName][UnitName('target')] == nil then
             local p_name, p_server, guid, p_class = identifyPlayer("target")
-            arch_addPersonToDatabase(p_name, p_server)
+            addPlayer(p_name, p_server) -- bu fonksiyon grouporgnizer icinde
         end
         A.people[realmName][UnitName('target')][category].note = msg
         if msg ~= '' then
             SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. fCol(UnitName('target')) .. ': ' ..
-                                               A.people[realmName][UnitName('target')].note)
+                                               A.people[realmName][UnitName('target')][category].note)
         else
             SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Note for ' .. fCol(UnitName('target')) .. ' has been pruned.')
         end
@@ -303,7 +315,7 @@ local function addNote(args)
     if A.people[realmName][name] == nil then
         aprint("cannot find " .. fCol(args) .. " in your database.")
     end
-    A.people[realmName][name].note = note
+    A.people[realmName][name][category].note = note
 
     if args[1] then
         -- print(note)
@@ -313,14 +325,59 @@ local function addNote(args)
     end
 end
 
+local function changeQuanParam(par, val, name, server)
+    if type(tonumber(val)) == "number" then
+        arch_addPersonToDatabase(name, server)
+        A.people[realmName][name][category][par] = tonumber(A.people[realmName][name][category][par]) + tonumber(val)
+        checkStatLimit(name, par)
+        aprint(fCol(name) .. ' ' .. par .. tCol(' is now ') .. cCol(A.people[realmName][name][category][par]))
+    end
+    -- archGetPlayer(name)
+end
+
+local function changeNote(note, name, server)
+    if type(note) == "string" then
+        A.people[realmName][name][category].note = note
+        aprint(fCol(name) .. tCol("note has changed to ") .. note)
+    end
+end
+
 local function handlePlayerStat(msg, parameter, pass)
 
     args = fixArgs(msg)
     mod = parameter
-
+    -- :: ek parametre var mi isim, sayi etc
     if args[1] then
         -- :: Isim oncelikli entry
         if type(tonumber(args[1])) ~= "number" then
+            -- :: isim varsa ve reputation belirtilmemisse karakteri cek
+            if args[2] == nil and A.people[realmName][args[1]] ~= nil then
+                archGetPlayer(args[1])
+                do
+                    return
+                end
+            end
+            -- :: ilk karakter / ise dogrudan ekle
+            if string.sub(args[1], 1, 1) == "/" then
+                args[1] = pCase(args[1]:sub(2))
+                addPlayer(args[1], "")
+                local p_name = table.remove(args, 1)
+                if args[2] ~= nil then
+                    -- :: eger reputation varsa
+                    local p_parValue = table.remove(args, 1)
+                    changeQuanParam(parameter, p_parValue, p_name, "")
+                    -- :: comment varsa
+                    if args[3] ~= nil then
+                        local comment = table.concat(args, " ")
+                        changeNote(comment, p_name, "")
+                    end
+                end
+                archGetPlayer(p_name)
+                do
+                    return
+                end
+            end
+            -- :: who gonderip event triggerla ordan hallediyor
             C_FriendList.SetWhoToUi(1)
             C_FriendList.SendWho('n-"' .. args[1] .. '"')
         else
@@ -332,16 +389,8 @@ local function handlePlayerStat(msg, parameter, pass)
                         if A.people[realmName][UnitName('target')] == nil then
                             arch_addPersonToDatabase(p_name, p_server)
                         end
-
-                        if type(tonumber(args[1])) == "number" then
-                            arch_addPersonToDatabase(p_name, p_server)
-                            A.people[realmName][UnitName('target')][category][parameter] = tonumber(
-                                A.people[realmName][UnitName('target')][category][parameter]) + tonumber(args[1])
-                            checkStatLimit(UnitName('target'), parameter)
-                            SELECTED_CHAT_FRAME:AddMessage(
-                                moduleAlert .. fCol(UnitName('target')) .. ' ' .. parameter .. ' is now ' ..
-                                    A.people[realmName][UnitName('target')][category][parameter])
-                        end
+                        -- :: change q param
+                        changeQuanParam(parameter, args[1], p_name, p_server)
                     end
                 end
             end
@@ -376,15 +425,16 @@ end
 -- :: add player stat [who da kullaniliyor] args[1] = player name args[]
 local function addPlayerStat(args, parameter)
     if A.people[realmName][args[1]] == nil then
-        aprint("cannot find " .. fCol(args) .. " in your database.")
+        -- aprint("cannot find " .. fCol(args[1]) .. " in your database.")
+        arch_addPersonToDatabase(args[1])
     end
     if args[2] ~= nil then
         if type(tonumber(args[2])) == "number" then
             A.people[realmName][args[1]][category][parameter] = tonumber(
                 A.people[realmName][args[1]][category][parameter]) + tonumber(args[2])
             checkStatLimit(args[1], parameter)
-            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. args[1] .. ' ' .. parameter .. ' is now ' ..
-                                               A.people[realmName][args[1]][category][parameter])
+            aprint(fCol(args[1]) .. ' ' .. parameter .. tCol(' is now ') ..
+                                               cCol(A.people[realmName][args[1]][category][parameter]))
             -- test
             if args[3] then
                 table.remove(args, 2)
@@ -558,11 +608,23 @@ function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()whitelist
             end
             isPlayerExists = false
         else
-            print('Player not found')
+            aprint('Player not found on who inquiry')
         end
     end
     mod = 'patates'
 
+end
+
+function module:CHAT_MSG_SYSTEM(_, arg1)
+    if string.find(arg1, "joins the") then
+        if GetNumGroupMembers() == 5 or GetNumGroupMembers() == 10 or GetNumGroupMembers() == 18 or GetNumGroupMembers() == 25 then
+            groupRepCheck("")
+        end
+    elseif string.find(arg1, "leaves the") then
+    elseif string.find(arg1, "Party converted to Raid") then
+    elseif string.find(arg1, "You leave the group") then
+    elseif string.find(arg1, "has been disbanded") then
+    end
 end
 
 function module:RAID_ROSTER_UPDATE()

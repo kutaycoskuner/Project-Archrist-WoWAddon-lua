@@ -2,6 +2,92 @@
 local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local L = LibStub("AceLocale-3.0"):GetLocale("Archrist") -- :: translations usage: L['<data>']
 ----------------------------------------------------------------------------------------------------------
+local realm = GetRealmName()
+local help = Arch_help_content
+local fCol = Arch_focusColor
+local aprint = Arch_print
+
+--
+local function displayHelp(key)
+    -- :: todo list
+    local desc_memory_todo = ""
+    local cmds_memory_todo = ""
+    for ii = 1, #help[key]["desc"] do
+        local row = help[key]['desc'][ii]
+        desc_memory_todo = desc_memory_todo .. row .. "\n"
+    end
+    for ii = 1, #help[key]["commands"] do
+        local row = help[key]['commands'][ii]
+        cmds_memory_todo = cmds_memory_todo .. row .. "\n"
+    end
+    desc_memory_todo = desc_memory_todo .. "\n" .. cmds_memory_todo
+    return desc_memory_todo
+end
+
+local about_about = {
+    name = "",
+    type = "group",
+    order = 1,
+    inline = true,
+    args = {
+        options = {
+            name = "",
+            type = "group",
+            order = 2,
+            inline = true,
+            args = {
+                description = {
+                    name = displayHelp("") .. "\n\n" ..
+                        "For suggestions, bug reports and cooperation you can reach me on Discord.",
+                    type = "description",
+                    order = 1,
+                    fontSize = "medium"
+                },
+                head_info = {
+                    name = "",
+                    type = "header",
+                    order = 4
+                },
+                desc_info = {
+                    name = "",
+                    type = "group",
+                    inline = true,
+                    order = 5,
+                    args = {
+                        info_11version = {
+                            name = L["archrist_about_info_version"] .. A.version,
+                            type = "description",
+                            order = 1,
+                            width = 1.5,
+                            fontSize = "medium"
+                        },
+                        info_21release = {
+                            name = L["archrist_about_info_releaseDate"] .. A.releaseDate,
+                            type = "description",
+                            order = 2,
+                            width = 1.5,
+                            fontSize = "medium"
+                        },
+                        info_12author = {
+                            name = L["archrist_about_info_author"],
+                            type = "description",
+                            order = 1,
+                            width = 1.5,
+                            fontSize = "medium"
+                        },
+                        info_22discord = {
+                            name = L["archrist_about_info_discord"],
+                            type = "description",
+                            order = 2,
+                            width = 1.5,
+                            fontSize = "medium"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 local assist_groupCooldowns = {
     name = "",
@@ -97,22 +183,97 @@ local assist_groupCooldowns = {
                             get = function(info)
                                 return A.global.assist.groupCooldown.spells["Reincarnation"]
                             end
-                        },
+                        }
                     }
+                }
+            }
+        }
+    }
+}
+
+local assist_groupOrganizer = {
+    name = "",
+    type = "group",
+    order = 1,
+    inline = true,
+    args = {
+        title = {
+            name = "Group Organizer",
+            order = 1,
+            type = "header"
+        },
+        options = {
+            name = "",
+            type = "group",
+            order = 2,
+            inline = true,
+            args = {
+                opt_enable = {
+                    name = "Enable",
+                    desc = "Enables / disables the module",
+                    type = "toggle",
+                    order = 1,
+                    width = "full",
+                    get = function(info)
+                        return A.global.assist.groupOrganizer.isEnabled
+                    end,
+                    set = function(info, val)
+                        A.global.assist.groupOrganizer.isEnabled = val
+                        if val then
+                            aprint("Group Organizer" .. " is enabled")
+                        else
+                            aprint("Group Organizer" .. " is disabled")
+                        end
+                    end
                 },
-                -- opt_msg = {
-                --     name = "Enter message you want to display",
-                --     desc = "",
-                --     width = "full",
-                --     type = "input",
-                --     order = 4,
-                --     set = function(_, msg)
-                --         A.global.utility.posture.text = msg
-                --     end,
-                --     get = function()
-                --         return A.global.utility.posture.text
-                --     end
-                -- }
+                desc = {
+                    name = displayHelp("grouporganizer"),
+                    type = "description",
+                    order = 2,
+                    width = "full"
+                },
+                spells = {
+                    name = "Trackers",
+                    order = 3,
+                    type = "group",
+                    width = "full",
+                    inline = true,
+                    args = arch_opt_triggerSpells
+                },
+                opt_spell = {
+                    name = "Enter new " .. fCol("Spell ID") .. " or " .. fCol("Spell Name") .. ":",
+                    type = "input",
+                    order = 4,
+                    width = 1.5,
+                    set = function(info, val)
+                        A.global.assist.groupOrganizer.triggerSpells[val] = A.global.assist.groupOrganizer.task
+                        InterfaceOptionsFrame_Show()
+                        InterfaceAddOnsList_Update()
+                        createOptTable_triggerSpells()
+                        A.OpenInterfaceConfig()
+                    end,
+                    get = function(info)
+                        return ''
+                        -- return A.global.macros.autoMount[realm][UnitName("player")].ground
+                    end
+                },
+                opt_size = {
+                    type = "select",
+                    order = 4,
+                    width = 1.5,
+                    values = {"interrupt", "aura", "divine"},
+                    style = 'dropdown',
+                    name = function()
+                        return 'Task Group:'
+                    end,
+                    get = function()
+                        return A.global.assist.groupOrganizer.task
+                    end,
+                    set = function(_, key)
+                        A.global.assist.groupOrganizer.task = key
+                    end
+                }
+
             }
         }
     }
@@ -292,24 +453,11 @@ local macro_disench = {
                     end
                 },
                 opt_desc = {
-                    name = "\nEnabling will create a macro for you. You can alter the name and icon afterwards but turn off your macro screen before creating or removing a macro\n",
+                    name = "\nCreates a macro that automatically disenchants every item in your bag with level and rarity constraints.\n",
                     type = "description",
                     order = 1,
                     width = "full"
                 },
-                -- opt_macro = {
-                --     name = "",
-                --     type = "input",
-                --     order = 2,
-                --     multiline = true,
-                --     width = "full",
-                --     set = function(info, val)
-                --         return "|cffbf4aa8/run setdisenchantButton()\n/click disenchantButton|r"
-                --     end,
-                --     get = function(info)
-                --         return "|cffbf4aa8/run setdisenchantButton()\n/click disenchantButton|r"
-                --     end
-                -- },
                 opt_range1 = {
                     name = "Min Item Level",
                     type = "range",
@@ -360,137 +508,234 @@ local macro_disench = {
     }
 }
 
+local macro_autoMount = {
+    name = "",
+    type = "group",
+    order = 1,
+    inline = true,
+    args = {
+        title = {
+            name = "Auto Mount",
+            order = 1,
+            type = "header"
+        },
+        options = {
+            name = "",
+            type = "group",
+            order = 2,
+            inline = true,
+            args = {
+                opt_enable = {
+                    name = "Enable",
+                    desc = "Enables / disables the module",
+                    type = "toggle",
+                    order = 1,
+                    width = "full",
+                    set = function(info, val)
+                        if A.global.macros.autoMount[realm][UnitName("player")].isEnabled then
+                            UIParent:Hide()
+                            print(L["archrist"] .. ' Deleting macro for single click mounting')
+                            DeleteMacro(" Mount")
+                            UIParent:Show()
+                            ShowMacroFrame()
+                        else
+                            UIParent:Hide()
+                            print(L["archrist"] .. ' Creating macro for single click mounting')
+                            CreateMacro(" Mount", "132251", "/run setAutoMountButton()\n/click AutoMount", nil)
+                            UIParent:Show()
+                            ShowMacroFrame()
+                        end
+                        A.global.macros.autoMount[realm][UnitName("player")].isEnabled = val
+                    end,
+                    get = function(info)
+                        return A.global.macros.autoMount[realm][UnitName("player")].isEnabled
+                    end
+                },
+                opt_desc = {
+                    name = "\nCreates a single button macro to pick up ground or flying mount depending on the zone.\n",
+                    type = "description",
+                    order = 1,
+                    width = "full"
+                },
+                opt_ground = {
+                    name = "Ground Mount",
+                    type = "input",
+                    order = 3,
+                    set = function(info, val)
+                        A.global.macros.autoMount[realm][UnitName("player")].ground = val
+                    end,
+                    get = function(info)
+                        return A.global.macros.autoMount[realm][UnitName("player")].ground
+                    end
+                },
+                opt_fly = {
+                    name = "Flying Mount",
+                    type = "input",
+                    order = 3,
+                    get = function()
+                        return A.global.macros.autoMount[realm][UnitName("player")].fly
+                    end,
+                    set = function(_, key)
+                        A.global.macros.autoMount[realm][UnitName("player")].fly = key
+                    end
+                }
+            }
+        }
+    }
+}
+
+-- :: todo list
+local memory_todo = {
+    name = "",
+    type = "group",
+    order = 1,
+    inline = true,
+    args = {
+        title = {
+            name = help["todolist"]["title"],
+            order = 1,
+            type = "header"
+        },
+        options = {
+            name = "",
+            type = "group",
+            order = 2,
+            inline = true,
+            args = {
+                desc = {
+                    name = displayHelp('todolist'),
+                    type = "description",
+                    order = 1,
+                    width = "full"
+                }
+            }
+        }
+    }
+}
+
+-- :: playerdb
+local memory_playerDB = {
+    name = "",
+    type = "group",
+    order = 1,
+    inline = true,
+    args = {
+        title = {
+            name = help["playerdb"]["title"],
+            order = 1,
+            type = "header"
+        },
+        options = {
+            name = "",
+            type = "group",
+            order = 2,
+            inline = true,
+            args = {
+                desc = {
+                    name = displayHelp("playerdb"),
+                    type = "description",
+                    order = 1,
+                    width = "full"
+                }
+            }
+        }
+    }
+}
+
+-- :: playerdb
+local guide_craft = {
+    name = "",
+    type = "group",
+    order = 1,
+    inline = true,
+    args = {
+        title = {
+            name = help["craftguides"]["title"],
+            order = 1,
+            type = "header"
+        },
+        options = {
+            name = "",
+            type = "group",
+            order = 2,
+            inline = true,
+            args = {
+                desc = {
+                    name = displayHelp("craftguides"),
+                    type = "description",
+                    order = 1,
+                    width = "full"
+                }
+            }
+        }
+    }
+}
+
 ---------------------------------------------------------------------------------------------------
 A.options = {
     name = "Archrist",
     type = "group",
     childGroups = "tab",
     args = {
-        About = {
-            name = "About",
-            desc = "Deskripsiyon",
-            type = "group",
-            order = 1,
-            args = {
-                description = {
-                    name = L["archrist_about_description"],
-                    type = "description",
-                    order = 1,
-                    fontSize = "medium"
-                },
-                head_modules = {
-                    name = "Functions",
-                    type = "header",
-                    order = 2
-                },
-                desc_modules = {
-                    name = L["archrist_about_modules"],
-                    type = "description",
-                    order = 3,
-                    fontSize = "medium"
-                },
-                head_info = {
-                    name = "",
-                    type = "header",
-                    order = 4
-                },
-                desc_info = {
-                    name = "",
-                    type = "group",
-                    inline = true,
-                    order = 5,
-                    args = {
-                        info_11version = {
-                            name = L["archrist_about_info_version"] .. A.version,
-                            type = "description",
-                            order = 1,
-                            width = 1.5,
-                            fontSize = "medium"
-                        },
-                        info_21release = {
-                            name = L["archrist_about_info_releaseDate"] .. A.releaseDate,
-                            type = "description",
-                            order = 2,
-                            width = 1.5,
-                            fontSize = "medium"
-                        },
-                        info_12author = {
-                            name = L["archrist_about_info_author"],
-                            type = "description",
-                            order = 1,
-                            width = 1.5,
-                            fontSize = "medium"
-                        },
-                        info_22discord = {
-                            name = L["archrist_about_info_discord"],
-                            type = "description",
-                            order = 2,
-                            width = 1.5,
-                            fontSize = "medium"
-                        }
-                    }
-                }
-            }
-
-        },
         Assistance = {
             name = "Assistance",
             desc = "Desc",
             type = "group",
-            order = 2,
+            order = 1,
             args = {
+                groupOrg = assist_groupOrganizer,
                 groupCooldowns = assist_groupCooldowns
             }
 
         },
-        -- Guide = {
-        --     name = "Guide",
-        --     desc = "Desc",
-        --     type = "group",
-        --     order = 3,
-        --     args = {
-        --         intro1 = {
-        --             name = "",
-        --             type = "description",
-        --             order = 1,
-        --             fontSize = "medium"
-        --         }
-        --     }
-
-        -- },
         Utility = {
             name = "Utility",
             type = "group",
-            order = 4,
+            order = 2,
             args = {
                 postureCheck = util_postureCheck,
                 lootFilter = util_lootFilter
             }
 
         },
-        -- ExternalMemory = {
-        --     name = "External Memory",
-        --     desc = "Desc",
-        --     type = "group",
-        --     order = 5,
-        --     args = {
-        --         intro1 = {
-        --             name = "",
-        --             type = "description",
-        --             order = 1,
-        --             fontSize = "medium"
-        --         }
-        --     }
-        -- },
+        Guide = {
+            name = "Guide",
+            desc = "Desc",
+            type = "group",
+            order = 3,
+            args = {
+                craftGuides = guide_craft
+            }
+        },
+        ExternalMemory = {
+            name = "External Memory",
+            desc = "Desc",
+            type = "group",
+            order = 5,
+            args = {
+                todo = memory_todo,
+                playerDB = memory_playerDB
+            }
+        },
         ExtendedMacros = {
             name = "Extended Macros",
             desc = "Desc",
             type = "group",
             order = 6,
             args = {
-                disench = macro_disench
+                disench = macro_disench,
+                autoMount = macro_autoMount
             }
 
+        },
+        About = {
+            name = "About",
+            desc = "Deskripsiyon",
+            type = "group",
+            order = -1,
+            args = {
+                about = about_about
+            }
         }
     }
 }

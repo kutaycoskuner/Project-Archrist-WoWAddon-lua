@@ -63,7 +63,18 @@ end
     - [x] boss interrupt skill cast ettiginde sirayla gruba alert gonderecek
     
     - [x] bazi ozel moblar icin paladinlerin talent i varsa sirasiyla kimin kullanacagini soyleyecek
+
+    - [x] spell track customizability
+        	- [x] spell que tut bunlari registera aktar
+
+    - [x] disable module and registrations
     
+    - [x] fix: isim veya spell id 
+    
+    - [x] event trigger a delay ekle 
+
+    - [x] mage focus que
+
     ]]
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -84,12 +95,19 @@ LCI:IsWotlk()
 local fCol = Arch_focusColor
 local cCol = Arch_commandColor
 local mCol = Arch_moduleColor
+local tCol = Arch_trivialColor
 local classCol = Arch_classColor
+local addPlayer = arch_addPersonToDatabase
+arch_opt_triggerSpells = {}
+
 local realmName = GetRealmName()
+local triggerSpells = {}
 
 -- :: announcer
-local isEnabled = false
+local isEnabled = true
 local timeInMin = 10
+local delayInSecs = 3
+local delayedStart = tonumber(GetTime())
 local announceType = 'self'
 local text = "Check your posture!"
 
@@ -106,11 +124,11 @@ local organization = {
     ["role"] = "",
     ["tasks"] = {}
 }
-local category = "organization"
 local categories = {
     ["impressions"] = impressions,
     ["organization"] = organization
 }
+local category = "organization"
 
 -- :: announce frame
 local f = CreateFrame("Frame")
@@ -147,10 +165,17 @@ end
 -- local decursers = {}
 local divine_sacrifice = {}
 local aura_mastery = {}
+local focus_magic = {}
 
 local que_interrupt = 0
 local que_aura = 0
 local que_guardian = 0
+
+local sign_group_task = {
+    [1] = "interrupt",
+    [2] = "aura",
+    [3] = "divine"
+}
 
 -- :: availability
 local available_interruptors = {
@@ -212,6 +237,7 @@ local available_spec_role = {
 --     [""] = nil
 --     [""] = 
 -- }
+createOptTable_triggerSpells = nil
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Start
@@ -224,16 +250,54 @@ function module:Initialize()
     if A.people[realmName] == nil then
         A.people[realmName] = {}
     end
-    -- module:RegisterEvent("PLAYER_REGEN_ENABLED")
+    -- :: construct
+    if A.global.assist == nil then
+        A.global.assist = {}
+    end
+    if A.global.assist.groupOrganizer == nil then
+        A.global.assist.groupOrganizer = {}
+    end
+    -- :: is module enabled
+    if A.global.assist.groupOrganizer.isEnabled == nil then
+        A.global.assist.groupOrganizer.isEnabled = isEnabled
+    end
+    isEnabled = A.global.assist.groupOrganizer.isEnabled
+    -- :: track spells
+    if A.global.assist.groupOrganizer.triggerSpells == nil then
+        A.global.assist.groupOrganizer.triggerSpells = triggerSpells
+    end
+    triggerSpells = A.global.assist.groupOrganizer.triggerSpells
+    -- :: option role
+    if A.global.assist.groupOrganizer.task == nil then
+        A.global.assist.groupOrganizer.task = ""
+    end
+    -- test
+    createOptTable_triggerSpells()
+    -- for k, v in pairs(arch_opt_triggerSpells) do
+    --     aprint(k)
+    -- end
+    -- test end
+
 end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Local Methods
+local function isDelayed()
+    local current = tonumber(GetTime())
+    if current <= delayedStart then
+        return false
+    else
+        delayedStart = current + delayInSecs
+        return true
+    end
+end
 
 -- :: utility functions
 local function resetTable(t)
-    for key in pairs(t) do
-        t[key] = {}
+    if t ~= nil then
+        for k, v in pairs(t) do
+            t[k] = {}
+        end
     end
 end
 
@@ -267,32 +331,6 @@ end
 local function properCase(str)
     if str ~= nil then
         return (str:gsub("^%l", string.upper))
-    end
-end
-
--- :: secondary fucntions
-function arch_addPersonToDatabase(player, server)
-    -- :: defensive
-    if "" ~= server or string.find(player, "-") then
-        do
-            return
-        end
-    end
-    -- :: add player name
-    if A.people[realmName][player] == nil then
-        A.people[realmName][player] = {}
-        aprint(fCol(player) .. " added to your database.")
-    end
-    -- :: add categories
-    for cat, subcat in pairs(categories) do
-        if A.people[realmName][player][cat] == nil then
-            A.people[realmName][player][cat] = {}
-        end
-        for key, val in pairs(subcat) do
-            if A.people[realmName][player][cat][key] == nil then
-                A.people[realmName][player][cat][key] = val
-            end
-        end
     end
 end
 
@@ -382,6 +420,7 @@ end
 
 -- :: announce player / group
 local function announcePlayer(taskGroup, taskQue, msg)
+    --
     local string = ""
     taskQue = taskQue + 1
     -- :: pick sequence
@@ -405,8 +444,8 @@ local function announcePlayer(taskGroup, taskQue, msg)
     if taskQue > #taskGroup then
         taskQue = 1
     end
+    --
 end
-
 
 local function announceGroup()
     -- :: counter
@@ -458,6 +497,23 @@ local function announceGroup()
         end
     end
 end
+
+local function announceFocusQue()
+    if #focus_magic > 1 then
+        local announce = "Focus Link: "
+        for ii = 1, #focus_magic do
+            announce = announce .. focus_magic[ii] .. " >> "
+        end
+        announce = announce .. focus_magic[1]
+        if UnitInRaid('player') then
+            SendChatMessage(announce, "raid", nil, "channel")
+        elseif UnitInParty('player') then
+            SendChatMessage(announce, "party", nil, "channel")
+        end
+    else
+        aprint("not enough people for focus link")
+    end
+end
 --
 local function assignInterruptor(player)
     local smallestGroup
@@ -502,7 +558,9 @@ end
 local function organizeGroup()
     resetTable(group_roles)
     resetTable(interrupt_groups)
-    taskGroup = {}
+    aura_mastery = {}
+    divine_sacrifice = {}
+    focus_magic = {}
     for ii = 1, GetNumGroupMembers() do
         local id_string
         -- :: determine whether party or raid
@@ -532,7 +590,7 @@ local function organizeGroup()
                 end
             end
             if not isExists then
-                group_roles["unassigned"][p_name] = 1
+                group_roles["unassigned"][p_name] = true
             end
         end
         -- == task assignment
@@ -548,14 +606,16 @@ local function organizeGroup()
             end
             local talentName, _, _, _, rank, maxRank = LCI:GetTalentInfo(guid, 1, 3)
             if rank == 1 then
-                -- todo
                 assignPlayer(p_name, aura_mastery)
             end
         end
-        -- if p_class == "MAGE" then
-        --     local talentName, _, _, _, rank, maxRank = LCI:GetTalentInfo(guid, 2, 24)
-        --     print(talentName, rank, maxRank)
-        -- end
+        -- :: focus magic
+        if p_class == "MAGE" then
+            local talentName, _, _, _, rank, maxRank = LCI:GetTalentInfo(guid, 1, 29)
+            if rank == 1 then
+                assignPlayer(p_name, focus_magic)
+            end
+        end
     end
 end
 
@@ -684,10 +744,68 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Global Methods
+createOptTable_triggerSpells = function()
+    for k, v in pairs(arch_opt_triggerSpells) do
+        arch_opt_triggerSpells[k] = nil
+    end
+    for k, v in pairs(A.global.assist.groupOrganizer.triggerSpells) do
+        local spellName, spellId = GetSpellLink(k)
+        local val
+        -- :: spell name or id
+        if spellName ~= nil then
+            val = spellName
+        end
+        if val ~= nil then
+            -- :: option block
+            local opt = {
+                name = tCol(sign_group_task[v]) .. " " .. tostring(val),
+                type = "toggle",
+                order = 1,
+                width = 1.5,
+                get = function(info)
+                    return true
+                end,
+                set = function(info, val)
+                    A.global.assist.groupOrganizer.triggerSpells[k] = nil
+                    InterfaceOptionsFrame_Show()
+                    InterfaceAddOnsList_Update()
+                    createOptTable_triggerSpells()
+                    A.OpenInterfaceConfig()
+                end
+            }
+            -- :: insert 
+            arch_opt_triggerSpells[k] = opt
+        end
+    end
+    triggerSpells = A.global.assist.groupOrganizer.triggerSpells
+end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Main
-local function main(msg)
+local function toggleModule(isSilent)
+    if isEnabled then
+        module:RegisterEvent("CHAT_MSG_SYSTEM")
+        module:RegisterEvent("CHAT_MSG_WHISPER")
+        module:RegisterEvent("CHAT_MSG_SAY")
+        module:RegisterEvent("PLAYER_REGEN_ENABLED")
+        module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+        if not isSilent or isSilent == nil then
+            aprint(fCol(moduleName2) .. " is enabled")
+        end
+    else
+        module:UnregisterEvent("CHAT_MSG_SYSTEM")
+        module:UnregisterEvent("CHAT_MSG_WHISPER")
+        module:UnregisterEvent("CHAT_MSG_SAY")
+        module:UnregisterEvent("PLAYER_REGEN_ENABLED")
+        module:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+        if not isSilent or isSilent == nil then
+            aprint(fCol(moduleName2) .. " is disabled")
+        end
+    end
+    if not isSilent then
+        isEnabled = not isEnabled
+        A.global.assist.groupOrganizer.isEnabled = isEnabled
+    end
 end
 
 local function handleCommand(msg)
@@ -701,17 +819,18 @@ local function handleCommand(msg)
             local guid = UnitGUID("target")
             local _, p_class, _, p_race, _, p_name, p_server = GetPlayerInfoByGUID(guid)
             autoRole_single(target, class, p_class)
-        else
-            aprint("target someone to give roles " .. fCol("tank, heal, rdps, mdps"))
-            aprint("or raid tasks " .. fCol("interrupter, decurser, dispeller, guardian"))
-            aprint("example: " .. fCol("/org tank"))
         end
-        aprint("Group Role Categorization")
+        aprint(fCol(":: Group Roles Categorization ::"))
         printGroupRoles()
+    elseif msg == "focus" then
+        autoRole_inspect()
+        announceFocusQue()
     elseif msg == "tasks" then
-        aprint("Task Groups")
+        aprint(fCol(":: Task Groups ::"))
         autoRole_inspect()
         printTasks()
+    elseif msg == "toggle" then
+        toggleModule()
     elseif group_roles[msg] then
         if target ~= nil then
             local guid = UnitGUID("target")
@@ -799,10 +918,31 @@ function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBA
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14 =
         CombatLogGetCurrentEventInfo()
     local timestamp, eventType, srcName, dstName, spellId, spellName = arg1, arg2, arg5, arg9, arg12, arg13
-
-    if eventType == "SPELL_CAST_START" then
-        announceGroup()
+    -- aprint('test 1')
+    if triggerSpells[tostring(spellId)] ~= nil or triggerSpells[spellName] ~= nil then
+        local track
+        if triggerSpells[tostring(spellId)] ~= nil then
+            track = triggerSpells[tostring(spellId)]
+        elseif triggerSpells[spellName] ~= nil then
+            track = triggerSpells[spellName]
+        end
+        -- 
+        if sign_group_task[track] == "interrupt" then
+            if isDelayed() then
+                -- print('a')
+                announceGroup()
+            end
+        elseif sign_group_task[track] == "aura" then
+            if isDelayed() then
+                announcePlayer(aura_mastery, que_aura, "Aura Mastery")
+            end
+        elseif sign_group_task[track] == "divine" then
+            if isDelayed() then
+                announcePlayer(divine_sacrifice, que_guardian, "Divine Sacrifice")
+            end
+        end
     end
+
 end
 
 function module:PLAYER_REGEN_ENABLED()
@@ -826,12 +966,7 @@ end
 local function InitializeCallback()
     module:Initialize()
     -- Register
-    module:RegisterEvent("CHAT_MSG_SYSTEM")
-    module:RegisterEvent("CHAT_MSG_WHISPER")
-    module:RegisterEvent("CHAT_MSG_SAY")
-    module:RegisterEvent("PLAYER_REGEN_ENABLED")
-    -- module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-
+    toggleModule(true)
 end
 A:RegisterModule(module:GetName(), InitializeCallback)
 

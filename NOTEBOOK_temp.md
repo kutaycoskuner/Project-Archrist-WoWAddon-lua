@@ -8,6 +8,9 @@
 # Comment Discipline
 
 # Links
+- wow icons
+    - https://wowpedia.fandom.com/wiki/Category:WoW_Icons
+
 - leveling guides
     - class
         - mage
@@ -20,6 +23,7 @@
 
 - blizz interface code
     - https://github.com/tomrus88/BlizzardInterfaceCode/blob/master/Interface/FrameXML/UIParent.lua
+    - https://wowpedia.fandom.com/wiki/Using_the_Interface_Options_Addons_panel
 
 - lua pattern matching
     - https://www.lua.org/pil/20.1.html
@@ -83,11 +87,16 @@ https://www.lua.org/pil/20.2.html
 
 
 # Blackboard
-- customizability levels
+- customizability levels | levels of customizability | levels of customization
     1. give your data within the logic
     2. split your data from logic in the code
     3. split your data from the logic file
-    4. allow user to manipulate data within uiwwa
+    4. allow user to manipulate data with ingame commands
+    5. allow user to manipulate data with ingame interface
+        - allow to activate/deactivate
+        - allow discrete customization
+        - allow to add
+
 
 - feature list template
     - name, description, how to use, example

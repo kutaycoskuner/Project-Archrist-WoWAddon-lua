@@ -48,6 +48,10 @@
 - [x] 14-Dec-2022 13-Dec-2022 add: CRIndicator: inteface options
 - [x] 16-Dec-2022 14-Dec-2022 add: CRIndicator icin belli bosslarda raid inform "Taunt Shocket!"
 - [x] 16-Dec-2022 14-Dec-2022 add: raid role categorization | heal, tank, mdps, rdps, interrupt groups
+- [x] 18-Dec-2022 14-Dec-2022 add: automount interface options
+- [c] 18-Dec-2022 02-Nov-2022 add: github release yaps 
+- [x] 18-Dec-2022 22-Nov-2022 fix playerdb: rep atinca veri yazmiyor
+- [x] 19-Dec-2022 17-Dec-2022 add: Cleaning / refactoring / help functions / ui / accessibility
 - 26-Nov-2022 ler: addon communication ayni addona sahip baska biriyle iletisim kurmayi ogren veri paylas
 - 26-Nov-2022 ler: minimap / map marking
 - 09-Nov-2022 add: todo resting event api ekle : now its good time to check todo list
@@ -55,16 +59,26 @@
 - 10-Nov-2022 add: navigation arrow
 - 25-Oct-2022 add: petfeed macro help
 - 28-Oct-2022 fun: raidwarnings: if not in group then send printout message / party
-- 02-Nov-2022 add: github release yaps 
-- 22-Nov-2022 fix playerdb: rep atinca veri yazmiyor
 - 22-Nov-2022 add: playerdb ui | spy i inceleyerek yap
 - 24-Nov-2022 add: minimap icon
 - 02-Dec-2022 add: options frame with minimap icon
 - 13-Dec-2022 add: 5 metre yaricap icinde kac mob var?
 - 14-Dec-2022 add: trinket tracker for arena
-- 14-Dec-2022 add: automount interface options
-- 14-Dec-2022 add: Procedural reminders | wear your tabard, repair, get water
-- 17-Dec-2022 add: Cleaning / refactoring / help functions / ui / accessibility
+- 14-Dec-2022 add: Procedural reminders | wear your tabard, repair, get water, quest ver
+- 19-Dec-2022 add: help and interface customizability for GroupOrganizer
+- 19-Dec-2022 add: module enable disable  template ekle diger moduller icin standard yap
+- 19-Dec-2022 fix: CRIndicator innervate yerine rebirth gosteriyor
+- 20-Dec-2022 add: craft guide maker
+
+# Release cleaning
+- .git file
+- .gitignore
+- -display
+- !disabled
+- log
+- notebook
+- readme
+- timelog
 
 
 # Procedures
@@ -76,6 +90,17 @@
 - push
 
 # LOG
+- [1.43] add: Group organizer customizability ...
+    - 19-Dec-2022 upg: PlayerDB notice color indicator 
+    - 19-Dec-2022 add: GroupOrganizer help, customizability level interface
+    - 19-Dec-2022 help: CraftGuides
+    - 19-Dec-2022 arch: Help refactor | options separation to be used on both gui, cli
+    - 19-Dec-2022 fix: PlayerDB handle multiple parameters on single strings
+    - 19-Dec-2022 fix: PlayerDB Rep player addition if not exists
+    - 18-Dec-2022 fix: PlayerDB Rep
+    - 18-Dec-2022 wip: arch: Help remake, refactoring
+    - 18-Dec-2022 add: macro: AutoMount customization with name interface options
+
 - [1.42] add: GroupOrganizer ...
     - 17-Dec-2022 add: LibSharedMedia3-0
     - 17-Dec-2022 upg: Ace3 updated from spy

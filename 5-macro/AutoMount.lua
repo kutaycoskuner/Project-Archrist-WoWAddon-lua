@@ -33,6 +33,7 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
+local realm = GetRealmName()
 local mounts = {
     -- spellid = { isflyable(bool), speed} 
     -- speed: 1= ground 60, 2= ground 100, 3= fly 150, 4-fly 300, 5-fly 310
@@ -53,14 +54,14 @@ macro:SetAttribute("type", "macro")
 
 function setAutoMountButton()
     local mount, zone, speed, speedLimit = "", "", 0, 0
-    -- print(type(GetMinimapZoneText()), GetMinimapZoneText()=="Krasus' Landing")
+    -- print(type(GetMinimapZoneText()), GetMinim   apZoneText()=="Krasus' Landing")
     -- :: select zone
     if not IsFlyableArea() then
         zone = "Ground"
     else
         if GetZoneText() == "Dalaran" and GetMinimapZoneText() ~= "Krasus' Landing" then
             zone = "Ground"
-        elseif GetMinimapZoneText() == "Krasus' landing" then
+        elseif GetZoneText() == "Dalaran" and GetMinimapZoneText() == "Krasus' landing" then
             zone = "Flying"
         else
             zone = "Flying"
@@ -71,6 +72,16 @@ function setAutoMountButton()
     for i = 1, GetNumCompanions("MOUNT") do
         local itemId,name,spellId,_,_,typeID,typeString = GetCompanionInfo("mount", i)
         if zone == "Ground" then speedLimit = 2 else speedLimit = 5 end 
+        --
+        if zone == "Ground" and A.global.macros.autoMount[realm][UnitName('player')].ground ~= "" then
+            mount = A.global.macros.autoMount[realm][UnitName('player')].ground
+            break
+        end
+        if zone == "Flying" and A.global.macros.autoMount[realm][UnitName('player')].fly ~= "" then
+            mount = A.global.macros.autoMount[realm][UnitName('player')].fly
+            break
+        end
+        --
         if mounts[spellId] then
             if mounts[spellId][2] >= speed and mounts[spellId][2] <= speedLimit then
                 mount = name
@@ -86,7 +97,35 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Start
-function module:Initialize() self.initialized = true end
+function module:Initialize() 
+    self.initialized = true 
+    -- :: superset construct
+    if A.global.macros == nil then
+        A.global.macros = {}
+    end
+    if A.global.macros.autoMount == nil then
+        A.global.macros.autoMount = {}
+    end
+    if A.global.macros.autoMount[realm] == nil then
+        A.global.macros.autoMount[realm] = {}
+    end
+    if A.global.macros.autoMount[realm][UnitName("player")] == nil then
+        A.global.macros.autoMount[realm][UnitName("player")] = {}
+    end
+    -- :: set variable: is enabled
+    if A.global.macros.autoMount[realm][UnitName("player")].isEnabled == nil then
+        A.global.macros.autoMount[realm][UnitName("player")].isEnabled = false
+    end
+    -- :: set variable: is enabled
+    if A.global.macros.autoMount[realm][UnitName("player")].ground == nil then
+        A.global.macros.autoMount[realm][UnitName("player")].ground = ""
+    end
+    -- :: set variable: is enabled
+    if A.global.macros.autoMount[realm][UnitName("player")].fly == nil then
+        A.global.macros.autoMount[realm][UnitName("player")].fly = ""
+    end
+
+end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== End

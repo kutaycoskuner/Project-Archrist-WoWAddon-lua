@@ -1,9 +1,14 @@
 ------------------------------------------------------------------------------------------------------------------------
--- :: Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
--- local A, L, V, P, G, C, M, N = unpack(select(2, ...));
--- local moduleName = 'GlobalFunctions';
--- local moduleAlert = M .. moduleName .. ": |r";
--- local module = A:GetModule(moduleName);
+--------- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+------------------------------------------------------------------------------------------------------------------------
+local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
+-- local moduleName1, moduleName2  = 'PostureCheck', "Posture Check";
+-- local moduleAlert = M .. moduleName2 .. ": |r";
+-- local module = A:GetModule(moduleName1, true);
+-- if module == nil then
+--     return
+-- end
+
 -- ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
 local addonColor = '|cff00c8ff'
@@ -13,7 +18,7 @@ local focusColor = '|cffbf4aa8'
 local trivialColor = '|cff767676'
 local colorEnd = '|r'
 local addonName = "[Archrist]: "
-
+local realmName = GetRealmName()
 
 local Arch_classColors = {
     ["Death Knight"] = '|cffC41F3B',    
@@ -28,31 +33,50 @@ local Arch_classColors = {
     ["Warrior"] = '|cffC79C6E',
 }
 
--- -- ==== GUI
--- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
+-- :: category
+local impressions = {
+    ["reputation"] = 0,
+    ["strategy"] = 0,
+    ["attendance"] = 0,
+    ["discipline"] = 0,
+    ["damage"] = 0,
+    ["note"] = ""
+}
+local organization = {
+    ["role"] = "",
+    ["tasks"] = {}
+}
+local categories = {
+    ["impressions"] = impressions,
+    ["organization"] = organization
+}
 
 -- ==== Functions
 -- :: Colors
 function Arch_addonColor(msg) return (addonColor .. tostring(msg) .. colorEnd) end
+local aCol = Arch_addonColor
 
 function Arch_moduleColor(msg) return (moduleColor .. tostring(msg) .. colorEnd) end
+local mCol = Arch_moduleColor
+
 
 function Arch_commandColor(msg)
     return (commandColor .. tostring(msg) .. colorEnd)
 end
+local cCol = Arch_commandColor
 
 function Arch_focusColor(msg) return (focusColor .. tostring(msg) .. colorEnd) end
+local fCol = Arch_focusColor
+
 
 function Arch_classColor(class, msg) return (Arch_classColors[class] .. tostring(msg) .. colorEnd) end
+local classCol = Arch_classColor
 
 function Arch_trivialColor(msg)
     return (trivialColor .. tostring(msg) .. colorEnd)
 end
+local tCol = Arch_trivialColor
 
--- :: addon special
-function Arch_print(msg)
-    print(Arch_addonColor(addonName) .. tostring(msg))
-end
 
 -- :: Time
 function Arch_calcTimeInSec()
@@ -86,21 +110,42 @@ function Arch_fixArgs(msg)
     return args;
 end
 
--- -- ==== Start
--- function module:Initialize()
---     self.initialized = true
---     -- :: Register some events
---     module:RegisterEvent("CHAT_MSG_SAY");
--- end
+function Arch_properCase(str)
+    if str ~= nil then
+        return (str:gsub("^%l", string.upper))
+    end
+end
 
--- ==== Todo
---[[
-    - addonColor
-    - moduleColor
-    - commandColor
-    - focusColor
-    - trivialColor
-]]
-
--- ==== UseCase
---[[]]
+-- :: addon functions with multiple user modules
+function Arch_print(msg)
+    print(Arch_addonColor(addonName) .. tostring(msg))
+end
+local aprint = Arch_print
+-- 
+function arch_addPersonToDatabase(player, server)
+    -- :: def: server farkliysa ekleme
+    if "" ~= server or string.find(player, "-") then
+        do
+            return
+        end
+    end
+    -- :: def: player varsa
+    if A.people[realmName][player] ~= nil then
+        -- aprint(fCol(player) .. " added to your database.")
+        do return end 
+    end
+    -- :: add player name
+    A.people[realmName][player] = {}
+    aprint(fCol(player) .. " added to your database.")
+    -- :: add categories
+    for cat, subcat in pairs(categories) do
+        if A.people[realmName][player][cat] == nil then
+            A.people[realmName][player][cat] = {}
+        end
+        for key, val in pairs(subcat) do
+            if A.people[realmName][player][cat][key] == nil then
+                A.people[realmName][player][cat][key] = val
+            end
+        end
+    end
+end

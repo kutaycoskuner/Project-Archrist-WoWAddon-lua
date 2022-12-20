@@ -5,8 +5,8 @@
 ## SavedVariables: ArchDB, ArchPrivateDB, ArchPeopleDB, ArchLootDB
 ## SavedVariablesPerCharacter: ArchCharacterDB
 ## OptionalDeps: Blizzard_DebugTools, Ace3, LibClassicInspector
-## Version: 1.42
-## X-ReleaseDate: 18 Dec 2022
+## Version: 1.43
+## X-ReleaseDate: 20 Dec 2022
 ## Author: Orthrin
 ## X-Discord: lichzelg#6056
 ## X-Embeds: Ace3

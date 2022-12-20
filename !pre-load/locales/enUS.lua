@@ -27,35 +27,7 @@ L["archrist_about_description"] = [[
 
 Archrist is multi-purpose asisstant addon with various functionalities. 
 
-]]
-
-L["archrist_about_modules"] = [[
-
-    |cffffd000 External Memory |cffffffff
-
-|cffbf4aa8 Todo List |r 
-Take short notes and reminders for future use.
-
-|cffbf4aa8 Player Database |r 
-Take notes specific to players, and grade them with five type of quantitative parameters. 
-
-    |cffffd000 Guide  |cffffffff
-    
-|cffbf4aa8 Crafting Guides |r 
-Crafting guides for efficient leveling and material calculation.
-
-    |cffffd000 Command Asisstance  |cffffffff
-
-|cffbf4aa8 Tactics |r 
-Announce four type of tactics before bosses
-
-|cffbf4aa8 Pug Raid Former | Diverse Raid Former |r 
-Easy setup for dynamic PUG raid announcemnets
-
-    |cffffd000 Utility Functions  |cffffffff
-    
-|cffbf4aa8 Disable Greed Loot Messages |r 
-Disable greed loots to increase need visibility and reduce chat flow. 
+For suggestions, bug reports and cooperation you can reach me on Discord.
 
 ]]
 
