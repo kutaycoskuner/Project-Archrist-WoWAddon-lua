@@ -168,8 +168,8 @@ local aura_mastery = {}
 local focus_magic = {}
 
 local que_interrupt = 0
-local que_aura = 0
-local que_guardian = 0
+local que_auraMastery = 0
+local que_divineSacrifice = 0
 
 local sign_group_task = {
     [1] = "interrupt",
@@ -377,7 +377,12 @@ end
 
 local function printGroupRoles()
     -- for role in spairs(group_roles) do
+    local printTitle = true
     for ii = 1, #role_order do
+        if printTitle then
+            aprint(fCol(":: Group Role Categorization ::"))
+            printTitle = false
+        end
         local role = role_order[ii]
         local role_string = mCol(properCase(role) .. ": ")
         for player in pairs(group_roles[role]) do
@@ -391,7 +396,13 @@ end
 
 local function printTasks()
     -- :: print interruptors
+    local printTitle = true
     for group in ipairs(interrupt_groups) do
+        if printTitle then
+            aprint(fCol(":: Task Groups ::"))
+            printTitle = false
+        end
+        -- 
         local group_string = mCol(properCase("Interrupt group " .. group) .. ": ")
         for ii = 1, #interrupt_groups[group] do
             group_string = group_string .. interrupt_groups[group][ii] .. " "
@@ -419,13 +430,12 @@ local function printTasks()
 end
 
 -- :: announce player / group
-local function announcePlayer(taskGroup, taskQue, msg)
-    --
+local function announceDivine(msg)
     local string = ""
-    taskQue = taskQue + 1
+    que_divineSacrifice = que_divineSacrifice + 1
     -- :: pick sequence
-    if taskGroup[taskQue] ~= nil then
-        string = taskGroup[taskQue]
+    if divine_sacrifice[que_divineSacrifice] ~= nil then
+        string = divine_sacrifice[que_divineSacrifice]
     end
     -- :: print
     if string ~= "" then
@@ -440,11 +450,34 @@ local function announcePlayer(taskGroup, taskQue, msg)
             aprint(string)
         end
     end
-    local size = 0
-    if taskQue > #taskGroup then
-        taskQue = 1
+    if que_divineSacrifice > #divine_sacrifice then
+        que_divineSacrifice = 1
     end
-    --
+end
+
+local function announceAura(msg)
+    local string = ""
+    que_auraMastery = que_auraMastery + 1
+    -- :: pick sequence
+    if aura_mastery[que_auraMastery] ~= nil then
+        string = aura_mastery[que_auraMastery]
+    end
+    -- :: print
+    if string ~= "" then
+        string = msg .. " >> " .. string .. " <<"
+        if UnitIsGroupLeader('player') then
+            SendChatMessage(string, "raid_warning", nil, "channel")
+        elseif UnitInRaid('player') then
+            SendChatMessage(string, "raid", nil, "channel")
+        elseif UnitInParty('player') then
+            SendChatMessage(string, "party", nil, "channel")
+        else
+            aprint(string)
+        end
+    end
+    if que_auraMastery > #aura_mastery then
+        que_auraMastery = 1
+    end
 end
 
 local function announceGroup()
@@ -498,20 +531,27 @@ local function announceGroup()
     end
 end
 
-local function announceFocusQue()
+local function announceFocusQue(isSilent)
     if #focus_magic > 1 then
         local announce = "Focus Link: "
         for ii = 1, #focus_magic do
             announce = announce .. focus_magic[ii] .. " >> "
         end
         announce = announce .. focus_magic[1]
-        if UnitInRaid('player') then
-            SendChatMessage(announce, "raid", nil, "channel")
-        elseif UnitInParty('player') then
-            SendChatMessage(announce, "party", nil, "channel")
+        if not isSilent then
+            if UnitInRaid('player') then
+                SendChatMessage(announce, "raid", nil, "channel")
+            elseif UnitInParty('player') then
+                SendChatMessage(announce, "party", nil, "channel")
+            end
+        else
+            aprint(":: Suggested Focus Queue ::")
+            aprint(announce)
         end
     else
-        aprint("not enough people for focus link")
+        if not isSilent then
+            aprint("not enough people for focus link")
+        end
     end
 end
 --
@@ -575,9 +615,11 @@ local function organizeGroup()
         -- :: role assignment
         if A.people[realmName][p_name][category]["role"] then
             local role = A.people[realmName][p_name][category]["role"]
-            if group_roles[role] ~= nil then
-                if group_roles[role][p_name] == nil then
-                    group_roles[role][p_name] = true
+            if group_roles ~= nil then
+                if group_roles[role] ~= nil then
+                    if group_roles[role][p_name] == nil then
+                        group_roles[role][p_name] = true
+                    end
                 end
             end
         else
@@ -651,7 +693,6 @@ local function autoRole_inspect()
                 return
             end
         end
-        autoRole_single(p_name, p_class, p_server)
         p_class = string.upper(p_class)
         local dist, tabIndex = {}, 0
         local active = LCI:GetActiveTalentGroup(guid)
@@ -682,11 +723,12 @@ local function autoRole_inspect()
                 return
             end
         end
+        autoRole_single(p_name, p_class, p_server)
         if (A.people[realmName][p_name][category]["role"] ~= available_spec_role[specName] or
             A.people[realmName][p_name][category]["role"] == nil) then
             -- :: exceptions
             -- :: mage frostsa rdps
-            if p_class == "MAGE" and A.people[realmName][p_name][category]["role"] == nil then
+            if p_class == "MAGE" and (A.people[realmName][p_name][category]["role"] == nil or A.people[realmName][p_name][category]["role"] == "mdps") then
                 A.people[realmName][p_name][category]["role"] = "rdps"
                 aprint(fCol(properCase(available_spec_role[specName])) .. " role automaticaly assigned to " ..
                            cCol(p_name))
@@ -807,6 +849,7 @@ local function toggleModule(isSilent)
         A.global.assist.groupOrganizer.isEnabled = isEnabled
     end
 end
+module.toggleModule = toggleModule
 
 local function handleCommand(msg)
     scanGroup()
@@ -814,21 +857,18 @@ local function handleCommand(msg)
     local target = UnitName("target")
     -- :: handle parameter
     if msg == "" then
-        autoRole_inspect()
         if target then
             local guid = UnitGUID("target")
             local _, p_class, _, p_race, _, p_name, p_server = GetPlayerInfoByGUID(guid)
-            autoRole_single(target, class, p_class)
+            autoRole_single(target, p_class, p_class)
         end
-        aprint(fCol(":: Group Roles Categorization ::"))
+        autoRole_inspect()
         printGroupRoles()
+        printTasks()
+        announceFocusQue(true)
     elseif msg == "focus" then
         autoRole_inspect()
         announceFocusQue()
-    elseif msg == "tasks" then
-        aprint(fCol(":: Task Groups ::"))
-        autoRole_inspect()
-        printTasks()
     elseif msg == "toggle" then
         toggleModule()
     elseif group_roles[msg] then
@@ -886,9 +926,9 @@ function module:CHAT_MSG_SYSTEM(_, arg1)
     elseif string.find(arg1, "Party converted to Raid") then
         organizeGroup()
     elseif string.find(arg1, "You leave the group") then
-        group_roles = empty_group_roles
+        organizeGroup()
     elseif string.find(arg1, "has been disbanded") then
-        group_roles = empty_group_roles
+        organizeGroup()
     end
 end
 
@@ -905,12 +945,12 @@ end
 
 function module:CHAT_MSG_SAY(_, msg, author)
     -- print(msg, author, lang)
-    if msg == "cast" then
+    if msg == "testing cast" then
         announceGroup()
-    elseif msg == "tantrum" then
-        announcePlayer(divine_sacrifice, que_guardian, "Divine Sacrifice")
-    elseif msg == "aura" then
-        announcePlayer(aura_mastery, que_aura, "Aura Mastery")
+    elseif msg == "testing divine" then
+        announceDivine("Divine Sacrifice")
+    elseif msg == "testing aura" then
+        announceAura("Aura Mastery")
     end
 end
 
@@ -929,16 +969,15 @@ function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBA
         -- 
         if sign_group_task[track] == "interrupt" then
             if isDelayed() then
-                -- print('a')
                 announceGroup()
             end
         elseif sign_group_task[track] == "aura" then
             if isDelayed() then
-                announcePlayer(aura_mastery, que_aura, "Aura Mastery")
+                announceAura("Aura Mastery")
             end
         elseif sign_group_task[track] == "divine" then
             if isDelayed() then
-                announcePlayer(divine_sacrifice, que_guardian, "Divine Sacrifice")
+                announceDivine("Divine Sacrifice")
             end
         end
     end

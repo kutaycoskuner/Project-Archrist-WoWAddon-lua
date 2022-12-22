@@ -52,6 +52,7 @@
 - [c] 18-Dec-2022 02-Nov-2022 add: github release yaps 
 - [x] 18-Dec-2022 22-Nov-2022 fix playerdb: rep atinca veri yazmiyor
 - [x] 19-Dec-2022 17-Dec-2022 add: Cleaning / refactoring / help functions / ui / accessibility
+- [x] 22-Dec-2022 20-Dec-2022 add: craft guide maker
 - 26-Nov-2022 ler: addon communication ayni addona sahip baska biriyle iletisim kurmayi ogren veri paylas
 - 26-Nov-2022 ler: minimap / map marking
 - 09-Nov-2022 add: todo resting event api ekle : now its good time to check todo list
@@ -68,7 +69,10 @@
 - 19-Dec-2022 add: help and interface customizability for GroupOrganizer
 - 19-Dec-2022 add: module enable disable  template ekle diger moduller icin standard yap
 - 19-Dec-2022 fix: CRIndicator innervate yerine rebirth gosteriyor
-- 20-Dec-2022 add: craft guide maker
+- 20-Dec-2022 add: gui refactoring
+- 20-Dec-2022 add: export artwork yapip uygun gui texturelari sec
+- 20-Dec-2022 add: xml ui ogren
+
 
 # Release cleaning
 - .git file
@@ -90,6 +94,19 @@
 - push
 
 # LOG
+- [1.44] add: GuideMaker ...
+    - 22-Dec-2022 add: GuideMaker finished first guide done with firstAid
+    - 22-Dec-2022 fix: PlayerDB add by name bug
+    - 22-Dec-2022 wip GuideMaker categories
+    - 21-Dec-2022 wip: GuideMaker gui 
+    - 20-Dec-2022 wip: prototyping GuideMaker gui display
+    - 20-Dec-2022 upg: GroupOrganizer focus queue added to organization if there is que
+    - 20-Dec-2022 fix: GroupOrganizer announce que not working because individual que calismiyor
+    - 20-Dec-2022 fix: interface: GroupOrganizer enabling bug fixed
+    - 20-Dec-2022 upg: PlayerDB help detaylandirma
+    - 20-Dec-2022 fix: PlayerDB rrep blacklist no display fix
+    - 20-Dec-2022 add: GuideMaker project started
+
 - [1.43] add: Group organizer customizability ...
     - 19-Dec-2022 upg: PlayerDB notice color indicator 
     - 19-Dec-2022 add: GroupOrganizer help, customizability level interface

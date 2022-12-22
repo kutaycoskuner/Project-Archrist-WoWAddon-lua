@@ -205,7 +205,7 @@ local function Archrist_PlayerDB_getPlayerData()
         if Name ~= UnitName('player') then
             if A.people[realmName][Name] then
                 for ii = 1, #quantitative do
-                    if A.people[realmName][Name][quantitative[ii]] ~= nil then
+                    if A.people[realmName][Name][category][quantitative[ii]] ~= nil then
                         local data = A.people[realmName][Name][category][quantitative[ii]]
                         if data ~= 0 then
                             GameTooltip:AddLine(quantitative[ii] .. ' ' .. data, 0.5, 0.5, 0.5, true)
@@ -223,8 +223,7 @@ local function archGetPlayer(player)
         factionName = UnitFactionGroup('player')
         for yy = 1, #quantitative do
             if A.people[realmName][player][category][quantitative[yy]] ~= 0 then
-                aprint(tCol(quantitative[yy] .. ': ') ..
-                                                   A.people[realmName][player][category][quantitative[yy]])
+                aprint(tCol(quantitative[yy] .. ': ') .. A.people[realmName][player][category][quantitative[yy]])
             end
         end
         --
@@ -241,7 +240,7 @@ end
 -- ==== Main 
 local function checkStatLimit(player, stat)
     if A.people[realmName][player][category][stat] == nil then
-        A.people[realmName][player][category][stat] = stat 
+        A.people[realmName][player][category][stat] = stat
     elseif A.people[realmName][player][category][stat] >= 5 then
         A.people[realmName][player][category][stat] = 5
     elseif A.people[realmName][player][category][stat] <= -5 then
@@ -425,8 +424,7 @@ end
 -- :: add player stat [who da kullaniliyor] args[1] = player name args[]
 local function addPlayerStat(args, parameter)
     if A.people[realmName][args[1]] == nil then
-        -- aprint("cannot find " .. fCol(args[1]) .. " in your database.")
-        arch_addPersonToDatabase(args[1])
+        arch_addPersonToDatabase(args[1], "")
     end
     if args[2] ~= nil then
         if type(tonumber(args[2])) == "number" then
@@ -434,7 +432,7 @@ local function addPlayerStat(args, parameter)
                 A.people[realmName][args[1]][category][parameter]) + tonumber(args[2])
             checkStatLimit(args[1], parameter)
             aprint(fCol(args[1]) .. ' ' .. parameter .. tCol(' is now ') ..
-                                               cCol(A.people[realmName][args[1]][category][parameter]))
+                       cCol(A.people[realmName][args[1]][category][parameter]))
             -- test
             if args[3] then
                 table.remove(args, 2)
@@ -490,14 +488,15 @@ local function groupRepCheck(msg)
                             local p_name, p_server, guid, p_class = identifyPlayer(ii)
                             arch_addPersonToDatabase(p_name, p_server)
                         end
-                        local quantitativeP = A.people[realmName][person][category][quantitative[yy]]
-                        if quantitativeP ~= nil then
-                            if type(quantitative[yy]) == "number" then
-                                if A.people[realmName][person][category][quantitative[yy]] < 0 then
+                        local qPar = A.people[realmName][person][category][quantitative[yy]]
+                        if qPar ~= nil then
+                            if type(qPar) == "number" then
+                                if qPar < 0 then
+                                    print('test 3')
                                     table.insert(blacklist, person)
                                     break
-                                elseif A.people[realmName][person][category][quantitative[yy]] > 0 then
-                                    -- if Archrist_PlayerDB_calcRaidScore(person) > 0 then
+                                elseif qPar > 0 then
+                                    -- if true then -- Archrist_PlayerDB_calcRaidScore(person) > 0 then
                                     --     table.insert(whitelist, person)
                                     --     break
                                     -- end
@@ -617,7 +616,8 @@ end
 
 function module:CHAT_MSG_SYSTEM(_, arg1)
     if string.find(arg1, "joins the") then
-        if GetNumGroupMembers() == 5 or GetNumGroupMembers() == 10 or GetNumGroupMembers() == 18 or GetNumGroupMembers() == 25 then
+        if GetNumGroupMembers() == 5 or GetNumGroupMembers() == 10 or GetNumGroupMembers() == 18 or GetNumGroupMembers() ==
+            25 then
             groupRepCheck("")
         end
     elseif string.find(arg1, "leaves the") then

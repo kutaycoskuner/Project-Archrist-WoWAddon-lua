@@ -8,6 +8,9 @@
 # Comment Discipline
 
 # Links
+- xml ui
+    - https://wowwiki-archive.fandom.com/wiki/XML_UI
+
 - wow icons
     - https://wowpedia.fandom.com/wiki/Category:WoW_Icons
 
@@ -239,6 +242,7 @@ https://www.lua.org/pil/20.2.html
 background, border, artwork, overlay, highlight
 
 - <ExportArtwork>
+    - https://wowwiki-archive.fandom.com/wiki/Extracting_WoW_user_interface_files
     - create shortcut
     - add -console to name
     - open shortcut press ~

@@ -45,6 +45,7 @@ end
 -- :: professions
 local tai = "Tailoring"
 local eng = "Engineering"
+local fa = "First Aid"
 
 -- :: localization (language) --
 local locale = GetLocale()
@@ -59,7 +60,8 @@ local guideFramePos
 local profession = nil
 local guide_Assoc = {
     [tai] = Arch_guide_tailor,
-    [eng] = Arch_guide_engineer
+    [eng] = Arch_guide_engineer,
+    [fa] = Arch_guide_firstAid
 }
 local guide = nil
 -- :: edit
@@ -182,6 +184,7 @@ local function calcTotalMaterial(matId, amount, prev, next, levels)
     local size
     local total = 0
     for ii, level in ipairs(levels) do
+        level = tonumber(level)
         stepLimit = stepLimit + 1
         if calcDownLimit < next and calcDownLimit < level then -- calcDownLimit < currentLevel and
             -- :: find which level range to calculate
@@ -528,7 +531,8 @@ drawMainFrame = function()
     local dd = AceGUI:Create('Dropdown')
     local guideType = {
         [tai] = tai,
-        [eng] = eng
+        [eng] = eng,
+        [fa] = fa
     }
     dd:SetList(guideType)
     dd:SetValue(A.global.selectedGuide)
@@ -614,7 +618,7 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Main
-local function main(msg)
+local function handleCommand(msg)
     Arch_setGUI(moduleName)
 end
 
@@ -643,7 +647,7 @@ end
 -- ==== CLI (Slash Commands)
 SLASH_cra1 = "/cra" -- todo change the key later
 SlashCmdList["cra"] = function(msg)
-    main(msg)
+    handleCommand(msg)
 end
 
 ------------------------------------------------------------------------------------------------------------------------

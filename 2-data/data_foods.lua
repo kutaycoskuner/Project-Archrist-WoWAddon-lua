@@ -14,10 +14,11 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
         35947,          -- 75 sparkling frostcap
         35953,          -- 75 mead basted caribou
         43518,          -- 74 conjured mana pie
-        39691,          -- 70 succulent orca stew
+        39691,          -- 70 succulent orca stew   
         34759,          -- 70 smoken rockfin
         34125,          -- 70 showeltusk soup
         33452,          -- 65 Honey-Spiced Lichen
+        29449,          -- 65 bladespire bagel
         33449,          -- 65 crusty flatbread
         33443,          -- 65 sour goat cheese
         33454,          -- 65 salted venison
@@ -26,6 +27,7 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
         27854,          -- 55 smoken talbuk venison
         8952,           -- 45 roasted quail
         8076,           -- 45 conjured sweet roll
+        21215,          -- 40 graccu's mince meat fruitcake
         8075,           -- 35 conjured sourdough
         1487,           -- 25 conjured pumpernickel
         3729,           -- 25 soothing turtle bisque
@@ -70,6 +72,7 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
         28399,          -- 60 filtered draenic water
         8766,           -- 45 morning glory dewBCBCB
         8078,           -- 45 conjured sparkling water
+        21215,          -- 40 graccu's mince meat fruitcake
         8077,           -- 35 conjured mineral water
         1645,           -- 35 moonberry juice
         3772,           -- 25 conjured spring water
@@ -97,6 +100,7 @@ Arch_futter = {
         12202,          -- meat tiger meat
         6308,           -- fish raw bristle catfish
         3667,           -- meat zartes krokoliskenfleisch
+        12203,          -- red wolf meat
         
     }
 }

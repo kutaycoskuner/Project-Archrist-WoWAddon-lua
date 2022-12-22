@@ -8,4 +8,5 @@
     <Script file="data_spells.lua"/>
     <Script file="guide_engineer.lua"/>
     <Script file="guide_tailor.lua"/>
+    <Script file="guide_firstAid.lua"/>
 </Ui>

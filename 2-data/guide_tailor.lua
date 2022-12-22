@@ -347,7 +347,7 @@ Arch_guide_tailor = {
     },
     [335] = {
         -- netherweave pants
-        ['item'] = 26772,
+        ['item'] = 21852,
         ['howtolearn'] = "trainer",
         ["levels"] = {325, 335, 340, 345},
         ['mats'] = {
@@ -359,7 +359,7 @@ Arch_guide_tailor = {
     },
     [340] = {
         -- netherweave boots
-        ['item'] = 26772,
+        ['item'] = 21853,
         ['howtolearn'] = "trainer",
         ["levels"] = {335, 345, 350, 355},
         ['mats'] = {

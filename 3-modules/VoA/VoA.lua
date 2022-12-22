@@ -44,7 +44,7 @@ local tank = ""
 local heal = ""
 local mdps = ""
 local rdps = ""
-local count = " " .. tostring(GetNumRaidMembers()) .. "/18"
+local count = " " .. tostring(GetNumGroupMembers()) .. "/18"
 
 -- -- ==== GUI
 -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
@@ -103,8 +103,8 @@ function VoA_announce(inner, msg)
     end
     if not inner then
         if (type(tonumber(return_diverseRaid()[2])) == "number") then
-            count = " " .. tostring(GetNumRaidMembers()) .. "/18"
-            if GetNumRaidMembers() > 10 then
+            count = " " .. tostring(GetNumGroupMembers()) .. "/18"
+            if GetNumGroupMembers() > 10 then
                 SendChatMessage(announce .. tank .. heal .. mdps .. rdps ..
                                     count, "channel", nil,
                                 return_diverseRaid()[2]);

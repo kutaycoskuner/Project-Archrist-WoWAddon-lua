@@ -78,7 +78,7 @@ Arch_help_content = {
     ["playerdb"] = {
         ["title"] = "Player Database",
         ["desc"] = {'playerscoring and note taking module for your interactions',
-                    'quantitative parameters: [dmg], [str], [rep], [att], [dsc]', 'qualitative parameters: note[not]'},
+                    'quantitative parameters: damage[dmg], strategy[str], reputation[rep], attendance[att], discipline[dsc]', 'qualitative parameters: note[not]'},
         ["commands"] = {Arch_commandColor('/rep') .. ' present player details if existing in database',
                         Arch_commandColor('/rep <number>') .. ' increases or decreases score',
                         Arch_commandColor('/rep <playername> <number>') .. ' non target variant',
@@ -88,7 +88,9 @@ Arch_help_content = {
             ' without parameter checks if anyone has negative reputation in your group',
                         Arch_commandColor('/rrep <number>') .. ' gives everyone a given reputation in the group',
                         Arch_commandColor('/rep') ..
-            ' adds target person to your database, if target is already added displays data'},
+            ' adds target person to your database, if target is already added displays data',
+            cCol('/dsc ') .. cCol('/str ') .. cCol('/att ') .. cCol('/dmg') .. ' commands will also work same way for other quantitative parameters'
+        },
         ["conditionals"] = {},
         ["functions"] = {}
 

@@ -218,12 +218,7 @@ local assist_groupOrganizer = {
                         return A.global.assist.groupOrganizer.isEnabled
                     end,
                     set = function(info, val)
-                        A.global.assist.groupOrganizer.isEnabled = val
-                        if val then
-                            aprint("Group Organizer" .. " is enabled")
-                        else
-                            aprint("Group Organizer" .. " is disabled")
-                        end
+                        A:GetModule("GroupOrganizer", true).toggleModule()
                     end
                 },
                 desc = {

@@ -10,6 +10,7 @@ local switch_register = true
 -- -- ==== GUI
 -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
 
+
 -- ==== Methods
 local function handleCommand(msg)
     -- print(IsPlayerMoving())

@@ -16,6 +16,8 @@ local moduleColor = '|cff00efff'
 local commandColor = '|cfff7882f'
 local focusColor = '|cffbf4aa8'
 local trivialColor = '|cff767676'
+local headerColor = "|cffffd000"
+
 local colorEnd = '|r'
 local addonName = "[Archrist]: "
 local realmName = GetRealmName()
@@ -77,6 +79,10 @@ function Arch_trivialColor(msg)
 end
 local tCol = Arch_trivialColor
 
+function Arch_headerColor(msg)
+    return (headerColor .. tostring(msg) .. colorEnd)
+end
+local hCol = Arch_headerColor
 
 -- :: Time
 function Arch_calcTimeInSec()
@@ -110,7 +116,36 @@ function Arch_fixArgs(msg)
     return args;
 end
 
-function Arch_properCase(str)
+function Arch_split(msg, sep)
+    -- :: this is separating the given arguments after command
+    if sep == nil then sep = "%s" end
+    local args = {};
+    for str in string.gmatch(msg, "([^" .. sep .. "]+)") do
+        table.insert(args, str)
+    end
+
+    return args;
+end
+
+function Arch_properCase(msg)
+    -- :: this is separating the given arguments after command
+    local sep;
+    if sep == nil then sep = "%s" end
+    local args = {};
+    for str in string.gmatch(msg, "([^" .. sep .. "]+)") do
+        table.insert(args, str)
+    end
+
+    -- :: this capitalizes first letters of each given string
+    for ii = 1, #args, 1 do
+        if type(args[ii]) == 'string' then args[ii] = args[ii]:lower() end
+        if ii == 1 then args[ii] = args[ii]:gsub("^%l", string.upper) end
+    end
+    args = table.concat(args, " ")
+    return args;
+end
+
+function Arch_sentenceCase(str)
     if str ~= nil then
         return (str:gsub("^%l", string.upper))
     end

@@ -139,13 +139,8 @@ function toggleGUI(key)
             Arch_craftGuidesGUI()
         elseif key == 'PlayerDB' then
             Arch_playerDB_GUI()
-            -- elseif key == 'LootDatabase' then
-            --     LootDatabaseGUI()
-            -- elseif key == 'LootDatabasePrune' then
-            --     currentLootList = {}
-            --     toggleGUI('LootDatabase')
-            -- elseif key == "DiverseRaid" then
-            --     diverseRaidGUI()
+        elseif key == "GuideMaker" then
+            Arch_guideMaker_GUI()
         end
         -- test
     elseif recursive then

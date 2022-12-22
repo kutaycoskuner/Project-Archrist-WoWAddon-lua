@@ -141,6 +141,10 @@ frameTextName:SetFont("Fonts\\FRIZQT__.ttf", fontSize, "OUTLINE")
 frameTextName:SetPoint("CENTER")
 frameTextName:SetText(baseFrameText)
 
+-- :: Frame i yerlestir ve sakla
+frame:SetSize(frameWidth, frameHeight)
+frame:Hide()
+
 -- :: time color picker
 local function raidCooldowns_calcTime(time)
     local cd = tonumber(time) - tonumber(GetTime())
@@ -322,10 +326,6 @@ local function updateGUI()
     -- :: bu gruptan cikarilan itemlari gui uzerinden silmek icin lazim. gu
     guiFrames = group
 end
-
--- :: Frame i yerlestir ve sakla
-frame:SetSize(frameWidth, frameHeight)
-frame:Hide()
 
 -- ==== Methods
 local function getSpellCooldown(spellName)
@@ -592,7 +592,7 @@ local function startCooldown(srcName, spellID, spellName)
                 if group[spell][name].isAvailable ~= nil then
                     group[spell][name].isAvailable = false
                 end
-                if group[spell][name].availableAt ~= nil and getSpellCooldown(spellName) then
+                if group[spell][name].availableAt ~= nil then --and getSpellCooldown(spellName)
                     -- print(GetTime(), getSpellCooldown(spellName))
                     group[spell][name].availableAt = tonumber(GetTime()) + tonumber(getSpellCooldown(spellName))
                     -- print(group[spell][name].availableAt)
