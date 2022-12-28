@@ -97,6 +97,7 @@ local cCol = Arch_commandColor
 local mCol = Arch_moduleColor
 local tCol = Arch_trivialColor
 local classCol = Arch_classColor
+local pCase = Arch_properCase
 local addPlayer = arch_addPersonToDatabase
 arch_opt_triggerSpells = {}
 
@@ -365,11 +366,14 @@ local function setRole(player, class, role, server)
             return
         end
     end
-    for ii = 1, #available_roles[class] do
-        if role == available_roles[class][ii] then
-            A.people[realmName][player][category]["role"] = role
-            aprint("you have set " .. fCol(properCase(role)) .. " role to " .. cCol(UnitName("target")))
-            return
+    class = pCase(class)
+    if available_roles[class] then
+        for ii = 1, #available_roles[class] do
+            if role == available_roles[class][ii] then
+                A.people[realmName][player][category]["role"] = role
+                aprint("you have set " .. fCol(properCase(role)) .. " role to " .. classCol(class, UnitName("target")))
+                return
+            end
         end
     end
     aprint("given role is not applicable for " .. classCol(class, class))
@@ -545,7 +549,7 @@ local function announceFocusQue(isSilent)
                 SendChatMessage(announce, "party", nil, "channel")
             end
         else
-            aprint(":: Suggested Focus Queue ::")
+            aprint(fCol(":: Suggested Focus Queue ::"))
             aprint(announce)
         end
     else
@@ -677,7 +681,7 @@ local function autoRole_single(player, class, p_server)
     end
     -- :: rol yoksa
     if role ~= nil then
-        aprint(fCol(properCase(role)) .. " role automaticaly assigned to " .. cCol(player))
+        aprint(fCol(properCase(role)) .. " role automaticaly assigned to " .. classCol(class, player))
     end
     -- :: inspect
 end
@@ -728,29 +732,33 @@ local function autoRole_inspect()
             A.people[realmName][p_name][category]["role"] == nil) then
             -- :: exceptions
             -- :: mage frostsa rdps
-            if p_class == "MAGE" and (A.people[realmName][p_name][category]["role"] == nil or A.people[realmName][p_name][category]["role"] == "mdps") then
+            if p_class == "MAGE" and
+                (A.people[realmName][p_name][category]["role"] == nil or A.people[realmName][p_name][category]["role"] ==
+                    "mdps") then
                 A.people[realmName][p_name][category]["role"] = "rdps"
                 aprint(fCol(properCase(available_spec_role[specName])) .. " role automaticaly assigned to " ..
-                           cCol(p_name))
+                           classCol(p_class, p_name))
                 -- :: druidde tank talenti varsa tank
             elseif p_class == "DRUID" and specName == "Feral Combat" then
                 local talentName, _, _, _, rank, maxRank = LCI:GetTalentInfo(guid, 2, 29)
                 if rank == 3 then
                     if A.people[realmName][p_name][category]["role"] ~= "tank" then
                         A.people[realmName][p_name][category]["role"] = "tank"
-                        aprint(fCol(properCase("tank")) .. " role automaticaly assigned to " .. cCol(p_name))
+                        aprint(fCol(properCase("tank")) .. " role automaticaly assigned to " ..
+                                   classCol(p_class, p_name))
                     end
                 else
                     if A.people[realmName][p_name][category]["role"] ~= "mdps" then
                         A.people[realmName][p_name][category]["role"] = "mdps"
-                        aprint(fCol(properCase("mdps")) .. " role automaticaly assigned to " .. cCol(p_name))
+                        aprint(fCol(properCase("mdps")) .. " role automaticaly assigned to " ..
+                                   classCol(p_class, p_name))
                     end
                 end
             else
                 if available_spec_role[specName] then
                     A.people[realmName][p_name][category]["role"] = available_spec_role[specName]
                     aprint(fCol(properCase(available_spec_role[specName])) .. " role automaticaly assigned to " ..
-                               cCol(p_name))
+                               classCol(p_class, p_name))
                 end
             end
         end

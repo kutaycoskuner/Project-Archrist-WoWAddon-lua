@@ -8,11 +8,17 @@
 # Comment Discipline
 
 # Links
+- curse project
+    - https://authors.curseforge.com/#/projects
+
 - xml ui
     - https://wowwiki-archive.fandom.com/wiki/XML_UI
 
 - wow icons
     - https://wowpedia.fandom.com/wiki/Category:WoW_Icons
+
+- raid buffs and debuffs
+    - https://www.icy-veins.com/wotlk-classic/raid-buffs-and-debuffs
 
 - leveling guides
     - class
@@ -86,10 +92,19 @@ https://www.lua.org/pil/20.2.html
 +-- modules
 +-- settings
 +-- Archrist.lua
-+-- Archrist.toc
++-- Archrist.tocsd
 
 
 # Blackboard
+- check addons
+    - blt
+    - fatality
+    - rangedisplay
+    - vuhdo
+
+- architecture
+    - frame position un belirlenmesi x-gui de oluyor
+
 - customizability levels | levels of customizability | levels of customization
     1. give your data within the logic
     2. split your data from logic in the code

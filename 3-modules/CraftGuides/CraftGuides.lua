@@ -48,11 +48,11 @@ local eng = "Engineering"
 local fa = "First Aid"
 
 -- :: localization (language) --
-local locale = GetLocale()
-if locale == "deDE" then
-    tai = "Schneiderei"
-    eng = "Ingenieuerskunst"
-end
+-- local locale = GetLocale()
+-- if locale == "deDE" then
+--     tai = "Schneiderei"
+--     eng = "Ingenieuerskunst"
+-- end
 
 -- :: frame position variable
 local guideFramePos
@@ -99,6 +99,7 @@ local prevItemTargetLevel = 0
 -- :: lua table i sorted olmadigi icin soted sekilde kullanmak icin custom fonksiyon
 -- https://stackoverflow.com/questions/15706270/sort-a-table-in-lua
 local function spairs(t, order)
+    -- print(guide)
     -- collect the keys
     local keys = {}
     for k in pairs(t) do
@@ -156,12 +157,20 @@ end
 
 local function selectTargetLevel()
     table.sort(guide)
+    --    do return end
     learnCurrentLevel()
     for k, v in spairs(guide) do
         if k > currentLevel then
             targetLevel = k
             targetData = guide[k]
+            if targetData["item"] == nil then
+                print(k)
+                do
+                    return
+                end
+            end
             _, targetItem = GetItemInfo(targetData['item'])
+
             -- print("current target is " .. k)
             break
         end
@@ -212,14 +221,16 @@ local function calcTotalDiffMaterial(matId, amount, prev, next, levels)
     local calcDownLimit = prev
     local size = 0
     local total = 0
+    next = tonumber(next)
     for ii, level in pairs(levels) do
+        level = tonumber(level)
         -- print("level ".. level)
         stepLimit = stepLimit + 1
         if calcDownLimit < next and calcDownLimit < level then -- calcDownLimit < currentLevel and
             -- :: find which level range to calculate
             calcUpLimit = level
             if calcUpLimit > next then
-                calcUpLimit = next
+                calcUpLimit = tonumber(next)
             end
             if calcUpLimit > currentLevel then
                 calcUpLimit = currentLevel
@@ -232,7 +243,7 @@ local function calcTotalDiffMaterial(matId, amount, prev, next, levels)
             if size > 0 then
                 total = total + (round(amount * (size * multipliers[stepLimit])))
             end
-            calcDownLimit = calcUpLimit
+            calcDownLimit = tonumber(calcUpLimit)
         end
     end
     return total
@@ -242,6 +253,7 @@ local function createResourceList()
     calcProfLimitByLevel()
     resourceList = {}
     prevItemTargetLevel = 0
+
     for level, dataItem in spairs(guide) do
         if profLimitByLevel > level then
             for mat, matData in spairs(dataItem['mats']) do

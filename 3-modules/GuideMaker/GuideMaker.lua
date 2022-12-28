@@ -249,10 +249,12 @@ local function validateGuide(data, oldKey)
             -- print(levels[1])
             if #levels == 4 then
                 -- todo 
-                -- for ii=1, #levels do
-                --     levels[ii] = split(levels[ii],"|")
-                --     levels[ii] = levels[ii]
-                -- end
+                for ii = 1, #levels do
+                    if string.find(levels[ii], "|") then
+                        levels[ii] = split(levels[ii], "|")
+                        levels[ii] = tonumber(string.sub(levels[ii][1], 10))
+                    end
+                end
                 A.global.guides[tab][data[2]].levels = levels
             end
         end
@@ -592,7 +594,11 @@ drawMainFrame = function()
                     elseif ii == 4 then
                         col = "|cff9c9487"
                     end
-                    levels = levels .. col .. tar["levels"][ii] .. "|r "
+                    if tar["levels"][ii] == nil then
+                        levels = levels .. tCol('00') .. " "
+                    else
+                        levels = levels .. col .. tar["levels"][ii] .. "|r "
+                    end
                 end
                 -- get materials
                 local mats = ""

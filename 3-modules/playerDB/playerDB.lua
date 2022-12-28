@@ -59,6 +59,7 @@ player oyunda degilse /who isim kontrolu yapilamiyor bu durumda playeri yazarak 
 ------------------------------------------------------------------------------------------------------------------------
 
 -- ==== Variables
+local aCol = Arch_addonColor
 local cCol = Arch_commandColor
 local fCol = Arch_focusColor
 local classCol = Arch_classColor
@@ -208,7 +209,7 @@ local function Archrist_PlayerDB_getPlayerData()
                     if A.people[realmName][Name][category][quantitative[ii]] ~= nil then
                         local data = A.people[realmName][Name][category][quantitative[ii]]
                         if data ~= 0 then
-                            GameTooltip:AddLine(quantitative[ii] .. ' ' .. data, 0.5, 0.5, 0.5, true)
+                            GameTooltip:AddLine(aCol(pCase(quantitative[ii] .. ":") .. ' ' .. data), 0.5, 0.5, 0.5, true)
                         end
                     end
                 end
@@ -287,13 +288,12 @@ local function handleNote(msg)
         end
         A.people[realmName][UnitName('target')][category].note = msg
         if msg ~= '' then
-            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. fCol(UnitName('target')) .. ': ' ..
-                                               A.people[realmName][UnitName('target')][category].note)
+            aprint(fCol(UnitName('target')) .. ': ' .. A.people[realmName][UnitName('target')][category].note)
         else
-            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Note for ' .. fCol(UnitName('target')) .. ' has been pruned.')
+            aprint('Note for ' .. fCol(UnitName('target')) .. ' has been pruned.')
         end
     elseif UnitName('target') == UnitName('player') then
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'You cannot add note for your own character')
+        aprint('You cannot add note for your own character')
     else
         -- :: Get Name and not after
         args = fixArgs(msg)
@@ -318,9 +318,9 @@ local function addNote(args)
 
     if args[1] then
         -- print(note)
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. fCol(name) .. ': ' .. A.people[realmName][name][category].note)
+        aprint(fCol(name.. ": ") .. A.people[realmName][name][category].note)
     else
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Note for ' .. fCol(name) .. ' has been pruned.')
+        aprint('Note for ' .. fCol(name) .. ' has been pruned.')
     end
 end
 
@@ -528,10 +528,10 @@ local function groupRepCheck(msg)
                     checkBlacklist = checkBlacklist .. ', '
                 end
             end
-            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. fCol('Blacklist: ') .. checkBlacklist)
+            aprint(fCol('Blacklist: ') .. checkBlacklist)
             -- return
         else
-            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'nobody in raid in your blacklist')
+            aprint('nobody in raid in your blacklist')
         end
         -- :: add raidwise reputation
         if msg ~= nil and msg ~= '' then

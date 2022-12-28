@@ -70,13 +70,13 @@ local group = {}
 local rcFramePos
 local rcFrameLock = false
 local trackClass = {
+    -- --test
+    -- ["Mage"] = {false, {"Arcane Explosion", "Cone of Cold"}},
+    -- --test
     ["Druid"] = {false, {"Innervate", "Rebirth"}},
     ["Hunter"] = {false, {"Misdirection"}},
     ["Shaman"] = {false, {"Reincarnation"}},
     ["Warlock"] = {false, {"Soulstone Resurrection"}}
-    -- --test
-    -- ["Mage"] = {false, {"Cone of Cold"}}
-    -- --test
 }
 
 --
@@ -147,7 +147,17 @@ frame:Hide()
 
 -- :: time color picker
 local function raidCooldowns_calcTime(time)
-    local cd = tonumber(time) - tonumber(GetTime())
+    local cd = time - GetTime()
+    function toint(n)
+        local s = tostring(n)
+        local i, j = s:find('%.')
+        if i then
+            return tonumber(s:sub(1, i - 1))
+        else
+            return n
+        end
+    end
+    -- print("time: " .. toint(time), "current: " .. toint(GetTime()), "cd: " .. toint(cd))
     if cd > 1 then
         local min = math.floor(cd / 60)
         local sec = math.floor(cd % 60)
@@ -344,19 +354,20 @@ local function deadCheck()
             end
         end
     end
+    A.global.assist.groupCooldown.group = group
 end
 
 local function addPerson(name, playerClass, spell)
     -- :: spell listede yoksa ekle
     if group[spell] == nil then
-        group[spell] = {}
+        group[spell] = {}   
     end
     -- :: ismi yoksa ekle
     if group[spell][name] == nil or group[spell][name] == {} then
         group[spell][name] = {
             class = playerClass, -- :: class color icin
             isAvailable = true, -- :: kullanim musait mi
-            availableAt = tonumber(GetTime()), -- :: ne zaman musait olacak
+            availableAt = GetTime(), -- :: ne zaman musait olacak
             alive = true
         }
         A.global.assist.groupCooldown.group = group
@@ -375,7 +386,7 @@ local function addSelfOnly()
                     local name = UnitName('player')
                     local class = UnitClass('player')
                     addPerson(name, class, spell)
-                    return
+                    -- return
                 end
             end
         end
@@ -391,6 +402,8 @@ local function scanGroup()
         addSelfOnly()
         -- :: gruptaysa
     else
+        -- test
+        group = {}
         for ii = 1, GetNumGroupMembers() do
 
             local druidName, rank, subgroup, level, vclass
@@ -490,7 +503,6 @@ local function handleCommand(msg)
 
     -- :: Announce
     if UnitName('target') and (UnitAffectingCombat("player") or UnitIsDeadOrGhost('player')) then
-
         if msg ~= '' then
             local que = tonumber(msg)
             local queCounter = 1
@@ -556,13 +568,16 @@ local function setClosestAvailable()
         closestAvailable = 0
         for spell in pairs(group) do
             for name in pairs(group[spell]) do
-                if closestAvailable == 0 and group[spell][name].availableAt ~= nil then
+                if closestAvailable == 0 then
                     closestAvailable = group[spell][name].availableAt
-                elseif closestAvailable <= group[spell][name].availableAt and group[spell][name].availableAt ~= nil then
-                    group[spell][name].availableAt = closestAvailable
+                elseif closestAvailable < group[spell][name].availableAt then
+                    closestAvailable = group[spell][name].availableAt
+                elseif group[spell][name].availableAt == nil then
+                    mprint("available at is nil")
                 end
             end
         end
+        -- print("closest: ", closestAvailable, "crnt: ",GetTime())
         --
         if closestAvailable > GetTime() then
             inquiryCD = true
@@ -588,14 +603,15 @@ local function startCooldown(srcName, spellID, spellName)
     for spell in pairs(group) do
         local break2 = false
         for name in pairs(group[spell]) do
-            if name == srcName then
+            -- print(group[spell][name]["availableAt"], spell, spellName, spellID, name, srcName)
+            if name == srcName and spell == spellName then
                 if group[spell][name].isAvailable ~= nil then
+                    -- print(group[spell][name]["availableAt"], spell, name, spellName, spellID,group[spell][name]["isAvailable"])
                     group[spell][name].isAvailable = false
                 end
-                if group[spell][name].availableAt ~= nil then --and getSpellCooldown(spellName)
-                    -- print(GetTime(), getSpellCooldown(spellName))
-                    group[spell][name].availableAt = tonumber(GetTime()) + tonumber(getSpellCooldown(spellName))
-                    -- print(group[spell][name].availableAt)
+                if group[spell][name].availableAt ~= nil then -- and getSpellCooldown(spellName)
+                    group[spell][name]["availableAt"] = GetTime() + getSpellCooldown(spellName)
+                    -- print("available at: ", group[spell][name]["availableAt"], "current: ", GetTime())
                 else
                     aprint("cannot update interface")
                 end
@@ -636,7 +652,6 @@ local function endCooldown()
 end
 
 local function TextureBasics_CreateTexture(iconFrame, show)
-
     if show == true then
         iconFrame:Show()
     else
@@ -753,7 +768,7 @@ function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBA
     if spellName == "Misdirection" and eventType == "SPELL_CAST_SUCCESS" then
         setAlive(dstName, true)
         startCooldown(srcName, spellId, spellName)
-    end 
+    end
     -- :: Soulstone Resurrection
     if spellName == "Soulstone Resurrection" then
         setAlive(dstName, true)
@@ -767,12 +782,12 @@ function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBA
     -- test shaman end
 
     -- test mage
-    -- if spellName == "Cone of Cold" then -- shaman lesser healing wave
-    --     -- todo: testten sonra scan group u cikar
-    --     scanGroup()
-    --     setAlive(srcName, true)
-    --     startCooldown(srcName, spellId, spellName)
-    -- end
+    if eventType == "SPELL_CAST_SUCCESS" and spellName == "Cone of Cold" or spellName == "Arcane Explosion" then -- shaman lesser healing wave
+        -- todo: testten sonra scan group u cikar
+        -- scanGroup()
+        setAlive(srcName, true)
+        startCooldown(srcName, spellId, spellName)
+    end
     -- test mage end
 
     -- -- :: Checktime if some cd exists
@@ -846,11 +861,6 @@ SLASH_cr1 = "/cr"
 SlashCmdList["cr"] = function(msg)
     handleCommand(msg)
 end
-
--- SLASH_app1 = "/app"
--- SlashCmdList["app"] = function(msg)
---     ('asdf')
--- end
 
 -- -- ==== End
 local function InitializeCallback()

@@ -33,6 +33,17 @@ local Arch_classColors = {
     ["Shaman"] = '|cff0070DE',
     ["Warlock"] = '|cff8787ED',
     ["Warrior"] = '|cffC79C6E',
+    ["DEATHKNIGHT"] = '|cffC41F3B',    
+    ["DRUID"] = '|cffFF7D0A',
+    ["HUNTER"] = '|cffA9D271',
+    ["MAGE"] = '|cff40C7EB',
+    ["PALADIN"] = '|cffF58CBA',
+    ["PRIEST"] = '|cffFFFFFF',
+    ["ROGUE"] = '|cffFFF569',
+    ["SHAMAN"] = '|cff0070DE',
+    ["WARLOCK"] = '|cff8787ED',
+    ["WARRIOR"] = '|cffC79C6E',
+    
 }
 
 -- :: category
@@ -83,6 +94,35 @@ function Arch_headerColor(msg)
     return (headerColor .. tostring(msg) .. colorEnd)
 end
 local hCol = Arch_headerColor
+
+-- :: Data Management /  Sorting
+function Arch_sortedPairs(t, order)
+    -- print(guide)
+    -- collect the keys
+    local keys = {}
+    for k in pairs(t) do
+        keys[#keys + 1] = k
+    end
+
+    -- if order function given, sort by it by passing the table and keys a, b,
+    -- otherwise just sort the keys 
+    if order then
+        table.sort(keys, function(a, b)
+            return order(t, a, b)
+        end)
+    else
+        table.sort(keys)
+    end
+
+    -- return the iterator function
+    local i = 0
+    return function()
+        i = i + 1
+        if keys[i] then
+            return keys[i], t[keys[i]]
+        end
+    end
+end
 
 -- :: Time
 function Arch_calcTimeInSec()

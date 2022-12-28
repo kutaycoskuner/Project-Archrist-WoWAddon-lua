@@ -53,6 +53,10 @@
 - [x] 18-Dec-2022 22-Nov-2022 fix playerdb: rep atinca veri yazmiyor
 - [x] 19-Dec-2022 17-Dec-2022 add: Cleaning / refactoring / help functions / ui / accessibility
 - [x] 22-Dec-2022 20-Dec-2022 add: craft guide maker
+- [x] 25-Dec-2022 19-Dec-2022 fix: CRIndicator innervate yerine rebirth gosteriyor
+- [x] 27-Dec-2022 25-Dec-2022 add: VoA 18 rework
+- [x] 28-Dec-2022 28-Dec-2022 add: skill casts by name
+- [x] 28-Dec-2022 28-Dec-2022 add: thanks to focus magic
 - 26-Nov-2022 ler: addon communication ayni addona sahip baska biriyle iletisim kurmayi ogren veri paylas
 - 26-Nov-2022 ler: minimap / map marking
 - 09-Nov-2022 add: todo resting event api ekle : now its good time to check todo list
@@ -68,10 +72,12 @@
 - 14-Dec-2022 add: Procedural reminders | wear your tabard, repair, get water, quest ver
 - 19-Dec-2022 add: help and interface customizability for GroupOrganizer
 - 19-Dec-2022 add: module enable disable  template ekle diger moduller icin standard yap
-- 19-Dec-2022 fix: CRIndicator innervate yerine rebirth gosteriyor
 - 20-Dec-2022 add: gui refactoring
 - 20-Dec-2022 add: export artwork yapip uygun gui texturelari sec
 - 20-Dec-2022 add: xml ui ogren
+- 27-Dec-2022 add: VoA help
+- 27-Dec-2022 add: GuideMaker help
+- 28-Dec-2022 add: group org: interrupter skill source
 
 
 # Release cleaning
@@ -84,7 +90,6 @@
 - readme
 - timelog
 
-
 # Procedures
 - check todo
 - enter log
@@ -94,6 +99,21 @@
 - push
 
 # LOG
+- [1.46]
+    - todo minimap icon
+
+- [1.45] VoA remake ...
+    - 28-Dec-2022 add: Announcer thanks for focus magic
+    - 28-Dec-2022 add: Test: spell track by name
+    - 27-Dec-2022 fix: CRIndicator frame update problem
+    - 27-Dec-2022 add: VoA remake
+    - 26-Dec-2022 add: GroupOrganizer class color on msg 
+    - 26-Dec-2022 wip: VoA remake gui
+    - 26-Dec-2022 add: VoA remake frame positions
+    - 25-Dec-2022 fix: CRIndicator display problem
+    - 23-Dec-2022 sty: PlayerDB tooltip colors
+    - 23-Dec-2022 fix: guideMaker to CraftGuide test
+
 - [1.44] add: GuideMaker ...
     - 22-Dec-2022 add: GuideMaker finished first guide done with firstAid
     - 22-Dec-2022 fix: PlayerDB add by name bug

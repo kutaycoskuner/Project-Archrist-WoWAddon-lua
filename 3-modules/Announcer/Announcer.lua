@@ -22,7 +22,6 @@ local function sendGroupMessage(msg)
     end
 end
 
-
 -- ==== Start
 function module:Initialize()
     self.initialized = true
@@ -42,6 +41,10 @@ function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBA
     -- :: Apply: Mage Focus
     if srcName == UnitName('player') and spellName == "Focus Magic" and eventType == "SPELL_CAST_SUCCESS" then
         SendChatMessage(GetSpellLink("Focus Magic") .. " is cast on you (3% spell crit chance)", "whisper", nil, dstName);
+    end
+    -- :: Receive: Mage Focus
+    if dstName == UnitName('player') and spellName == "Focus Magic" and eventType == "SPELL_CAST_SUCCESS" then
+        SendChatMessage("Thanks for the " .. GetSpellLink("Focus Magic"), "whisper", nil, srcName);
     end
 
     -- :: Apply: Priest Power Infusion 

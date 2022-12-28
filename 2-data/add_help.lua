@@ -144,7 +144,7 @@ Arch_help_content = {
         ["desc"] = {"This module categorizes people in your group on 4 main roles " .. fCol('tank heal mdps rdps'),
                     "And creates tasks groups of your preference to announce in sequence in encounters"},
         ["commands"] = {cCol('/org ') .. "scans and manifests group",
-                        cCol('/org [tank | heal | mdps | rdps]') .. "assigns role to target",
+                        cCol('/org [tank | heal | mdps | rdps]') .. " assigns role to target",
                         cCol('/org tasks') .. " scans and present task groups",
                         cCol('/org focus') .. " creates and announces mage's focus magic link"},
         ["conditionals"] = {},

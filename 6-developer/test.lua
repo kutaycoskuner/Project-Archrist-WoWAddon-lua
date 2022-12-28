@@ -1,25 +1,50 @@
-----------------------------------------------------------------------------------------------------------------------
--- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+------------------------------------------------------------------------------------------------------------------------
+--------- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+------------------------------------------------------------------------------------------------------------------------
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
-local moduleName = 'test';
-local moduleAlert = M .. moduleName .. ": |r";
-local module = A:GetModule(moduleName);
-----------------------------------------------------------------------------------------------------------------------
+local m_name, m_name2 = "test", "test";
+local group = "";
+local module = A:GetModule(m_name, true);
+local moduleAlert = M .. m_name2 .. ": |r";
+local mprint = function(msg)
+    print(moduleAlert .. msg)
+end
+local aprint = Arch_print
+if module == nil then
+    return
+end
+
+------------------------------------------------------------------------------------------------------------------------
+--------- Notes
+------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
 local switch_register = true
+local sourceName = ""
 -- -- ==== GUI
 -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
-
 
 -- ==== Methods
 local function handleCommand(msg)
     -- print(IsPlayerMoving())
-    if switch_register == true then
-        module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+    if msg == "" then
+        if switch_register == true then
+            module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+            aprint("spell tracking activated")
+        else
+            module:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+            aprint("spell tracking deactivated")
+        end
+        switch_register = not switch_register
     else
-        module:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+        sourceName = msg
+        if sourceName == "reset" then
+            sourceName = ""
+        end
+        if UnitName("target") ~= nil then
+            sourceName = UnitName('target')
+        end
+        aprint("Tracking set to " .. sourceName)
     end
-    switch_register = not switch_register
 end
 -- ==== Start
 function module:Initialize()
@@ -51,7 +76,9 @@ function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBA
     -- print(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)
     -- print(timestamp, eventType, srcName, dstName, spellId, spellName)
     -- if eventType == nil then
-    print(eventType, srcName, spellId, spellName)
+    if srcName == sourceName then
+        print(eventType, srcName, spellId, spellName)
+    end
     -- :: stop macro
     -- do
     --     return

@@ -29,5 +29,6 @@ Arch_spells = {
     -- test
     -- ==== rogue
     -- tricks of the trade
-    -- ["Cone of Cold"] = {10159, 10, 26, "spell_frost_glacier"},
+    ["Cone of Cold"] = {10159, 10, 26, "spell_frost_glacier"},
+    ["Arcane Explosion"] = {27080, 5, 20, "spell_frost_glacier"}
 }
