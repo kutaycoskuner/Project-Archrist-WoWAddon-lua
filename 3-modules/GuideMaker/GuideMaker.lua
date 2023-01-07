@@ -58,6 +58,7 @@ local realmName = GetRealmName()
 local framePos = {"CENTER", "CENTER", 0, 0}
 local test_guide
 local col_widths = {0.03, 0.07, 0.30, 0.18, 0.41}
+local b_editActive = true
 
 -- :: Functions
 local drawMainFrame = nil
@@ -233,7 +234,8 @@ local function validateGuide(data, oldKey)
     if A.global.guides[tab][data[2]] ~= nil then
         -- == validate item
         if data[3] then
-            local itemName, itemLink = GetItemInfo(tostring(data[3]))
+            -- print(data[3], GetItemInfo("Malachite"))
+            local itemName, itemLink = GetItemInfo(data[3])
             -- print(itemLink, #data[3], type(data[3]), data[3])
             local itemID
             if itemLink then
@@ -278,6 +280,7 @@ local function validateGuide(data, oldKey)
                             if itemLink then
                                 itemID = GetItemInfoFromHyperlink(itemLink)
                             end
+                            -- aprint(tostring(matID))
                             if itemID then
                                 -- aprint(itemID, amount)
                                 if first then
@@ -393,6 +396,13 @@ draw_widget_editBox = function(content, width, parent, label)
     widget:SetRelativeWidth(width)
     widget:SetCallback("OnEnterPressed", function(widget, event, text)
         -- :: create editbox
+        -- print(widget:GetUserData("key"))
+        -- if string.find(widget:GetUserData("key"), "Enter ID or Name") then
+        --     widget:SetText("")
+        -- end
+        -- if widget:GetUserData("key") == tCol("MatId_1") then
+        --     widget:SetText("")
+        -- end
         local d = {}
         local counter = 0
         widget:SetUserData("key", text)
@@ -402,6 +412,7 @@ draw_widget_editBox = function(content, width, parent, label)
                 d[counter] = v
             end
         end
+        b_editActive = true
         parent:ReleaseChildren()
         validateGuide(d)
     end)
@@ -432,6 +443,7 @@ draw_widget_editBox2 = function(content, width, parent, label)
         end
         parent:ReleaseChildren()
         validateGuide(d, oldKey)
+        b_editActive = true
         Arch_setGUI(m_name, true)
         Arch_setGUI(m_name, true)
         -- drawRow(parent, data[1], data[2], data[3], data[4], true)
@@ -483,16 +495,21 @@ draw_widget_interactiveLabel = function(text, width, parent, isNotHighlighted)
     end)
     widget:SetCallback("OnClick", function(widget, event, selection)
         -- :: create editbox
-        local data = {}
-        local counter = 0
-        for children in pairs(parent.children) do
-            counter = counter + 1
-            for k, v in pairs(parent.children[children].userdata) do
-                data[counter] = v
+        if b_editActive then
+            local data = {}
+            local counter = 0
+            for children in pairs(parent.children) do
+                counter = counter + 1
+                for k, v in pairs(parent.children[children].userdata) do
+                    data[counter] = v
+                end
             end
+            parent:ReleaseChildren()
+            if string.find(data[3], "Enter ID") then data[3] = "" end
+            if string.find(data[5], "MatId_") then data[5] = "" end
+            draw_block_editRow(parent, data[1], data[2], data[3], data[4], data[5])
+            b_editActive = false
         end
-        parent:ReleaseChildren()
-        draw_block_editRow(parent, data[1], data[2], data[3], data[4], data[5])
     end)
 end
 
@@ -611,9 +628,9 @@ drawMainFrame = function()
                 for mat, val in pairs(tar["mats"]) do
                     local amount = val[1]
                     if true then -- lastMatId == mat then
-                        mats = mats .. mat .. tCol("=") .. fCol(amount) .. tCol(";")
-                    else
-                        mats = mats .. tCol(mat) .. tCol("=") .. tCol(amount) .. tCol(";")
+                        mats = mats .. mat .. "=" .. amount .. ";"
+                    -- else
+                    --     mats = mats .. tCol(mat) .. tCol("=") .. tCol(amount) .. tCol(";")
                     end
                 end
                 if mats == "" then

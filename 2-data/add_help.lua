@@ -58,7 +58,8 @@ Arch_help_content = {
             ["RaidCommands"] = 'Work in progress not yet finished',
             ["Macro"] = 'Allows you to create your own macros more than 255 characters with lua',
             ["CraftGuides"] = "Crafting skill guides and material calculator imported from warcrafttavern. Currently only for tailor and engineering.",
-            ["GroupOrganizer"] = "Automatic role categorization and sequence announcing for encounters."
+            ["GroupOrganizer"] = "Automatic role categorization and sequence announcing for encounters.",
+            ["EncounterStopwatch"] = "Encounter stopwatch automatically starts when encounter starts and stop when encounter ends."
             -- Util-PostureCheck
             -- Util-LootFilter
             -- Macro-AutoMount
@@ -78,7 +79,8 @@ Arch_help_content = {
     ["playerdb"] = {
         ["title"] = "Player Database",
         ["desc"] = {'playerscoring and note taking module for your interactions',
-                    'quantitative parameters: damage[dmg], strategy[str], reputation[rep], attendance[att], discipline[dsc]', 'qualitative parameters: note[not]'},
+                    'quantitative parameters: damage[dmg], strategy[str], reputation[rep], attendance[att], discipline[dsc]',
+                    'qualitative parameters: note[not]'},
         ["commands"] = {Arch_commandColor('/rep') .. ' present player details if existing in database',
                         Arch_commandColor('/rep <number>') .. ' increases or decreases score',
                         Arch_commandColor('/rep <playername> <number>') .. ' non target variant',
@@ -89,8 +91,8 @@ Arch_help_content = {
                         Arch_commandColor('/rrep <number>') .. ' gives everyone a given reputation in the group',
                         Arch_commandColor('/rep') ..
             ' adds target person to your database, if target is already added displays data',
-            cCol('/dsc ') .. cCol('/str ') .. cCol('/att ') .. cCol('/dmg') .. ' commands will also work same way for other quantitative parameters'
-        },
+                        cCol('/dsc ') .. cCol('/str ') .. cCol('/att ') .. cCol('/dmg') ..
+            ' commands will also work same way for other quantitative parameters'},
         ["conditionals"] = {},
         ["functions"] = {}
 
@@ -147,6 +149,13 @@ Arch_help_content = {
                         cCol('/org [tank | heal | mdps | rdps]') .. " assigns role to target",
                         cCol('/org tasks') .. " scans and present task groups",
                         cCol('/org focus') .. " creates and announces mage's focus magic link"},
+        ["conditionals"] = {},
+        ["functions"] = {}
+    },
+    ["encounterstopwatch"] = {
+        ["title"] = 'Encounter Stopwatch',
+        ["desc"] = {"This is an experimental module. Starts simple stop watch when you start encounter and stops when encounter ends."},
+        ["commands"] = {},
         ["conditionals"] = {},
         ["functions"] = {}
     }

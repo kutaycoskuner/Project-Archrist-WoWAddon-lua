@@ -99,7 +99,7 @@ function Arch_callTactics()
     end
 end
 
--- :: selecting boss via slash command
+-- :: selecting boss via slash commandd
 local function selectBoss(boss)
     local target = boss
     if boss ~= '' then

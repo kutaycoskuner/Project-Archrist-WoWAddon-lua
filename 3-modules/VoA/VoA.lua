@@ -322,7 +322,7 @@ local function announce()
     end
     --
 
-    print(showNumbers, GetNumGroupMembers())
+    -- print(showNumbers, GetNumGroupMembers())
     if showNumbers then
         if GetNumGroupMembers() < 18 then
             announce = announce .. " " .. delimeter .. " " .. GetNumGroupMembers() .. "/18"

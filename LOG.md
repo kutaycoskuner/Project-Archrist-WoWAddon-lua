@@ -57,6 +57,8 @@
 - [x] 27-Dec-2022 25-Dec-2022 add: VoA 18 rework
 - [x] 28-Dec-2022 28-Dec-2022 add: skill casts by name
 - [x] 28-Dec-2022 28-Dec-2022 add: thanks to focus magic
+- [x] 04-Jan-2022 02-Jan-2023 fix: CRIndicator dead return problem
+- [x] 07-Jan-2023 06-Jan-2023 add: Customizability for Encounter Stopwatch and announces
 - 26-Nov-2022 ler: addon communication ayni addona sahip baska biriyle iletisim kurmayi ogren veri paylas
 - 26-Nov-2022 ler: minimap / map marking
 - 09-Nov-2022 add: todo resting event api ekle : now its good time to check todo list
@@ -77,7 +79,8 @@
 - 20-Dec-2022 add: xml ui ogren
 - 27-Dec-2022 add: VoA help
 - 27-Dec-2022 add: GuideMaker help
-- 28-Dec-2022 add: group org: interrupter skill source
+- 02-Jan-2023 add: Prospecting
+- 04-Jan-2023 add: raid roller
 
 
 # Release cleaning
@@ -98,9 +101,24 @@
 - enter time log
 - push
 
-# LOG
-- [1.46]
+# 
+- [1.47]
     - todo minimap icon
+
+- [1.46] add: Project description ...
+    - 07-Jan-2023 add: Customizability for EncounterStopwatch
+    - 07-Jan-2022 fix: CRIndicator fix attempt 2
+    - 06-Jan-2022 fix: CRIndicator fix attempt 
+    - 05-Jan-2023 add: EncounterStopwatch
+    - 04-Jan-2023 upg: Project description readme update
+    - 04-Jan-2023 fix: GlobalFunctions aprint to selected chat frame
+    - 04-Jan-2023 fix: CRIndicator gui not update (not tested in raid)
+    - 03-Jan-2023 add: Tactics reactivated
+    - 29-Dec-2022 fix: Attempt to fix CRIndicator frame update problem
+    - 29-Dec-2022 add: Announcer resting announce
+    - 28-Dec-2022 add: CurseForge description is written and published.
+    - 28-Dec-2022 fix: GuideMaker delete placeholder text on edit
+    - 28-Dec-2022 fix: GuideMaker multiple row edit preventation
 
 - [1.45] VoA remake ...
     - 28-Dec-2022 add: Announcer thanks for focus magic

@@ -93,6 +93,7 @@ do
     Addon.lootMsgFilter = Addon:NewModule("LootFilter")
     Addon.postureCheck = Addon:NewModule("PostureCheck")
     Addon.guideMaker = Addon:NewModule("GuideMaker")
+    Addon.encounterStopwatch = Addon:NewModule("EncounterStopwatch", "AceEvent-3.0")
     -- :: Extended Macros
     Addon.macro = Addon:NewModule("Macro")
     Addon.milling = Addon:NewModule("Milling", "AceEvent-3.0")

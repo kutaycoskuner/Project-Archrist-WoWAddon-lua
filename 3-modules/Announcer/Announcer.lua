@@ -1,14 +1,62 @@
---------------------------------------------------------------------------------------------------------------------
--- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+------------------------------------------------------------------------------------------------------------------------
+--------- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+------------------------------------------------------------------------------------------------------------------------
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
-local moduleName = 'Announcer';
-local moduleAlert = M .. moduleName .. ": |r";
-local module = A:GetModule(moduleName, true);
+local m_name, m_name2 = "Announcer", "Announcer";
+local group = "utility";
+local module = A:GetModule(m_name, true);
+local moduleAlert = M .. m_name2 .. ": |r";
+local mprint = function(msg)
+    print(moduleAlert .. msg)
+end
+local aprint = Arch_print
 if module == nil then
     return
 end
-----------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+--------- Notes
+------------------------------------------------------------------------------------------------------------------------
+-- todo ----------------------------------------------------------------------------------------------------------------
+--[[
+
+    - announcing certain skills
+        - add level of customizability
+
+    - [x] resting event
+        - time delay ekle
+        - [x] reminder
+            - buy food and drink
+            - buy reagents
+            - repair your gear
+            - give back completed quests
+]]
+
+-- ==== use case ------------------------------------------------------------------------------------------------------------
+--[[
+        - Guide addon and material calculator for efficient profession grinding.
+            - Calculates adaptive material requirements for your level
+            - Suggests item to create to progress on crafting profession        
+        ]]
+
+------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
+-- :: global Functions
+local fCol = Arch_focusColor
+local cCol = Arch_commandColor
+local mCol = Arch_moduleColor
+local tCol = Arch_trivialColor
+local hCol = Arch_headerColor
+local classCol = Arch_classColor
+local pCase = Arch_properCase
+local split = Arch_split
+local spairs = Arch_sortedPairs
+local realmName = GetRealmName()
+
+-- :: module variables
+local b_isEnabled_restingAnnounce = false
+
+
 
 -- -- ==== GUI
 -- ==== Methods
@@ -29,6 +77,20 @@ function module:Initialize()
 end
 
 -- ==== Event Handlers
+function module:ZONE_CHANGED_NEW_AREA() -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
+    if b_isEnabled_restingAnnounce then
+        local b_isNotResting = IsResting()
+        if not b_isNotResting then
+            aprint("You are resting now. don't forget to")
+            aprint(fCol("1") .. "Repair your equipment")
+            aprint(fCol("2") .. "Buy reagents")
+            aprint(fCol("3") .. "Buy food and drinks")
+            aprint(fCol("4") .. "Clean your bags")
+            aprint(fCol("5") .. "Return completed quests")
+        end
+    end
+end
+
 function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14 =
         CombatLogGetCurrentEventInfo()
@@ -44,7 +106,7 @@ function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBA
     end
     -- :: Receive: Mage Focus
     if dstName == UnitName('player') and spellName == "Focus Magic" and eventType == "SPELL_CAST_SUCCESS" then
-        SendChatMessage("Thanks for the " .. GetSpellLink("Focus Magic"), "whisper", nil, srcName);
+        -- SendChatMessage("Thanks for the " .. GetSpellLink("Focus Magic"), "whisper", nil, srcName);
     end
 
     -- :: Apply: Priest Power Infusion 
@@ -71,6 +133,7 @@ local function InitializeCallback()
 
     -- :: Register events
     module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    module:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 end
 A:RegisterModule(module:GetName(), InitializeCallback)
 

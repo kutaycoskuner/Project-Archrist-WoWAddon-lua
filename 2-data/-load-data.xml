@@ -9,4 +9,5 @@
     <Script file="guide_engineer.lua"/>
     <Script file="guide_tailor.lua"/>
     <Script file="guide_firstAid.lua"/>
+    <Script file="guide_jewelcrafting.lua"/>
 </Ui>

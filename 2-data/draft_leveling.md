@@ -3,6 +3,47 @@
 
 # cont
 - Alliance
+    - [zone] 1-10 elywynn forest
+        - 1-6 [group] to goldshire
+            - accept: a thread within
+            - finish: a thread within
+            - accept: kobold camp cleanup
+            - accept: eagan peltskinner
+            - finish: eagen peltskinner
+            - accept: wolves across the border
+            - do: wolves across the border
+            - finish: wolves across the border
+            - accept: brotherhood of thieves
+            - do: kobold camp cleanup
+            - finish: cobold camp cleanup
+            - accept: [priest] hallowed letter
+            - accept investigate echo ridge
+            - finish: [priest] hallowed letter
+            - skill train
+            - do: investigate echo ridge
+            - finish: investigate echo ridge
+            - accept: skirmish at echo ridge
+            - do: skirmish at echo ridge
+            - complete: skirmish at echo ridge
+            - accept: report to goldshire
+            - do: brotherhood of thieves
+            - complete: brother of thieves
+            - accept: milly osworth
+            - accept: bounty on garrick padfoot
+            - accept: [priest] in the favor of light
+            - complete: milly osworth
+            - accept: milly's harvest
+            - do: milly's harvest
+            - do: bounty on garrick padfoot
+            - complete: milly's harvest
+            - accept: grape manifest
+            - complete: grape manifest
+            - complete: bounty on garrick padfoot
+            - accept: rest and relaxation
+            - complete: report to goldshire
+            - accept: the fargodeep mine
+            - complete: rest and relaxation
+            - set heartstone to goldshire
     - 32 stv
     - 34-34 [dg] Scarlet Librry
         - mythology of titans

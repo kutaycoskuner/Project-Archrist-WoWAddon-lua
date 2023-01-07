@@ -13,7 +13,8 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
 
 ]]
 
-Arch_tactics = {
+-- :: this is secondary level is necessary for duplicated keys one is name other is id
+local base = {
     -- ==== Pre-Raid Check
     ["genel"] = {
         "! 1- Log dosyasini sil combat log ac", 
@@ -49,6 +50,22 @@ Arch_tactics = {
         "! Remind frost aura or frost resist totem",
         "=4 {triangle} Kill Frozen Orbs! {triangle}",
     },
+    -- :: Naxx
+    ["anubrekhan"] = {},
+    ["faerlina"] = {},
+    ["maexxna"] = {},
+    ["noth"] = {},
+    ["heigan"] = {},
+    ["loatheb"] = {},
+    ["razuvious"] = {},
+    ["gothik"] = {},
+    ["horsemen"] = {},
+    ["patchwerk"] = {},
+    ["grobbulus"] = {},
+    ["gluth"] = {},
+    ["thaddius"] = {},
+    ["sapphiron"] = {},
+    ["kelthuzad"] = {},
     -- :: Ulduar
     ["fl"] = {
         "This is one of the unique raid encounters of WotLK raids due to the whole fight lasts on vehicles",
@@ -306,4 +323,73 @@ Arch_tactics = {
     ["strand"] = {
         '1- Protect Demos', '2- RDPS get in turret slot', '3- Get Bombs'
     }
+}
+
+Arch_tactics = {
+    -- ==== Pre-Raid Check
+    ["genel"] = base["genel"],
+    -- ==== Dungeons
+    -- :: Utgarde Pinnacle
+    ["skadi"] = base["skadi"],
+    -- ==== Raids
+    -- :: VoA
+    ["koralon"] = base["koralon"],
+    ["emalon"] = base["emalon"],
+    ["toravon"] = base["toravon"],
+    -- :: Naxx
+    ["anubrekhan"] = {},
+    ["faerlina"] = {},
+    ["maexxna"] = {},
+    ["noth"] = {},
+    ["heigan"] = {},
+    ["loatheb"] = {},
+    ["razuvious"] = {},
+    ["gothik"] = {},
+    ["horsemen"] = {},
+    ["patchwerk"] = {},
+    ["grobbulus"] = {},
+    ["gluth"] = {},
+    ["thaddius"] = {},
+    ["sapphiron"] = {},
+    ["kelthuzad"] = {},
+    -- :: Ulduar
+    ["fl"] = base["fl"],
+    ["razorscale"] = base["razorscale"],
+    ["ignis"] = base["ignis"],
+    ["deconstructor"] = base["deconstructor"],
+    ["assembly"] = base["aseembly"],
+    ["kologarn"] = base["kologarn"],
+    ["auriya"] = base["auriya"],
+    ["hodir"] = base["hodir"],
+    ["thorim"] = base["thorim"],
+    -- ["freya"] = {},
+    ["mimiron"] = base["mimiron"],
+    ["vezax"] = base["vezax"],
+    ["yogg"] = base["yogg"],
+    -- ["algalon"] = {},
+    -- :: ToGC
+    ["beasts"] = base["beasts"],
+    ["jarraxus"] = base["jarraxus"],
+    ["faction"] = base["faction"],
+    ["valkyr"] = base["valyr"],
+    ["anub"] = base["anub"],
+    -- :: Onyxia
+    ["onyxia"] = base["onyxia"],
+    -- :: ICC
+    ["marrowgar"] = base["marrowgar"],
+    ["lady"] = base["lady"],
+    ["gunship"] = base["gunship"],
+    ["saurfang"] = base["saurfang"],
+    ["festergut"] = base["festergut"],
+    ["rotface"] = base["rotface"],
+    ["professor"] = base["professor"],
+    ["council"] = base["council"],
+    ["lanathel"] = base["lanathel"],
+    ["valithria"] = base["valithria"],
+    ["sindragosa"] = base["sindragosa"],
+    ["lichking"] = base["lichking"],
+    -- :: RS
+    ["halion"] = base["halion"],
+    -- ==== Battlegrounds
+    ["strand"] = base["strand"],
 }

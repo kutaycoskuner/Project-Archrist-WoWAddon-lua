@@ -46,6 +46,7 @@ end
 local tai = "Tailoring"
 local eng = "Engineering"
 local fa = "First Aid"
+local jew = "Jewelcrafting"
 
 -- :: localization (language) --
 -- local locale = GetLocale()
@@ -61,7 +62,8 @@ local profession = nil
 local guide_Assoc = {
     [tai] = Arch_guide_tailor,
     [eng] = Arch_guide_engineer,
-    [fa] = Arch_guide_firstAid
+    [fa] = Arch_guide_firstAid,
+    [jew] = Arch_guide_Jewelcrafting
 }
 local guide = nil
 -- :: edit
@@ -253,22 +255,28 @@ local function createResourceList()
     calcProfLimitByLevel()
     resourceList = {}
     prevItemTargetLevel = 0
-
-    for level, dataItem in spairs(guide) do
-        if profLimitByLevel > level then
-            for mat, matData in spairs(dataItem['mats']) do
-                if resourceList[mat] == nil then
-                    resourceList[mat] = {0, 0}
+    for ii = 1, 450 do
+        if guide[ii] then
+            local level = ii
+            local dataItem = guide[ii]
+            if profLimitByLevel > level then
+                for mat, matData in spairs(dataItem['mats']) do
+                    if resourceList[mat] == nil then
+                        resourceList[mat] = {0, 0}
+                    end
+                    if resourceList[mat] ~= nil then
+                        resourceList[mat][1] = resourceList[mat][1] +
+                                                   calcTotalMaterial(mat, matData[1], prevItemTargetLevel, level,
+                                dataItem['levels'])
+                    end
                 end
-                if resourceList[mat] ~= nil then
-                    resourceList[mat][1] = resourceList[mat][1] +
-                                               calcTotalMaterial(mat, matData[1], prevItemTargetLevel, level,
-                            dataItem['levels'])
-                end
+                prevItemTargetLevel = level
             end
-            prevItemTargetLevel = level
         end
     end
+
+    -- for level, dataItem in spairs(guide) do
+    -- end
 end
 
 local function calcMatAmount(amount)
@@ -325,19 +333,6 @@ local function deepcopy(orig)
 end
 
 adaptResourceList = function()
-    -- :: itemlari listeye cek
-    -- for step, item in spairs(Arch_guide_tailor_resources) do
-    --     if step > currentLevel then
-    --         adaptedList = deepcopy(Arch_guide_tailor_resources[step])
-    --         break
-    --     end
-    -- end
-    -- for k, v in pairs(resourceList) do
-    --     for j,h in pairs(v)    do
-    --     print(j, " ", h)
-    --     end
-    -- end
-    -- do return end
     -- :: adapted resource list
     createResourceList()
     adaptedList = deepcopy(resourceList)
@@ -358,20 +353,8 @@ adaptResourceList = function()
                 end
             end
         end
-        -- end
         prevItemTargetLevel = itemTargetLevel
     end
-    -- prevItemTargetLevel = 0
-    -- -- :: conversions
-    -- for mat, matData in spairs(adaptedList) do
-    --     if conversion[mat] then
-    --         local amount = conversion[mat][2]
-    --         local t1Material = conversion[mat][1]
-    --         local t2Material = mat
-    --         adaptedList[t1Material][1] = adaptedList[t1Material][1] + (adaptedList[t2Material][1] * amount)
-    --         adaptedList[t2Material][1] = 0
-    --     end
-    -- end
 end
 
 drawLbl = function(content, width, parent)
@@ -541,11 +524,14 @@ drawMainFrame = function()
     drawHead("Crafting Assistant", Arch_guiFrame)
     -- :: guide selector
     local dd = AceGUI:Create('Dropdown')
-    local guideType = {
-        [tai] = tai,
-        [eng] = eng,
-        [fa] = fa
-    }
+    local guideType = {}
+    for k in pairs(guide_Assoc) do
+        guideType[k] = k
+    end
+    --     [tai] = tai,
+    --     [eng] = eng,
+    --     [fa] = fa
+    -- }
     dd:SetList(guideType)
     dd:SetValue(A.global.selectedGuide)
     dd:SetFullWidth(true)

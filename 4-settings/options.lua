@@ -274,6 +274,47 @@ local assist_groupOrganizer = {
     }
 }
 
+local assist_encounterStopwatch = {
+    name = "",
+    type = "group",
+    order = 1,
+    inline = true,
+    args = {
+        title = {
+            name = "Encounter Stopwatch",
+            order = 1,
+            type = "header"
+        },
+        options = {
+            name = "",
+            type = "group",
+            order = 2,
+            inline = true,
+            args = {
+                opt_enable = {
+                    name = "Enable",
+                    desc = "Enables / disables the module",
+                    type = "toggle",
+                    order = 1,
+                    width = "full",
+                    get = function(info)
+                        return A.global.assist.EncounterStopwatch.isEnabled
+                    end,
+                    set = function(info, val)
+                        A:GetModule("EncounterStopwatch", true).toggleModule()
+                    end
+                },
+                desc = {
+                    name = displayHelp("encounterstopwatch"),
+                    type = "description",
+                    order = 2,
+                    width = "full"
+                },
+            }
+        }
+    }
+}
+
 local util_postureCheck = {
     name = "",
     type = "group",
@@ -678,8 +719,9 @@ A.options = {
             type = "group",
             order = 1,
             args = {
+                encounterStopwatch = assist_encounterStopwatch,
                 groupOrg = assist_groupOrganizer,
-                groupCooldowns = assist_groupCooldowns
+                groupCooldowns = assist_groupCooldowns,
             }
 
         },

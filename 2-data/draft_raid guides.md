@@ -1,4 +1,38 @@
 # Draft guides
 
 - naxx  
-    -
+    - patchwerk hero 35 / at start
+    - grobbulus 15931
+        - kill slimes as they spawn
+        - healers dont dispel in group
+        - if you get disease run behind
+        - tank will rotate counter clocwise
+        - hero at start
+    - gluth
+        - focus on boss
+        - on decimate kill all of the skeletons
+        - we need two kiters
+    - thaddius
+        - ---- ++++ 
+        - 
+    - anub rekhan
+    - maexxna 
+        - run away from rain of fire
+    - insructior 
+    - four horseman
+        - korthaz, rivendare 
+        - stack
+        - kill 2 fast then changeon 3 stacks
+        - range zeliek
+        - zeliek spread
+    - sapphiron
+        - stack behind ice
+        - decurse
+        - run away from blizzard
+        - frost aura / totem'
+        - spread before air phase
+    - kel thuzad
+        - interrupt frostbolt
+        - 3 melee groups | rdps spread in p2
+        - kill all mobs before p2 especially banshees
+        - 55802 frostbolt

@@ -18,32 +18,57 @@ end
 --------- Notes
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
+local classColor = Arch_classColor
+local fCol = Arch_focusColor
+local split = Arch_split
 local switch_register = true
 local sourceName = ""
+local b_isTesting = false
 -- -- ==== GUI
 -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
 
 -- ==== Methods
+local function test()
+    -- local elapsed = time() 
+    local elapsed = GetServerTime()
+    print(elapsed)
+    -- DEFAULT_CHAT_FRAME.editBox:SetText("/sw play") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
+end
+
+
 local function handleCommand(msg)
+    if b_isTesting then
+        test()
+        do return end
+    end
     -- print(IsPlayerMoving())
     if msg == "" then
         if switch_register == true then
+            if UnitName("target") ~= nil then
+                sourceName = UnitName('target')
+                aprint("Tracking set to " .. fCol(sourceName))
+            end
             module:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
             aprint("spell tracking activated")
         else
+            sourceName = ""
             module:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
             aprint("spell tracking deactivated")
         end
         switch_register = not switch_register
-    else
-        sourceName = msg
-        if sourceName == "reset" then
-            sourceName = ""
+    elseif msg == "id" then
+        if UnitGUID("target") ~= nil then
+            local arr_id = split(UnitGUID("target"), "-")
+            if arr_id[6] then
+                aprint("Unit id is " .. arr_id[6])
+            end
         end
-        if UnitName("target") ~= nil then
-            sourceName = UnitName('target')
-        end
-        aprint("Tracking set to " .. sourceName)
+        -- else
+        --     sourceName = msg
+        --     if sourceName == "reset" then
+        --         sourceName = ""
+        --     end
+        --     aprint("Tracking set to " .. sourceName)
     end
 end
 -- ==== Start

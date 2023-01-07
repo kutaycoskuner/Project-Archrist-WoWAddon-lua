@@ -26,6 +26,7 @@ Arch_spells = {
     -- ==== mage
     -- test
     -- ["Cone of Cold"] = {10159, 10, 26, "spell_frost_glacier"},
+    ["Blood Boil"] = {49939, 5, 60, "spell_nature_reincarnation"},
     -- test
     -- ==== rogue
     -- tricks of the trade

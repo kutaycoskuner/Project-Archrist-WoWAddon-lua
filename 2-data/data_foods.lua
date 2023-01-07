@@ -29,6 +29,7 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
         8076,           -- 45 conjured sweet roll
         21215,          -- 40 graccu's mince meat fruitcake
         8075,           -- 35 conjured sourdough
+        21552,          -- 35 striped yellowtail
         1487,           -- 25 conjured pumpernickel
         3729,           -- 25 soothing turtle bisque
         4539,           -- 25 goldenbark appleF
@@ -58,6 +59,7 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
         44836,          -- 0 pumpkin pie
         44840,          -- 0 cranberry chutney
         44838,          -- 0 slow-roasted turkey
+        21254,          -- 0 winter veil cookie
     },    
     -- ==== Drinkables
     ["drinks"] = {
@@ -101,6 +103,7 @@ Arch_futter = {
         6308,           -- fish raw bristle catfish
         3667,           -- meat zartes krokoliskenfleisch
         12203,          -- red wolf meat
+        21552,          -- 35 striped yellowtail
         
     }
 }

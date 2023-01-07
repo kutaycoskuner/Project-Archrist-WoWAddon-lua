@@ -8,8 +8,11 @@
 # Comment Discipline
 
 # Links
+
+
 - curse project
     - https://authors.curseforge.com/#/projects
+    - https://www.curseforge.com/wow/addons/archrist
 
 - xml ui
     - https://wowwiki-archive.fandom.com/wiki/XML_UI
@@ -96,6 +99,19 @@ https://www.lua.org/pil/20.2.html
 
 
 # Blackboard
+- curseforge description
+    - description
+        - disclaimer
+    - installation and usage
+    - feature list
+    - todo 
+    - metadata
+        - version release date
+        - authors
+        - links
+        - comments, bug reports, contributions
+        
+
 - check addons
     - blt
     - fatality

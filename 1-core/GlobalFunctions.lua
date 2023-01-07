@@ -193,7 +193,8 @@ end
 
 -- :: addon functions with multiple user modules
 function Arch_print(msg)
-    print(Arch_addonColor(addonName) .. tostring(msg))
+    SELECTED_CHAT_FRAME:AddMessage(Arch_addonColor(addonName) .. tostring(msg))
+    -- print(Arch_addonColor(addonName) .. tostring(msg))
 end
 local aprint = Arch_print
 -- 
