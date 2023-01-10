@@ -100,6 +100,10 @@ function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBA
         SendChatMessage(GetSpellLink("Hysteria") .. " is cast on you (+20% dmg -1% hp 30 sec)", "whisper", nil, dstName);
     end
 
+    if srcName == UnitName('player') and spellName == "Hysteria" and eventType == "SPELL_AURA_APPLIED" then
+        SendChatMessage(GetSpellLink("Unholy Frenzy") .. " is cast on you (+20% dmg -1% hp 30 sec)", "whisper", nil, dstName);
+    end
+
     -- :: Apply: Mage Focus
     if srcName == UnitName('player') and spellName == "Focus Magic" and eventType == "SPELL_CAST_SUCCESS" then
         SendChatMessage(GetSpellLink("Focus Magic") .. " is cast on you (3% spell crit chance)", "whisper", nil, dstName);

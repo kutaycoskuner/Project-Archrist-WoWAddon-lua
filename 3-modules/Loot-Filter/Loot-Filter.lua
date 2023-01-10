@@ -31,6 +31,10 @@ end
 local isEnabled = false
 -- local f = CreateFrame("Frame")
 
+local words = {
+    -- [""],wd
+}
+
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Start
 function module:Initialize()

@@ -1,8 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
     <Script file="Milling.lua"/>
-    <Script file="Prospecting.lua"/>
-    <Script file="Disenchanting.lua"/>
+    <Script file="prospecting.lua"/>
+    <Script file="disenchanting.lua"/>
     <Script file="AutoMount.lua"/>
     <Script file="EatDrink.lua"/>
     <Script file="FeedPet.lua"/>

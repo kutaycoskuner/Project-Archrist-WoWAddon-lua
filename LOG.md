@@ -59,6 +59,7 @@
 - [x] 28-Dec-2022 28-Dec-2022 add: thanks to focus magic
 - [x] 04-Jan-2022 02-Jan-2023 fix: CRIndicator dead return problem
 - [x] 07-Jan-2023 06-Jan-2023 add: Customizability for Encounter Stopwatch and announces
+- [x] 11-Jan-2023 02-Jan-2023 add: Prospecting
 - 26-Nov-2022 ler: addon communication ayni addona sahip baska biriyle iletisim kurmayi ogren veri paylas
 - 26-Nov-2022 ler: minimap / map marking
 - 09-Nov-2022 add: todo resting event api ekle : now its good time to check todo list
@@ -79,7 +80,6 @@
 - 20-Dec-2022 add: xml ui ogren
 - 27-Dec-2022 add: VoA help
 - 27-Dec-2022 add: GuideMaker help
-- 02-Jan-2023 add: Prospecting
 - 04-Jan-2023 add: raid roller
 
 
@@ -93,6 +93,10 @@
 - readme
 - timelog
 
+# Curseforge Proc
+- display name
+    - Archrist_vx.xx
+
 # Procedures
 - check todo
 - enter log
@@ -102,8 +106,15 @@
 - push
 
 # 
-- [1.47]
+- [1.48]
     - todo minimap icon
+
+- [1.47] fix: CRIndicator prune titles ...
+    - 11-Jan-2023 add: Prospecting macro, options
+    - 10-Jan-2023 fix: CRIndicator prune titles attempt 3
+    - 08-Jan-2023 fix: CRIndicator prune titles attempt 2
+    - 07-Jan-2023 add: Help CR warning
+    - 07-Jan-2023 fix: CRIndicator prune titles
 
 - [1.46] add: Project description ...
     - 07-Jan-2023 add: Customizability for EncounterStopwatch

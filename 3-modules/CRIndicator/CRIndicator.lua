@@ -64,7 +64,6 @@ local subFrame = {}
 local subIconFrame = {}
 local subFrameName = {}
 local subFrameCD = {}
-local maxRows = 0
 --
 local group = {}
 local rcFramePos
@@ -310,26 +309,28 @@ local function gui_addHeader(spell)
     fH = fH + (rowHeight * rowSizeMultiplier * 1.1)
 end
 -- :: subframe ekleme
-local function updateGUI()
+local function updateGUI(test)
+    -- :: go
+    if test then
+        for k in pairs(group) do
+            print(k)
+        end
+    end
     -- :: prune empty frames
-    for ii = 1, maxRows do
+    for ii = -1, n_rows + 1 do
         if subFrame[ii] then
             subFrameName[ii]:SetText("")
             subFrameCD[ii]:SetText("")
         end
     end
     tab = 0
-    fH = frameHeight
     n_rows = 0
+    fH = frameHeight
     for spell in pairs(group) do
         gui_addHeader(spell)
         gui_addPeople(spell)
     end
-    
-    if n_rows > maxRows then
-        maxRows = n_rows
-    end
-    
+
     gui_calcFrameHeight()
 end
 
@@ -399,7 +400,7 @@ local function removeif_notInGroup(p_name)
     end
 end
 
-local function scanGroup()
+local function scanGroup(test)
     if group == nil or group == {} then
         group = A.global.assist.groupCooldown.group
     end
@@ -496,12 +497,17 @@ local function scanGroup()
     -- print(nl)
     -- :: spell deaktivasyon
     for spell in pairs(group) do
-        if not group[spell] == {} then
+        local n_spells = 0
+        for person in pairs(group[spell]) do
+            n_spells = n_spells + 1
+            break
+        end
+        if n_spells == 0 then
             group[spell] = nil
         end
     end
     A.global.assist.groupCooldown.group = group
-    updateGUI()
+    updateGUI(test)
 end
 
 local function handleCommand(msg)
@@ -822,6 +828,7 @@ function module:CHAT_MSG_SYSTEM(_, arg1)
     elseif string.find(arg1, "joins the") then
         scanGroup()
     elseif string.find(arg1, "has been disbanded") then
+        group = {}
         scanGroup()
     elseif string.find(arg1, "Party converted to Raid") then
         scanGroup()

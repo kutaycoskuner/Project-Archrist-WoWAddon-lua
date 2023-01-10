@@ -444,6 +444,61 @@ local util_lootFilter = {
     }
 }
 
+local macro_prospecting = {
+    name = "",
+    type = "group",
+    order = 1,
+    inline = true,
+    args = {
+        title = {
+            name = "Prospecting",
+            order = 1,
+            type = "header"
+        },
+        options = {
+            name = "",
+            type = "group",
+            order = 2,
+            inline = true,
+            args = {
+                opt_enable = {
+                    name = "Enable",
+                    desc = "Enables / disables the module",
+                    type = "toggle",
+                    order = 1,
+                    width = "full",
+                    set = function(info, val)
+                        if A.global.macros.prospecting.isEnabled then
+                            UIParent:Hide()
+                            print(L["archrist"] .. ' Deleting macro for prospecting')
+                            DeleteMacro(" Prospecting")
+                            UIParent:Show()
+                            ShowMacroFrame()
+                        else
+                            UIParent:Hide()
+                            print(L["archrist"] .. ' Creating macro for prospecting')
+                            CreateMacro(" Prospecting", "inv_misc_gem_bloodgem_01",
+                                "/run setprospectButton()\n/click prospectButton", nil)
+                            UIParent:Show()
+                            ShowMacroFrame()
+                        end
+                        A.global.macros.prospecting.isEnabled = val
+                    end,
+                    get = function(info)
+                        return A.global.macros.prospecting.isEnabled
+                    end
+                },
+                opt_desc = {
+                    name = "\nCreates a macro that automatically prospects ores (Thorium, Fel Iron, Cobalt, Saronite, Adamantite).\n",
+                    type = "description",
+                    order = 1,
+                    width = "full"
+                }
+            }
+        }
+    }
+}
+
 local macro_disench = {
     name = "",
     type = "group",
@@ -761,6 +816,7 @@ A.options = {
             order = 6,
             args = {
                 disench = macro_disench,
+                prospecting = macro_prospecting,
                 autoMount = macro_autoMount
             }
 

@@ -102,7 +102,9 @@ Arch_help_content = {
         ["desc"] = {'simple frame module to inform raid leader how many crucial raid cooldowns are available in raid'},
         ["commands"] = {Arch_commandColor('/cr') .. ' for toggle frame|r',
                         Arch_commandColor('/cr move') .. ' for move frame|r',
-                        Arch_commandColor('/cr lock') .. ' for lock frame|r'},
+                        Arch_commandColor('/cr lock') .. ' for lock frame|r',
+                        Arch_commandColor('/cr scan') .. ' re-scans the group |r',
+                        Arch_commandColor('/re') .. ' reload the session if frame bugs |r'},
         ["conditionals"] = {},
         ["functions"] = {}
     },

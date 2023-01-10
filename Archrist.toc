@@ -5,8 +5,8 @@
 ## SavedVariables: ArchDB, ArchPrivateDB, ArchPeopleDB, ArchLootDB
 ## SavedVariablesPerCharacter: ArchCharacterDB
 ## OptionalDeps: Blizzard_DebugTools, Ace3, LibClassicInspector
-## Version: 1.46
-## X-ReleaseDate: 07 Jan 2023
+## Version: 1.47
+## X-ReleaseDate: 11 Jan 2023
 ## Author: Orthrin
 ## X-Discord: lichzelg#6056
 ## X-Embeds: Ace3
@@ -27,8 +27,8 @@ Archrist.lua
 1-core\-load-core.xml
 2-data\-load-data.xml
 3-modules\-load-modules.xml
-4-settings\-load-settings.xml
-5-macro\-load-macro.xml
+4-macro\-load-macro.xml
+5-settings\-load-settings.xml
 6-developer\-load-developer.xml
 
 # Development
