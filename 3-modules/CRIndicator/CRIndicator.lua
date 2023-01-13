@@ -310,13 +310,15 @@ local function gui_addHeader(spell)
 end
 -- :: subframe ekleme
 local function updateGUI(test)
-    -- :: go
+    frameWidth = A.global.gui.groupCooldown.frameWidth
+    frame:SetSize(frameWidth, frameHeight) -- 180 50
     if test then
         for k in pairs(group) do
             print(k)
         end
     end
     -- :: prune empty frames
+
     for ii = -1, n_rows + 1 do
         if subFrame[ii] then
             subFrameName[ii]:SetText("")
@@ -332,6 +334,10 @@ local function updateGUI(test)
     end
 
     gui_calcFrameHeight()
+end
+
+function module:updateGUI()
+    updateGUI()
 end
 
 -- ==== Methods
@@ -580,6 +586,10 @@ local function handleCommand(msg)
     end
 end
 
+-- function module:handleCommand()
+--     handleCommand()
+-- end
+
 -- :: sets closest cd arrival for cooldowned rebirth
 local function setClosestAvailable()
     if group ~= {} then
@@ -703,6 +713,12 @@ function module:Initialize()
     -- :: initialize gui position
     if A.global.gui.groupCooldown.position == nil then
         A.global.gui.groupCooldown.position = {"CENTER", "CENTER", 0, 0}
+    end
+    -- :: initialize gui position
+    if A.global.gui.groupCooldown.frameWidth == nil then
+        A.global.gui.groupCooldown.frameWidth = frameWidth
+    else
+        frameWidth = A.global.gui.groupCooldown.frameWidth
     end
     -- :: initialize gui isOpen
     if A.global.gui.groupCooldown.isOpen == nil then

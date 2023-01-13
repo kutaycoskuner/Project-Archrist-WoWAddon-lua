@@ -100,7 +100,7 @@ function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBA
         SendChatMessage(GetSpellLink("Hysteria") .. " is cast on you (+20% dmg -1% hp 30 sec)", "whisper", nil, dstName);
     end
 
-    if srcName == UnitName('player') and spellName == "Hysteria" and eventType == "SPELL_AURA_APPLIED" then
+    if srcName == UnitName('player') and spellName == "Unholy Frenzy" and eventType == "SPELL_AURA_APPLIED" then
         SendChatMessage(GetSpellLink("Unholy Frenzy") .. " is cast on you (+20% dmg -1% hp 30 sec)", "whisper", nil, dstName);
     end
 

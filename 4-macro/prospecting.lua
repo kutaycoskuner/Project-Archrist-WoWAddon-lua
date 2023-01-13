@@ -36,6 +36,16 @@ end
 local prospect = CreateFrame("CheckButton", "prospectButton", UIParent, "SecureActionButtonTemplate")
 prospect:SetAttribute("type", "macro")
 
+local ores = {
+    ["Thorium Ore"] = true,
+    ["Fel Iron Ore"] = true,
+    ["Cobalt Ore"] = true,
+    ["Saronite Ore"] = true,
+    ["Adamantite Ore"] = true,
+    ["Tin Ore"] = true,
+    ["Copper Ore"] = true,
+}
+
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Start
 function module:Initialize()
@@ -51,46 +61,51 @@ function module:Initialize()
     if A.global.macros.prospecting.isEnabled == nil then
         A.global.macros.prospecting.isEnabled = false
     end
-    
+
 end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Methods
 local function findMineInBag()
     local function findItem(bag, slot)
-    -- print(GetItemInfo(GetContainerItemLink(bag, slot)))
-    return (select(1, GetItemInfo(GetContainerItemLink(bag, slot) or 0)) == "Thorium Ore" or 
-           select(1, GetItemInfo(GetContainerItemLink(bag, slot) or 0)) == "Fel Iron Ore" or
-           select(1, GetItemInfo(GetContainerItemLink(bag, slot) or 0)) == "Cobalt Ore" or
-           select(1, GetItemInfo(GetContainerItemLink(bag, slot) or 0)) == "Saronite Ore" or
-           select(1, GetItemInfo(GetContainerItemLink(bag, slot) or 0)) == "Adamantite Ore") and 
-           select(2, GetContainerItemInfo(bag, slot)) >= 5
+        -- print(GetItemInfo(GetContainerItemLink(bag, slot)))
+        local item = select(1, GetItemInfo(GetContainerItemLink(bag, slot) or 0))
+        if ores[item] then
+            return (select(1, GetItemInfo(GetContainerItemLink(bag, slot) or 0)) == item) and
+                       select(2, GetContainerItemInfo(bag, slot)) >= 5
+        end
     end
     --
     for i = 0, 4 do
         for j = 1, GetContainerNumSlots(i) do
-            if findItem(i, j) then return i, j end
+            if findItem(i, j) then
+                return i, j
+            end
         end
     end
 end
 
 function setProspectButton()
     local bag, slot = findMineInBag()
-    if (not bag or not slot) or LootFrame:IsVisible() or
-        CastingBarFrame:IsVisible() or UnitCastingInfo("player") then
+    -- print(bag, slot)
+    if (not bag or not slot) or LootFrame:IsVisible() or CastingBarFrame:IsVisible() or UnitCastingInfo("player") then
         -- do nothing if no herb, if looting or casting
         prospectButton:SetAttribute("macrotext", "")
         -- print('test') --for i = GetNumLootItems(), 1, -1 do LootSlot(i) end
-        if not bag then print(moduleAlert .. "No more ore in stacks of 5 or more.") end
+        if not bag then
+            print(moduleAlert .. "No more ore in stacks of 5 or more.")
+        end
     else
         module:RegisterEvent("LOOT_OPENED")
         prospectButton:SetAttribute("macrotext", --
-                                "/cast prospecting\n/use " .. bag .. " " .. slot)
+        "/cast prospecting\n/use " .. bag .. " " .. slot)
     end
 end
- 
+
 function module:LOOT_OPENED()
-    for i = GetNumLootItems(), 1, -1 do LootSlot(i) end
+    for i = GetNumLootItems(), 1, -1 do
+        LootSlot(i)
+    end
     module:UnregisterEvent("LOOT_OPENED")
     module:UnregisterAllEvents()
 

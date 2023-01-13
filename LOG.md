@@ -94,8 +94,11 @@
 - timelog
 
 # Curseforge Proc
-- display name
-    - Archrist_vx.xx
+- disp name: Archrist_vx.xx
+- beta
+- enter changelog 
+- enter wow version
+- change version and rd on curse desc.
 
 # Procedures
 - check todo
@@ -106,8 +109,10 @@
 - push
 
 # 
-- [1.48]
-    - todo minimap icon
+- [1.48] add: GroupCooldowns customizability frame width
+    - 13-Jan-2023 add: CRIndicator customizablity frame width
+    - 11-Jan-2023 add: Eat Drink message on interval
+    - 11-Jan-2023 add: Announce hysteria
 
 - [1.47] fix: CRIndicator prune titles ...
     - 11-Jan-2023 add: Prospecting macro, options

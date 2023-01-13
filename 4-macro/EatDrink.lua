@@ -3,11 +3,15 @@
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
 local moduleName = 'EatDrink';
 local moduleAlert = M .. ": |r";
+local aprint = Arch_print
 local module = A:GetModule(moduleName);
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
 local foods = Arch_consumables["foods"]
 local drinks = Arch_consumables["drinks"]
+local tCol = Arch_trivialColor
+local interval = 6
+local availableAt = GetServerTime()
 
 --
 local foodClass = {
@@ -36,6 +40,14 @@ feed:SetAttribute("type", "macro")
 --
 local level = UnitLevel('player')
 local class = UnitClass("player")
+
+
+local function tprint(msg)
+    if GetServerTime() > availableAt then
+        aprint(msg)
+        availableAt = GetServerTime() + interval
+    end
+end
 
 local function findConsumableInBag(foodType)
     local healthPercentage =  UnitHealth('player') / UnitHealthMax('player')
@@ -93,13 +105,13 @@ function setFeedButton(foodType)
         "/sit")
         -- SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "You are already full " .. foodType)
     elseif not noPrint then
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. "Could not find any " .. foodType)
+        tprint("Could not find any " .. foodType)
     elseif bag==nil and noPrint then
         do return end
     elseif bag and slot then
         feedButton:SetAttribute("macrotext", --
         "#showtooltip \n/use " .. bag .. " " .. slot)
-        print(moduleAlert .. "Consuming " .. item .. " (" .. GetItemCount(item) .. ")")
+        tprint(tCol("Consuming ") .. item .. tCol(" (" .. GetItemCount(item) .. ")"))
     end
 end
 

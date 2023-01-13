@@ -112,10 +112,26 @@ local assist_groupCooldowns = {
                     order = 1,
                     width = "full"
                 },
+                opt_frameWidth = {
+                    name = "Frame Width",
+                    type = "range",
+                    order = 2,
+                    width = 1,
+                    min = 40,
+                    max = 400,
+                    step = 1,
+                    set = function(info, val)
+                        A.global.gui.groupCooldown.frameWidth = val
+                        A:GetModule("CRIndicator", true):updateGUI()
+                    end,
+                    get = function(info)
+                        return A.global.gui.groupCooldown.frameWidth
+                    end
+                },
                 opt_skills_druid = {
                     name = "Skills",
                     type = "group",
-                    order = 2,
+                    order = 3,
                     width = "full",
                     desc = "",
                     args = {
@@ -478,7 +494,7 @@ local macro_prospecting = {
                             UIParent:Hide()
                             print(L["archrist"] .. ' Creating macro for prospecting')
                             CreateMacro(" Prospecting", "inv_misc_gem_bloodgem_01",
-                                "/run setprospectButton()\n/click prospectButton", nil)
+                                "/run setProspectButton()\n/click prospectButton", nil)
                             UIParent:Show()
                             ShowMacroFrame()
                         end
