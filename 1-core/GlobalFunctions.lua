@@ -23,7 +23,7 @@ local addonName = "[Archrist]: "
 local realmName = GetRealmName()
 
 local Arch_classColors = {
-    ["Death Knight"] = '|cffC41F3B',    
+    ["Death Knight"] = '|cffC41F3B',
     ["Druid"] = '|cffFF7D0A',
     ["Hunter"] = '|cffA9D271',
     ["Mage"] = '|cff40C7EB',
@@ -33,7 +33,7 @@ local Arch_classColors = {
     ["Shaman"] = '|cff0070DE',
     ["Warlock"] = '|cff8787ED',
     ["Warrior"] = '|cffC79C6E',
-    ["DEATHKNIGHT"] = '|cffC41F3B',    
+    ["DEATHKNIGHT"] = '|cffC41F3B',
     ["DRUID"] = '|cffFF7D0A',
     ["HUNTER"] = '|cffA9D271',
     ["MAGE"] = '|cff40C7EB',
@@ -42,8 +42,8 @@ local Arch_classColors = {
     ["ROGUE"] = '|cffFFF569',
     ["SHAMAN"] = '|cff0070DE',
     ["WARLOCK"] = '|cff8787ED',
-    ["WARRIOR"] = '|cffC79C6E',
-    
+    ["WARRIOR"] = '|cffC79C6E'
+
 }
 
 -- :: category
@@ -66,23 +66,29 @@ local categories = {
 
 -- ==== Functions
 -- :: Colors
-function Arch_addonColor(msg) return (addonColor .. tostring(msg) .. colorEnd) end
+function Arch_addonColor(msg)
+    return (addonColor .. tostring(msg) .. colorEnd)
+end
 local aCol = Arch_addonColor
 
-function Arch_moduleColor(msg) return (moduleColor .. tostring(msg) .. colorEnd) end
+function Arch_moduleColor(msg)
+    return (moduleColor .. tostring(msg) .. colorEnd)
+end
 local mCol = Arch_moduleColor
-
 
 function Arch_commandColor(msg)
     return (commandColor .. tostring(msg) .. colorEnd)
 end
 local cCol = Arch_commandColor
 
-function Arch_focusColor(msg) return (focusColor .. tostring(msg) .. colorEnd) end
+function Arch_focusColor(msg)
+    return (focusColor .. tostring(msg) .. colorEnd)
+end
 local fCol = Arch_focusColor
 
-
-function Arch_classColor(class, msg) return (Arch_classColors[class] .. tostring(msg) .. colorEnd) end
+function Arch_classColor(class, msg)
+    return (Arch_classColors[class] .. tostring(msg) .. colorEnd)
+end
 local classCol = Arch_classColor
 
 function Arch_trivialColor(msg)
@@ -128,12 +134,16 @@ end
 function Arch_calcTimeInSec()
     local date = date("%H:%M:%S")
     local sep = ':';
-    if sep == nil then sep = "%s" end
+    if sep == nil then
+        sep = "%s"
+    end
     local args = {};
     for str in string.gmatch(date, "([^" .. sep .. "]+)") do
         table.insert(args, str)
     end
-    if args[1] == 0 then args[1] = 12 end
+    if args[1] == 0 then
+        args[1] = 12
+    end
     return tonumber(args[1] * 3600 + args[2] * 60 + args[3])
 end
 
@@ -141,7 +151,9 @@ end
 function Arch_fixArgs(msg)
     -- :: this is separating the given arguments after command
     local sep;
-    if sep == nil then sep = "%s" end
+    if sep == nil then
+        sep = "%s"
+    end
     local args = {};
     for str in string.gmatch(msg, "([^" .. sep .. "]+)") do
         table.insert(args, str)
@@ -149,8 +161,12 @@ function Arch_fixArgs(msg)
 
     -- :: this capitalizes first letters of each given string
     for ii = 1, #args, 1 do
-        if type(args[ii]) == 'string' then args[ii] = args[ii]:lower() end
-        if ii == 1 then args[ii] = args[ii]:gsub("^%l", string.upper) end
+        if type(args[ii]) == 'string' then
+            args[ii] = args[ii]:lower()
+        end
+        if ii == 1 then
+            args[ii] = args[ii]:gsub("^%l", string.upper)
+        end
     end
 
     return args;
@@ -158,7 +174,9 @@ end
 
 function Arch_split(msg, sep)
     -- :: this is separating the given arguments after command
-    if sep == nil then sep = "%s" end
+    if sep == nil then
+        sep = "%s"
+    end
     local args = {};
     for str in string.gmatch(msg, "([^" .. sep .. "]+)") do
         table.insert(args, str)
@@ -170,7 +188,9 @@ end
 function Arch_properCase(msg)
     -- :: this is separating the given arguments after command
     local sep;
-    if sep == nil then sep = "%s" end
+    if sep == nil then
+        sep = "%s"
+    end
     local args = {};
     for str in string.gmatch(msg, "([^" .. sep .. "]+)") do
         table.insert(args, str)
@@ -178,8 +198,12 @@ function Arch_properCase(msg)
 
     -- :: this capitalizes first letters of each given string
     for ii = 1, #args, 1 do
-        if type(args[ii]) == 'string' then args[ii] = args[ii]:lower() end
-        if ii == 1 then args[ii] = args[ii]:gsub("^%l", string.upper) end
+        if type(args[ii]) == 'string' then
+            args[ii] = args[ii]:lower()
+        end
+        if ii == 1 then
+            args[ii] = args[ii]:gsub("^%l", string.upper)
+        end
     end
     args = table.concat(args, " ")
     return args;
@@ -199,28 +223,40 @@ end
 local aprint = Arch_print
 -- 
 function arch_addPersonToDatabase(player, server)
+    local realm = realmName
     -- :: def: server farkliysa ekleme
     if "" ~= server or string.find(player, "-") then
+        local parameters = Arch_split(player, "-")
+        player = parameters[1]
+        if parameters[2] then
+            realm = parameters[2]
+        elseif "" ~= server then
+            realm = server            
+        else
+            do return end
+        end
+    end
+    -- :: def: player varsa
+    if A.people[realm] == nil then
+        A.people[realm] = {}
+    end
+    if A.people[realm][player] ~= nil then
+        -- aprint(fCol(player) .. " added to your database.")
         do
             return
         end
     end
-    -- :: def: player varsa
-    if A.people[realmName][player] ~= nil then
-        -- aprint(fCol(player) .. " added to your database.")
-        do return end 
-    end
     -- :: add player name
-    A.people[realmName][player] = {}
-    aprint(fCol(player) .. " added to your database.")
+    A.people[realm][player] = {}
+    aprint(fCol(player) .. " from " .. fCol(realm) .. " added to your database.")
     -- :: add categories
     for cat, subcat in pairs(categories) do
-        if A.people[realmName][player][cat] == nil then
-            A.people[realmName][player][cat] = {}
+        if A.people[realm][player][cat] == nil then
+            A.people[realm][player][cat] = {}
         end
         for key, val in pairs(subcat) do
-            if A.people[realmName][player][cat][key] == nil then
-                A.people[realmName][player][cat][key] = val
+            if A.people[realm][player][cat][key] == nil then
+                A.people[realm][player][cat][key] = val
             end
         end
     end

@@ -24,16 +24,18 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
         33454,          -- 65 salted venison
         41751,          -- 55 black mushroom
         27859,          -- 55 zangar caps
-        27854,          -- 55 smoken talbuk venison
+        27854,          -- 55 smoken talbuwdk venison
         8952,           -- 45 roasted quail
         8076,           -- 45 conjured sweet roll
         21215,          -- 40 graccu's mince meat fruitcake
         8075,           -- 35 conjured sourdough
+        4608,           -- 35 raw black truffle
         21552,          -- 35 striped yellowtail
         1487,           -- 25 conjured pumpernickel
         3729,           -- 25 soothing turtle bisque
         4539,           -- 25 goldenbark appleF
         3771,           -- 25 wild hog shank
+        1707,           -- 25 stormwind brie
         1114,           -- 15 conjured rye
         4593,           -- 15 bristle whisker catfish
         4606,           -- 15 spongy morel

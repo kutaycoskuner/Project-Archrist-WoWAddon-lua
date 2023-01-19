@@ -57,7 +57,7 @@ local function findConsumableInBag(foodType)
     -- Find item
     local isFound = false
     local function findItem(bag, slot)
-        local consumable = GetContainerItemID(bag, slot)--GetItemInfo(GetContainerItemLink(bag, slot) or 0)
+        local consumable = C_Container.GetContainerItemID(bag, slot)--GetItemInfo(GetContainerItemLink(bag, slot) or 0)
         local search 
         if relateFoodType[foodType] then
             search = relateFoodType[foodType]
@@ -77,9 +77,9 @@ local function findConsumableInBag(foodType)
     end
     -- :: Return items' bag coordinates
     for ii = 4, 0, -1 do
-        for jj = GetContainerNumSlots(ii), 1, -1 do
+        for jj = C_Container.GetContainerNumSlots(ii), 1, -1 do
             if findItem(ii, jj) then 
-                local item = GetContainerItemLink(ii, jj)
+                local item = C_Container.GetContainerItemLink(ii, jj)
                 -- :: class / hp conditionals
                 if foodType=='drink' and foodClass[class]==nil and (powerPercentage~=1) then
                     return item, ii, jj, true

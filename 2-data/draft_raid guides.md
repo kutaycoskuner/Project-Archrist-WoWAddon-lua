@@ -36,3 +36,19 @@
         - 3 melee groups | rdps spread in p2
         - kill all mobs before p2 especially banshees
         - 55802 frostbolt
+
+- ulduar
+    - flame leviathan
+    - ignis
+    - razorscale
+    - xt-002
+    - assembly
+    - kologarn
+    - auriya
+    - mimirion
+    - freya
+    - thorim
+    - hodir
+    - general
+    - yogg
+    - algalon

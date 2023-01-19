@@ -8,8 +8,9 @@ Archrist is an multi-functional assistance addon with various functionalities fo
 # Table of Contents
 1. [Installation and Use](#installation-and-use)
 2. [Feature List](#feature-list)
-5. [Display](#display)
-6. [References and Links](#references-and-links)
+3. [Roadmap](#roadmap)
+4. [Display](#display)
+5. [References and Links](#references-and-links)
 
 # Intallation and Use
 - Dependencies
@@ -49,16 +50,16 @@ Archrist is an multi-functional assistance addon with various functionalities fo
     - [x] `Help` Basic text interface how to use module
     - [x] `GUI` Some modules support graphical user interface to provide user a level of customizability
 
-- Work In Progress
-    - [ ] `PUG Raid Organizer` Dynamic PUG Raid announcement module  
-    - [ ] `Eat and Drink` Using consumables in backpack by given order
-    - [ ] `Pet Feed` Aloows you to feed your pet as their happiness decreased.
-    - [ ] `Milling` Single click milling macro
-    - [ ] `Disenchanting` Single click disenchanting
-    - [ ] `Announcer` Announcing booster skills given to other people  
-    - [ ] `Raid Commands` Dynamic command interface for repetitive and distinctive warning messages   
-    - [ ] `VoA` Vault of Archavon spec run announcement module 
-    - [ ] `Tactics` Display tactics of selected raid boss   
+# Roadmap
+- [ ] `PUG Raid Organizer` Dynamic PUG Raid announcement module  
+- [ ] `Eat and Drink` Using consumables in backpack by given order
+- [ ] `Pet Feed` Aloows you to feed your pet as their happiness decreased.
+- [ ] `Milling` Single click milling macro
+- [ ] `Disenchanting` Single click disenchanting
+- [ ] `Announcer` Announcing booster skills given to other people  
+- [ ] `Raid Commands` Dynamic command interface for repetitive and distinctive warning messages   
+- [ ] `VoA` Vault of Archavon spec run announcement module 
+- [ ] `Tactics` Display tactics of selected raid boss   
 
 # Display
 ![](-display/v1.23%20Pug%20GUI%202022-10-16.png)

@@ -166,12 +166,17 @@ end
 -- :: present player note
 function Archrist_PlayerDB_getNote(player)
     if not isInCombat then
-        local Name = GameTooltip:GetUnit();
-        if Name ~= UnitName('player') then
-            if A.people[realmName][Name] then
-                local note = A.people[realmName][Name][category].note
-                if note ~= '' then
-                    GameTooltip:AddLine(note, 0.5, 0.5, 0.5, true)
+        local p_name, p_server = UnitName("mouseover")
+        if p_server == nil then
+            p_server = realmName
+        end
+        if p_name ~= UnitName('player') then
+            if A.people[p_server] then
+                if A.people[p_server][p_name] then
+                    local note = A.people[p_server][p_name][category].note
+                    if note ~= '' then
+                        GameTooltip:AddLine(note, 0.5, 0.5, 0.5, true)
+                    end
                 end
             end
         end
@@ -179,37 +184,44 @@ function Archrist_PlayerDB_getNote(player)
 end
 
 local function Archrist_PlayerDB_getRaidScore()
-    if GameTooltip:GetUnit() then
-        -- local Name = GameTooltip:GetUnit();
-        -- if not GearScore_GetScore then
-        --     return
-        -- end
-        -- if GearScore_GetScore(Name, "mouseover") then
-        --     if A.people[realmName][Name] then
-        --         local gearScore = GearScore_GetScore(Name, "mouseover")
-        --         if gearScore and gearScore > 0 then
-        --             local personalData = Archrist_PlayerDB_calcRaidScore(Name)
-        --             -- local note = Archrist_PlayerDB_getNote(Name)
-        --             local raidScore = personalData
-        --             if gearScore ~= raidScore then
-        --                 GameTooltip:AddLine('RaidScore: ' .. raidScore, 0, 78, 100)
-        --             end
-        --         end
-        --     end
-        -- end
-    end
+    -- if GameTooltip:GetUnit() then
+    -- local Name = GameTooltip:GetUnit();
+    -- if not GearScore_GetScore then
+    --     return
+    -- end
+    -- if GearScore_GetScore(Name, "mouseover") then
+    --     if A.people[realmName][Name] then
+    --         local gearScore = GearScore_GetScore(Name, "mouseover")
+    --         if gearScore and gearScore > 0 then
+    --             local personalData = Archrist_PlayerDB_calcRaidScore(Name)
+    --             -- local note = Archrist_PlayerDB_getNote(Name)
+    --             local raidScore = personalData
+    --             if gearScore ~= raidScore then
+    --                 GameTooltip:AddLine('RaidScore: ' .. raidScore, 0, 78, 100)
+    --             end
+    --         end
+    --     end
+    -- end
+    -- end
 end
 
 local function Archrist_PlayerDB_getPlayerData()
     if not isInCombat then
-        local Name = GameTooltip:GetUnit();
-        if Name ~= UnitName('player') then
-            if A.people[realmName][Name] then
-                for ii = 1, #quantitative do
-                    if A.people[realmName][Name][category][quantitative[ii]] ~= nil then
-                        local data = A.people[realmName][Name][category][quantitative[ii]]
-                        if data ~= 0 then
-                            GameTooltip:AddLine(aCol(pCase(quantitative[ii] .. ":") .. ' ' .. data), 0.5, 0.5, 0.5, true)
+        -- local Name = GameTooltip:GetUnit();
+        local p_name, p_server = UnitName("mouseover")
+        if p_server == nil then
+            p_server = realmName
+        end
+        if p_name ~= UnitName('player') then
+            if A.people[p_server] then
+                if A.people[p_server][p_name] then
+                    for ii = 1, #quantitative do
+                        if A.people[p_server][p_name][category][quantitative[ii]] ~= nil then
+                            local data = A.people[p_server][p_name][category][quantitative[ii]]
+                            if data ~= 0 then
+                                GameTooltip:AddLine(aCol(pCase(quantitative[ii] .. ":") .. ' ' .. data), 0.5, 0.5, 0.5,
+                                    true)
+                            end
                         end
                     end
                 end
@@ -218,34 +230,38 @@ local function Archrist_PlayerDB_getPlayerData()
     end
 end
 -- :: Get Player Stats
-local function archGetPlayer(player)
-    if A.people[realmName][player] then
+local function archGetPlayer(player, realm)
+    if realm == nil then
+        realm = realmName
+    end
+    if A.people[realm][player] then
         SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. fCol(player))
         factionName = UnitFactionGroup('player')
         for yy = 1, #quantitative do
-            if A.people[realmName][player][category][quantitative[yy]] ~= 0 then
-                aprint(tCol(quantitative[yy] .. ': ') .. A.people[realmName][player][category][quantitative[yy]])
+            if A.people[realm][player][category][quantitative[yy]] ~= 0 then
+                aprint(tCol(quantitative[yy] .. ': ') .. A.people[realm][player][category][quantitative[yy]])
             end
         end
         --
-        if A.people[realmName][player][category].note ~= '' then
-            aprint(tCol("Note:") .. A.people[realmName][player][category].note)
+        if A.people[realm][player][category].note ~= '' then
+            aprint(tCol("Note:") .. A.people[realm][player][category].note)
         end
     else
         aprint(fCol(player) .. " not found in your database.")
-        -- C_FriendList.SetWhoToUi(1)
-        -- C_FriendList.SendWho('n-"' .. player .. '"')
     end
 end
 
 -- ==== Main 
-local function checkStatLimit(player, stat)
-    if A.people[realmName][player][category][stat] == nil then
-        A.people[realmName][player][category][stat] = stat
-    elseif A.people[realmName][player][category][stat] >= 5 then
-        A.people[realmName][player][category][stat] = 5
-    elseif A.people[realmName][player][category][stat] <= -5 then
-        A.people[realmName][player][category][stat] = -5
+local function checkStatLimit(player, stat, realm)
+    if realm == nil then
+        realm = realmName
+    end
+    if A.people[realm][player][category][stat] == nil then
+        A.people[realm][player][category][stat] = stat
+    elseif A.people[realm][player][category][stat] >= 5 then
+        A.people[realm][player][category][stat] = 5
+    elseif A.people[realm][player][category][stat] <= -5 then
+        A.people[realm][player][category][stat] = -5
     end
 end
 
@@ -282,13 +298,16 @@ local function handleNote(msg)
 
     -- :: Burda target oncelikli
     if UnitExists('target') and UnitIsPlayer('target') and UnitName('target') ~= UnitName('player') then
-        if A.people[realmName][UnitName('target')] == nil then
-            local p_name, p_server, guid, p_class = identifyPlayer("target")
+        local p_name, p_server = UnitName("target")
+        if p_server == nil then
+            p_server = realmName
+        end
+        if A.people[p_server][UnitName('target')] == nil then
             addPlayer(p_name, p_server) -- bu fonksiyon grouporgnizer icinde
         end
-        A.people[realmName][UnitName('target')][category].note = msg
+        A.people[p_server][UnitName('target')][category].note = msg
         if msg ~= '' then
-            aprint(fCol(UnitName('target')) .. ': ' .. A.people[realmName][UnitName('target')][category].note)
+            aprint(fCol(UnitName('target')) .. ': ' .. A.people[p_server][UnitName('target')][category].note)
         else
             aprint('Note for ' .. fCol(UnitName('target')) .. ' has been pruned.')
         end
@@ -303,22 +322,22 @@ local function handleNote(msg)
             C_FriendList.SendWho('n-"' .. args[1] .. '"')
         end
     end
-
 end
 
 -- :: add if player note exists on tooltip
-local function addNote(args)
+local function addManualNote(args, server)
+    print('test')
     local name = table.remove(args, 1)
     local note = table.concat(args, ' ')
-
-    if A.people[realmName][name] == nil then
+    if server == nil then server = realmName end
+    if A.people[server][name] == nil then
         aprint("cannot find " .. fCol(args) .. " in your database.")
     end
-    A.people[realmName][name][category].note = note
+    A.people[server][name][category].note = note
 
     if args[1] then
         -- print(note)
-        aprint(fCol(name.. ": ") .. A.people[realmName][name][category].note)
+        aprint(fCol(name .. ": ") .. A.people[server][name][category].note)
     else
         aprint('Note for ' .. fCol(name) .. ' has been pruned.')
     end
@@ -327,16 +346,17 @@ end
 local function changeQuanParam(par, val, name, server)
     if type(tonumber(val)) == "number" then
         arch_addPersonToDatabase(name, server)
-        A.people[realmName][name][category][par] = tonumber(A.people[realmName][name][category][par]) + tonumber(val)
-        checkStatLimit(name, par)
-        aprint(fCol(name) .. ' ' .. par .. tCol(' is now ') .. cCol(A.people[realmName][name][category][par]))
+        A.people[server][name][category][par] = tonumber(A.people[server][name][category][par]) + tonumber(val)
+        checkStatLimit(name, par, server)
+        aprint(fCol(name) .. ' ' .. par .. tCol(' is now ') .. cCol(A.people[server][name][category][par]))
     end
     -- archGetPlayer(name)
 end
 
 local function changeNote(note, name, server)
+    if server == nil then server = realmName end
     if type(note) == "string" then
-        A.people[realmName][name][category].note = note
+        A.people[server][name][category].note = note
         aprint(fCol(name) .. tCol("note has changed to ") .. note)
     end
 end
@@ -345,6 +365,7 @@ local function handlePlayerStat(msg, parameter, pass)
 
     args = fixArgs(msg)
     mod = parameter
+
     -- :: ek parametre var mi isim, sayi etc
     if args[1] then
         -- :: Isim oncelikli entry
@@ -381,11 +402,13 @@ local function handlePlayerStat(msg, parameter, pass)
             C_FriendList.SendWho('n-"' .. args[1] .. '"')
         else
             -- :: Target varsa
+            local p_name, p_server, guid, p_class = UnitName("target")
+            if p_server == nil then p_server = realmName end
             if UnitExists('target') then
-                local p_name, p_server, guid, p_class = identifyPlayer("target")
                 if UnitIsPlayer('target') then
                     if UnitName('target') ~= UnitName('player') then
-                        if A.people[realmName][UnitName('target')] == nil then
+                        if A.people[p_server] == nil then A.people[p_server] = {} end
+                        if A.people[p_server][UnitName('target')] == nil then
                             arch_addPersonToDatabase(p_name, p_server)
                         end
                         -- :: change q param
@@ -393,17 +416,14 @@ local function handlePlayerStat(msg, parameter, pass)
                     end
                 end
             end
+            -- print(args[3])
             -- :: not varsa   
-            -- test
-            if args[3] then
+            if args[2] then
                 table.remove(args, 1)
                 table.insert(args, 1, tostring(UnitName('target')))
-                -- local asdf = table.concat(args, ' ')
-                -- SELECTED_CHAT_FRAME:AddMessage(asdf)
                 local noteBlock = args
-                addNote(noteBlock)
+                addManualNote(noteBlock, p_server)
             end
-            -- test end
         end
 
     else
@@ -422,25 +442,26 @@ local function handlePlayerStat(msg, parameter, pass)
 end
 
 -- :: add player stat [who da kullaniliyor] args[1] = player name args[]
-local function addPlayerStat(args, parameter)
-    if A.people[realmName][args[1]] == nil then
+local function addPlayerStat(args, parameter, realm)
+    if realm == nil then
+        realm = realmName
+    end
+    if A.people[realm][args[1]] == nil then
         arch_addPersonToDatabase(args[1], "")
     end
     if args[2] ~= nil then
         if type(tonumber(args[2])) == "number" then
-            A.people[realmName][args[1]][category][parameter] = tonumber(
-                A.people[realmName][args[1]][category][parameter]) + tonumber(args[2])
+            A.people[realm][args[1]][category][parameter] = tonumber(A.people[realm][args[1]][category][parameter]) +
+                                                                tonumber(args[2])
             checkStatLimit(args[1], parameter)
             aprint(fCol(args[1]) .. ' ' .. parameter .. tCol(' is now ') ..
-                       cCol(A.people[realmName][args[1]][category][parameter]))
-            -- test
+                       cCol(A.people[realm][args[1]][category][parameter]))
             if args[3] then
                 table.remove(args, 2)
                 -- SELECTED_CHAT_FRAME:AddMessage(args[1] .. ' '.. args[2])
                 local noteBlock = args
-                addNote(noteBlock)
+                addManualNote(noteBlock)
             end
-            -- test
         else
             SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'your entry is not valid')
         end
@@ -467,32 +488,34 @@ local function groupRepCheck(msg)
     if groupType ~= nil then
         local blacklist = {}
         local whitelist = {}
-        local person
+        local person, p_server
         -- :: check if blacklisted
         --
         for ii = 1, groupMembers do
             -- :: check if party or group
             if groupType == "raid" then
-                person = GetRaidRosterInfo(ii)
+                person, p_server = UnitName("raid" .. ii)
             elseif groupType == "party" then
-                person = UnitName(groupRoster[ii])
+                person, p_server = UnitName("party" .. ii)
             end
+            if p_server == nil then p_server = realmName end
             -- :: control break
             if person ~= nil then
-                if A.people[realmName][person] == nil then
-                    local p_name, p_server, guid, p_class = identifyPlayer(ii)
-                    arch_addPersonToDatabase(p_name, p_server)
+                -- local p_name, p_server, guid, p_class = identifyPlayer(ii)
+                if A.people[p_server] == nil then A.people[p_server] = {} end
+                if A.people[p_server][person] == nil then
+                    arch_addPersonToDatabase(person, p_server)
                 else
                     for yy = 1, #quantitative do
-                        if A.people[realmName][person] == nil then
-                            local p_name, p_server, guid, p_class = identifyPlayer(ii)
-                            arch_addPersonToDatabase(p_name, p_server)
+                        -- local p_name, p_server, guid, p_class = identifyPlayer(ii)
+                        if A.people[p_server] == nil then A.people[p_server] = {} end
+                        if A.people[p_server][person] == nil then
+                            arch_addPersonToDatabase(person, p_server)
                         end
-                        local qPar = A.people[realmName][person][category][quantitative[yy]]
+                        local qPar = A.people[p_server][person][category][quantitative[yy]]
                         if qPar ~= nil then
                             if type(qPar) == "number" then
                                 if qPar < 0 then
-                                    print('test 3')
                                     table.insert(blacklist, person)
                                     break
                                 elseif qPar > 0 then
@@ -561,7 +584,6 @@ end
 
 -- ==== Event Handlers
 function module:PLAYER_REGEN_ENABLED()
-    -- SELECTED_CHAT_FRAME:AddMessage('You are out of combat.')
     isInCombat = false
 end
 
@@ -601,7 +623,7 @@ function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()whitelist
         --
         if isPlayerExists then
             if mod == 'not' then
-                addNote(args)
+                addManualNote(args)
             else
                 addPlayerStat(args, mod)
             end

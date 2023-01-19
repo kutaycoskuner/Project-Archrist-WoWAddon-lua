@@ -81,7 +81,9 @@
 - 27-Dec-2022 add: VoA help
 - 27-Dec-2022 add: GuideMaker help
 - 04-Jan-2023 add: raid roller
-
+- 13-Jan-2023 add: readme feature | roadmap
+- 18-Jan-2023 add: Quest share blocking
+- 18-Jan-2023 add: ignoremore / blacklist
 
 # Release cleaning
 - .git file
@@ -97,6 +99,7 @@
 - disp name: Archrist_vx.xx
 - beta
 - enter changelog 
+- markdwon
 - enter wow version
 - change version and rd on curse desc.
 
@@ -109,6 +112,11 @@
 - push
 
 # 
+- [1.49] chg: Version updatae 30401
+    - 19-Jan-2023 add: PlayerDB impressions for all servers
+    - 19-Jan-2023 chg: Eat&Drink version compatibiltiy update
+    - 18-Jan-2023 chg: Version update 30401
+
 - [1.48] add: GroupCooldowns customizability frame width
     - 13-Jan-2023 add: CRIndicator customizablity frame width
     - 11-Jan-2023 add: Eat Drink message on interval

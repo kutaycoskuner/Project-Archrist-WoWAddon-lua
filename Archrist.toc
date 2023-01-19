@@ -1,17 +1,16 @@
 # Metadata
-## Interface: 30400
+## Interface: 30401
 ## Title: |cffedededArchrist|r
 ## Notes: Multi-functional external memory addon: Todolist, Player Database, Raid Assistant, etc.
 ## SavedVariables: ArchDB, ArchPrivateDB, ArchPeopleDB, ArchLootDB
 ## SavedVariablesPerCharacter: ArchCharacterDB
 ## OptionalDeps: Blizzard_DebugTools, Ace3, LibClassicInspector
-## Version: 1.48
-## X-ReleaseDate: 13 Jan 2023
+## Version: 1.49
+## X-ReleaseDate: 19 Jan 2023
 ## Author: Orthrin
 ## X-Discord: lichzelg#6056
 ## X-Embeds: Ace3
-## Interface: 30400
-## X-Interface: 30400
+## X-Interface: 30400, 30401
 
 # Pre-Load
 !pre-load\libraries\-load-libraries.xml
