@@ -112,6 +112,10 @@
 - push
 
 # 
+- [1.50] fix: PlayerDB add manual note bug
+    - 21-Jan-2023 add: TomTom location pointing test
+    - 20-Jan-2023 fix: PlayerDB add manual note bug
+
 - [1.49] chg: Version updatae 30401
     - 19-Jan-2023 add: PlayerDB impressions for all servers
     - 19-Jan-2023 chg: Eat&Drink version compatibiltiy update

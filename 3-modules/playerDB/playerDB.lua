@@ -326,15 +326,18 @@ end
 
 -- :: add if player note exists on tooltip
 local function addManualNote(args, server)
-    print('test')
     local name = table.remove(args, 1)
     local note = table.concat(args, ' ')
-    if server == nil then server = realmName end
+    if server == nil then
+        server = realmName
+    end
+    if A.people[server] == nil then
+        A.people[server] = {}
+    end
     if A.people[server][name] == nil then
-        aprint("cannot find " .. fCol(args) .. " in your database.")
+        addPlayer(name, server) -- bu fonksiyon grouporgnizer icinde
     end
     A.people[server][name][category].note = note
-
     if args[1] then
         -- print(note)
         aprint(fCol(name .. ": ") .. A.people[server][name][category].note)
@@ -346,15 +349,23 @@ end
 local function changeQuanParam(par, val, name, server)
     if type(tonumber(val)) == "number" then
         arch_addPersonToDatabase(name, server)
-        A.people[server][name][category][par] = tonumber(A.people[server][name][category][par]) + tonumber(val)
-        checkStatLimit(name, par, server)
-        aprint(fCol(name) .. ' ' .. par .. tCol(' is now ') .. cCol(A.people[server][name][category][par]))
+        if server == nil or server == "" then server = realmName end
+        if A.people[server] == null then
+            A.people[server] = {}
+        end
+        if A.people[server][name] then
+            A.people[server][name][category][par] = tonumber(A.people[server][name][category][par]) + tonumber(val)
+            checkStatLimit(name, par, server)
+            aprint(fCol(name) .. ' ' .. par .. tCol(' is now ') .. cCol(A.people[server][name][category][par]))
+        end
     end
     -- archGetPlayer(name)
 end
 
 local function changeNote(note, name, server)
-    if server == nil then server = realmName end
+    if server == nil then
+        server = realmName
+    end
     if type(note) == "string" then
         A.people[server][name][category].note = note
         aprint(fCol(name) .. tCol("note has changed to ") .. note)
@@ -401,13 +412,17 @@ local function handlePlayerStat(msg, parameter, pass)
             C_FriendList.SetWhoToUi(1)
             C_FriendList.SendWho('n-"' .. args[1] .. '"')
         else
-            -- :: Target varsa
             local p_name, p_server, guid, p_class = UnitName("target")
-            if p_server == nil then p_server = realmName end
+            -- :: Target varsa
             if UnitExists('target') then
                 if UnitIsPlayer('target') then
+                    if p_server == nil then
+                        p_server = realmName
+                    end
                     if UnitName('target') ~= UnitName('player') then
-                        if A.people[p_server] == nil then A.people[p_server] = {} end
+                        if A.people[p_server] == nil then
+                            A.people[p_server] = {}
+                        end
                         if A.people[p_server][UnitName('target')] == nil then
                             arch_addPersonToDatabase(p_name, p_server)
                         end
@@ -418,7 +433,7 @@ local function handlePlayerStat(msg, parameter, pass)
             end
             -- print(args[3])
             -- :: not varsa   
-            if args[2] then
+            if args[2] and p_name ~= nil then
                 table.remove(args, 1)
                 table.insert(args, 1, tostring(UnitName('target')))
                 local noteBlock = args
@@ -498,17 +513,23 @@ local function groupRepCheck(msg)
             elseif groupType == "party" then
                 person, p_server = UnitName("party" .. ii)
             end
-            if p_server == nil then p_server = realmName end
+            if p_server == nil then
+                p_server = realmName
+            end
             -- :: control break
             if person ~= nil then
                 -- local p_name, p_server, guid, p_class = identifyPlayer(ii)
-                if A.people[p_server] == nil then A.people[p_server] = {} end
+                if A.people[p_server] == nil then
+                    A.people[p_server] = {}
+                end
                 if A.people[p_server][person] == nil then
                     arch_addPersonToDatabase(person, p_server)
                 else
                     for yy = 1, #quantitative do
                         -- local p_name, p_server, guid, p_class = identifyPlayer(ii)
-                        if A.people[p_server] == nil then A.people[p_server] = {} end
+                        if A.people[p_server] == nil then
+                            A.people[p_server] = {}
+                        end
                         if A.people[p_server][person] == nil then
                             arch_addPersonToDatabase(person, p_server)
                         end

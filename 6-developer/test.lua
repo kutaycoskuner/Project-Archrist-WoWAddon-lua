@@ -31,15 +31,28 @@ local b_isTesting = false
 local function test()
     -- local elapsed = time() 
     local elapsed = GetServerTime()
-    print(elapsed)
+    -- print(elapsed)
+    -- mapID, isContenent = GetCurrentMapAreaID()
+    print(GetZoneText(), GetMinimapZoneText(), WorldMapFrame:GetMapID())
+    TomTom:AddWaypoint(947, 45, 45, {
+        ["desc"] = "test",
+        ["title"] = "stuff",
+        ["persistent"] = true,
+        ["minimap"] = true,
+        ["world"] = true,
+        ["silent"] = true,
+        -- ["from"] = aura_env.id .. " WeakAura"
+    })
+
     -- DEFAULT_CHAT_FRAME.editBox:SetText("/sw play") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
 end
-
 
 local function handleCommand(msg)
     if b_isTesting then
         test()
-        do return end
+        do
+            return
+        end
     end
     -- print(IsPlayerMoving())
     if msg == "" then

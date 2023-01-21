@@ -4,9 +4,9 @@
 ## Notes: Multi-functional external memory addon: Todolist, Player Database, Raid Assistant, etc.
 ## SavedVariables: ArchDB, ArchPrivateDB, ArchPeopleDB, ArchLootDB
 ## SavedVariablesPerCharacter: ArchCharacterDB
-## OptionalDeps: Blizzard_DebugTools, Ace3, LibClassicInspector
-## Version: 1.49
-## X-ReleaseDate: 19 Jan 2023
+## OptionalDeps: Blizzard_DebugTools, Ace3, LibClassicInspector, TomTom
+## Version: 1.50
+## X-ReleaseDate: 21 Jan 2023
 ## Author: Orthrin
 ## X-Discord: lichzelg#6056
 ## X-Embeds: Ace3
