@@ -100,8 +100,43 @@
         - disarmanent
         - into utgarde
     - 75-76 sholazar basin
-    - 78-80 storm peaks
+    - 77-79 storm peaks
         - [q] luxurious getaway
+        - sons of hodir questline
+    - 78-80 icecrown 
+        - argent dawn questline
+            - complete: the stone that started a revolution
+            - complete: it could kill us all
+            - accept: into the frozen heart of northrend
+            - accept: the battle for crusaders pinnacle 
+            - do: the battle for crusaders pinnacle 
+            - complete: the battle for crusaders pinnacle
+            - accept: the crusader's pinnacle 
+            - complete: the crusader's pinnacle 
+            - accept: a tale of valor
+            - complete: a tale of valor
+            - accept: a hero remains
+            - complete: a hero remains
+            - accept: the keeper's favor
+            - accept: the skybreaker
+            - complete: skybreaker
+            - accept: the broken front
+            - accept: exploiting an opening thassarian
+        - ebon blade questline
+            - revenge ofr the vargul
+            - complete: revenge for the vargul
+            - complete: deep in the bowels of the underhalls
+            - complete: the sum is greater than the parts
+            - accept: the art of being a water terror
+            - do: the art of being a water terror
+            - complete: the art of being a water terror
+            - accept: through the eye
+            - do: through the eye
+            - complete: through the eye
+            - accept: find the ancient hero
+            - do: find the ancient hero
+            - complete: find the ancient hero
+            - accept: not-so-honorable combat
     - 78-80 wintergrasp
         - a rare herbs
         - victory in wintergrasp

@@ -43,6 +43,7 @@ end
 -- ==== Variables
 -- :: global Functions
 local fCol = Arch_focusColor
+local aCol = Arch_addonColor
 local cCol = Arch_commandColor
 local mCol = Arch_moduleColor
 local tCol = Arch_trivialColor
@@ -50,31 +51,58 @@ local hCol = Arch_headerColor
 local classCol = Arch_classColor
 local pCase = Arch_properCase
 local split = Arch_split
+local announce = Arch_sendChatMessage
 local spairs = Arch_sortedPairs
 local realmName = GetRealmName()
 
 -- :: module variables
 local b_isEnabled_restingAnnounce = false
 
-
-
 -- -- ==== GUI
 -- ==== Methods
 local function sendGroupMessage(msg)
     if UnitInRaid('player') then
-        SendChatMessage(msg, "raid", nil, "channel")
+        announce(msg, "raid", nil, "channel")
     elseif UnitInParty('player') then
-        SendChatMessage(msg, "party", nil, "channel")
+        announce(msg, "party", nil, "channel")
     else
-        SendChatMessage(msg, "say")
+        announce(msg, "say")
     end
 end
 
 -- ==== Start
 function module:Initialize()
     self.initialized = true
+    -- :: initialize frame lock
+    if A.global.assist == nil then
+        A.global.assist = {}
+    end
+    if A.global.assist.announce == nil then
+        A.global.assist.announce = {}
+    end
+    if A.global.assist.announce.isEnabled == nil then
+        A.global.assist.announce.isEnabled = true
+    end
+    if A.global.assist.announce.advertise == nil then
+        A.global.assist.announce.advertise = true
+    end
 
 end
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Main
+local function toggleAdvertise()
+    A.global.assist.announce.advertise = not A.global.assist.announce.advertise
+    if A.global.assist.announce.advertise then
+        aprint("Archrist public announces now will marked as " .. aCol("[Archrist]"))
+        announce = Arch_sendChatMessage
+    else
+        announce = SendChatMessage
+        aprint("Archrist public announces will not marked")
+    end
+end
+
+module.toggleAdvertise = toggleAdvertise
 
 -- ==== Event Handlers
 function module:ZONE_CHANGED_NEW_AREA() -- https://wow.gamepedia.com/COMBAT_LOG_EVENT
@@ -97,25 +125,26 @@ function module:COMBAT_LOG_EVENT_UNFILTERED() -- https://wow.gamepedia.com/COMBA
     local timestamp, eventType, srcName, dstName, spellId, spellName = arg1, arg2, arg5, arg9, arg12, arg13
     -- :: Apply: DK Hysteria
     if srcName == UnitName('player') and spellName == "Hysteria" and eventType == "SPELL_AURA_APPLIED" then
-        SendChatMessage(GetSpellLink("Hysteria") .. " is cast on you (+20% dmg -1% hp 30 sec)", "whisper", nil, dstName);
+        announce(GetSpellLink("Hysteria") .. " is cast on you (+20% dmg -1% hp 30 sec)", "whisper", nil, dstName);
     end
 
     if srcName == UnitName('player') and spellName == "Unholy Frenzy" and eventType == "SPELL_AURA_APPLIED" then
-        SendChatMessage(GetSpellLink("Unholy Frenzy") .. " is cast on you (+20% dmg -1% hp 30 sec)", "whisper", nil, dstName);
+        announce(GetSpellLink("Unholy Frenzy") .. " is cast on you (+20% dmg -1% hp 30 sec)", "whisper", nil,
+            dstName);
     end
 
     -- :: Apply: Mage Focus
     if srcName == UnitName('player') and spellName == "Focus Magic" and eventType == "SPELL_CAST_SUCCESS" then
-        SendChatMessage(GetSpellLink("Focus Magic") .. " is cast on you (3% spell crit chance)", "whisper", nil, dstName);
+        announce(GetSpellLink("Focus Magic") .. " is cast on you (3% spell crit chance)", "whisper", nil, dstName);
     end
     -- :: Receive: Mage Focus
     if dstName == UnitName('player') and spellName == "Focus Magic" and eventType == "SPELL_CAST_SUCCESS" then
-        -- SendChatMessage("Thanks for the " .. GetSpellLink("Focus Magic"), "whisper", nil, srcName);
+        -- announce("Thanks for the " .. GetSpellLink("Focus Magic"), "whisper", nil, srcName);
     end
 
     -- :: Apply: Priest Power Infusion 
     if srcName == UnitName('player') and spellName == "Power Infusion" and eventType == "SPELL_AURA_APPLIED" then
-        SendChatMessage(GetSpellLink("Power Infusion") .. " is cast on you (+20% spell haste, -20% mana cost, 15 sec)",
+        announce(GetSpellLink("Power Infusion") .. " is cast on you (+20% spell haste, -20% mana cost, 15 sec)",
             "whisper", nil, dstName);
     end
 

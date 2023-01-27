@@ -43,11 +43,16 @@
     - razorscale
     - xt-002
     - assembly
+        - [personal] focus runecaster
+        - small to big
     - kologarn
     - auriya
     - mimirion
     - freya
     - thorim
+        - addon
+            - set melee and rpds groups auto
+            - set healers uniformly
     - hodir
     - general
     - yogg

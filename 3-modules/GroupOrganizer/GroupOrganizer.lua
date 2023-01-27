@@ -98,7 +98,9 @@ local mCol = Arch_moduleColor
 local tCol = Arch_trivialColor
 local classCol = Arch_classColor
 local pCase = Arch_properCase
+local a_announce = Arch_sendChatMessage
 local addPlayer = arch_addPersonToDatabase
+local split = Arch_split
 arch_opt_triggerSpells = {}
 
 local realmName = GetRealmName()
@@ -142,6 +144,43 @@ local group_roles = {
     ["tank"] = {},
     ["unassigned"] = {}
 }
+-- ::jump1
+local group_pos = {
+    ["mdps"] = {
+        [1] = {},
+        [2] = {},
+        [3] = {}
+    },
+    ["rdps"] = {
+        [1] = {},
+        [2] = {},
+        [3] = {},
+        [4] = {},
+        [5] = {},
+        [6] = {}
+    },
+    ["heal"] = {
+        [1] = {},
+        [2] = {},
+        [3] = {},
+        [4] = {},
+        [5] = {}
+    }
+}
+
+local pos_tracker = {
+    ["mdps"] = 1,
+    ["rdps"] = 1,
+    ["heal"] = 1
+}
+
+local pos_tracker_limit = {
+    ["mdps"] = 6,
+    ["rdps"] = 6,
+    ["heal"] = 6
+}
+
+local pos_heal = {}
 
 local role_order = {"tank", "heal", "mdps", "rdps", "unassigned"}
 
@@ -177,6 +216,19 @@ local sign_group_task = {
     [2] = "aura",
     [3] = "divine"
 }
+
+local function announce(string, isSilent)
+    if not isSilent then
+        local announce = string
+        if UnitInRaid('player') then
+            SendChatMessage(announce, "raid", nil, "channel")
+        elseif UnitInParty('player') then
+            SendChatMessage(announce, "party", nil, "channel")
+        end
+    else
+        aprint(announce)
+    end
+end
 
 -- :: availability
 local available_interruptors = {
@@ -665,6 +717,61 @@ local function organizeGroup()
     end
 end
 
+local function organizePositions()
+    -- :: reset organizePositions
+    for k in pairs(pos_tracker) do
+        pos_tracker[k] = 1
+    end
+    for k in pairs(group_pos) do
+        for index in pairs(group_pos[k]) do
+            group_pos[k][index] = {}
+        end
+    end
+    -- :: get player assign group
+    for role in pairs(group_roles) do
+        for player in pairs(group_roles[role]) do
+            if group_pos[role] and pos_tracker[role] <= pos_tracker_limit[role] then
+                table.insert(group_pos[role][pos_tracker[role]], player)
+                pos_tracker[role] = pos_tracker[role] + 1
+                if group_pos[role][pos_tracker[role]] == nil or pos_tracker[role] > pos_tracker_limit[role] then
+                    pos_tracker[role] = 1
+                end
+            end
+        end
+    end
+end
+
+local function printPositions(isSilent)
+    local short = {
+        ["mdps"] = "M",
+        ["rdps"] = "R",
+        ["heal"] = "H"
+    }
+    if not isSilent then
+        announce("[Archrist] :: Positions ::")
+    else
+        aprint(fCol(":: Positions ::"))
+    end
+    for role, pos in pairs(group_pos) do
+        local string = ""
+        for index, players in ipairs(pos) do
+            local substring = short[role] .. index .. ": "
+            for ii = 1, #players do
+                substring = substring .. players[ii] .. " "
+            end
+            if #players > 0 then
+                string = string .. substring
+            end
+        end
+        if not isSilent then
+            announce(string)
+        elseif string ~= "" then
+            aprint(string)
+        end
+        string = ""
+    end
+end
+
 local function autoRole_single(player, class, p_server)
     -- :: if there is no player add
     arch_addPersonToDatabase(player, p_server)
@@ -864,6 +971,7 @@ local function handleCommand(msg)
     -- :: defensive
     local target = UnitName("target")
     -- :: handle parameter
+    local params = split(msg, " ")
     if msg == "" then
         if target then
             local guid = UnitGUID("target")
@@ -887,6 +995,21 @@ local function handleCommand(msg)
             setRole(p_name, p_class, msg, p_server)
         else
             aprint("you need to target someone to assign them role or task")
+        end
+    elseif params[1] == "pos" or params[1] == "position" then
+        if params[2] then
+            if params[2] == "1" or params[2] == "announce" then
+                autoRole_inspect()
+                organizePositions()
+                printPositions()
+            elseif pos_tracker[params[2]] and params[3] and type(tonumber(params[3])) == "number" and tonumber(params[3]) <= 6 then
+                pos_tracker_limit[params[2]] = tonumber(params[3])
+                aprint("Group limit for " .. params[2] .. " is " .. tonumber(params[3]))
+            end
+        else
+            autoRole_inspect()
+            organizePositions()
+            printPositions(true)
         end
     else
         if target then

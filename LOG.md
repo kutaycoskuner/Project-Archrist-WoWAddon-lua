@@ -112,6 +112,11 @@
 - push
 
 # 
+- [1.51] add: GroupOrganizer: group positions
+    - 27-Jan-2023 add: GroupOrganization: experimental group positions
+    - 23-Jan-2023 add: Announcer optional addon marking on announce
+    - 22-Jan-2023 add: Addon name on announcements
+
 - [1.50] fix: PlayerDB add manual note bug
     - 21-Jan-2023 add: TomTom location pointing test
     - 20-Jan-2023 fix: PlayerDB add manual note bug

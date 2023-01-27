@@ -150,7 +150,11 @@ Arch_help_content = {
         ["commands"] = {cCol('/org ') .. "scans and manifests group",
                         cCol('/org [tank | heal | mdps | rdps]') .. " assigns role to target",
                         cCol('/org tasks') .. " scans and present task groups",
-                        cCol('/org focus') .. " creates and announces mage's focus magic link"},
+                        cCol('/org focus') .. " creates and announces mage's focus magic link",
+                        cCol('/org pos') .. " displays group positions to you",
+                        cCol('/org pos 1') .. " presents group positions to group",
+                        cCol('/org pos [rdps | mdps | heal] <number>') .. " sets group limit for one of the three position indicators"
+                    },
         ["conditionals"] = {},
         ["functions"] = {}
     },

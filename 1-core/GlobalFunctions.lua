@@ -19,7 +19,7 @@ local trivialColor = '|cff767676'
 local headerColor = "|cffffd000"
 
 local colorEnd = '|r'
-local addonName = "[Archrist]: "
+local addonName = "[Archrist] "
 local realmName = GetRealmName()
 
 local Arch_classColors = {
@@ -221,6 +221,16 @@ function Arch_print(msg)
     -- print(Arch_addonColor(addonName) .. tostring(msg))
 end
 local aprint = Arch_print
+
+-- :: addon announce
+function Arch_sendChatMessage(msg, type, language, target)
+    if target then
+        SendChatMessage(addonName .. msg, type, language, target);
+    elseif type == "say" then
+        SendChatMessage(addonName .. msg, type);
+    end
+end
+
 -- 
 function arch_addPersonToDatabase(player, server)
     local realm = realmName
@@ -231,12 +241,15 @@ function arch_addPersonToDatabase(player, server)
         if parameters[2] then
             realm = parameters[2]
         elseif "" ~= server then
-            realm = server            
+            realm = server
         else
-            do return end
+            do
+                return
+            end
         end
     end
     -- :: def: player varsa
+    if realm == nil or realm == "" then realm = realmName end
     if A.people[realm] == nil then
         A.people[realm] = {}
     end
