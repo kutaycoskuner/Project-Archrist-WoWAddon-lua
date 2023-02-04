@@ -231,6 +231,19 @@ function Arch_sendChatMessage(msg, type, language, target)
     end
 end
 
+function Arch_announce(string, isSilent)
+    if not isSilent then
+        local announce = string
+        if UnitInRaid('player') then
+            SendChatMessage(announce, "raid", nil, "channel")
+        elseif UnitInParty('player') then
+            SendChatMessage(announce, "party", nil, "channel")
+        end
+    else
+        aprint(announce)
+    end
+end
+
 -- 
 function arch_addPersonToDatabase(player, server)
     local realm = realmName

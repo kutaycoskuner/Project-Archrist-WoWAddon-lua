@@ -1,10 +1,10 @@
 <Ui>
     <Script file="Discord.lua"/>
-    <Script file="Tank.lua"/>
-    <Script file="Spread.lua"/>
-    <Script file="Stack.lua"/>
-    <Script file="PaladinBuffs.lua"/>
-    <Script file="LootRules.lua"/>
-    <Script file="RaidWarnings.lua"/> <!-- :: Tacticsten once olmasi lazim cunku tactics bunu kullaniyor-->
+    <!-- <Script file="Tank.lua"/> -->
+    <!-- <Script file="Spread.lua"/> -->
+    <!-- <Script file="Stack.lua"/> -->
+    <!-- <Script file="PaladinBuffs.lua"/> -->
+    <!-- <Script file="LootRules.lua"/> -->
+    <Script file="RaidWarnings.lua"/> :: Tacticsten once olmasi lazim cunku tactics bunu kullaniyor
     <Script file="Tactics.lua"/>
 </Ui>

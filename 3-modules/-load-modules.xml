@@ -15,4 +15,5 @@
     <Include file="CraftGuides\-load.xml"/>
     <Include file="VoA\-load.xml"/>
     <Include file="EncounterStopwatch\-load.xml"/>
+    <Include file="Leveling_Guides\-load.xml"/>
 </Ui>

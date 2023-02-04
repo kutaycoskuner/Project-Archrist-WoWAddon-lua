@@ -84,11 +84,13 @@ do
     Addon.playerDB = Addon:NewModule("PlayerDB", "AceHook-3.0", "AceEvent-3.0")
     -- :: Guide
     Addon.craftGuides = Addon:NewModule("CraftGuides", "AceHook-3.0", "AceEvent-3.0")
+    Addon.levelingGuides = Addon:NewModule("LevelingGuides", "AceHook-3.0", "AceEvent-3.0")
     -- :: Assistance
     Addon.cRIndicator = Addon:NewModule("CRIndicator", "AceHook-3.0", "AceEvent-3.0")
     Addon.pug = Addon:NewModule("Pug", "AceHook-3.0", "AceEvent-3.0")
     Addon.announcer = Addon:NewModule("Announcer", "AceHook-3.0", "AceEvent-3.0")
     Addon.groupOrganizer = Addon:NewModule("GroupOrganizer", "AceHook-3.0", "AceEvent-3.0")
+    Addon.raidWarnings = Addon:NewModule("RaidWarnings", "AceHook-3.0", "AceEvent-3.0")
     -- :: Utility
     Addon.lootMsgFilter = Addon:NewModule("LootFilter")
     Addon.postureCheck = Addon:NewModule("PostureCheck")
@@ -117,7 +119,6 @@ do
     -- Addon.macro = Addon:NewModule("RaidCommands")
     -- :: Empty Modules
     -- :: Macros
-    Addon.raidWarnings = Addon:NewModule("RaidWarnings", "AceHook-3.0", "AceEvent-3.0")
     Addon.discord = Addon:NewModule('Discord')
     Addon.tank = Addon:NewModule('Tank')
     Addon.spread = Addon:NewModule('Spread')

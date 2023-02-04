@@ -18,6 +18,7 @@ end
 ------------------------------------------------------------------------------------------------------------------------
 -- todo ----------------------------------------------------------------------------------------------------------------
 --[[
+    autorole single callarin birinde problem var
 ]]
 
 -- theory / calculation ------------------------------------------------------------------------------------------------
@@ -144,7 +145,7 @@ local group_roles = {
     ["tank"] = {},
     ["unassigned"] = {}
 }
--- ::jump1
+
 local group_pos = {
     ["mdps"] = {
         [1] = {},
@@ -157,7 +158,8 @@ local group_pos = {
         [3] = {},
         [4] = {},
         [5] = {},
-        [6] = {}
+        [6] = {},
+        [7] = {}
     },
     ["heal"] = {
         [1] = {},
@@ -167,6 +169,8 @@ local group_pos = {
         [5] = {}
     }
 }
+
+local group_pos_yogg = {}
 
 local pos_tracker = {
     ["mdps"] = 1,
@@ -717,7 +721,171 @@ local function organizeGroup()
     end
 end
 
-local function organizePositions()
+local function organizePositionsYogg()
+    local counter = 1
+    for ii = 1, 9 do
+        group_pos_yogg[ii] = {}
+    end
+    -- :: balance or hunter
+    for ii = 1, GetNumGroupMembers() do
+        -- :: determine whether party or raid
+        local p_name, p_server, guid, p_class = identifyPlayer(ii)
+        -- :: retrieve data
+        if p_class == nil then
+            do
+                return
+            end
+        end
+        p_class = string.upper(p_class)
+        local dist, tabIndex = {}, 0
+        local active = LCI:GetActiveTalentGroup(guid)
+        local spec1 = LCI:GetSpecialization(guid, 1)
+        -- :: which spec is active?G
+        if active == 1 then
+            dist[1], dist[2], dist[3] = LCI:GetTalentPoints(guid, 1)
+        else
+            dist[1], dist[2], dist[3] = LCI:GetTalentPoints(guid, 2)
+        end
+        -- :: find spec
+        local biggest = 0
+        for ii = 1, #dist do
+            if dist[ii] > biggest then
+                biggest = dist[ii]
+                tabIndex = ii
+            end
+        end
+        -- :: defensive: spec cekebildi mi F
+        local specName
+        if tabIndex > 0 then
+            specName = LCI:GetSpecializationName(p_class, tabIndex)
+        end
+        -- ::
+        if specName == "Balance" then
+            group_pos_yogg[counter] = {
+                [p_name] = true
+            }
+            counter = counter + 1
+        elseif specName == "Survival" or specName == "Marksmanship" or specName == "Beast Mastery" then
+            group_pos_yogg[counter] = {
+                [p_name] = true
+            }
+            counter = counter + 1
+        end
+    end
+    -- :: mdps 
+    for k in pairs(group_roles["mdps"]) do
+        group_pos_yogg[counter] = {
+            [k] = true
+        }
+        counter = counter + 1
+        if counter == 10 then
+            break
+        end
+    end
+    -- :: 
+    for ii = 1, GetNumGroupMembers() do
+        -- :: determine whether party or raid
+        local p_name, p_server, guid, p_class = identifyPlayer(ii)
+        -- :: retrieve data
+        if p_class == nil then
+            do
+                return
+            end
+        end
+        p_class = string.upper(p_class)
+        local dist, tabIndex = {}, 0
+        local active = LCI:GetActiveTalentGroup(guid)
+        local spec1 = LCI:GetSpecialization(guid, 1)
+        -- :: which spec is active?G
+        if active == 1 then
+            dist[1], dist[2], dist[3] = LCI:GetTalentPoints(guid, 1)
+        else
+            dist[1], dist[2], dist[3] = LCI:GetTalentPoints(guid, 2)
+        end
+        -- :: find spec
+        local biggest = 0
+        for ii = 1, #dist do
+            if dist[ii] > biggest then
+                biggest = dist[ii]
+                tabIndex = ii
+            end
+        end
+        -- :: defensive: spec cekebildi mi F
+        local specName
+        if tabIndex > 0 then
+            specName = LCI:GetSpecializationName(p_class, tabIndex)
+        end
+        -- ::
+        if specName == "Shadow" or specName == "Fire" or specName == "Arcane" or specName == "Demonology" then
+            group_pos_yogg[counter] = {
+                [p_name] = true
+            }
+            counter = counter + 1
+        end
+        if counter == 10 then
+            break
+        end
+    end
+end
+
+local function printPositionsYogg(isSilent)
+    local short = "D"
+    if not isSilent then
+        announce("[Archrist] :: Positions ::")
+    else
+        aprint(fCol(":: Positions ::"))
+    end
+    local string = ""
+    for index, player in ipairs(group_pos_yogg) do
+        local substring = short .. index .. ": "
+        for player in pairs(group_pos_yogg[index]) do
+            substring = substring .. player .. " "
+        end
+        if player and #substring > 4 then
+            string = string .. substring
+        end
+    end
+    if not isSilent then
+        announce(string)
+    elseif string ~= "" then
+        aprint(string)
+    end
+    string = ""
+end
+
+local function manualAddPositionYogg(index)
+    if UnitName('target') and group_pos_yogg[tonumber(index)] then
+        for index in ipairs(group_pos_yogg) do
+            for player in pairs(group_pos_yogg[index]) do
+                if player == UnitName('target') then
+                    group_pos_yogg[index][player] = nil
+                end
+            end
+        end
+        group_pos_yogg[tonumber(index)] = {
+            [UnitName('target')] = true
+        }
+    end
+    printPositionsYogg(true)
+end
+
+local function manualRemovePositionYogg(index)
+    if UnitName('target') and group_pos_yogg[tonumber(index)] then
+        for index in ipairs(group_pos_yogg) do
+            for player in pairs(group_pos_yogg[index]) do
+                if player == UnitName('target') then
+                    group_pos_yogg[index][player] = nil
+                end
+            end
+        end
+        group_pos_yogg[tonumber(index)] = {
+            [UnitName("target")] = nil
+        }
+    end
+    printPositionsYogg(true)
+end
+
+local function organizePositionsThorim()
     -- :: reset organizePositions
     for k in pairs(pos_tracker) do
         pos_tracker[k] = 1
@@ -741,7 +909,7 @@ local function organizePositions()
     end
 end
 
-local function printPositions(isSilent)
+local function printPositionsThorim(isSilent)
     local short = {
         ["mdps"] = "M",
         ["rdps"] = "R",
@@ -773,6 +941,11 @@ local function printPositions(isSilent)
 end
 
 local function autoRole_single(player, class, p_server)
+    if player == nil then
+        do
+            return
+        end
+    end
     -- :: if there is no player add
     arch_addPersonToDatabase(player, p_server)
     if A.people[realmName][player] == nil then
@@ -973,8 +1146,8 @@ local function handleCommand(msg)
     -- :: handle parameter
     local params = split(msg, " ")
     if msg == "" then
-        if target then
-            local guid = UnitGUID("target")
+        if target ~= nil then
+            local guid = UnitGUID("target") -- bug eger target makineyse problem oluyor
             local _, p_class, _, p_race, _, p_name, p_server = GetPlayerInfoByGUID(guid)
             autoRole_single(target, p_class, p_class)
         end
@@ -998,18 +1171,35 @@ local function handleCommand(msg)
         end
     elseif params[1] == "pos" or params[1] == "position" then
         if params[2] then
-            if params[2] == "1" or params[2] == "announce" then
+            if params[2] == "thorim" and params[3] == nil then
                 autoRole_inspect()
-                organizePositions()
-                printPositions()
-            elseif pos_tracker[params[2]] and params[3] and type(tonumber(params[3])) == "number" and tonumber(params[3]) <= 6 then
+                organizePositionsThorim()
+                printPositionsThorim(true)
+            elseif params[2] == "thorim" and params[3] == 1 then
+                autoRole_inspect()
+                organizePositionsThorim()
+                printPositionsThorim()
+            elseif params[2] == "yogg" and params[3] == nil then
+                autoRole_inspect()
+                organizePositionsYogg()
+                printPositionsYogg(true)
+            elseif params[2] == "yogg" and params[3] == 1 then
+                autoRole_inspect()
+                organizePositionsYogg()
+                printPositionsYogg()
+            elseif params[2] == "yogg" and params[3] == "add" and type(tonumber(params[4])) == "number" then
+                manualAddPositionYogg(params[4])
+            elseif params[2] == "yogg" and params[3] == "del" and type(tonumber(params[4])) == "number" then
+                manualRemovePositionYogg(params[4])
+            elseif pos_tracker[params[2]] and params[3] and type(tonumber(params[3])) == "number" and
+                tonumber(params[3]) <= 6 then
                 pos_tracker_limit[params[2]] = tonumber(params[3])
                 aprint("Group limit for " .. params[2] .. " is " .. tonumber(params[3]))
             end
         else
             autoRole_inspect()
-            organizePositions()
-            printPositions(true)
+            organizePositionsThorim()
+            printPositionsThorim(true)
         end
     else
         if target then

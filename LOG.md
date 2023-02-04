@@ -84,6 +84,7 @@
 - 13-Jan-2023 add: readme feature | roadmap
 - 18-Jan-2023 add: Quest share blocking
 - 18-Jan-2023 add: ignoremore / blacklist
+- 31-Jan-2023 add: text to guide adapter
 
 # Release cleaning
 - .git file
@@ -98,8 +99,8 @@
 # Curseforge Proc
 - disp name: Archrist_vx.xx
 - beta
-- enter changelog 
 - markdwon
+- enter changelog 
 - enter wow version
 - change version and rd on curse desc.
 
@@ -112,6 +113,17 @@
 - push
 
 # 
+- [1.52]
+    - 04-Feb-2023 add: GroupOrganizer: manual add/remove
+    - 04-Feb-2023 fix: PlayerDB: adding manual name bug fixed
+    - 04-Feb-2023 def: GroupOrganizer: autorole_single class blocked
+    - 03-Feb-2023 add: LevelingGuides frame close, lock, scale functions
+    - 03-Feb-2023 wip: GroupOrganizer: yogg saron positioning
+    - 03-Feb-2023 add: LevelingGuides frame
+    - 02-Feb-2023 wip: Leveling_Guides wow xml/lua frame
+    - 01-Feb-2023 fix: PlayerDB combined entry bug
+    - 28-Jan-2023 add: Discord announce module
+
 - [1.51] add: GroupOrganizer: group positions
     - 27-Jan-2023 add: GroupOrganization: experimental group positions
     - 23-Jan-2023 add: Announcer optional addon marking on announce

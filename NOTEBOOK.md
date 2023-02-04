@@ -99,6 +99,13 @@ https://www.lua.org/pil/20.2.html
 
 
 # Blackboard
+- ui element layers
+    - background
+    - border
+    - artwork
+    - overlay
+    - highlight
+
 - curseforge description
     - description
         - disclaimer

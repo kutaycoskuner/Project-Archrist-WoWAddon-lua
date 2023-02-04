@@ -1,23 +1,63 @@
 ------------------------------------------------------------------------------------------------------------------------
--- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+--------- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+------------------------------------------------------------------------------------------------------------------------
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
-local moduleName = 'Discord';
-local moduleAlert = M .. moduleName .. ": |r";
-local module = A:GetModule(moduleName, true);
+local m_name, m_name2 = "Discord", "Discord";
+local group = "assist";
+local module = A:GetModule(m_name, true);
+local moduleAlert = M .. m_name2 .. ": |r";
+local mprint = function(msg)
+    print(moduleAlert .. msg)
+end
+local aprint = Arch_print
 if module == nil then return end
+
+------------------------------------------------------------------------------------------------------------------------
+--------- Notes
+------------------------------------------------------------------------------------------------------------------------
+
+-- use case ------------------------------------------------------------------------------------------------------------
+--[[
+    ]]
+
+-- blackboard ------------------------------------------------------------------------------------------------------------
+--[[
+]]
+
+-- todo ----------------------------------------------------------------------------------------------------------------
+--[[
+]]
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
 local raidAlerts = Arch_raidAlerts
+local announce = Arch_announce
+local split = Arch_split
+local cCol = Arch_commandColor
+local vc = "" 
 local isEnabled = true
-local string1 =
-    "If you like to be informed about further runs please join https://discord.gg/wQTEexv "
-local string2 =
-    "If you like to be informed about further runs or join guild https://discord.gg/PGAZuj7 "
-local string3 = ">> Join [The Prancing Pony] Channel "
-string2, string3 = '', ''
 
--- ==== Body
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Start
+function module:Initialize()
+    self.Initialized = true
+    -- -- :: construct
+    if A.global[group] == nil then
+        A.global[group] = {}
+    end
+    if A.global[group]["raidCommands"] == nil then 
+        A.global[group]["raidCommands"] = {}
+    end
+    if A.global[group]["raidCommands"][m_name] == nil then
+        A.global[group]["raidCommands"][m_name] = vc
+    else
+        vc = A.global[group]["raidCommands"][m_name]
+    end
+end
+
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Local Methods
 local function announceDiscord()
     if isEnabled then
         -- SELECTED_CHAT_FRAME:AddMessage(string1)
@@ -44,20 +84,69 @@ local function announceGuild()
     end
 end
 
--- ==== Slash commands [last arg]
-SLASH_DISCORD1 = "/discord"
-SlashCmdList["DISCORD"] = function(msg) announceDiscord() end
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Global Methods
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Main
+local function toggleModule(isSilent)
+
+end
+
+local function handleCommand(msg)
+    local par = split(msg)
+    if par[1] == "1" then
+        announce("Furher runs: >> " .. vc .. " <<")
+    elseif par[1] == "is" then
+        if par[2] then
+            vc = par[2]
+            A.global[group]["raidCommands"][m_name] = vc
+            aprint("Your voice communication is now: " .. vc)
+        else
+            aprint("Need link as well. Try " .. cCol("/vc is <link>"))
+        end
+    else 
+        if vc == "" then
+            aprint("You did not set any voice communication link.")
+            aprint("Try " .. cCol("/vc is <link>"))
+        else
+            aprint("Your voice communication is: " .. vc)
+        end
+    end
+end
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Event Handlers
+-- function module:PLAYER_REGEN_ENABLED()
+--     -- SELECTED_CHAT_FRAME:AddMessage('You are out of combat.')
+--     isInCombat = false
+-- end
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== CLI (Slash Commands)
+-- SLASH_DISCORD1 = "/discord"
+-- SlashCmdList["DISCORD"] = function(msg) announceDiscord() end
 SLASH_vc1 = "/vc"
-SlashCmdList["vc"] = function(msg) announceVoiceCommunication(msg) end
-SLASH_ARCHGUILD1 = "/guild"
-SlashCmdList["ARCHGUILD"] = function(msg) announceGuild() end
+SlashCmdList["vc"] = function(msg) handleCommand(msg) end
+-- SLASH_ARCHGUILD1 = "/guild"
+-- SlashCmdList["ARCHGUILD"] = function(msg) announceGuild() end
 
--- local b = CreateFrame("Button", "MyButton", UIParent, "UIPanelButtonTemplate")
--- b:SetSize(80 ,22)
--- b:SetText("Button!")
--- b:SetPoint("CENTER")
--- b:SetScript("OnClick", function()
---     SendChatMessage("I'm saying stuff" ,"SAY")
--- end)
 
+------------------------------------------------------------------------------------------------------------------------
+-- ==== GUI
+-- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getPlayerData)
+-- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getNote)
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Callback & Register [last arg]
+local function InitializeCallback()
+    module:Initialize()
+    toggleModule(true)
+end
+A:RegisterModule(module:GetName(), InitializeCallback)
+
+-- ==== Slash commands [last arg]
 -- https://www.wowinterface.com/forums/showthread.php?t=37386
+-- https://discord.gg/wQTEexv

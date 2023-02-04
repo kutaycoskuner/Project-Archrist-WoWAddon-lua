@@ -231,7 +231,7 @@ local function Archrist_PlayerDB_getPlayerData()
 end
 -- :: Get Player Stats
 local function archGetPlayer(player, realm)
-    if realm == nil then
+    if realm == nil or realm == "" then
         realm = realmName
     end
     if A.people[realm][player] then
@@ -303,7 +303,8 @@ local function handleNote(msg)
             p_server = realmName
         end
         if A.people[p_server][UnitName('target')] == nil then
-            addPlayer(p_name, p_server) -- bu fonksiyon grouporgnizer icinde
+            arch_addPersonToDatabase(p_name, p_server)
+            -- addPlayer(p_name, p_server) -- bu fonksiyon grouporgnizer icinde
         end
         A.people[p_server][UnitName('target')][category].note = msg
         if msg ~= '' then
@@ -335,9 +336,14 @@ local function addManualNote(args, server)
         A.people[server] = {}
     end
     if A.people[server][name] == nil then
-        addPlayer(name, server) -- bu fonksiyon grouporgnizer icinde
+        arch_addPersonToDatabase(name, server)
     end
-    A.people[server][name][category].note = note
+    if A.people[server][name][category].note then
+        A.people[server][name][category].note = note
+    else
+        A.people[server][name] = nil
+        addManualNote(args, server)
+    end
     if args[1] then
         -- print(note)
         aprint(fCol(name .. ": ") .. A.people[server][name][category].note)
@@ -349,7 +355,9 @@ end
 local function changeQuanParam(par, val, name, server)
     if type(tonumber(val)) == "number" then
         arch_addPersonToDatabase(name, server)
-        if server == nil or server == "" then server = realmName end
+        if server == nil or server == "" then
+            server = realmName
+        end
         if A.people[server] == null then
             A.people[server] = {}
         end
@@ -363,7 +371,7 @@ local function changeQuanParam(par, val, name, server)
 end
 
 local function changeNote(note, name, server)
-    if server == nil then
+    if server == nil or server == "" then
         server = realmName
     end
     if type(note) == "string" then
@@ -393,12 +401,12 @@ local function handlePlayerStat(msg, parameter, pass)
                 args[1] = pCase(args[1]:sub(2))
                 addPlayer(args[1], "")
                 local p_name = table.remove(args, 1)
-                if args[2] ~= nil then
+                if args[1] ~= nil then
                     -- :: eger reputation varsa
                     local p_parValue = table.remove(args, 1)
                     changeQuanParam(parameter, p_parValue, p_name, "")
                     -- :: comment varsa
-                    if args[3] ~= nil then
+                    if args[1] ~= nil then
                         local comment = table.concat(args, " ")
                         changeNote(comment, p_name, "")
                     end
@@ -458,7 +466,7 @@ end
 
 -- :: add player stat [who da kullaniliyor] args[1] = player name args[]
 local function addPlayerStat(args, parameter, realm)
-    if realm == nil then
+    if realm == nil or realm == "" then
         realm = realmName
     end
     if A.people[realm][args[1]] == nil then
@@ -636,9 +644,6 @@ function module:WHO_LIST_UPDATE() -- CHAT_MSG_SYSTEM()whitelist
             args = table.concat(args, " ")
             args = fixArgs(args)
             -- :: eski kod
-            -- table.remove(args, 1)
-            -- args = table.concat(args, " ")
-            -- args = fixArgs(args)
             isPlayerExists = true
         end
         --
