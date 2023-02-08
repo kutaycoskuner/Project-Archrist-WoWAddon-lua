@@ -13,6 +13,9 @@ local A, L, V, P, G = unpack(select(2, ...)); -- Import: Engine, Locales, Privat
 
 ]]
 
+
+-------------------------------------------------------------------------------
+
 -- :: this is secondary level is necessary for duplicated keys one is name other is id
 local base = {
     -- ==== Pre-Raid Check
@@ -38,6 +41,7 @@ local base = {
         '2- RDPS spread stairside /range 10 dont use mid',
         '3- MDPS use diagonal way when you move towards adds dont get in range of healers',
         '4- Hero/Bloodlust after add kill if exhaustion otherwise at start',
+        '=4 {triangle} Change to Add  {triangle}',
         '! Set tanks who is add / who is boss'
     },
     ["toravon"] = {
@@ -322,6 +326,9 @@ local base = {
     -- ==== Battlegrounds
     ["strand"] = {
         '1- Protect Demos', '2- RDPS get in turret slot', '3- Get Bombs'
+    },
+    ["wg"] = {
+        '=1 Protect Demos', '2- RDPS get in turret slot', '3- Get Bombs'
     }
 }
 
@@ -391,5 +398,6 @@ Arch_tactics = {
     -- :: RS
     ["halion"] = base["halion"],
     -- ==== Battlegrounds
+    ["wg"] = base["wg"],
     ["strand"] = base["strand"],
 }

@@ -13,6 +13,7 @@ local aprint = Arch_print
 if module == nil then
     return
 end
+local guide = Arch_levelingGuide
 
 ------------------------------------------------------------------------------------------------------------------------
 --------- Notes
@@ -36,6 +37,11 @@ end
 
 -- blackboard ------------------------------------------------------------------------------------------------------------
 --[[
+    - frame information
+        - level range
+        - zone, chapter (sigmazsa alt satira)
+        - current quest
+        - description
 
     - quest id
             - coordinates
@@ -63,13 +69,29 @@ local realmName = GetRealmName()
 local split = Arch_split
 
 local mainFrame
-local defaultFrameSize = {280, 160} 
-local defaultFramePos  = {"CENTER", 0, 0}
+local defaultFrameSize = {280, 160}
+local defaultFramePos = {"CENTER", 0, 0}
 
 -- :: function def
 local createFrame
 local toggleFrame
 local shiftLockButton
+local setGuide
+
+-- :: palyer
+local completedQuestsList = GetQuestsCompleted()
+
+-- ::
+local textPosition = -18
+local textPositionShift = -14
+local textIndent = 6
+
+local rangeText
+local zoneText
+local chapterText
+local stepText
+local questText
+local descText
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Start
@@ -106,8 +128,9 @@ function module:Initialize()
         A.global.gui[m_name].size = defaultFrameSize
     end
     -- :: createFrame
-    createFrame()
-    toggleFrame()
+    -- createFrame()
+    -- toggleFrame()
+    -- setGuide()
 end
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -123,6 +146,17 @@ toggleFrame = function()
     else
         mainFrame:Hide()
     end
+end
+
+-- local function presentStepText(text, x, y, color, variable)
+--     rangeText:SetFont("Fonts\\FRIZQT__.ttf", 11, "OUTLINE")
+--     rangeText:SetPoint("TOPLEFT", mainFrame, x, y)
+--     rangeText:SetText(tCol(text))
+--     textPosition = textPosition + textPositionShift
+-- end
+
+local function tomtom(x, y, desc)
+    TomTom:AddWaypointToCurrentZone(x, y, desc)
 end
 
 createFrame = function()
@@ -182,7 +216,7 @@ createFrame = function()
     resizeButton:SetScript("OnMouseUp", function(self, button)
         mainFrame:StopMovingOrSizing()
         local w, h = mainFrame:GetSize()
-        A.global.gui[m_name].size = {w,h}
+        A.global.gui[m_name].size = {w, h}
     end)
 
     -- :: Dragging --------------------
@@ -319,8 +353,139 @@ createFrame = function()
         end
     end)
 
+    --
+    local range = "x to y"
+    local zone = "Zone Name"
+    local chapter = "Chapter i: Chapter Name"
+    local step = "a"
+    local maxStep = "b"
+    local quest = "Quest: |cffcc9933" .. "Quest Name|r"
+    local desc = "Description: Description of what to do"
+    -- 
+    rangeText = mainFrame:CreateFontString(nil, "ARTWORK")
+    rangeText:SetFont("Fonts\\FRIZQT__.ttf", 11, "OUTLINE")
+    rangeText:SetPoint("TOPLEFT", mainFrame, textIndent, textPosition)
+    rangeText:SetText(tCol(range))
+    textPosition = textPosition + textPositionShift
+
+    zoneText = mainFrame:CreateFontString(nil, "ARTWORK")
+    zoneText:SetFont("Fonts\\FRIZQT__.ttf", 11, "OUTLINE")
+    zoneText:SetPoint("TOPLEFT", mainFrame, textIndent, textPosition)
+    zoneText:SetText(tCol(zone))
+    textPosition = textPosition + textPositionShift
+
+    chapterText = mainFrame:CreateFontString(nil, "ARTWORK")
+    chapterText:SetFont("Fonts\\FRIZQT__.ttf", 11, "OUTLINE")
+    chapterText:SetPoint("TOPLEFT", mainFrame, textIndent, textPosition)
+    chapterText:SetText(tCol(chapter))
+    textPosition = textPosition + textPositionShift
+
+    stepText = mainFrame:CreateFontString(nil, "ARTWORK")
+    stepText:SetFont("Fonts\\FRIZQT__.ttf", 11, "OUTLINE")
+    stepText:SetPoint("TOPLEFT", mainFrame, textIndent, textPosition)
+    stepText:SetText(tCol(step .. " of " .. maxStep))
+    textPosition = textPosition + textPositionShift
+
+    questText = mainFrame:CreateFontString(nil, "ARTWORK")
+    questText:SetFont("Fonts\\FRIZQT__.ttf", 11, "OUTLINE")
+    questText:SetPoint("TOPLEFT", mainFrame, textIndent, textPosition)
+    questText:SetText(tCol(quest))
+    textPosition = textPosition + textPositionShift
+
+    descText = mainFrame:CreateFontString(nil, "ARTWORK")
+    descText:SetFont("Fonts\\FRIZQT__.ttf", 11, "OUTLINE")
+    descText:SetPoint("TOPLEFT", mainFrame, textIndent, textPosition)
+    descText:SetText(tCol(desc))
+    textPosition = textPosition + textPositionShift
+
+    -- local button = CreateFrame("Button", "next", mainFrame, "UIPanelButtonTempalte")
+    -- local button = CreateFrame("Button", "next", mainFrame, "OptionsButtonTemplate")
+    -- local button = CreateFrame("Button", "next", mainFrame, "OptionsFrameTabButtonTemplate")
+    -- local button = CreateFrame("Button", "next", mainFrame, "UIDropDownMenuButtonTemplate")
+    -- local button = CreateFrame("Button", "next", mainFrame, "GameMenuButtonTemplate")
+    -- local button = CreateFrame("Button", "next", mainFrame, "UIPanelCloseButton")
+    local rightButton = CreateFrame("Button", "next", mainFrame, "UIPanelButtonGrayTemplate")
+    rightButton:SetText(">")
+    rightButton:SetPoint("TOPRIGHT", -4, -18)
+    rightButton:SetSize(16,16)
+    rightButton:Show()
+
+    local leftButton = CreateFrame("Button", "next", mainFrame, "UIPanelButtonGrayTemplate")
+    leftButton:SetText("<")
+    leftButton:SetPoint("TOPRIGHT", -22, -18)
+    leftButton:SetSize(16,16)
+    leftButton:Show()
+    -- 
+    -- GetQuestLink(13109)
+    -- C_QuestLog.GetQuestInfo(13109)
+    -- IsUnitOnQuest(questIndex, "unit") - Determine if the specified unit is on the given quest.
+    -- for k, v in pairs({GetQuestsCompleted()}) do
+    --         print(k, v)
+    --         -- tinsert(QuestIDs, k)
+    -- end
+
+    -- desc = completedQuestsList[9973] 
+    --
+
+    -- for ra in pairs(guide) do
+    --     -- jump1
+    --     local range = split(range, "-")
+    --     aprint(range[1], range[2])
+    --     -- :: level Check
+    --     -- :: zone select
+    --     -- :: chapter 1 
+    --     if  UnitLevel("player") >= tonumber(r[1]) then--and UnitLevel("player") < tonumber(r[2]) then
+    --         for zo in pairs(guide[ra]) do
+
+    --         end
+    --     end
+    -- end 
+    -- TomTom:AddWaypointToCurrentZone(48, 43, "guide")
+
+    -- presentStepText(range, textIndent, textPosition, rangeText)
+    -- presentStepText(zone, textIndent, textPosition, zoneText)
+    -- presentStepText(chapter, textIndent, textPosition, chapterText)
+    -- presentStepText("Step: " .. step .. " of " .. maxStep, textIndent, textPosition, stepText)
+    -- presentStepText(quest, textIndent, textPosition, questText)
+    -- presentStepText(desc, textIndent, textPosition, descText)
+
     -- :: set frame state 
     -- A.global.gui[m_name].isOpen = true
+end
+
+setGuide = function()
+    local questline = guide["1-10"]["Elwynn Forest"]["chapters"][1]["steps"]
+    local x, y
+    local desc
+    local steps
+    for s in ipairs(questline) do
+        steps = s
+    end
+    for s, data in ipairs(questline) do
+        -- get quest if completed go next
+        if completedQuestsList[data["quest"]] == nil then
+            if data.task == "accept" and GetQuestLink(data.quest) then
+            else
+                -- print(GetQuestLink())
+                questText:SetText("Quest: " .. data["questName"])
+                stepText:SetText(s .. " of " .. steps)
+                descText:SetText(data.desc)
+                x = data.coords.x
+                y = data.coords.y
+                desc = data.desc
+                break
+            end
+        else 
+            aprint("ÿou have completed " .. data.questName)
+        end
+    end
+    if x and y and desc then
+        -- todo kontrol: bulundugun harita ile guide zone ayni mi
+        tomtom(x, y, desc)
+    else
+        aprint("Not any coordinates given for next step")
+    end
+
 end
 -- createFrame()
 
@@ -344,13 +509,16 @@ end
 local function toggleModule(isSilent)
     if isEnabled then
         -- :: register
-        -- module:RegisterEvent("CHAT_MSG_SYSTEM")
+        module:RegisterEvent("CHAT_MSG_SYSTEM")
+        module:RegisterEvent("QUEST_LOG_UPDATE")
+
         if not isSilent or isSilent == nil then
             aprint(fCol(m_name2) .. " is enabled")
         end
     else
         -- :: deregister
-        -- module:UnregisterEvent("CHAT_MSG_SYSTEM")
+        module:UnregisterEvent("CHAT_MSG_SYSTEM")
+        module:uNRegisterEvent("QUEST_LOG_UPDATE")
         if not isSilent or isSilent == nil then
             aprint(fCol(m_name2) .. " is disabled")
         end
@@ -363,17 +531,21 @@ end
 
 local function handleCommand(msg)
     local par
-    if msg then 
+    if msg then
         par = split(msg, " ")
-    end 
+    end
     -- print(par[1])
     if par[1] == "reset" then
         A.global.gui[m_name].size = defaultFrameSize
         A.global.gui[m_name].position = defaultFramePos
         A.global.gui[m_name].isLocked = false
+    elseif par[1] == "test" then
+        setGuide()
     end
-    A.global.gui[m_name].isOpen = not A.global.gui[m_name].isOpen
-    toggleFrame()
+    if  par[1] == nil  then
+        A.global.gui[m_name].isOpen = not A.global.gui[m_name].isOpen
+        toggleFrame()
+    end
 end
 
 function module:handleCommand(msg)
@@ -382,16 +554,24 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Event Handlers
--- function module:PLAYER_REGEN_ENABLED()
---     -- SELECTED_CHAT_FRAME:AddMessage('You are out of combat.')
---     isInCombat = false
--- end
+function module:CHAT_MSG_SYSTEM(_, arg1)
+    if string.find(arg1, "Quest accepted:") then
+        setGuide()
+    elseif string.find(arg1, "completed.") then
+        setGuide()
+    end
+end
+
+function module:QUEST_LOG_UPDATE()
+    aprint('test')
+end
 
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== CLI (Slash Commands)
 SLASH_levelingGuides1 = "/lg"
 SlashCmdList["levelingGuides"] = function(msg)
     handleCommand(msg)
+
 end
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -403,6 +583,6 @@ end
 -- ==== Callback & Register [last arg]
 local function InitializeCallback()
     module:Initialize()
-    toggleModule(true)
+    -- toggleModule(true)
 end
 A:RegisterModule(module:GetName(), InitializeCallback)

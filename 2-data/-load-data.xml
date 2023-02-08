@@ -10,4 +10,5 @@
     <Script file="guide_tailor.lua"/>
     <Script file="guide_firstAid.lua"/>
     <Script file="guide_jewelcrafting.lua"/>
+    <Script file="draft_leveling.lua"/>
 </Ui>

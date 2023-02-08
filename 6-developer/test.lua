@@ -28,21 +28,27 @@ local b_isTesting = false
 -- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getRaidScore)
 
 -- ==== Methods
+local table = { GetQuestsCompleted() }
 local function test()
+    for id in pairs(GetQuestsCompleted()) do
+        print(id, C_QuestLog.GetQuestInfo(id))
+    end
     -- local elapsed = time() 
     local elapsed = GetServerTime()
     -- print(elapsed)
-    -- mapID, isContenent = GetCurrentMapAreaID()
+    -- local mapID, isContenent = GetCurrentMapAreaID()
     print(GetZoneText(), GetMinimapZoneText(), WorldMapFrame:GetMapID())
-    TomTom:AddWaypoint(947, 45, 45, {
-        ["desc"] = "test",
-        ["title"] = "stuff",
-        ["persistent"] = true,
-        ["minimap"] = true,
-        ["world"] = true,
-        ["silent"] = true,
-        -- ["from"] = aura_env.id .. " WeakAura"
-    })
+    TomTom:AddWaypointToCurrentZone(48, 43, "test")
+    
+    -- TomTom:AddWaypoint(947, 48, 43, {
+    --     ["desc"] = "test",
+    --     ["title"] = "stuff",
+    --     ["persistent"] = true,
+    --     ["minimap"] = true,
+    --     ["world"] = true,
+    --     ["silent"] = true,
+    --     -- ["from"] = aura_env.id .. " WeakAura"
+    -- })
 
     -- DEFAULT_CHAT_FRAME.editBox:SetText("/sw play") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
 end

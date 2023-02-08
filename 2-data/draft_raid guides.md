@@ -48,12 +48,19 @@
     - kologarn
     - auriya
     - mimirion
+        - trash 
+        - ikinci fazin baslangici heroism
     - freya
     - thorim
         - addon
             - set melee and rpds groups auto
             - set healers uniformly
     - hodir
-    - general
+    - general vezax
+        - interrupt que 
+        - sadece poolda dps yap
+        - manayi animusa sakla %30 dan sonra vurma
+        - rdps split in two groups left and right to avoid shadow crash
+        - animus spawn 4min
     - yogg
     - algalon

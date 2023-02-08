@@ -85,6 +85,8 @@
 - 18-Jan-2023 add: Quest share blocking
 - 18-Jan-2023 add: ignoremore / blacklist
 - 31-Jan-2023 add: text to guide adapter
+- 05-Feb-2023 add: Arch comms ayarla
+- 05-Feb-2023 add: Leveling guide buttons and selectors
 
 # Release cleaning
 - .git file
@@ -113,6 +115,14 @@
 - push
 
 # 
+- [1.53] 1.53 chg: Project break
+    - 08-Feb-2023 chg: LevelingGuides | work on the project is stopped due to earthquake in Turkey
+    - 06-Feb-2023 add: Leveling guide left and right buttons
+    - 06-Feb-2023 add: LevelingGuides basic 3-4 step guide
+    - 05-Feb-2023 wip: LevelingGuides tomtom integration 
+    - 05-Feb-2023 upg: RaidWarnings set auto comms channel
+    
+
 - [1.52]
     - 04-Feb-2023 add: GroupOrganizer: manual add/remove
     - 04-Feb-2023 fix: PlayerDB: adding manual name bug fixed

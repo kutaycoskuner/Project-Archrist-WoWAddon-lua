@@ -1,18 +1,51 @@
 ------------------------------------------------------------------------------------------------------------------------
--- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+--------- Import: System, Locales, PrivateDB, ProfileDB, GlobalDB, PeopleDB, AlertColors AddonName
+------------------------------------------------------------------------------------------------------------------------
 local A, L, V, P, G, C, R, M, N = unpack(select(2, ...));
-local moduleName = 'RaidWarnings';
-local moduleAlert = M .. moduleName .. ": |r";
-local module = A:GetModule(moduleName, true);
-if module == nil then return end
+local m_name, m_name2 = "RaidWarnings", "Raid Warnings";
+local group = "assist";
+local module = A:GetModule(m_name, true);
+local moduleAlert = M .. m_name2 .. ": |r";
+local mprint = function(msg)
+    print(moduleAlert .. msg)
+end
+local aprint = Arch_print
+if module == nil then
+    return
+end
 
 ------------------------------------------------------------------------------------------------------------------------
---:: Former  : /click WarnButton2
---:: Current : /run SendChatMessage(Arch_RaidWarnings[1], Arch_comms,nil,Arch_forthKey)
+--------- Notes
+------------------------------------------------------------------------------------------------------------------------
+
+-- use case ------------------------------------------------------------------------------------------------------------
+--[[
+    ]]
+
+-- blackboard ------------------------------------------------------------------------------------------------------------
+--[[
+]]
+
+-- todo ----------------------------------------------------------------------------------------------------------------
+--[[
+]]
+
+------------------------------------------------------------------------------------------------------------------------
+-- :: Former  : /click WarnButton2
+-- :: Current : /run SendChatMessage(Arch_RaidWarnings[1], Arch_comms,nil,Arch_forthKey)
 ------------------------------------------------------------------------------------------------------------------------
 -- ==== Variables
+-- :: global Functions
+local fCol = Arch_focusColor
+local cCol = Arch_commandColor
+local mCol = Arch_moduleColor
+local tCol = Arch_trivialColor
+local classCol = Arch_classColor
+local realmName = GetRealmName()
+-- :: local
 local boss = 'none';
 local comms = '/p ';
+local isEnabled = true;
 --
 local rwDefault = {}
 rwDefault[1] = "{skull} Focus on [%t] {skull}"
@@ -30,26 +63,44 @@ Arch_forthKey = "1"
 --
 local fixArgs = Arch_fixArgs
 local focus = Arch_focusColor
+
+local previousComms = ""
 --
 -- :: buttons
-local warn1 = CreateFrame("CheckButton", "WarnButton1", UIParent,
-                          "SecureActionButtonTemplate")
+local warn1 = CreateFrame("CheckButton", "WarnButton1", UIParent, "SecureActionButtonTemplate")
 warn1:SetAttribute("type", "macro")
-local warn2 = CreateFrame("CheckButton", "WarnButton2", UIParent,
-                          "SecureActionButtonTemplate")
+local warn2 = CreateFrame("CheckButton", "WarnButton2", UIParent, "SecureActionButtonTemplate")
 warn2:SetAttribute("type", "macro")
-local warn3 = CreateFrame("CheckButton", "WarnButton3", UIParent,
-                          "SecureActionButtonTemplate")
+local warn3 = CreateFrame("CheckButton", "WarnButton3", UIParent, "SecureActionButtonTemplate")
 warn3:SetAttribute("type", "macro")
-local warn4 = CreateFrame("CheckButton", "WarnButton4", UIParent,
-                          "SecureActionButtonTemplate")
+local warn4 = CreateFrame("CheckButton", "WarnButton4", UIParent, "SecureActionButtonTemplate")
 warn4:SetAttribute("type", "macro")
 
+------------------------------------------------------------------------------------------------------------------------
 -- ==== Start
+function module:Initialize()
+    self.Initialized = true
+    -- :: construct
+    if A.global[group] == nil then
+        A.global[group] = {}
+    end
+    if A.global[group][m_name] == nil then
+        A.global[group][m_name] = {}
+    end
+    if A.global[group][m_name].isEnabled == nil then
+        A.global[group][m_name].isEnabled = isEnabled
+    end
+    isEnabled = A.global[group][m_name].isEnabled
+end
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Local Methods
 function module:Initialize()
     self.initialized = true
 
-    if A.global.comms == nil then A.global.comms = '/p ' end
+    if A.global.comms == nil then
+        A.global.comms = '/p '
+    end
     --
     if A.global.raidWarnings == nil then
         A.global.raidWarnings = {
@@ -83,35 +134,36 @@ local function setRaidWarnings(msg)
     local pass = false
     local args = fixArgs(msg)
     local mod = tonumber(table.remove(args, 1))
-    local entry = string.gsub(" "..table.concat(args, ' '), "%W%l", string.upper):sub(2)
-    if entry ~= '' then entry = "{triangle} " .. entry .. " {triangle}" end
+    local entry = string.gsub(" " .. table.concat(args, ' '), "%W%l", string.upper):sub(2)
+    if entry ~= '' then
+        entry = "{triangle} " .. entry .. " {triangle}"
+    end
     local rw = 'rw' .. tostring(mod)
     local default = 'rwDefault' .. tostring(mod)
     -- :: Defensive
-    for ii = 1, 4 do if tonumber(mod) == ii then pass = true end end
+    for ii = 1, 4 do
+        if tonumber(mod) == ii then
+            pass = true
+        end
+    end
     if pass then
         if entry == nil or entry == '' then
-            SELECTED_CHAT_FRAME:AddMessage(
-                moduleAlert .. 'you need to enter a valid text')
+            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'you need to enter a valid text')
             return
         end
         --
         if entry == 'default' then
             A.global.raidWarnings[rw] = rwDefault[mod]
             Arch_RaidWarnings[mod] = rwDefault[mod]
-            SELECTED_CHAT_FRAME:AddMessage(
-                moduleAlert .. 'Your ' .. rw .. ' set as: ' ..
-                    focus(rwDefault[mod]))
+            SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Your ' .. rw .. ' set as: ' .. focus(rwDefault[mod]))
             return
         end
         --
         A.global.raidWarnings[rw] = entry
         Arch_RaidWarnings[tonumber(mod)] = entry
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Your ' .. rw ..
-                                           ' set as: ' .. focus(entry))
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'Your ' .. rw .. ' set as: ' .. focus(entry))
     else
-        SELECTED_CHAT_FRAME:AddMessage(moduleAlert ..
-                                           'you need to enter numbers between 1-4 as first argument')
+        SELECTED_CHAT_FRAME:AddMessage(moduleAlert .. 'you need to enter numbers between 1-4 as first argument')
         return
     end
     Arch_setRaidWarnings()
@@ -121,8 +173,7 @@ end
 -- :: selecting boss via slash command
 local function selectBoss(boss)
     if boss then
-        local firsti, lasti, command, value =
-            string.find(boss, "(%w+) \"(.*)\"");
+        local firsti, lasti, command, value = string.find(boss, "(%w+) \"(.*)\"");
         if (command == nil) then
             firsti, lasti, command, value = string.find(boss, "(%w+) (%w+)");
         end
@@ -130,7 +181,9 @@ local function selectBoss(boss)
             firsti, lasti, command = string.find(boss, "(%w+)");
         end
         -- :: komut varsa
-        if (command ~= nil) then command = string.lower(command); end
+        if (command ~= nil) then
+            command = string.lower(command);
+        end
         --
         -- :: Dungeons
         if (command == "skadi") then
@@ -153,15 +206,13 @@ local function selectBoss(boss)
             Arch_RaidWarnings[4] = '{triangle} Spread 10 yard {triangle}'
             --
         elseif (command == "noth") then
-            Arch_RaidWarnings[1] =
-                '{triangle} Watch for debuffs and dispel {triangle}'
+            Arch_RaidWarnings[1] = '{triangle} Watch for debuffs and dispel {triangle}'
             Arch_RaidWarnings[2] = '{skull} Focus on Big Add {skull}'
             Arch_RaidWarnings[3] = '{skull} Back to boss {skull}'
             Arch_RaidWarnings[4] = '{triangle} Spread 10 yard {triangle}'
             --
         elseif (command == "anubrekhan") then
-            Arch_RaidWarnings[1] =
-                '{triangle} Locust Swarm!! Run clockwise. {triangle}'
+            Arch_RaidWarnings[1] = '{triangle} Locust Swarm!! Run clockwise. {triangle}'
             Arch_RaidWarnings[2] = '{skull} Kill Crypt Lord {skull}'
             Arch_RaidWarnings[3] = '{skull} Back to boss {skull}'
             Arch_RaidWarnings[4] = '{triangle} Spread 10 yard {triangle}'
@@ -173,8 +224,7 @@ local function selectBoss(boss)
             Arch_RaidWarnings[4] = '{triangle} Spread 10 yard {triangle}'
             --
         elseif (command == "grobbulus") then
-            Arch_RaidWarnings[1] =
-                '{triangle} Dont stand infront of the boss {triangle}'
+            Arch_RaidWarnings[1] = '{triangle} Dont stand infront of the boss {triangle}'
             Arch_RaidWarnings[2] = '{square} do not stand in green slime {square}'
             Arch_RaidWarnings[3] = '{skull} Kill the adds as they are 3 {skull}'
             Arch_RaidWarnings[4] = '{triangle} %t run away for the Dispel {triangle}'
@@ -292,18 +342,10 @@ local function selectBoss(boss)
             Arch_RaidWarnings[4] = '{triangle}  {triangle}'
             -- :: Wintergrasp
         elseif command == 'wg' then
-            Arch_RaidWarnings[1] =
-                '{triangle} STACK SIEGES AT BROKEN AND ATTACK NW {triangle}'
-            Arch_RaidWarnings[2] =
-                '{skull} YELL FOR CANNONER IF YOU DONT HAVE ONE {skull}'
+            Arch_RaidWarnings[1] = '{triangle} STACK SIEGES AT BROKEN AND ATTACK NW {triangle}'
+            Arch_RaidWarnings[2] = '{skull} YELL FOR CANNONER IF YOU DONT HAVE ONE {skull}'
             Arch_RaidWarnings[3] = '{skull} CANNONERS KILL CANNONS & PEOPLE {skull}'
             Arch_RaidWarnings[4] = '{triangle} Protect Sieges {triangle}'
-            --[[
-                brain links
-                get in portals two group
-                portal gets plate
-                
-            ]]
         else
             boss = 'default'
             Arch_RaidWarnings[1] = rwDefault[1];
@@ -311,8 +353,7 @@ local function selectBoss(boss)
             Arch_RaidWarnings[3] = rwDefault[3];
             Arch_RaidWarnings[4] = rwDefault[4];
         end
-        DEFAULT_CHAT_FRAME:AddMessage("|cff128ec4[Archrium] Raidwarnings:|r " ..
-                                          tostring(boss))
+        DEFAULT_CHAT_FRAME:AddMessage("|cff128ec4[Archrium] Raidwarnings:|r " .. tostring(boss))
         UIErrorsFrame:AddMessage("|cff128ec4Raidwarnings|r " .. tostring(boss))
     end
     Arch_setRaidWarnings();
@@ -320,8 +361,7 @@ end
 
 local function selectChannel(channel)
     if channel then
-        local firsti, lasti, command, value =
-            string.find(channel, "(%w+) \"(.*)\"");
+        local firsti, lasti, command, value = string.find(channel, "(%w+) \"(.*)\"");
         if (command == nil) then
             firsti, lasti, command, value = string.find(channel, "(%w+) (%w+)");
         end
@@ -329,7 +369,9 @@ local function selectChannel(channel)
             firsti, lasti, command = string.find(channel, "(%w+)");
         end
         -- :: komut varsa
-        if (command ~= nil) then command = string.lower(command); end
+        if (command ~= nil) then
+            command = string.lower(command);
+        end
         --
         if (command == "w" or command == "test") then
             comms = "/w " .. UnitName('player') .. " "
@@ -367,31 +409,106 @@ local function selectChannel(channel)
             Arch_comms = 'CHANNEL'
             Arch_forthKey = "1"
         end
-        DEFAULT_CHAT_FRAME:AddMessage(
-            "|cff128ec4[Archrium] WarningChannel:|r " .. tostring(comms))
-        UIErrorsFrame:AddMessage("|cff128ec4WarningChannel|r " ..
-                                     tostring(comms))
+        aprint("|cff128ec4Warning Channel:|r " .. tostring(comms))
+        UIErrorsFrame:AddMessage("|cff128ec4Warning Channel|r " .. tostring(comms))
     end
     Arch_setRaidWarnings();
 end
 
--- -- ==== End
--- Arch_setRaidWarnings();
-local function InitializeCallback() module:Initialize() end
-A:RegisterModule(module:GetName(), InitializeCallback)
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Global Methods
 
--- ==== Slash Handlers
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Main
+local function toggleModule(isSilent)
+    if isEnabled then
+        -- :: register
+        module:RegisterEvent("CHAT_MSG_SYSTEM")
+        if not isSilent or isSilent == nil then
+            aprint(fCol(m_name2) .. " is enabled")
+        end
+    else
+        -- :: deregister
+        module:UnregisterEvent("CHAT_MSG_SYSTEM")
+        if not isSilent or isSilent == nil then
+            aprint(fCol(m_name2) .. " is disabled")
+        end
+    end
+    if not isSilent then
+        isEnabled = not isEnabled
+        -- A.global.assist.groupOrganizer.isEnabled = isEnabled
+    end
+end
+
+local function handleCommand(msg)
+end
+
+local function autoSelectComms()
+    local isLeader = UnitIsGroupLeader("player")
+    local isAssist = UnitIsGroupAssistant("player")
+    if isLeader or isAssist then
+        Arch_comms = "RAID_WARNING"
+    elseif UnitInRaid("player") then
+        Arch_comms = "RAID"
+    elseif UnitInParty("player") then
+        Arch_comms = "PARTY"
+    elseif UnitInBattleground("player") then
+        Arch_comms = "BATTLEGROUND"
+    else
+        Arch_comms = "SAY"
+    end
+    comms = Arch_comms
+    A.global.comms = comms
+    if Arch_comms ~= previousComms then
+        aprint("|cff128ec4Warning Channel:|r " .. tostring(comms))
+        UIErrorsFrame:AddMessage("|cff128ec4Warning Channel|r " .. tostring(comms))
+        previousComms = Arch_comms
+    end
+end
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Event Handlers
+function module:CHAT_MSG_SYSTEM(_, arg1)
+    if string.find(arg1, "You leave the group") then
+        autoSelectComms()
+    elseif string.find(arg1, "leaves the") then
+        autoSelectComms()
+    elseif string.find(arg1, "joins the") then
+        autoSelectComms()
+    elseif string.find(arg1, "joined the") then
+        autoSelectComms()
+    elseif string.find(arg1, "has been disbanded") then
+        group = {}
+        autoSelectComms()
+    elseif string.find(arg1, "Party converted to Raid") then
+        autoSelectComms()
+    end
+end
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== CLI (Slash Commands)
 SLASH_RaidWarning1 = "/battle"
-SlashCmdList["RaidWarning"] = function(boss) selectBoss(boss) end
+SlashCmdList["RaidWarning"] = function(boss)
+    selectBoss(boss)
+end
 SLASH_SelectLeadChannel1 = "/comms"
-SlashCmdList["SelectLeadChannel"] = function(channel) selectChannel(channel) end
+SlashCmdList["SelectLeadChannel"] = function(channel)
+    selectChannel(channel)
+end
 SLASH_RaidWarnings1 = "/war"
-SlashCmdList["RaidWarnings"] = function(msg) setRaidWarnings(msg) end
+SlashCmdList["RaidWarnings"] = function(msg)
+    setRaidWarnings(msg)
+end
 
--- ==== Example Usage [last arg]
---[[
-/click WarnButton1;  
-/click WarnButton2; 
-/click WarnButton3; 
-/click WarnButton4; 
---]]
+------------------------------------------------------------------------------------------------------------------------
+-- ==== GUI
+-- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getPlayerData)
+-- GameTooltip:HookScript("OnTooltipSetUnit", Archrist_PlayerDB_getNote)
+
+------------------------------------------------------------------------------------------------------------------------
+-- ==== Callback & Register [last arg]
+local function InitializeCallback()
+    module:Initialize()
+    toggleModule(true)
+end
+A:RegisterModule(module:GetName(), InitializeCallback)
